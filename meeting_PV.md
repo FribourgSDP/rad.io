@@ -20,4 +20,5 @@ If a API is used for extracting/getting audio sample, we should check the policy
 
 Idea for what is on the cloud and what is not: have a local and remote playlist: the user has to choose what playlist is on the cloud and what is on the phone.<br>
 Small room of about 8 people. The goal is to for everyone to be able to sing at one point. This would not be possible in big room. <br>
+
 </p>
