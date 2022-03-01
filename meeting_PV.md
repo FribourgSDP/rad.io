@@ -22,3 +22,12 @@ Idea for what is on the cloud and what is not: have a local and remote playlist:
 Small room of about 8 people. The goal is to for everyone to be able to sing at one point. This would not be possible in big room. <br>
 
 </p>
+</p>
+
+### Accepted by:
+
+- [] Nathan
+- [] Lucien
+- [] Maxence
+- [] Alexandre
+- [x] Victor
