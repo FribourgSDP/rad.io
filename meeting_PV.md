@@ -28,7 +28,7 @@ Small room of about 8 people. The goal is to for everyone to be able to sing at 
 
 - [x] Nathan
 - [x] Lucien
-- [] Maxence
+- [x] Maxence
 - [x] Alexandre
 - [x] Victor
 - [x] Simon
