@@ -11,7 +11,7 @@ Every week is graded.</p>
 ### Project
 
 <p>Concerning points rewards, binary system prefered by TA.<br>
-If a API is used for extracting/getting audio sample, we should check the policy.<br>
+If an API is used for extracting/getting audio sample, we should check the policy.<br>
 2 part of offline:<br>
 
 1. some part has to be cached
@@ -26,9 +26,9 @@ Small room of about 8 people. The goal is to for everyone to be able to sing at 
 
 ### Accepted by:
 
-- [] Nathan
+- [x] Nathan
 - [x] Lucien
-- [] Maxence
-- [] Alexandre
+- [x] Maxence
+- [x] Alexandre
 - [x] Victor
 - [x] Simon
