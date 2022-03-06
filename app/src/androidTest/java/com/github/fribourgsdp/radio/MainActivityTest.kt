@@ -21,7 +21,7 @@ class MainActivityTest {
     @Test
     fun correctTextOnTextView() {
         // Context of the app under test.
-        var txtView = Espresso.onView(ViewMatchers.withId(R.id.mainText))
+        val txtView = Espresso.onView(ViewMatchers.withId(R.id.mainText))
 
         txtView.check(
             ViewAssertions.matches(
