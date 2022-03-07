@@ -1,10 +1,12 @@
 package com.github.fribourgsdp.radio
 
+import android.app.Activity
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.widget.Toast
+import androidx.activity.result.contract.ActivityResultContracts
 import com.github.fribourgsdp.radio.databinding.ActivityTestGoogleSignInBinding
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount
@@ -27,7 +29,6 @@ class TestGoogleSignInActivity : AppCompatActivity() {
 
     //constants
     private companion object{
-        private const val RC_SIGN_IN = 100
         private const val TAG = "GOOGLE_SIGN_TAG"
     }
 
@@ -55,14 +56,32 @@ class TestGoogleSignInActivity : AppCompatActivity() {
         binding.googleSignInButton.setOnClickListener{
             Log.d(TAG,"onCreate: begin Google SignIn")
             val intent = googleSignInClient.signInIntent
-            startActivityForResult(intent, RC_SIGN_IN)
+            launcher.launch(intent)
         }
 
-
-
-
-
     }
+
+    private val launcher =
+        registerForActivityResult(ActivityResultContracts.StartActivityForResult()){
+            result ->
+            //handle intent result here
+            if(result.resultCode == Activity.RESULT_OK){
+                Log.d(TAG, "onActivityResult: Google SignIn intent result")
+                val accountTask = GoogleSignIn.getSignedInAccountFromIntent(result.data)
+                try{
+                    //Google SignIn success, now authenticate with firebase
+                    val account = accountTask.getResult(ApiException::class.java)
+                    firebaseAuthWithGoogleAccount(account)
+                }
+                catch (e :Exception){
+                    //failed Google SignIn
+                    Log.d(TAG, "onActivityResult: ${e.message}")
+                }
+            }else{
+                //cancelled
+                Toast.makeText(this@TestGoogleSignInActivity,"Cancelled", Toast.LENGTH_SHORT).show()
+            }
+        }
 
     private fun checkUser(){
         //check if user is logged in or not
@@ -76,26 +95,6 @@ class TestGoogleSignInActivity : AppCompatActivity() {
 
     }
 
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
-
-        //Result returned from launching the Intent from GoogleSignInApi.getSignInIntent(...);
-        if(requestCode == RC_SIGN_IN){
-            Log.d(TAG, "onActivityResult: Google SignIn intent result")
-            val accountTask = GoogleSignIn.getSignedInAccountFromIntent(data)
-            try{
-                //Google SignIn success, now authenticate with firebase
-                val account = accountTask.getResult(ApiException::class.java)
-                firebaseAuthWithGoogleAccount(account)
-            }
-            catch (e :Exception){
-                //failed Google SignIn
-                Log.d(TAG, "onActivityResult: ${e.message}")
-            }
-
-        }
-
-    }
 
     private fun firebaseAuthWithGoogleAccount(account: GoogleSignInAccount){
         Log.d(TAG, "firebaseAuthWithGoogleAccount: begin firebase auth with google account")
