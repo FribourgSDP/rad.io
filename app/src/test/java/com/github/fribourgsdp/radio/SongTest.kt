@@ -1,5 +1,6 @@
-import org.junit.jupiter.api.Assertions.*
-import org.junit.jupiter.api.Test
+import org.junit.Test
+
+import org.junit.Assert.*
 
 internal class SongTest {
     @Test
