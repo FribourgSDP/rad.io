@@ -23,23 +23,34 @@ class LyricsGetter {
         fun getLyrics(songName: String, artistName: String) : CompletableFuture<String> {
             val future = CompletableFuture<String>()
             val trackIDFuture = getSongID(songName, artistName)
-            val trackID = trackIDFuture.get() // TODO: What if exception ?
+            val trackID : Int
+            try {
+                trackID = trackIDFuture.get()
+            } catch (e : Throwable){
+                future.completeExceptionally(e)
+                return future
+            }
             val url = BASE_URL + "track.lyrics.get?track_id=" + trackID + "&apikey=" + API_KEY
             val request = Request.Builder().url(url).build()
             client.newCall(request).enqueue(object : Callback {
                 override fun onFailure(call: Call, e: IOException) {
                     future.completeExceptionally(e)
-                    // TODO: throw exception ?
                 }
 
                 override fun onResponse(call: Call, response: Response) {
                     val parsedResponse = response.body()?.string()?.let {JSONObject(it)}
                     // TODO: assert not null ?
-                    val lyrics = parsedResponse
-                        ?.getJSONObject("message")
-                        ?.getJSONObject("body")
-                        ?.getJSONObject("lyrics")
-                        ?.getString("lyrics_body")
+                    val status = parsedResponse?.getJSONObject("message")?.getJSONObject("header")?.getInt("status_code")
+                    val lyrics : String?
+                    if (status == 404){
+                        lyrics = "---No lyrics were found for this song.---"
+                    } else {
+                        lyrics = parsedResponse
+                            ?.getJSONObject("message")
+                            ?.getJSONObject("body")
+                            ?.getJSONObject("lyrics")
+                            ?.getString("lyrics_body")
+                    }
                     future.complete(lyrics)
                 }
             })
@@ -50,24 +61,28 @@ class LyricsGetter {
             // TODO: I HAD to change API level from 23 to 24
             val future = CompletableFuture<Int>()
             val url =
-                BASE_URL + "track.search?q_track=" + songName + "&q_artist=" + artistName + "&apikey=" + API_KEY
+                BASE_URL + "track.search?q_track=" + songName + "&q_artist=" + artistName + "&apikey=" + API_KEY + "&s_artist_rating=desc"
             val request = Request.Builder().url(url).build()
             client.newCall(request).enqueue(object : Callback {
                 override fun onFailure(call: Call, e: IOException) {
                     future.completeExceptionally(e)
-                    // TODO: throw exception ?
                 }
 
                 override fun onResponse(call: Call, response: Response) {
                     val parsedResponse = response.body()?.string()?.let { JSONObject(it) } // TODO: wtf
-                    val firstTrackID = parsedResponse
+                    val trackList = parsedResponse
                         ?.getJSONObject("message")
                         ?.getJSONObject("body")
                         ?.getJSONArray("track_list")
-                        ?.getJSONObject(0)
-                        ?.getJSONObject("track")
-                        ?.getInt("track_id")
-                    future.complete(firstTrackID)
+                    if(trackList?.length() == 0){
+                        future.completeExceptionally(Exception("Song not found"))
+                    } else {
+                        val firstTrackID = trackList
+                            ?.getJSONObject(0)
+                            ?.getJSONObject("track")
+                            ?.getInt("track_id")
+                        future.complete(firstTrackID)
+                    }
                 }
             })
             return future
