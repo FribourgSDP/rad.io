@@ -1,3 +1,8 @@
+package com.github.fribourgsdp.radio
+
+import Genre
+import Playlist
+import Song
 import org.junit.Test
 
 import org.junit.Assert.*
@@ -59,7 +64,9 @@ internal class PlaylistTest {
         val addedSet: Set<Song> = mutableSetOf(Song("a", "b"), Song("woodlawn", "amine"))
         playlist1.addSongs(addedSet)
         assertEquals(6, playlist1.getSongs().size)
-        assert(playlist1.getSongs().contains(Song("Woodlawn", "amine")) && playlist1.getSongs().contains(Song("A", "b")))
+        assert(playlist1.getSongs().contains(Song("Woodlawn", "amine")) && playlist1.getSongs().contains(
+            Song("A", "b")
+        ))
     }
 
     @Test
@@ -78,7 +85,9 @@ internal class PlaylistTest {
         val removeSet = mutableSetOf(song1, song2)
         playlist1.removeSongs(removeSet)
         assertEquals(2, playlist1.getSongs().size)
-        assert(!playlist1.getSongs().contains(Song("back in black", "ACDC")) && !playlist1.getSongs().contains(Song("colorado", "Milky Chance")))
+        assert(!playlist1.getSongs().contains(Song("back in black", "ACDC")) && !playlist1.getSongs().contains(
+            Song("colorado", "Milky Chance")
+        ))
     }
 
     @Test

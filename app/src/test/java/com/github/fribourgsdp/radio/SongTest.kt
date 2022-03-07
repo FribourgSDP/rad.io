@@ -1,3 +1,6 @@
+package com.github.fribourgsdp.radio
+
+import Song
 import org.junit.Test
 
 import org.junit.Assert.*
