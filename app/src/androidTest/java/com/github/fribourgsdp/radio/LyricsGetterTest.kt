@@ -1,5 +1,6 @@
 package com.github.fribourgsdp.radio
 
+import android.util.Log
 import androidx.test.ext.junit.rules.ActivityScenarioRule
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import org.junit.Rule
@@ -21,7 +22,9 @@ class LyricsGetterTest {
     }
     @Test
     fun emptyLyricsTest(){
-        val lyrics = LyricsGetter.getLyrics("stream", "dream theater").get()
+        val lyricsFuture = LyricsGetter.getLyrics("stream", "dream theater")
+        val lyrics : String = lyricsFuture.get()
+        Log.println(Log.INFO, "***", lyrics)
         assert(lyrics.equals("---No lyrics were found for this song.---"))
     }
     @Test(expected = Exception::class)

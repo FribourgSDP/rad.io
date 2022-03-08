@@ -1,9 +1,11 @@
 package com.github.fribourgsdp.radio
 
+import android.util.Log
 import okhttp3.*
 import java.io.IOException
 import java.util.concurrent.CompletableFuture
 import org.json.JSONObject
+import java.util.concurrent.ExecutionException
 
 /**
  * Tool to get lyrics from a given song name and artist using Musixmatch API.
@@ -12,6 +14,7 @@ import org.json.JSONObject
 
 private const val API_KEY = "a3454edb65483e706c127deaa11df69d"
 private const val BASE_URL = "http://api.musixmatch.com/ws/1.1/"
+private const val LYRICS_NOT_FOUND = "---No lyrics were found for this song.---"
 
 
 
@@ -27,9 +30,10 @@ class LyricsGetter {
             try {
                 trackID = trackIDFuture.get()
             } catch (e : Throwable){
-                future.completeExceptionally(e)
+                future.complete(LYRICS_NOT_FOUND)
                 return future
             }
+
             val url = BASE_URL + "track.lyrics.get?track_id=" + trackID + "&apikey=" + API_KEY
             val request = Request.Builder().url(url).build()
             client.newCall(request).enqueue(object : Callback {
@@ -41,15 +45,17 @@ class LyricsGetter {
                     val parsedResponse = response.body()?.string()?.let {JSONObject(it)}
                     // TODO: assert not null ?
                     val status = parsedResponse?.getJSONObject("message")?.getJSONObject("header")?.getInt("status_code")
-                    val lyrics : String?
-                    if (status == 404){
-                        lyrics = "---No lyrics were found for this song.---"
+                    var lyrics : String? = if (status == 404){
+                        LYRICS_NOT_FOUND
                     } else {
-                        lyrics = parsedResponse
+                        parsedResponse
                             ?.getJSONObject("message")
                             ?.getJSONObject("body")
                             ?.getJSONObject("lyrics")
                             ?.getString("lyrics_body")
+                    }
+                    if (lyrics?.isEmpty() == true){
+                        lyrics = LYRICS_NOT_FOUND
                     }
                     future.complete(lyrics)
                 }

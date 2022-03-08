@@ -25,12 +25,7 @@ class DisplayLyricsActivity : AppCompatActivity() {
                 val artistName: String = artistTextView?.text.toString()
                 // TODO: handle exception
                 val lyricsFuture = LyricsGetter.getLyrics(songName, artistName)
-                var lyrics : String
-                try{
-                    lyrics = lyricsFuture.get()
-                } catch (e : Throwable){
-                    lyrics = e.message.toString()
-                }
+                val lyrics = lyricsFuture.get()
                 resultsTextView?.text = lyrics
             }
         }
