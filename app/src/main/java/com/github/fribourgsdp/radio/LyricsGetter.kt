@@ -22,10 +22,10 @@ class LyricsGetter {
 
     companion object {
 
-        private val client = OkHttpClient()
-        fun getLyrics(songName: String, artistName: String) : CompletableFuture<String> {
+
+        fun getLyrics(songName: String, artistName: String, client: OkHttpClient) : CompletableFuture<String> {
             val future = CompletableFuture<String>()
-            val trackIDFuture = getSongID(songName, artistName)
+            val trackIDFuture = getSongID(songName, artistName, client)
             val trackID : Int
             try {
                 trackID = trackIDFuture.get()
@@ -42,7 +42,8 @@ class LyricsGetter {
                 }
 
                 override fun onResponse(call: Call, response: Response) {
-                    val parsedResponse = response.body()?.string()?.let {JSONObject(it)}
+                    val parsedResponseString = response.body()?.string()
+                    val parsedResponse = parsedResponseString?.let { JSONObject(it) }
                     // TODO: assert not null ?
                     val status = parsedResponse?.getJSONObject("message")?.getJSONObject("header")?.getInt("status_code")
                     var lyrics : String? = if (status == 404){
@@ -63,8 +64,8 @@ class LyricsGetter {
             return future
         }
 
-        fun getSongID(songName: String, artistName: String) : CompletableFuture<Int> {
-            // TODO: I HAD to change API level from 23 to 24
+        fun getSongID(songName: String, artistName: String, client: OkHttpClient) : CompletableFuture<Int> {
+            //API needed : 24
             val future = CompletableFuture<Int>()
             val url =
                 BASE_URL + "track.search?q_track=" + songName + "&q_artist=" + artistName + "&apikey=" + API_KEY + "&s_artist_rating=desc"

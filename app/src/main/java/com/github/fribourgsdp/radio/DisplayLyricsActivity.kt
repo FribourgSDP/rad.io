@@ -6,6 +6,7 @@ import android.view.View
 import android.widget.Button
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
+import okhttp3.OkHttpClient
 
 
 class DisplayLyricsActivity : AppCompatActivity() {
@@ -24,7 +25,7 @@ class DisplayLyricsActivity : AppCompatActivity() {
                 val songName: String = songTextView?.text.toString()
                 val artistName: String = artistTextView?.text.toString()
                 // TODO: handle exception
-                val lyricsFuture = LyricsGetter.getLyrics(songName, artistName)
+                val lyricsFuture = LyricsGetter.getLyrics(songName, artistName, OkHttpClient())
                 val lyrics = lyricsFuture.get()
                 resultsTextView?.text = lyrics
             }

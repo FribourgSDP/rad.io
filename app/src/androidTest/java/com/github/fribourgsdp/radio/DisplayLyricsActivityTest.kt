@@ -13,7 +13,7 @@ import org.junit.Test
 
 class DisplayLyricsActivityTest {
     @get:Rule
-    public val testRule = ActivityScenarioRule(
+    val testRule = ActivityScenarioRule(
         DisplayLyricsActivity::class.java
     )
     @Test
