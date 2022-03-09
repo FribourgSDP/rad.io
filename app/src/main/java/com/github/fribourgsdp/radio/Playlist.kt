@@ -40,7 +40,8 @@ class Playlist (playlistName: String, songSet: Set<Song>, genreType: Genre){
         }
     }
 
-    fun getSongs(): MutableSet<Song> {
-        return songs.toMutableSet()
+    fun getSongs(): Set<Song> {
+        //return songs.toMutableSet()
+        return songs.toSet()
     }
 }

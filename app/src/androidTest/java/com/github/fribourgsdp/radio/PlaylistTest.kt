@@ -41,7 +41,8 @@ internal class PlaylistTest {
     fun getSet() {
         val testerSet = mutableSetOf(song1, song2, song3, song4)
         val playlist1 = Playlist("First", testerSet, Genre.POP)
-        assert(testerSet !== playlist1.getSongs())
+        val songSet = playlist1.getSongs()
+        assert(testerSet !== songSet)
         assert(playlist1.getSongs().contains(Song("colorado", "Milky Chance")))
     }
 
