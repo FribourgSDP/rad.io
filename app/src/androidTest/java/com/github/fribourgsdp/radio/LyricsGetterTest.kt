@@ -1,6 +1,7 @@
 package com.github.fribourgsdp.radio
 
 import okhttp3.*
+import org.json.JSONObject
 import org.junit.Test
 import org.junit.Assert.*
 import java.io.IOException
@@ -45,6 +46,21 @@ class LyricsGetterTest {
         val id = LyricsGetter.getSongID("rouge", "sardou", FailingHTTPClient())
         val i = id.get()
         println(i)
+    }
+    @Test(expected = Exception::class)
+    fun getSongIDMalformedResponse(){
+        val id = LyricsGetter.getSongID("rouge", "sardou", OkHttpClient(), NullJSONParser())
+        println(id.get())
+    }
+    @Test
+    fun getLyricsMalformedResponse(){
+        val lyrics = LyricsGetter.getLyrics("rouge", "sardou", OkHttpClient(), NullJSONParser()).get()
+        assert(lyrics.equals("---No lyrics were found for this song.---"))
+    }
+    @Test
+    fun emptyLyrics(){
+        val lyrics = LyricsGetter.getLyrics("rouge", "sardou", OkHttpClient(), EmptyLyricsJSONParser()).get()
+        assert(lyrics.equals("---No lyrics were found for this song.---"))
     }
 
     class FailingHTTPClient : OkHttpClient() {
@@ -124,6 +140,16 @@ class LyricsGetterTest {
             companion object {
                 var t = 1
             }
+        }
+    }
+    class NullJSONParser() : LyricsGetter.Companion.JSONParser() {
+        override fun parse(s: String?): JSONObject? {
+            return null
+        }
+    }
+    class EmptyLyricsJSONParser : LyricsGetter.Companion.JSONParser(){
+        override fun parse(s: String?): JSONObject? {
+            return JSONObject("{\"message\":{\"header\":{\"status_code\":200,\"execute_time\":0.0089538097381592},\"body\":{\"lyrics\":{\"lyrics_id\":18905350,\"explicit\":1,\"lyrics_body\":\"\"}}}}")
         }
     }
 
