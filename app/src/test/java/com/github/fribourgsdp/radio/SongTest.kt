@@ -1,6 +1,5 @@
 package com.github.fribourgsdp.radio
 
-import Song
 import org.junit.Test
 
 import org.junit.Assert.*
@@ -11,7 +10,7 @@ internal class SongTest {
         val test: Song = Song("Song Name", "bob", "lyrics really basic")
         assertEquals("Song Name", test.name)
         assertEquals("lyrics really basic", test.lyrics)
-        assertEquals("bob", test.artist)
+        assertEquals("Bob", test.artist)
     }
 
     @Test
@@ -23,10 +22,10 @@ internal class SongTest {
 
     @Test
     //In the case where a user creates a playlist, he may have mistakenly written the title wrong and may want to change it
-    fun changing_song_name_is_possible(){
+    fun changing_song_name_is_possible() {
         val test: Song = Song("Song Name")
-        test.lyrics = "these are the lyrics"
-        assertEquals("these are the lyrics", test.lyrics)
+        test.name = "this new name is better"
+        assertEquals("This New Name Is Better", test.name)
     }
 
     @Test
@@ -45,7 +44,7 @@ internal class SongTest {
     fun addingArtistNameWorks(){
         val test: Song = Song("new song")
         test.artist = "best artist"
-        assertEquals("best artist", test.artist)
+        assertEquals("Best Artist", test.artist)
     }
 
     @Test

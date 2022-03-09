@@ -1,3 +1,7 @@
+package com.github.fribourgsdp.radio
+
+import Genre
+
 class Playlist (playListName: String, songSet: Set<Song>, genreType: Genre){
     var name: String = playListName
     private val songs: MutableSet<Song>

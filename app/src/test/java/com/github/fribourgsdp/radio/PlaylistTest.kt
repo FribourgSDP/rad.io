@@ -1,8 +1,6 @@
 package com.github.fribourgsdp.radio
 
 import Genre
-import Playlist
-import Song
 import org.junit.Test
 
 import org.junit.Assert.*
@@ -53,7 +51,8 @@ internal class PlaylistTest {
         val testerSet = mutableSetOf(song1, song2, song3, song4)
         val playlist1 = Playlist("First", testerSet, Genre.POP)
         playlist1.addSong(Song("new song", "new artist", "bla"))
-        assert(playlist1.getSongs().contains(Song("new    Song", "new artist")))
+        val newSong = Song("new Song", "New artist")
+        assert(playlist1.getSongs().contains(newSong))
         assertEquals(5, playlist1.getSongs().size)
     }
 
@@ -96,9 +95,9 @@ internal class PlaylistTest {
         val testerSet2 = mutableSetOf(song2, song3, song4)
         val playlistToBeAdded = Playlist("old", testerSet1, Genre.NONE)
         val playlistAddedTo = Playlist("new", testerSet2, Genre.POP)
-        playlistAddedTo.combinePlaylists(playlistToBeAdded, "New Playlist", Genre.HIPHOP)
+        playlistAddedTo.combinePlaylists(playlistToBeAdded, "New com.github.fribourgsdp.radio.Playlist", Genre.HIPHOP)
         assertEquals(Genre.HIPHOP, playlistAddedTo.genre)
-        assertEquals("New Playlist", playlistAddedTo.name)
+        assertEquals("New com.github.fribourgsdp.radio.Playlist", playlistAddedTo.name)
         assertEquals(4, playlistAddedTo.getSongs().size)
         assert(playlistAddedTo.getSongs().contains(song1))
         assert(playlistAddedTo.getSongs().contains(song2))
