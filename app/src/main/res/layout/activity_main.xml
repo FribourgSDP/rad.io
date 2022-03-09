@@ -6,14 +6,61 @@
     android:layout_height="match_parent"
     tools:context=".MainActivity">
 
+    <!-- Temporary text to be replaced by the logo -->
     <TextView
         android:id="@+id/mainText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Hello World!"
+        android:text="@string/app_name"
+        android:textSize="50sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.25" />
+
+    <ImageButton
+        android:id="@+id/profileButton"
+        style="@style/Widget.AppCompat.ImageButton"
+        android:layout_width="45dp"
+        android:layout_height="45dp"
+        android:layout_marginTop="24dp"
+        android:layout_marginEnd="24dp"
+        android:adjustViewBounds="true"
+        android:background="@drawable/round_button"
+        android:contentDescription="@string/profile_picture_description"
+        android:scaleType="fitCenter"
+        android:src="@drawable/ic_login"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
+  
+    <LinearLayout
+        android:id="@+id/buttonsLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/mainText"
+        android:padding="64dp"
+        android:textSize="24sp">
+
+        <Button
+            android:id="@+id/playButton"
+            android:text="@string/play_button_text"
+            style="@style/MainButtons" />
+
+        <Button
+            android:id="@+id/settingsButton"
+            android:text="@string/settings_text"
+            style="@style/MainButtons" />
+      
+        <Button
+            android:id="@+id/button"
+            style="@style/MainButtons"
+            android:text="GO TO LYRICS GETTER" />
+
+    </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
