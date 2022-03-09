@@ -1,11 +1,23 @@
 package com.github.fribourgsdp.radio
 
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.widget.Button
 
 class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+
+        val playButton = findViewById<Button>(R.id.playButton)
+        playButton.setOnClickListener {
+            startActivity(Intent(this, GameSettingsActivity::class.java))
+        }
+
+        val settingsButton = findViewById<Button>(R.id.settingsButton)
+        settingsButton.setOnClickListener {
+            startActivity(Intent(this, SettingsActivity::class.java))
+        }
     }
 }
