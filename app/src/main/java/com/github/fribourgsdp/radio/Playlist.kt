@@ -2,8 +2,8 @@ package com.github.fribourgsdp.radio
 
 import Genre
 
-class Playlist (playListName: String, songSet: Set<Song>, genreType: Genre){
-    var name: String = playListName
+class Playlist (playlistName: String, songSet: Set<Song>, genreType: Genre){
+    var name: String = playlistName
     private val songs: MutableSet<Song>
     var genre: Genre = genreType
 
@@ -14,8 +14,8 @@ class Playlist (playListName: String, songSet: Set<Song>, genreType: Genre){
         }
         songs = result
     }
-    constructor(playListName: String, genreType: Genre): this(playListName, mutableSetOf(), genreType)
-    constructor(playListName: String): this(playListName, mutableSetOf(), Genre.NONE)
+    constructor(playlistName: String, genreType: Genre): this(playlistName, mutableSetOf(), genreType)
+    constructor(playlistName: String): this(playlistName, mutableSetOf(), Genre.NONE)
 
 
     fun addSong(song: Song){
