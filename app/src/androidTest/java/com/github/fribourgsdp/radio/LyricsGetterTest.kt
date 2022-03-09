@@ -62,6 +62,11 @@ class LyricsGetterTest {
         val lyrics = LyricsGetter.getLyrics("rouge", "sardou", OkHttpClient(), EmptyLyricsJSONParser()).get()
         assert(lyrics.equals("---No lyrics were found for this song.---"))
     }
+    @Test
+    fun LyricsGetterCreationTest(){
+    	val LyricsGetter = LyricsGetter()
+    	assert(LyricsGetter != null)
+    }
 
     class FailingHTTPClient : OkHttpClient() {
         override fun newCall(request: Request): Call {
