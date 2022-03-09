@@ -2,5 +2,13 @@
     <string name="app_name">Rad.io</string>
     <string name="play_button_text">Play</string>
     <string name="settings_text">Settings</string>
+    <string name="game_settings_text">Game Settings</string>
+    <string name="playlist_hint">What playlist do you want ?</string>
     <string name="profile_picture_description">Profile picture</string>
+    <string name="playlist_selection_text">Playlist:</string>
+    <string name="nb_players_text">Max number of players:</string>
+    <string name="nb_rounds_text">Number of rounds:</string>
+    <string name="private_option_text">Private</string>
+    <string name="start_button_text">Start</string>
+    <string name="save_settings_button_text">Save settings</string>
 </resources>
