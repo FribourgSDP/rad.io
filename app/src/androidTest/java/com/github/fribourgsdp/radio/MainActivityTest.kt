@@ -1,5 +1,6 @@
 package com.github.fribourgsdp.radio
 
+import android.app.Activity
 import androidx.test.espresso.Espresso
 import androidx.test.espresso.action.ViewActions
 import androidx.test.espresso.intent.Intents
@@ -8,9 +9,13 @@ import androidx.test.espresso.matcher.ViewMatchers.withId
 import androidx.test.ext.junit.rules.ActivityScenarioRule
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import org.hamcrest.Matchers
+
+import androidx.test.rule.ActivityTestRule
+
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
+
 
 /**
  * Main Activity Tests
@@ -50,6 +55,14 @@ class MainActivityTest {
             )
         )
 
+        Intents.release()
+    }
+    
+    @Test
+    fun correctTransitionToDisplayLyricsActivity(){
+        Intents.init()
+        Espresso.onView(withId(R.id.button)).perform(ViewActions.click())
+        Intents.intended(IntentMatchers.hasComponent(DisplayLyricsActivity::class.java.name))
         Intents.release()
     }
 }

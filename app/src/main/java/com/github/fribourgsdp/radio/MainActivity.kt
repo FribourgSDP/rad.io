@@ -19,5 +19,11 @@ class MainActivity : AppCompatActivity() {
         settingsButton.setOnClickListener {
             startActivity(Intent(this, SettingsActivity::class.java))
         }
+        
+        val button : Button = findViewById(R.id.button)
+        button.setOnClickListener { v ->
+            val i = Intent(this, DisplayLyricsActivity::class.java)
+            startActivity(i)
+        }
     }
 }

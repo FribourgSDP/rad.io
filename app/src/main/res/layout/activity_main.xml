@@ -33,7 +33,7 @@
         android:src="@drawable/ic_login"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
-
+  
     <LinearLayout
         android:id="@+id/buttonsLayout"
         android:layout_width="match_parent"
@@ -55,6 +55,11 @@
             android:id="@+id/settingsButton"
             android:text="@string/settings_text"
             style="@style/MainButtons" />
+      
+        <Button
+            android:id="@+id/button"
+            style="@style/MainButtons"
+            android:text="GO TO LYRICS GETTER" />
 
     </LinearLayout>
 
