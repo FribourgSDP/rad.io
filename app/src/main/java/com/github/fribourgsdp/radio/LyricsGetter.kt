@@ -1,6 +1,7 @@
 package com.github.fribourgsdp.radio
 
 import okhttp3.*
+import org.json.JSONException
 import java.io.IOException
 import java.util.concurrent.CompletableFuture
 import org.json.JSONObject
@@ -104,9 +105,15 @@ class LyricsGetter {
         abstract class JSONParser : JSONObject(){
             abstract fun parse(s : String?) : JSONObject?
         }
+        
         class JSONStandardParser() : JSONParser() {
             override fun parse(s : String?) : JSONObject? {
-                return s?.let { JSONObject(it) }
+                val out : JSONObject? = try{
+                    s?.let { JSONObject(it) }
+                } catch (e : JSONException){
+                    null
+                }
+                return out
             }
         }
     }
