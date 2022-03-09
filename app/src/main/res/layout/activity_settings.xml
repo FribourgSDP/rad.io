@@ -35,7 +35,7 @@
             <TextView
                 android:id="@+id/volumeTextView"
                 style="@style/SettingsText"
-                android:text="Volume:"
+                android:text="@string/volume_text"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintBottom_toBottomOf="parent" />
