@@ -6,7 +6,6 @@ import org.junit.Assert.*
 import java.io.IOException
 import java.util.concurrent.ExecutionException
 
-
 /**
  * Lyrics Getter Test
  */

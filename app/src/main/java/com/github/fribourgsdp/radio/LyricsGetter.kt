@@ -55,19 +55,23 @@ class LyricsGetter {
             override fun onResponse(call: Call, response: Response) {
                 val parsedResponseString = response.body()?.string()
                 val parsedResponse = parsedResponseString?.let { JSONObject(it) }
-                // TODO: assert not null ?
-                val status = parsedResponse?.getJSONObject("message")?.getJSONObject("header")?.getInt("status_code")
-                var lyrics : String? = if (status == 404){
-                    LYRICS_NOT_FOUND
-                } else {
-                    parsedResponse
-                        ?.getJSONObject("message")
-                        ?.getJSONObject("body")
-                        ?.getJSONObject("lyrics")
-                        ?.getString("lyrics_body")
-                }
-                if (lyrics?.isEmpty() == true){
+                var lyrics : String?
+                if(parsedResponse == null){
                     lyrics = LYRICS_NOT_FOUND
+                } else {
+                    val status = parsedResponse.getJSONObject("message").getJSONObject("header").getInt("status_code")
+                    if (status == 404) {
+                        lyrics = LYRICS_NOT_FOUND
+                    } else {
+                        lyrics = parsedResponse
+                            .getJSONObject("message")
+                            .getJSONObject("body")
+                            .getJSONObject("lyrics")
+                            .getString("lyrics_body")
+                    }
+                    if (lyrics?.isEmpty() == true) {
+                        lyrics = LYRICS_NOT_FOUND
+                    }
                 }
                 future.complete(lyrics)
             }

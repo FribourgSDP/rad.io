@@ -10,24 +10,20 @@ import okhttp3.OkHttpClient
 
 
 class DisplayLyricsActivity : AppCompatActivity() {
-    private var songTextView : TextView? = null
-    private var artistTextView : TextView? = null // TODO: right way to declare textviews ?
-    private var resultsTextView : TextView? = null
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_display_lyrics)
-        songTextView = findViewById(R.id.songEditView)
-        artistTextView = findViewById(R.id.artistEditView)
-        resultsTextView = findViewById(R.id.resultsTextView)
+        val songTextView : TextView = findViewById(R.id.songEditView)
+        val artistTextView : TextView = findViewById(R.id.artistEditView)
+        val resultsTextView : TextView = findViewById(R.id.resultsTextView)
         val goButton : Button = findViewById(R.id.button1)
         goButton.setOnClickListener {
             run {
-                val songName: String = songTextView?.text.toString()
-                val artistName: String = artistTextView?.text.toString()
-                // TODO: handle exception
+                val songName: String = songTextView.text.toString()
+                val artistName: String = artistTextView.text.toString()
                 val lyricsFuture = LyricsGetter.getLyrics(songName, artistName, OkHttpClient())
                 val lyrics = lyricsFuture.get()
-                resultsTextView?.text = lyrics
+                resultsTextView.text = lyrics
             }
         }
 
