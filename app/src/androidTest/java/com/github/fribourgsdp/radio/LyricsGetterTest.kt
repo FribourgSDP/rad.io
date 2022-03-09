@@ -1,30 +1,28 @@
 package com.github.fribourgsdp.radio
 
-import androidx.test.ext.junit.runners.AndroidJUnit4
 import okhttp3.*
 import org.junit.Test
-import org.junit.runner.RunWith
+import org.junit.Assert.*
 import java.io.IOException
-import org.junit.Assert
 import java.util.concurrent.ExecutionException
 
 
 /**
  * Lyrics Getter Test
  */
-@RunWith(AndroidJUnit4::class)
+//@RunWith(AndroidJUnit4::class)
 class LyricsGetterTest {
     @Test
     fun getLyricsFromSongAndArtist(){
         val f = LyricsGetter.getLyrics("rouge", "sardou", OkHttpClient())
         val lyrics = f.get()
-        assert(lyrics.startsWith("Rouge\nComme un soleil couchant de Méditerranée"))
+        assertTrue(lyrics.startsWith("Rouge\nComme un soleil couchant de Méditerranée"))
     }
     @Test
     fun emptyLyricsTest(){
         val lyricsFuture = LyricsGetter.getLyrics("stream", "dream theater", OkHttpClient())
         val lyrics : String = lyricsFuture.get()
-        assert(lyrics.equals("---No lyrics were found for this song.---"))
+        assertTrue(lyrics.equals("---No lyrics were found for this song.---"))
     }
     @Test(expected = Exception::class)
     fun songIDsongNotFoundTest(){
@@ -35,17 +33,19 @@ class LyricsGetterTest {
     fun songNotFoundTest(){
         val lyricsFuture = LyricsGetter.getLyrics("fsdgfdgdfgdfgdfg", "weoir hpfasdsfno", OkHttpClient())
         val lyrics = lyricsFuture.get()
-        assert(lyrics.equals("---No lyrics were found for this song.---"))
+        assertTrue(lyrics.equals("---No lyrics were found for this song.---"))
     }
     @Test(expected = ExecutionException::class)
     fun getLyricsFailingHTTPClientTest(){
         val f = LyricsGetter.getLyrics("rouge", "sardou", SemiFailingHTTPClient())
         val lyrics = f.get()
+        println(lyrics)
     }
     @Test(expected = Exception::class)
     fun getSongIDFailingHTTPClientTest(){
         val id = LyricsGetter.getSongID("rouge", "sardou", FailingHTTPClient())
-        id.get()
+        val i = id.get()
+        println(i)
     }
 
     class FailingHTTPClient : OkHttpClient() {
