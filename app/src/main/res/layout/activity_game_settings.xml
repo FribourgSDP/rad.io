@@ -60,6 +60,7 @@
 
             <TextView
                 android:id="@+id/nbRoundsTextView"
+                android:labelFor="@id/nbRoundsInput"
                 style="@style/SettingsText"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -69,7 +70,7 @@
                 app:layout_constraintTop_toTopOf="parent" />
 
             <EditText
-                android:id="@+id/editTextNumberDecimal"
+                android:id="@+id/nbRoundsInput"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
@@ -89,6 +90,7 @@
 
             <TextView
                 android:id="@+id/nbPlayersTextView"
+                android:labelFor="@id/nbPlayersInput"
                 style="@style/SettingsText"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
