@@ -2,12 +2,13 @@ package com.github.fribourgsdp.radio
 
 import java.util.*
 import kotlin.collections.ArrayList
+import kotlin.collections.HashMap
 import kotlin.collections.HashSet
 
 class Game private constructor(val name: String, val host: User, val playlist: Playlist, val nbRounds: Int,
                                val withHint: Boolean, val isPrivate: Boolean, private val listUser: List<User>) {
 
-    private val scoreMap : Map<User, Int> = listUser.associateWith { 0 }
+    private val scoreMap = HashMap(listUser.associateWith { 0 })
     private var usersToPlay = listUser.size
 
     var currentRound = 1
@@ -19,6 +20,13 @@ class Game private constructor(val name: String, val host: User, val playlist: P
 
     fun getScore(user: User): Int? {
         return scoreMap[user]
+    }
+
+    fun addPoints(user: User, points: Int) {
+        val oldValue = scoreMap[user]
+        if (oldValue != null) {
+            scoreMap[user] = oldValue + points
+        }
     }
 
     fun getUserToPlay(): User {
