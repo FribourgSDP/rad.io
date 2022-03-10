@@ -17,10 +17,11 @@ class User (nameInput: String) {
         Random.nextInt(100, 200),
         Random.nextInt(100, 200),
         Random.nextInt(100, 200))
-    var linkedSpotify: Boolean = false
-
+    private var linkedSpotify: Boolean = false
 
     fun initial(): Char = name.elementAt(0)
+
+    fun spotifyLinked(): Boolean = linkedSpotify
 
     fun addPlaylist(playlist: Playlist){
         playlists.add(playlist)
