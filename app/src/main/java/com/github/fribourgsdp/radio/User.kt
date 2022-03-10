@@ -1,6 +1,7 @@
 package com.github.fribourgsdp.radio
 
 import android.graphics.Color
+import java.lang.Exception
 import java.lang.IllegalArgumentException
 import kotlin.random.Random
 
