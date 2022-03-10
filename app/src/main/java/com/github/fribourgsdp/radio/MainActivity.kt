@@ -24,14 +24,13 @@ class MainActivity : AppCompatActivity() {
         }
         
         val button : Button = findViewById(R.id.button)
-        button.setOnClickListener { v ->
-            val i = Intent(this, DisplayLyricsActivity::class.java)
-            startActivity(i)
+        button.setOnClickListener {
+            startActivity(Intent(this, DisplayLyricsActivity::class.java))
         }
 
         val profileButton: ImageButton = findViewById(R.id.profileButton)
         profileButton.setOnClickListener {
-            val intent : Intent = Intent(this, UserProfile::class.java).apply {
+            val intent : Intent = Intent(this, UserProfileActivity::class.java).apply {
                 putExtra(USERNAME, "Default")
             }
             startActivity(intent)

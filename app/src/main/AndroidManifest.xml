@@ -13,7 +13,7 @@
         android:theme="@style/Theme.Radio"
         android:usesCleartextTraffic="true">
         <activity
-            android:name=".UserProfile"
+            android:name=".UserProfileActivity"
             android:exported="false" />
         <activity
             android:name=".DisplayLyricsActivity"

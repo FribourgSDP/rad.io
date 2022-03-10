@@ -7,7 +7,7 @@ import android.os.Bundle
 import android.widget.ImageView
 import android.widget.TextView
 
-class UserProfile : AppCompatActivity() {
+class UserProfileActivity : AppCompatActivity() {
     private lateinit var user : User
 
     override fun onCreate(savedInstanceState: Bundle?) {
