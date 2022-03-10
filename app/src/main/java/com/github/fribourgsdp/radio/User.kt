@@ -14,9 +14,9 @@ class User (nameInput: String) {
         }
     private val playlists = mutableSetOf<Playlist>()
     val color : Int = Color.rgb(
-        Random.nextInt(200, 255),
-        Random.nextInt(200, 255),
-        Random.nextInt(200, 255))
+        Random.nextInt(100, 200),
+        Random.nextInt(100, 200),
+        Random.nextInt(100, 200))
     var linkedSpotify: Boolean = false
 
 
