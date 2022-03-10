@@ -4,6 +4,7 @@ import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Button
+import android.widget.ImageButton
 
 class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -24,6 +25,11 @@ class MainActivity : AppCompatActivity() {
         button.setOnClickListener { v ->
             val i = Intent(this, DisplayLyricsActivity::class.java)
             startActivity(i)
+        }
+
+        val profileButton: ImageButton = findViewById(R.id.profileButton)
+        profileButton.setOnClickListener {
+            startActivity(Intent(this, UserProfile::class.java))
         }
     }
 }
