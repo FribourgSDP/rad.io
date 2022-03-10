@@ -22,11 +22,11 @@ class UserProfileActivity : AppCompatActivity() {
         }
 
         findViewById<TextView>(R.id.usernameInitial).apply {
-            text = user.initial().toString()
+            text = user.initial.toString()
         }
 
         findViewById<TextView>(R.id.spotifyStatus).apply {
-            text = if (user.spotifyLinked()) "linked" else "unlinked"
+            text = if (user.spotifyLinked) "linked" else "unlinked"
         }
 
         findViewById<ImageView>(R.id.userIcon).setColorFilter(PorterDuffColorFilter(user.color, PorterDuff.Mode.ADD))
