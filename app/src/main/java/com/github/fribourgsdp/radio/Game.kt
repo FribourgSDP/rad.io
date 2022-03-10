@@ -60,7 +60,7 @@ class Game private constructor(val name: String, val host: User, val playlist: P
 
     class Builder {
         private lateinit var host: User
-        private var name = host.name.trim() + " Party"
+        private var name = "A Fun Party"
         private lateinit var playlist: Playlist
         private var nbRounds = 0
         private var withHint  = false
