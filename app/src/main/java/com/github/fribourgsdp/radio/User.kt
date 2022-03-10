@@ -7,17 +7,26 @@ import kotlin.random.Random
 class User (nameInput: String) {
     var name: String = nameInput
         set(value) {
-            if (value.isEmpty() || value.isBlank()) {
-                throw  IllegalArgumentException("name cannot be empty or blank string")
-            }
+            nameSanitizer(name)
             field = value
         }
+
+    init {
+        nameSanitizer(name)
+    }
+
     private val playlists = mutableSetOf<Playlist>()
     val color : Int = Color.rgb(
         Random.nextInt(100, 200),
         Random.nextInt(100, 200),
         Random.nextInt(100, 200))
     private var linkedSpotify: Boolean = false
+
+    private fun nameSanitizer(name: String) {
+        if (name.isEmpty() || name.isBlank()) {
+            throw  IllegalArgumentException("name cannot be empty or blank string")
+        }
+    }
 
     fun initial(): Char = name.elementAt(0)
 
