@@ -27,6 +27,7 @@ class Game private constructor(val name: String, val host: User, val playlist: P
         --usersToPlay
         if (usersToPlay == 0) {
             ++currentRound
+            usersToPlay = listUser.size
         }
 
         return user
