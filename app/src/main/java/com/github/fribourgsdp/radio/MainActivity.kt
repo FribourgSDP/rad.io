@@ -6,6 +6,8 @@ import android.os.Bundle
 import android.widget.Button
 import android.widget.ImageButton
 
+const val USERNAME = "com.github.fribourgsdp.radio.USERNAME"
+
 class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -29,7 +31,10 @@ class MainActivity : AppCompatActivity() {
 
         val profileButton: ImageButton = findViewById(R.id.profileButton)
         profileButton.setOnClickListener {
-            startActivity(Intent(this, UserProfile::class.java))
+            val intent : Intent = Intent(this, UserProfile::class.java).apply {
+                putExtra(USERNAME, "Default")
+            }
+            startActivity(intent)
         }
     }
 }
