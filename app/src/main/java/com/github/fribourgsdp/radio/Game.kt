@@ -78,6 +78,11 @@ class Game private constructor(val name: String, val host: User, val playlist: P
             return this
         }
 
+        fun setPlaylist(playlist: Playlist): Builder {
+            this.playlist = playlist
+            return this
+        }
+
         fun setNbRounds(nbRounds: Int): Builder {
             this.nbRounds = nbRounds
             return this
