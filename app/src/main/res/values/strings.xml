@@ -12,4 +12,5 @@
     <string name="start_button_text">Start</string>
     <string name="save_settings_button_text">Save settings</string>
     <string name="volume_text">Volume:</string>
+    <string name="spotify_text">Spotify Status:</string>
 </resources>

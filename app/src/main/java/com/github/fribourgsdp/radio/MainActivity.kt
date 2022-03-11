@@ -4,6 +4,9 @@ import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Button
+import android.widget.ImageButton
+
+const val USERNAME = "com.github.fribourgsdp.radio.USERNAME"
 
 class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -21,9 +24,16 @@ class MainActivity : AppCompatActivity() {
         }
         
         val button : Button = findViewById(R.id.button)
-        button.setOnClickListener { v ->
-            val i = Intent(this, DisplayLyricsActivity::class.java)
-            startActivity(i)
+        button.setOnClickListener {
+            startActivity(Intent(this, DisplayLyricsActivity::class.java))
+        }
+
+        val profileButton: ImageButton = findViewById(R.id.profileButton)
+        profileButton.setOnClickListener {
+            val intent : Intent = Intent(this, UserProfileActivity::class.java).apply {
+                putExtra(USERNAME, "Default")
+            }
+            startActivity(intent)
         }
     }
 }
