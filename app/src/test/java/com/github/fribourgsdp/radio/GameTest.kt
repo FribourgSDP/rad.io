@@ -18,8 +18,8 @@ class GameTest {
     fun builderWorksCorrectlyWithCorrectArgs() {
         val builder = Game.Builder()
         val name = "Game Test"
-        val host = User()
-        val other = User()
+        val host = User("host")
+        val other = User("other")
         val nbRounds = 3
         val withHint = true
         val isPrivate = false
