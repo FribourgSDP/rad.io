@@ -1,6 +1,5 @@
 package com.github.fribourgsdp.radio
 
-import android.app.Activity
 import androidx.test.espresso.Espresso
 import androidx.test.espresso.action.ViewActions
 import androidx.test.espresso.intent.Intents
@@ -9,8 +8,6 @@ import androidx.test.espresso.matcher.ViewMatchers.withId
 import androidx.test.ext.junit.rules.ActivityScenarioRule
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import org.hamcrest.Matchers
-
-import androidx.test.rule.ActivityTestRule
 
 import org.junit.Rule
 import org.junit.Test
@@ -63,6 +60,14 @@ class MainActivityTest {
         Intents.init()
         Espresso.onView(withId(R.id.button)).perform(ViewActions.click())
         Intents.intended(IntentMatchers.hasComponent(DisplayLyricsActivity::class.java.name))
+        Intents.release()
+    }
+
+    @Test
+    fun correctTransitionToUserProfile(){
+        Intents.init()
+        Espresso.onView(withId(R.id.profileButton)).perform(ViewActions.click())
+        Intents.intended(IntentMatchers.hasComponent(UserProfileActivity::class.java.name))
         Intents.release()
     }
 }
