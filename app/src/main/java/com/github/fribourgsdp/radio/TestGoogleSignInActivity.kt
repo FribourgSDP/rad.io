@@ -50,6 +50,7 @@ class TestGoogleSignInActivity : AppCompatActivity() {
 
         //init firebase auth
         firebaseAuth = FirebaseAuth.getInstance()
+
         checkUser()
 
         //Google SignIn Button, click to begin Google SignIn
