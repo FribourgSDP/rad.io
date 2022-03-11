@@ -4,7 +4,7 @@ import org.junit.Test
 
 import org.junit.Assert.*
 
-internal class PlaylistTest {
+class PlaylistTest {
 
     val song1 = Song("colorado", "Milky Chance")
     val song2 = Song("Back in black", "ACDC")

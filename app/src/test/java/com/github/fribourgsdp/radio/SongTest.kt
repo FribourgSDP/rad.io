@@ -4,7 +4,7 @@ import org.junit.Test
 
 import org.junit.Assert.*
 
-internal class SongTest {
+class SongTest {
     @Test
     fun primary_constructor_works(){
         val test: Song = Song("Song Name", "bob", "lyrics really basic")
