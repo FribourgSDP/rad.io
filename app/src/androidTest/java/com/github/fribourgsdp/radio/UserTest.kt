@@ -1,23 +1,12 @@
 package com.github.fribourgsdp.radio
 
-import androidx.test.espresso.Espresso
-import androidx.test.espresso.action.ViewActions
-import androidx.test.espresso.intent.Intents
-import androidx.test.espresso.intent.matcher.IntentMatchers
-import androidx.test.espresso.matcher.ViewMatchers.withId
-import androidx.test.ext.junit.rules.ActivityScenarioRule
-import androidx.test.ext.junit.runners.AndroidJUnit4
-import org.hamcrest.Matchers
 import org.junit.Assert
-import org.junit.Before
 
-import org.junit.Rule
 import org.junit.Test
-import org.junit.runner.RunWith
 import java.lang.IllegalArgumentException
 
 
-@RunWith(AndroidJUnit4::class)
+//@RunWith(AndroidJUnit4::class)
 class UserTest {
 
     @Test
