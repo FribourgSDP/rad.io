@@ -1,5 +1,6 @@
 package com.github.fribourgsdp.radio
 
+import android.util.Log
 import okhttp3.*
 import org.json.JSONObject
 import org.junit.Test
@@ -14,9 +15,9 @@ import java.util.concurrent.ExecutionException
 class LyricsGetterTest {
     @Test
     fun getLyricsFromSongAndArtist(){
-        val f = LyricsGetter.getLyrics("rouge", "sardou", OkHttpClient())
+        val f = LyricsGetter.getLyrics("hurricane", "bob dylan", OkHttpClient())
         val lyrics = f.get()
-        assertTrue(lyrics.startsWith("Rouge\nComme un soleil couchant de Méditerranée"))
+        assertTrue(lyrics.startsWith("Pistol shots ring out in the barroom night"))
     }
     @Test
     fun emptyLyricsTest(){
@@ -70,6 +71,16 @@ class LyricsGetterTest {
     fun JSONStandardParserDoesntThrowException(){
         val s = LyricsGetter.Companion.JSONStandardParser().parse("32q87rfha98 73298r7h08qwoehr703o490{{{{{")
         assertNull(s)
+    }
+    @Test
+    fun cleanLyricsTest1(){
+        val lyrics = LyricsGetter.getLyrics("rouge", "sardou").get()
+        assertFalse(lyrics.contains("commercial"))
+    }
+    @Test
+    fun emphasizeSongNameInLyrics(){
+        val lyrics = LyricsGetter.getLyrics("rouge", "sardou").get()
+        assertTrue(lyrics.startsWith("<em>Rouge</em>\nComme un soleil couchant de Méditerranée"))
     }
 
     class FailingHTTPClient : OkHttpClient() {

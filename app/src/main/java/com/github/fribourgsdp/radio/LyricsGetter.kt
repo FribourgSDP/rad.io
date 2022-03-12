@@ -5,37 +5,63 @@ import org.json.JSONException
 import java.io.IOException
 import java.util.concurrent.CompletableFuture
 import org.json.JSONObject
+import java.util.*
+
+const val API_KEY = "a3454edb65483e706c127deaa11df69d"
+const val BASE_URL = "http://api.musixmatch.com/ws/1.1/"
+const val  LYRICS_NOT_FOUND = "---No lyrics were found for this song.---"
 
 /**
  * Tool to get lyrics from a given song name and artist using Musixmatch API.
  * API Call doc : https://stackoverflow.com/questions/45219379/how-to-make-an-api-request-in-kotlin
  */
 
-private const val API_KEY = "a3454edb65483e706c127deaa11df69d"
-private const val BASE_URL = "http://api.musixmatch.com/ws/1.1/"
-private const val LYRICS_NOT_FOUND = "---No lyrics were found for this song.---"
-
-
 class LyricsGetter {
-
     companion object {
 
-        fun getLyrics(songName: String, artistName: String, client: OkHttpClient = OkHttpClient(), parser : JSONParser = JSONStandardParser()) : CompletableFuture<String> {
+        // TODO: ASK VICTOR how to extract those strings
+        //private val API_KEY = instance.getString(R.string.api_key)
+        //private val BASE_URL = Resources.getSystem().getString(R.string.musixmatch_url)
+        //private val LYRICS_NOT_FOUND = Resources.getSystem().getString(R.string.lyrics_not_found)
+
+        /**
+         * Asks Musixmatch and retrieves the lyrics of a song.
+         * The song name and artist name can be empty or incomplete, the server can still find it.
+         * @param songName The name of the queried song
+         * @param artistName The name of the artist of this song
+         * @param client The HTTP Client used for connection
+         * @param parser The JSON parser used to parse response
+         */
+        fun getLyrics(
+            songName: String,
+            artistName: String,
+            client: OkHttpClient = OkHttpClient(),
+            parser: JSONParser = JSONStandardParser()
+        ): CompletableFuture<String> {
             val future = CompletableFuture<String>()
             val trackIDFuture = getSongID(songName, artistName, client)
-            val trackID : Int
+            val trackID: Int
             try {
                 trackID = trackIDFuture.get()
-            } catch (e : Throwable){
+            } catch (e: Throwable) {
                 future.complete(LYRICS_NOT_FOUND)
                 return future
             }
-            val url = BASE_URL + "track.lyrics.get?track_id=" + trackID + "&apikey=" + API_KEY
+            val url =
+                BASE_URL + "track.lyrics.get?track_id=" + trackID.toString() + "&apikey=" + API_KEY
             val request = Request.Builder().url(url).build()
             client.newCall(request).enqueue(GetLyricsCallback(future, parser))
-            return future
+            return future.thenApply { s -> markSongName(cleanLyrics(s), songName) }
         }
 
+        /**
+         * Asks Musixmatch to get the ID of a song and returns it.
+         * @param songName The name of the queried song
+         * @param artistName The name of the artist of this song
+         * @param client The HTTP Client used for connection
+         * @param parser The JSON parser used to parse response
+         * @return The ID of the searched song
+         */
         fun getSongID(songName: String, artistName: String, client: OkHttpClient = OkHttpClient(), parser : JSONParser = JSONStandardParser()) : CompletableFuture<Int> {
             //API needed : 24
             val future = CompletableFuture<Int>()
@@ -100,6 +126,21 @@ class LyricsGetter {
                     future.complete(firstTrackID)
                 }
             }
+        }
+
+        private fun cleanLyrics(lyrics : String) : String{
+            if(lyrics == LYRICS_NOT_FOUND) {
+                return lyrics
+            }
+            val allLines = lyrics.split("\n")
+            val onlyLyricsLines = allLines.subList(0, allLines.size-4)
+            val sj = StringJoiner("\n")
+            onlyLyricsLines.forEach { e -> sj.add(e) }
+            return sj.toString()
+        }
+
+        private fun markSongName(lyrics : String, name : String) : String{
+            return lyrics.replace(name, "<em>${name[0].uppercase() + name.lowercase().substring(1)}</em>", ignoreCase = true)
         }
 
         abstract class JSONParser : JSONObject(){
