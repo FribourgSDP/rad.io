@@ -10,7 +10,20 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/Theme.Radio">
+        android:theme="@style/Theme.Radio"
+        android:usesCleartextTraffic="true">
+        <activity
+            android:name=".UserProfileActivity"
+            android:exported="false" />
+        <activity
+            android:name=".DisplayLyricsActivity"
+            android:exported="true" />
+        <activity
+            android:name=".SettingsActivity"
+            android:exported="true" />
+        <activity
+            android:name=".GameSettingsActivity"
+            android:exported="true" />
         <activity
             android:name=".ProfileActivity"
             android:exported="false" />

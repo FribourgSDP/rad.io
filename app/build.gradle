@@ -10,7 +10,7 @@ android {
 
     defaultConfig {
         applicationId "com.github.fribourgsdp.radio"
-        minSdk 23
+        minSdk 24
         targetSdk 31
         versionCode 1
         versionName "1.0"
@@ -56,7 +56,7 @@ dependencies {
     // Also declare the dependency for the Google Play services library and specify its version
     implementation 'com.google.android.gms:play-services-auth:20.1.0'
 
-
+    implementation 'com.squareup.okhttp3:okhttp:3.10.0'
 
     testImplementation 'junit:junit:4.13.2'
     androidTestImplementation 'androidx.test.ext:junit:1.1.3'

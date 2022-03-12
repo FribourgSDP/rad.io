@@ -1,13 +1,18 @@
 package com.github.fribourgsdp.radio
 
 import androidx.test.espresso.Espresso
-import androidx.test.espresso.assertion.ViewAssertions
-import androidx.test.espresso.matcher.ViewMatchers
+import androidx.test.espresso.action.ViewActions
+import androidx.test.espresso.intent.Intents
+import androidx.test.espresso.intent.matcher.IntentMatchers
+import androidx.test.espresso.matcher.ViewMatchers.withId
 import androidx.test.ext.junit.rules.ActivityScenarioRule
 import androidx.test.ext.junit.runners.AndroidJUnit4
+import org.hamcrest.Matchers
+
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
+
 
 /**
  * Main Activity Tests
@@ -19,14 +24,50 @@ class MainActivityTest {
     var mainActivityRule = ActivityScenarioRule(MainActivity::class.java)
 
     @Test
-    fun correctTextOnTextView() {
-        // Context of the app under test.
-        val txtView = Espresso.onView(ViewMatchers.withId(R.id.mainText))
+    fun playButtonStartsGameSettings() {
+        Intents.init()
+        val playButton = Espresso.onView(withId(R.id.playButton))
+        playButton.perform(ViewActions.click())
 
-        txtView.check(
-            ViewAssertions.matches(
-                ViewMatchers.withText("Hello World!")
+        Intents.intended(
+            Matchers.allOf(
+                IntentMatchers.hasComponent(GameSettingsActivity::class.java.name),
+                IntentMatchers.toPackage("com.github.fribourgsdp.radio")
             )
         )
+
+        Intents.release()
+    }
+
+    @Test
+    fun settingsButtonStartsSettings() {
+        Intents.init()
+        val settingsButton = Espresso.onView(withId(R.id.settingsButton))
+        settingsButton.perform(ViewActions.click())
+
+        Intents.intended(
+            Matchers.allOf(
+                IntentMatchers.hasComponent(SettingsActivity::class.java.name),
+                IntentMatchers.toPackage("com.github.fribourgsdp.radio")
+            )
+        )
+
+        Intents.release()
+    }
+    
+    @Test
+    fun correctTransitionToDisplayLyricsActivity(){
+        Intents.init()
+        Espresso.onView(withId(R.id.button)).perform(ViewActions.click())
+        Intents.intended(IntentMatchers.hasComponent(DisplayLyricsActivity::class.java.name))
+        Intents.release()
+    }
+
+    @Test
+    fun correctTransitionToUserProfile(){
+        Intents.init()
+        Espresso.onView(withId(R.id.profileButton)).perform(ViewActions.click())
+        Intents.intended(IntentMatchers.hasComponent(UserProfileActivity::class.java.name))
+        Intents.release()
     }
 }
