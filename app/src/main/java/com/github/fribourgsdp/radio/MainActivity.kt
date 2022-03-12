@@ -14,10 +14,6 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        binding.buttonGoToGoogleSignIn.setOnClickListener{
-            startActivity(Intent(this, TestGoogleSignInActivity::class.java))
-            finish()
-        }
 
     }
 }

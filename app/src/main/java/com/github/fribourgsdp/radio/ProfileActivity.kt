@@ -35,7 +35,7 @@ class ProfileActivity : AppCompatActivity() {
         val firebaseUser = firebaseAuth.currentUser
         if(firebaseUser == null){
             //user not logged in
-            startActivity(Intent(this, TestGoogleSignInActivity::class.java))
+            startActivity(Intent(this, GoogleSignInActivity::class.java))
             finish()
         }else{
             //user logged in

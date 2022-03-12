@@ -7,22 +7,23 @@ import android.os.Bundle
 import android.util.Log
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
-import com.github.fribourgsdp.radio.databinding.ActivityTestGoogleSignInBinding
+import com.github.fribourgsdp.radio.databinding.ActivityGoogleSignInBinding
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.android.gms.common.api.ApiException
+import com.google.firebase.auth.AuthCredential
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.GoogleAuthProvider
 import java.lang.Exception
 
 
-class TestGoogleSignInActivity : AppCompatActivity() {
+class GoogleSignInActivity : AppCompatActivity() {
 
 
     //view binding
-    private lateinit var binding: ActivityTestGoogleSignInBinding
+    private lateinit var binding: ActivityGoogleSignInBinding
 
     private lateinit var googleSignInClient: GoogleSignInClient
     private lateinit var firebaseAuth: FirebaseAuth
@@ -37,7 +38,7 @@ class TestGoogleSignInActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        binding = ActivityTestGoogleSignInBinding.inflate(layoutInflater)
+        binding = ActivityGoogleSignInBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
         //configure for the Google SignTn
@@ -54,7 +55,7 @@ class TestGoogleSignInActivity : AppCompatActivity() {
 
         //Google SignIn Button, click to begin Google SignIn
         binding.googleSignInButton.setOnClickListener{
-            Log.d(TAG,"onCreate: begin Google SignIn")
+
             val intent = googleSignInClient.signInIntent
             launcher.launch(intent)
         }
@@ -71,7 +72,8 @@ class TestGoogleSignInActivity : AppCompatActivity() {
                 try{
                     //Google SignIn success, now authenticate with firebase
                     val account = accountTask.getResult(ApiException::class.java)
-                    firebaseAuthWithGoogleAccount(account)
+                    val credential  = GoogleAuthProvider.getCredential(account.idToken, null)
+                    this.firebaseAuthWithCredentitial(credential, firebaseAuth)
                 }
                 catch (e :Exception){
                     //failed Google SignIn
@@ -79,7 +81,7 @@ class TestGoogleSignInActivity : AppCompatActivity() {
                 }
             }else{
                 //cancelled
-                Toast.makeText(this@TestGoogleSignInActivity,"Cancelled", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this@GoogleSignInActivity,"Cancelled", Toast.LENGTH_SHORT).show()
             }
         }
 
@@ -89,58 +91,42 @@ class TestGoogleSignInActivity : AppCompatActivity() {
         if(firebaseUser != null){
             //user is already logged in
             //start profile activity
-            startActivity(Intent(this@TestGoogleSignInActivity, ProfileActivity::class.java))
+            startActivity(Intent(this@GoogleSignInActivity, ProfileActivity::class.java))
             finish()
         }
 
     }
 
 
-    private fun firebaseAuthWithGoogleAccount(account: GoogleSignInAccount){
-        Log.d(TAG, "firebaseAuthWithGoogleAccount: begin firebase auth with google account")
+    fun firebaseAuthWithCredentitial(credential: AuthCredential, firebaseAuth : FirebaseAuth){
+        //Log.d(TAG, "firebaseAuthWithGoogleAccount: begin firebase auth with google account")
 
-        val credential  = GoogleAuthProvider.getCredential(account!!.idToken, null)
-        firebaseAuth.signInWithCredential(credential)
-            .addOnSuccessListener { authResult->
+
+        firebaseAuth.signInWithCredential(credential).addOnSuccessListener { authResult->
                 //login success
-                Log.d(TAG, "firebaseAuthWithGoogleAccount: LoggedIn")
-
-                //get loggedIn user
-                val firebaseUser = firebaseAuth.currentUser
-                //get user info
-                val uid = firebaseAuth!!.uid
-                val email = firebaseUser!!.email
-
-                Log.d(TAG, "firebaseAuthWithGoogleAccount: Uid: $uid")
-                Log.d(TAG, "firebaseAuthWithGoogleAccount: Email: $email")
 
                 //check if user is new or existing
                 if(authResult.additionalUserInfo!!.isNewUser) {
-                    //user is new - Account Created
-                    Log.d(TAG, "firebaseAuthWithGoogleAccount: Account created... \n$email")
-                    Toast.makeText(this@TestGoogleSignInActivity,"Account created... \n" +
-                            "$email", Toast.LENGTH_SHORT).show()
+                    //user is new - Account Create
+                    Toast.makeText(this@GoogleSignInActivity,"Account created", Toast.LENGTH_SHORT).show()
 
                 }else{
                     //existing user - LoggedIn
-                    Log.d(TAG, "firebaseAuthWithGoogleAccount: Existing User... \n$email")
-                    Toast.makeText(this@TestGoogleSignInActivity,"LoggedIn... \n" +
-                            "$email", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(this@GoogleSignInActivity,"LoggedIn", Toast.LENGTH_SHORT).show()
                 }
                 //start profile activity
-                startActivity(Intent(this@TestGoogleSignInActivity, ProfileActivity::class.java))
+                startActivity(Intent(this@GoogleSignInActivity, ProfileActivity::class.java))
                 finish()
 
             }
             .addOnFailureListener{e->
                 //login failed
-                Log.d(TAG, "firebaseAuthWithGoogleAccount: Loggin Failed due to ${e.message}")
-                Toast.makeText(this@TestGoogleSignInActivity,"Loggin Failed due to ${e.message}",
+                Toast.makeText(this@GoogleSignInActivity,"Loggin Failed due to ",
                     Toast.LENGTH_SHORT).show()
             }
 
     }
 
-
-
 }
+
+

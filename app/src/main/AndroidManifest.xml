@@ -15,7 +15,7 @@
             android:name=".ProfileActivity"
             android:exported="false" />
         <activity
-            android:name=".TestGoogleSignInActivity"
+            android:name=".GoogleSignInActivity"
             android:exported="false" />
         <activity
             android:name=".MainActivity"
