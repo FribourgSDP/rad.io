@@ -9,8 +9,6 @@ import java.util.*
 
 const val API_KEY = "a3454edb65483e706c127deaa11df69d"
 const val BASE_URL = "http://api.musixmatch.com/ws/1.1/"
-const val  LYRICS_NOT_FOUND = "---No lyrics were found for this song.---"
-
 /**
  * Tool to get lyrics from a given song name and artist using Musixmatch API.
  * API Call doc : https://stackoverflow.com/questions/45219379/how-to-make-an-api-request-in-kotlin
@@ -18,6 +16,7 @@ const val  LYRICS_NOT_FOUND = "---No lyrics were found for this song.---"
 
 class LyricsGetter {
     companion object {
+        const val LYRICS_NOT_FOUND = "---No lyrics were found for this song.---"
 
         // TODO: ASK VICTOR how to extract those strings
         //private val API_KEY = instance.getString(R.string.api_key)
@@ -34,7 +33,7 @@ class LyricsGetter {
          */
         fun getLyrics(
             songName: String,
-            artistName: String,
+            artistName: String = "",
             client: OkHttpClient = OkHttpClient(),
             parser: JSONParser = JSONStandardParser()
         ): CompletableFuture<String> {
@@ -51,7 +50,7 @@ class LyricsGetter {
                 BASE_URL + "track.lyrics.get?track_id=" + trackID.toString() + "&apikey=" + API_KEY
             val request = Request.Builder().url(url).build()
             client.newCall(request).enqueue(GetLyricsCallback(future, parser))
-            return future.thenApply { s -> markSongName(cleanLyrics(s), songName) }
+            return future.thenApply { s -> cleanLyrics(s) }
         }
 
         /**
@@ -139,8 +138,15 @@ class LyricsGetter {
             return sj.toString()
         }
 
-        private fun markSongName(lyrics : String, name : String) : String{
-            return lyrics.replace(name, "<em>${name[0].uppercase() + name.lowercase().substring(1)}</em>", ignoreCase = true)
+        /**
+         * Translates lyrics to HTML format crossing out the name of the song.
+         * @param lyrics The lyrics to transform
+         * @param name The name of the song to cross
+         */
+        fun markSongName(lyrics : String, name : String) : String{
+            return lyrics
+                .replace(name, "<strike>${name[0].uppercase() + name.lowercase().substring(1)}</strike>", ignoreCase = true)
+                .replace("\n", "<br>")
         }
 
         abstract class JSONParser : JSONObject(){

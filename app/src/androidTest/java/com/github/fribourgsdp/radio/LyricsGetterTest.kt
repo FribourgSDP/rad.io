@@ -64,11 +64,11 @@ class LyricsGetterTest {
         assert(lyrics.equals("---No lyrics were found for this song.---"))
     }
     @Test
-    fun LyricsGetterCreationTest(){
+    fun lyricsGetterCreationTest(){
     	val LyricsGetter = LyricsGetter()
     }
     @Test
-    fun JSONStandardParserDoesntThrowException(){
+    fun jsonStandardParserDoesntThrowException(){
         val s = LyricsGetter.Companion.JSONStandardParser().parse("32q87rfha98 73298r7h08qwoehr703o490{{{{{")
         assertNull(s)
     }
@@ -79,8 +79,8 @@ class LyricsGetterTest {
     }
     @Test
     fun emphasizeSongNameInLyrics(){
-        val lyrics = LyricsGetter.getLyrics("rouge", "sardou").get()
-        assertTrue(lyrics.startsWith("<em>Rouge</em>\nComme un soleil couchant de Méditerranée"))
+        val lyrics = LyricsGetter.markSongName(LyricsGetter.getLyrics("rouge", "sardou").get(), "rouge")
+        assertTrue(lyrics.startsWith("<strike>Rouge</strike><br>Comme un soleil couchant de Méditerranée"))
     }
 
     class FailingHTTPClient : OkHttpClient() {
