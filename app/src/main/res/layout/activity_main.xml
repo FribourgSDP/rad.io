@@ -61,29 +61,18 @@
             style="@style/MainButtons"
             android:text="GO TO LYRICS GETTER" />
 
+
+
+        <Button
+            android:id="@+id/FireBaseButton"
+            style="@style/MainButtons"
+            android:text="FireBase"
+             />
+
     </LinearLayout>
 
 
-    <Button
-        android:id="@+id/buttonGoToGoogleSignIn"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="216dp"
-        android:text="go to Google SignIn test"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
 
-
-    <Button
-        android:id="@+id/FireBaseButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="492dp"
-        android:text="FireBase"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
