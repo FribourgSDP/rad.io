@@ -14,8 +14,6 @@ class Game private constructor(val name: String, val host: User, val playlist: P
     var currentRound = 1
         private set
 
-    val isDone = nbRounds <= currentRound && usersToPlay <= 0
-
     private val songsNotDone = HashSet(playlist.getSongs())
 
     fun getScore(user: User): Int? {
@@ -26,17 +24,20 @@ class Game private constructor(val name: String, val host: User, val playlist: P
         val oldValue = scoreMap[user]
         if (oldValue != null) {
             scoreMap[user] = oldValue + points
+        } else {
+            throw IllegalArgumentException("Illegal argument: user '${user.name}' doesn't exist.")
         }
+
     }
 
     fun getUserToPlay(): User {
         val user = listUser[0]
         Collections.rotate(listUser, 1)
-        --usersToPlay
         if (usersToPlay == 0) {
             ++currentRound
             usersToPlay = listUser.size
         }
+        --usersToPlay
 
         return user
     }
@@ -56,6 +57,10 @@ class Game private constructor(val name: String, val host: User, val playlist: P
         }
 
         return chosen
+    }
+
+    fun isDone(): Boolean {
+        return nbRounds <= currentRound && usersToPlay <= 0
     }
 
     class Builder {
