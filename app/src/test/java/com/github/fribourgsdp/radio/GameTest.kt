@@ -5,41 +5,128 @@ import org.junit.Test
 import org.junit.Assert.*
 
 class GameTest {
-    private val song1 = Song("colorado", "Milky Chance")
-    private val song2 = Song("Back in black", "ACDC")
-    private val song3 = Song("i got a feeling", "black eyed pees")
-    private val song4 = Song("  party rock anthem", "lmfao")
     private val playlistTest = Playlist("Test",
-        mutableSetOf(song1, song2, song3, song4),
+        mutableSetOf(
+            Song("colorado", "Milky Chance"),
+            Song("Back in black", "ACDC"),
+            Song("i got a feeling", "black eyed pees"),
+            Song("  party rock anthem", "lmfao"),
+            Song("Rouge", "Sardou"),
+            Song("mop", "Gunna")
+        ),
         Genre.NONE
     )
 
+
+    private val name = "Game Test"
+    private val host = User("host")
+    private val other = User("other")
+    private val nbRounds = 3
+    private val withHint = true
+    private val isPrivate = false
+
+    private val gameBuilder = Game.Builder().setHost(host)
+        .setName(name)
+        .setPlaylist(playlistTest)
+        .setWithHint(withHint)
+        .setNbRounds(nbRounds)
+        .setPrivacy(isPrivate)
+        .addUser(other)
+
     @Test
     fun builderWorksCorrectlyWithCorrectArgs() {
-        val builder = Game.Builder()
-        val name = "Game Test"
-        val host = User("host")
-        val other = User("other")
-        val nbRounds = 3
-        val withHint = true
-        val isPrivate = false
-
-        builder.setHost(host)
-            .setName(name)
-            .setPlaylist(playlistTest)
-            .setWithHint(withHint)
-            .setNbRounds(nbRounds)
-            .setPrivacy(isPrivate)
-            .addUser(other)
-
-        val game = builder.build()
+        val game = gameBuilder.build()
 
         assertEquals(name, game.name)
         assertEquals(host, game.host)
         assertEquals(nbRounds, game.nbRounds)
         assertEquals(withHint, game.withHint)
         assertEquals(isPrivate, game.isPrivate)
-        assertEquals(false, game.isDone)
+        assertEquals(false, game.isDone())
         assertEquals(playlistTest, game.playlist)
+    }
+
+    @Test
+    fun choiceGetterGivesDifferentSongs() {
+        val game = gameBuilder.build()
+
+        val multipleChoices = game.getChoices(3)
+        val simpleChoice1 = game.getChoices(1)
+        val simpleChoice2 = game.getChoices(1)
+
+        assertFalse(multipleChoices.containsAll(simpleChoice1))
+        assertFalse(multipleChoices.containsAll(simpleChoice2))
+        assertFalse(simpleChoice1.containsAll(simpleChoice2))
+    }
+
+    @Test
+    fun songsResetWhenAllPicked() {
+        val game = gameBuilder.build()
+
+        val choices1 = game.getChoices(6)
+        val choices2 = game.getChoices(3)
+
+        assertTrue(choices1.containsAll(choices2))
+    }
+
+    @Test(expected = IllegalArgumentException::class)
+    fun errorWhenAddingPointToFakeUser() {
+        val game = gameBuilder.build()
+
+        game.addPoints(User("fake"), 10)
+    }
+
+    @Test
+    fun pointsUpdateCorrectly() {
+        val game = gameBuilder.build()
+
+        assertEquals(0, game.getScore(host))
+        assertEquals(0, game.getScore(other))
+
+        game.addPoints(host, 10)
+        game.addPoints(other, 100)
+
+        assertEquals(10, game.getScore(host))
+        assertEquals(100, game.getScore(other))
+    }
+
+    @Test
+    fun playerRotationWorks() {
+        val game = gameBuilder.build()
+
+        val user1 = game.getUserToPlay()
+        game.getUserToPlay()
+        val userTest = game.getUserToPlay()
+        assertEquals(user1, userTest)
+    }
+
+    @Test
+    fun currentRoundsUpdateCorrectly() {
+        val game = gameBuilder.build()
+
+        val oldValue = game.currentRound
+
+        // The two players play in round one
+        game.getUserToPlay()
+        game.getUserToPlay()
+        assertEquals(oldValue, game.currentRound)
+
+        // The next chosen player plays in round two
+        game.getUserToPlay()
+        assertEquals(oldValue + 1, game.currentRound)
+    }
+
+    @Test
+    fun gameDoneAtRightTime() {
+        val game = gameBuilder.build()
+
+        for (i in 1..nbRounds) {
+            assertFalse(game.isDone())
+            game.getUserToPlay()
+            game.getUserToPlay()
+        }
+
+        assertTrue(game.isDone())
+
     }
 }
