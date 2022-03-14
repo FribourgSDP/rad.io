@@ -91,7 +91,11 @@ class GoogleSignInActivity : AppCompatActivity() {
         if(firebaseUser != null){
             //user is already logged in
             //start profile activity
-            startActivity(Intent(this@GoogleSignInActivity, UserProfileActivity::class.java))
+
+            val intent = Intent(this@GoogleSignInActivity, UserProfileActivity::class.java)
+            intent.putExtra(USERNAME, "Default")
+            startActivity(intent)
+
             finish()
         }
 
@@ -115,9 +119,9 @@ class GoogleSignInActivity : AppCompatActivity() {
                     Toast.makeText(this@GoogleSignInActivity,"LoggedIn", Toast.LENGTH_SHORT).show()
                 }
                 //start profile activity
-                val intent : Intent = Intent(this, UserProfileActivity::class.java).apply {
-                    putExtra(USERNAME, "Default")
-                }
+                val intent : Intent = Intent(this, UserProfileActivity::class.java)
+                intent.putExtra(USERNAME, "Default")
+
                 startActivity(intent)
                 finish()
 

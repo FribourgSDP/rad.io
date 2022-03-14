@@ -163,6 +163,34 @@ class GoogleSignInActivityTest {
         }
     }
 
+    @Test
+    fun StartActivityWhenAlreadyLogged() {
+
+        Intents.init()
+        val firebaseAuth = FirebaseAuth.getInstance()
+        firebaseAuth.signInWithEmailAndPassword("test@test.com","test123!!!")
+        Thread.sleep(1000)
+
+        val context: Context = ApplicationProvider.getApplicationContext()
+
+        val intent: Intent = Intent(context, GoogleSignInActivity::class.java)
+
+
+        ActivityScenario.launch<GoogleSignInActivity>(intent).use { scenario ->
+
+            Intents.intended(
+                Matchers.allOf(
+                    IntentMatchers.hasComponent(UserProfileActivity::class.java.name),
+                    IntentMatchers.toPackage("com.github.fribourgsdp.radio")
+                )
+            )
+
+
+        }
+        Intents.release()
+        firebaseAuth.signOut()
+    }
+
 
 }
 
