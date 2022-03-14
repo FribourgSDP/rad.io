@@ -7,20 +7,7 @@ import androidx.test.espresso.matcher.ViewMatchers
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import org.junit.Test
 import org.junit.runner.RunWith
-import org.junit.Assert.*
-import android.content.pm.ApplicationInfo
-import android.content.pm.PackageManager
-import android.content.res.AssetManager
-import android.content.res.Configuration
-import android.content.res.Resources
-import android.database.DatabaseErrorHandler
-import android.database.sqlite.SQLiteDatabase
-import android.graphics.Bitmap
-import android.graphics.drawable.Drawable
-import android.net.Uri
 import android.os.*
-import android.provider.ContactsContract
-import android.view.Display
 import androidx.test.core.app.ActivityScenario
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.espresso.Espresso.*
@@ -32,31 +19,8 @@ import com.google.firebase.FirebaseApp
 import com.google.firebase.FirebaseOptions
 import com.google.firebase.auth.*
 import org.hamcrest.Matchers
-import java.io.File
-import java.io.FileInputStream
-import java.io.FileOutputStream
-import java.io.InputStream
-import java.lang.IllegalArgumentException
-
-import androidx.test.espresso.matcher.RootMatchers.withDecorView
-
-import androidx.test.espresso.matcher.RootMatchers
-import androidx.test.espresso.assertion.ViewAssertions.matches
-import androidx.test.espresso.matcher.RootMatchers.withDecorView
-import org.hamcrest.Matchers.`is`
-import org.hamcrest.Matchers.not
-
-import androidx.test.espresso.matcher.RootMatchers.withDecorView
-
-import androidx.test.espresso.action.ViewActions
 import androidx.test.espresso.action.ViewActions.click
-import androidx.test.espresso.matcher.ViewMatchers.*
 import java.lang.Exception
-import androidx.test.rule.ActivityTestRule
-
-import org.junit.Rule
-
-
 
 
 
@@ -195,11 +159,6 @@ class GoogleSignInActivityTest {
 
 
             scenario.onActivity {a -> a.firebaseAuthWithCredentitial(mockAuthCredential, mockFireBaseAuth) }
-
-
-
-
-
 
         }
     }

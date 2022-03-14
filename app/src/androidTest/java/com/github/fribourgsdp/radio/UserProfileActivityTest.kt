@@ -31,23 +31,23 @@ class UserProfileActivityTest {
     @Test
     fun logoutButtonTest() {
 
-
+        Intents.init()
         val firebaseAuth = FirebaseAuth.getInstance()
         firebaseAuth.signInWithEmailAndPassword("test@test.com","test123!!!")
+        Thread.sleep(1000)
 
+        val context: Context = ApplicationProvider.getApplicationContext()
 
-        val context : Context =  ApplicationProvider.getApplicationContext()
-
-        val intent : Intent = Intent(context, UserProfileActivity::class.java).apply {
+        val intent: Intent = Intent(context, UserProfileActivity::class.java).apply {
             putExtra(USERNAME, "Default")
         }
-        ActivityScenario.launch<UserProfileActivity>(intent).use { scenario ->
 
+
+        ActivityScenario.launch<UserProfileActivity>(intent).use { scenario ->
 
 
             val logoutButton = Espresso.onView(ViewMatchers.withId(R.id.logoutButton))
 
-            Intents.init()
             logoutButton.perform(click())
 
             Intents.intended(
@@ -57,8 +57,9 @@ class UserProfileActivityTest {
                 )
             )
 
-            Intents.release()
+
         }
+        Intents.release()
     }
 
 
@@ -80,8 +81,9 @@ class UserProfileActivityTest {
                 )
             )
 
-            Intents.release()
+
         }
+        Intents.release()
     }
 
 }
