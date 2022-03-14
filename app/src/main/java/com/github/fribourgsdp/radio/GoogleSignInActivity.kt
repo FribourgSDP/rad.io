@@ -91,7 +91,7 @@ class GoogleSignInActivity : AppCompatActivity() {
         if(firebaseUser != null){
             //user is already logged in
             //start profile activity
-            startActivity(Intent(this@GoogleSignInActivity, ProfileActivity::class.java))
+            startActivity(Intent(this@GoogleSignInActivity, UserProfileActivity::class.java))
             finish()
         }
 
@@ -104,7 +104,7 @@ class GoogleSignInActivity : AppCompatActivity() {
 
         firebaseAuth.signInWithCredential(credential).addOnSuccessListener { authResult->
                 //login success
-
+            Log.d(TAG, "ture")
                 //check if user is new or existing
                 if(authResult.additionalUserInfo!!.isNewUser) {
                     //user is new - Account Create
@@ -115,12 +115,16 @@ class GoogleSignInActivity : AppCompatActivity() {
                     Toast.makeText(this@GoogleSignInActivity,"LoggedIn", Toast.LENGTH_SHORT).show()
                 }
                 //start profile activity
-                startActivity(Intent(this@GoogleSignInActivity, ProfileActivity::class.java))
+                val intent : Intent = Intent(this, UserProfileActivity::class.java).apply {
+                    putExtra(USERNAME, "Default")
+                }
+                startActivity(intent)
                 finish()
 
             }
             .addOnFailureListener{e->
                 //login failed
+                Log.d(TAG, "false")
                 Toast.makeText(this@GoogleSignInActivity,"Loggin Failed due to ${e.message}",
                     Toast.LENGTH_SHORT).show()
             }

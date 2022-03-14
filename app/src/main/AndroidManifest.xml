@@ -25,9 +25,6 @@
             android:name=".GameSettingsActivity"
             android:exported="true" />
         <activity
-            android:name=".ProfileActivity"
-            android:exported="false" />
-        <activity
             android:name=".GoogleSignInActivity"
             android:exported="false" />
         <activity

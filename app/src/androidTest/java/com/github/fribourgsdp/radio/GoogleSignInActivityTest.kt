@@ -23,6 +23,7 @@ import android.provider.ContactsContract
 import android.view.Display
 import androidx.test.core.app.ActivityScenario
 import androidx.test.core.app.ApplicationProvider
+import androidx.test.espresso.Espresso.*
 import androidx.test.espresso.intent.Intents
 import androidx.test.espresso.intent.matcher.IntentMatchers
 import com.google.android.gms.tasks.Task
@@ -39,7 +40,6 @@ import java.lang.IllegalArgumentException
 
 import androidx.test.espresso.matcher.RootMatchers.withDecorView
 
-import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.matcher.RootMatchers
 import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.matcher.RootMatchers.withDecorView
@@ -48,7 +48,6 @@ import org.hamcrest.Matchers.not
 
 import androidx.test.espresso.matcher.RootMatchers.withDecorView
 
-import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.action.ViewActions
 import androidx.test.espresso.action.ViewActions.click
 import androidx.test.espresso.matcher.ViewMatchers.*
@@ -107,8 +106,13 @@ class GoogleSignInActivityTest {
 
         }
     }
+
     @Test
     fun firebaseAuthWithNewUser() {
+
+
+        EmailAuthProvider.getCredential("test","test2")
+
         val context : Context =  ApplicationProvider.getApplicationContext()
         val intent : Intent= Intent(context, GoogleSignInActivity::class.java)
         ActivityScenario.launch<GoogleSignInActivity>(intent).use { scenario ->
@@ -128,7 +132,7 @@ class GoogleSignInActivityTest {
 
             Intents.intended(
                 Matchers.allOf(
-                    IntentMatchers.hasComponent(ProfileActivity::class.java.name),
+                    IntentMatchers.hasComponent(UserProfileActivity::class.java.name),
                     IntentMatchers.toPackage("com.github.fribourgsdp.radio")
                 )
             )
@@ -162,7 +166,7 @@ class GoogleSignInActivityTest {
 
             Intents.intended(
                 Matchers.allOf(
-                    IntentMatchers.hasComponent(ProfileActivity::class.java.name),
+                    IntentMatchers.hasComponent(UserProfileActivity::class.java.name),
                     IntentMatchers.toPackage("com.github.fribourgsdp.radio")
                 )
             )
@@ -249,6 +253,7 @@ class MockAdditionalUserInfo(val isNew:Boolean) : AdditionalUserInfo{
 
 
 class MockAuthResult(val userInfo : AdditionalUserInfo):AuthResult{
+
 
 
 
