@@ -121,7 +121,7 @@ class GoogleSignInActivity : AppCompatActivity() {
             }
             .addOnFailureListener{e->
                 //login failed
-                Toast.makeText(this@GoogleSignInActivity,"Loggin Failed due to ",
+                Toast.makeText(this@GoogleSignInActivity,"Loggin Failed due to ${e.message}",
                     Toast.LENGTH_SHORT).show()
             }
 
