@@ -15,10 +15,10 @@ class User (nameInput: String) {
         nameSanitizer(name)
     }
     private val playlists = mutableSetOf<Playlist>()
-    val color : Int = Color.rgb(
-        Random.nextInt(100, 200),
-        Random.nextInt(100, 200),
-        Random.nextInt(100, 200))
+    val color : Int = (255 shl 24) or
+        (Random.nextInt(100, 200) shl 16) or
+        (Random.nextInt(100, 200) shl 8) or
+        Random.nextInt(100, 200)
     private var linkedSpotify: Boolean = false
     val initial get(): Char = name.elementAt(0)
     val spotifyLinked get(): Boolean = linkedSpotify
