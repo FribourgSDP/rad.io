@@ -74,9 +74,11 @@ class Game private constructor(val name: String, val host: User, val playlist: P
             songsNotDone.addAll(playlist.getSongs())
         }
 
+        val nbRandom = if (songsNotDone.size < nb) songsNotDone.size else nb
+
         val chosen = HashSet<Song>()
 
-        for (i in 1..nb) {
+        for (i in 1..nbRandom) {
             val random = songsNotDone.random()
             chosen.add(random)
             songsNotDone.remove(random)
