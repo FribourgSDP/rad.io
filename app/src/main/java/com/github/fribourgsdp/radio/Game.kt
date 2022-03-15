@@ -65,8 +65,9 @@ class Game private constructor(val name: String, val host: User, val playlist: P
     }
 
     /**
-     * Return a certain number ([nb]) of random songs.
-     * @return a certain number ([nb]) of random songs.
+     * Return a certain number ([nb]) of random songs. All songs from consecutive calls are different until they are all done.
+     * It returns a smaller subset if the asked number is bigger than the number of songs left.
+     * @return a random subset of songs.
      */
     fun getChoices(nb: Int): Set<Song> {
         // Check if all the songs have been done and restart if so
