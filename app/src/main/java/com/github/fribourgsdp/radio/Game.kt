@@ -93,6 +93,9 @@ class Game private constructor(val name: String, val host: User, val playlist: P
         return nbRounds <= currentRound && usersToPlay <= 0
     }
 
+    /**
+     * A builder for the [Game] class.
+     */
     class Builder {
         private lateinit var host: User
         private var name = "A Fun Party"
@@ -102,43 +105,78 @@ class Game private constructor(val name: String, val host: User, val playlist: P
         private var isPrivate = false
         private var list = ArrayList<User>()
 
+        /**
+         * Set the [host] for the game.
+         * @return the [Builder]
+         */
         fun setHost(host: User): Builder {
             this.host = host
             list.add(host)
             return this
         }
 
+        /**
+         * Set the [name] for the game.
+         * @return the [Builder]
+         */
         fun setName(name: String): Builder {
             this.name = name
             return this
         }
 
+        /**
+         * Set the [playlist] for the game.
+         * @return the [Builder]
+         */
         fun setPlaylist(playlist: Playlist): Builder {
             this.playlist = playlist
             return this
         }
 
+        /**
+         * Set the number of round ([nbRounds] for the game.
+         * @return the [Builder]
+         */
         fun setNbRounds(nbRounds: Int): Builder {
             this.nbRounds = nbRounds
             return this
         }
 
+        /**
+         * Set whether the game will have hints.
+         *
+         * @param withHint the boolean that says whether hints will be used or not.
+         * @return the [Builder]
+         */
         fun setWithHint(withHint: Boolean): Builder {
             this.withHint = withHint
             return this
         }
 
+        /**
+         * Set whether the game will be private.
+         *
+         * @param isPrivate the boolean that says whether the game will be private or not.
+         * @return the [Builder]
+         */
         fun setPrivacy(isPrivate: Boolean): Builder {
             this.isPrivate = isPrivate
             return this
         }
 
+        /**
+         * Add a [user] to the game.
+         * @return the [Builder]
+         */
         fun addUser(user: User): Builder {
             list.add(user)
             return this
         }
 
-
+        /**
+         * Build the [Game] with the previously given parameters.
+         * @return the [Game] built with the previously given parameters.
+         */
         fun build() : Game {
             return Game(name, host, playlist, nbRounds, withHint, isPrivate, list)
         }
