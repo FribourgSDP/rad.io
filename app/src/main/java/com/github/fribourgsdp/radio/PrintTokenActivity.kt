@@ -20,15 +20,17 @@ class PrintTokenActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_print_token)
         val userToken = intent.getStringExtra("auth_token")
-        val messageTextView: TextView = findViewById(R.id.tokenTextView)
-        messageTextView.text = userToken
         TOKEN = userToken
 
+        var playlistNames: String = String()
         val playlistMap: CompletableFuture<HashMap<String, String>> = getUserPlaylists()
         val map = playlistMap.get()
         for ((name, id) in map){
             println(name + ":" + getPlaylistContent(id).get())
+            playlistNames += name + "\n"
         }
+        val messageTextView: TextView = findViewById(R.id.playlistsTextView)
+        messageTextView.text = playlistNames
     }
 
     private fun getPlaylistContent(playlistId: String, client: OkHttpClient = OkHttpClient(), parser : JSONParser = JSONStandardParser()) : CompletableFuture<String> {
@@ -66,7 +68,6 @@ class PrintTokenActivity : AppCompatActivity() {
             val parsedResponseString = response.body()?.string()
             val parsedResponse = parser.parse(parsedResponseString)
             val playlistNameToId = HashMap<String, String>()
-            //println(parsedResponse.toString())
             if (parsedResponse == null || parsedResponse.has("error")){
                 //Case where request has failed.
             }

@@ -9,7 +9,7 @@ import com.spotify.sdk.android.auth.AuthorizationResponse
 
 class SpotifyReceiveActivity : AppCompatActivity() {
 
-    lateinit var ACCESS_TOKEN: String
+    private lateinit var ACCESS_TOKEN: String
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
