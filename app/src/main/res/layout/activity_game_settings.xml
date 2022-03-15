@@ -32,6 +32,37 @@
             android:layout_height="wrap_content">
 
             <TextView
+                android:id="@+id/nameTextView"
+                style="@style/SettingsText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/name_settings_text"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <EditText
+                android:id="@+id/nameInput"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:layout_marginEnd="16dp"
+                android:ems="10"
+                android:inputType="text"
+                android:autofillHints="username"
+                android:hint="@string/game_name_hint"
+                app:layout_constraintBottom_toBottomOf="@id/nameTextView"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@id/nameTextView"
+                app:layout_constraintTop_toTopOf="@id/nameTextView" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <TextView
                 android:id="@+id/playlist"
                 style="@style/SettingsText"
                 android:layout_width="wrap_content"
@@ -85,39 +116,13 @@
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-
-            <TextView
-                android:id="@+id/nbPlayersTextView"
-                android:labelFor="@id/nbPlayersInput"
-                style="@style/SettingsText"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/nb_players_text"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
-
-            <EditText
-                android:id="@+id/nbPlayersInput"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="8dp"
-                android:layout_marginEnd="16dp"
-                android:ems="10"
-                android:inputType="numberDecimal"
-                android:importantForAutofill="no"
-                app:layout_constraintBottom_toBottomOf="@id/nbPlayersTextView"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toEndOf="@id/nbPlayersTextView"
-                app:layout_constraintTop_toTopOf="@id/nbPlayersTextView" />
-
-        </androidx.constraintlayout.widget.ConstraintLayout>
+        <CheckBox
+            android:id="@+id/checkBoxHint"
+            style="@style/SettingsText"
+            android:text="@string/hint_option_text" />
 
         <CheckBox
-            android:id="@+id/checkBox"
+            android:id="@+id/checkBoxPrivate"
             style="@style/SettingsText"
             android:text="@string/private_option_text" />
 
