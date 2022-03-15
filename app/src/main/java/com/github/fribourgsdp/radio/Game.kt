@@ -4,7 +4,18 @@ import java.util.*
 import kotlin.collections.ArrayList
 import kotlin.collections.HashMap
 import kotlin.collections.HashSet
-
+/**
+ * An instance of a game.
+ *
+ *
+ * @property name the name of the game.
+ * @property host the host of the game.
+ * @property playlist the playlist used during the game.
+ * @property nbRounds the number of rounds of a game.
+ * @property withHint whether there is hints or not during the game.
+ * @property isPrivate whether the game is private or public.
+ * @property currentRound the current round of the game.
+ */
 class Game private constructor(val name: String, val host: User, val playlist: Playlist, val nbRounds: Int,
                                val withHint: Boolean, val isPrivate: Boolean, private val listUser: List<User>) {
 
@@ -16,10 +27,17 @@ class Game private constructor(val name: String, val host: User, val playlist: P
 
     private val songsNotDone = HashSet(playlist.getSongs())
 
+    /**
+     * Return the score of a [user].
+     * @return the score of a [user].
+     */
     fun getScore(user: User): Int? {
         return scoreMap[user]
     }
 
+    /**
+     * Add the given number of [points] to the given [user].
+     */
     fun addPoints(user: User, points: Int) {
         val oldValue = scoreMap[user]
         if (oldValue != null) {
@@ -30,6 +48,10 @@ class Game private constructor(val name: String, val host: User, val playlist: P
 
     }
 
+    /**
+     * Return the [user] that is playing next.
+     * @return the [user] that is playing next.
+     */
     fun getUserToPlay(): User {
         val user = listUser[0]
         Collections.rotate(listUser, 1)
@@ -42,6 +64,10 @@ class Game private constructor(val name: String, val host: User, val playlist: P
         return user
     }
 
+    /**
+     * Return a certain number ([nb]) of random songs.
+     * @return a certain number ([nb]) of random songs.
+     */
     fun getChoices(nb: Int): Set<Song> {
         // Check if all the songs have been done and restart if so
         if (songsNotDone.isEmpty()) {
@@ -59,6 +85,10 @@ class Game private constructor(val name: String, val host: User, val playlist: P
         return chosen
     }
 
+    /**
+     * Return whether the game is done or not.
+     * @return whether the game is done or not.
+     */
     fun isDone(): Boolean {
         return nbRounds <= currentRound && usersToPlay <= 0
     }
