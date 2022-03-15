@@ -49,8 +49,8 @@ class Game private constructor(val name: String, val host: User, val playlist: P
     }
 
     /**
-     * Return the [user] that is playing next.
-     * @return the [user] that is playing next.
+     * Return the [User] that is playing next.
+     * @return the [User] that is playing next.
      */
     fun getUserToPlay(): User {
         val user = listUser[0]
