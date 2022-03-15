@@ -129,4 +129,14 @@ class GameTest {
         assertTrue(game.isDone())
 
     }
+
+    @Test
+    fun tooManySongAsked() {
+        val game = gameBuilder.build()
+
+        assertEquals(
+            playlistTest.getSongs().size,
+            game.getChoices(playlistTest.getSongs().size + 15).size
+        )
+    }
 }
