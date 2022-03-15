@@ -6,6 +6,9 @@ import java.lang.IllegalArgumentException
 import kotlin.random.Random
 
 class User (nameInput: String) {
+    // TODO IMPLEMENT SERIALIZATION
+    // TODO IMPLEMENT STATIC METHODS TO LOAD + METHOD TO SAVE
+
     var name: String = nameInput
         set(value) {
             nameSanitizer(value)
