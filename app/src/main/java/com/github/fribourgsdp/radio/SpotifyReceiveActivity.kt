@@ -4,17 +4,37 @@ import android.content.Intent
 import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.widget.Toast
+import android.widget.Button
 import com.spotify.sdk.android.auth.AuthorizationResponse
 
 class SpotifyReceiveActivity : AppCompatActivity() {
+
+    lateinit var ACCESS_TOKEN: String
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_spotify_receive)
+        handleSpotifyResponse()
+
+
+        val tokenButton = findViewById<Button>(R.id.getTokenButton)
+        tokenButton.setOnClickListener {
+            println("Acces token is $ACCESS_TOKEN")
+            val intent = Intent(this@SpotifyReceiveActivity, PrintTokenActivity::class.java)
+            intent.putExtra("auth_token", ACCESS_TOKEN)
+            startActivity(intent)
+        }
+
     }
 
     override fun onNewIntent(intent: Intent?) {
         super.onNewIntent(intent)
+        setIntent(intent)
+        handleSpotifyResponse()
+    }
+
+    private fun handleSpotifyResponse() {
+        val intent: Intent = intent
         if (intent != null){
             val uri: Uri? = intent.data
             if (uri != null) {
@@ -22,15 +42,15 @@ class SpotifyReceiveActivity : AppCompatActivity() {
 
                 when (response.type) {
                     AuthorizationResponse.Type.TOKEN -> {
-                        Toast.makeText(applicationContext, response.accessToken, Toast.LENGTH_LONG).show()
+                        ACCESS_TOKEN = response.accessToken
                     }
 
                     AuthorizationResponse.Type.ERROR -> {
-                        Toast.makeText(applicationContext, "Error", Toast.LENGTH_LONG)
+                        println("Error occured.")
                     }
 
                     else -> {
-                        Toast.makeText(applicationContext, "Unexcpected behaviour", Toast.LENGTH_LONG)
+                        println("Something unexpected occured.")
                     }
                 }
 

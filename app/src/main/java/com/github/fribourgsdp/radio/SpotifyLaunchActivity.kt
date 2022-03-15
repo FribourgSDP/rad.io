@@ -25,10 +25,11 @@ class SpotifyLaunchActivity : AppCompatActivity() {
         }
     }
 
-    fun authenticateUser() {
+    private fun authenticateUser() {
         val request =
             AuthorizationRequest.Builder(MY_CLIENT_ID, AuthorizationResponse.Type.TOKEN, REDIRECT_URI)
                 .setScopes(arrayOf(SCOPES))
+                .setShowDialog(true)
                 .build()
         println(MY_CLIENT_ID)
         AuthorizationClient.openLoginInBrowser(this, request)
