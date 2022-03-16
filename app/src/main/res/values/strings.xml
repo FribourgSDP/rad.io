@@ -15,4 +15,6 @@
     <string name="spotify_text">Spotify Status:</string>
     <string name="hint_option_text">With hints</string>
     <string name="game_name_hint">A Fun Party</string>
+    <string name="default_game_name">A fun Party</string>
+    <string name="default_game_nb_rounds">3</string>
 </resources>
