@@ -13,6 +13,9 @@
         android:theme="@style/Theme.Radio"
         android:usesCleartextTraffic="true">
         <activity
+            android:name=".LobbyActivity"
+            android:exported="true" />
+        <activity
             android:name=".UserProfileActivity"
             android:exported="false" />
         <activity
