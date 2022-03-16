@@ -1,5 +1,6 @@
 package com.github.fribourgsdp.radio
 
+import android.content.ContentValues
 import android.content.ContentValues.TAG
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -7,9 +8,6 @@ import android.util.Log
 import android.widget.TextView
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.runBlocking
 
 class FireBaseTestActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -25,7 +23,14 @@ class FireBaseTestActivity : AppCompatActivity() {
         db.setUser(userAuthUID,userNa)
 
         db.getUser("m0sd9l").addOnSuccessListener { l ->
-            findViewById<TextView>(R.id.textToChange).text = l.name
+            if (l == null){
+                findViewById<TextView>(R.id.textToChange).text = "There has been an error"
+
+            }else {
+                findViewById<TextView>(R.id.textToChange).text = l.name
+            }
+        }.addOnFailureListener { e ->
+            Log.w(ContentValues.TAG, "Error adding document", e)
         }
     }
 }
