@@ -30,7 +30,7 @@ class DatabaseTest {
         val db = Database()
         var user = Tasks.withTimeout(db.getUser("rubbish"),10,TimeUnit.SECONDS)
         Log.d(ContentValues.TAG, "DocumentSnapshot added with ID put: " + Tasks.await(user))
-        assert(Tasks.await(user).name == "null")
+        assert(Tasks.await(user) == null)
     }
 
 }
