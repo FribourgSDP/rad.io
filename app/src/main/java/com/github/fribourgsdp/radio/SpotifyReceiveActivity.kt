@@ -14,12 +14,11 @@ class SpotifyReceiveActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_spotify_receive)
-        handleSpotifyResponse()
-
+        ACCESS_TOKEN = handleSpotifyResponse(intent)
 
         val tokenButton = findViewById<Button>(R.id.getTokenButton)
         tokenButton.setOnClickListener {
-            println("Acces token is $ACCESS_TOKEN")
+            //println("Acces token is $ACCESS_TOKEN")
             val intent = Intent(this@SpotifyReceiveActivity, PrintTokenActivity::class.java)
             intent.putExtra("auth_token", ACCESS_TOKEN)
             startActivity(intent)
@@ -30,31 +29,34 @@ class SpotifyReceiveActivity : AppCompatActivity() {
     override fun onNewIntent(intent: Intent?) {
         super.onNewIntent(intent)
         setIntent(intent)
-        handleSpotifyResponse()
+        handleSpotifyResponse(intent)
     }
 
-    private fun handleSpotifyResponse() {
-        val intent: Intent = intent
-        if (intent != null){
-            val uri: Uri? = intent.data
-            if (uri != null) {
-                val response: AuthorizationResponse = AuthorizationResponse.fromUri(uri)
 
-                when (response.type) {
-                    AuthorizationResponse.Type.TOKEN -> {
-                        ACCESS_TOKEN = response.accessToken
-                    }
+    companion object {
+        fun handleSpotifyResponse(intent: Intent?): String {
+            if (intent != null){
+                val uri: Uri? = intent.data
+                if (uri != null) {
+                    val response: AuthorizationResponse = AuthorizationResponse.fromUri(uri)
 
-                    AuthorizationResponse.Type.ERROR -> {
-                        println("Error occured.")
-                    }
+                    return when (response.type) {
+                        AuthorizationResponse.Type.TOKEN -> {
+                            println(uri)
+                            response.accessToken
+                        }
 
-                    else -> {
-                        println("Something unexpected occured.")
+                        AuthorizationResponse.Type.ERROR -> {
+                            ("Error occured.")
+                        }
+
+                        else -> {
+                            ("Something unexpected occured.")
+                        }
                     }
                 }
-
             }
+            return "Error"
         }
     }
 }

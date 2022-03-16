@@ -45,13 +45,16 @@ class UserProfileActivity : AppCompatActivity() {
         findViewById<ImageView>(R.id.userIcon).setColorFilter(PorterDuffColorFilter(user.color, PorterDuff.Mode.ADD))
     }
 
-    private fun authenticateUser() {
-        val request =
-            AuthorizationRequest.Builder(MY_CLIENT_ID, AuthorizationResponse.Type.TOKEN, REDIRECT_URI)
+    companion object {
+        fun buildReqest(): AuthorizationRequest{
+            return AuthorizationRequest.Builder(MY_CLIENT_ID, AuthorizationResponse.Type.TOKEN, REDIRECT_URI)
                 .setScopes(arrayOf(SCOPES))
                 .setShowDialog(true)
                 .build()
-        println(MY_CLIENT_ID)
-        AuthorizationClient.openLoginInBrowser(this, request)
+        }
+    }
+
+    private fun authenticateUser() {
+        AuthorizationClient.openLoginInBrowser(this, buildReqest())
     }
 }
