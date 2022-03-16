@@ -23,7 +23,6 @@ import androidx.test.espresso.action.ViewActions.click
 import java.lang.Exception
 
 
-
 /**
  * Main Activity Tests
  *
@@ -32,17 +31,13 @@ import java.lang.Exception
 class GoogleSignInActivityTest {
 
 
-
     @Test
     fun correctTextOnTextView() {
-        val context : Context =  ApplicationProvider.getApplicationContext()
-        val intent : Intent= Intent(context, GoogleSignInActivity::class.java)
+        val context: Context = ApplicationProvider.getApplicationContext()
+        val intent: Intent = Intent(context, GoogleSignInActivity::class.java)
         ActivityScenario.launch<GoogleSignInActivity>(intent).use { scenario ->
 
-
-
             val txtView = onView(ViewMatchers.withId(R.id.captionTv))
-
             txtView.check(
                 ViewAssertions.matches(
                     ViewMatchers.withText("Welcome to Google SignIn")
@@ -51,9 +46,6 @@ class GoogleSignInActivityTest {
         }
     }
 
-
-
-
     @Test
     fun playGoogleButton() {
 
@@ -61,13 +53,8 @@ class GoogleSignInActivityTest {
         val intent: Intent = Intent(context, GoogleSignInActivity::class.java)
         ActivityScenario.launch<GoogleSignInActivity>(intent).use { scenario ->
 
-
             val googleButton = Espresso.onView(ViewMatchers.withId(R.id.googleSignInButton))
-
-
             googleButton.perform(click())
-
-
         }
     }
 
@@ -75,24 +62,26 @@ class GoogleSignInActivityTest {
     fun firebaseAuthWithNewUser() {
 
 
-        EmailAuthProvider.getCredential("test","test2")
+        EmailAuthProvider.getCredential("test", "test2")
 
-        val context : Context =  ApplicationProvider.getApplicationContext()
-        val intent : Intent= Intent(context, GoogleSignInActivity::class.java)
+        val context: Context = ApplicationProvider.getApplicationContext()
+        val intent: Intent = Intent(context, GoogleSignInActivity::class.java)
         ActivityScenario.launch<GoogleSignInActivity>(intent).use { scenario ->
 
             val mockAdditionalUserInfo = MockAdditionalUserInfo(true)
-            val mockAuthResult  = MockAuthResult(mockAdditionalUserInfo)
+            val mockAuthResult = MockAuthResult(mockAdditionalUserInfo)
             val firebaseOptions = FirebaseOptions.fromResource(context)
-
-
-            val mockFirebaseApp   = MockFirebaseApp(context,"test", firebaseOptions)
-
-            val mockFireBaseAuth   = MockFireBaseAuth(false,mockAuthResult,mockFirebaseApp)
+            val mockFirebaseApp = MockFirebaseApp(context, "test", firebaseOptions)
+            val mockFireBaseAuth = MockFireBaseAuth(false, mockAuthResult, mockFirebaseApp)
             val mockAuthCredential: AuthCredential = MockAuthCredential()
 
             Intents.init()
-            scenario.onActivity {a -> a.firebaseAuthWithCredentitial(mockAuthCredential, mockFireBaseAuth) }
+            scenario.onActivity { a ->
+                a.firebaseAuthWithCredentitial(
+                    mockAuthCredential,
+                    mockFireBaseAuth
+                )
+            }
 
             Intents.intended(
                 Matchers.allOf(
@@ -102,31 +91,33 @@ class GoogleSignInActivityTest {
             )
 
             Intents.release()
-
-
         }
     }
 
 
     @Test
     fun firebaseAuthWithUser() {
-        val context : Context =  ApplicationProvider.getApplicationContext()
-        val intent : Intent= Intent(context, GoogleSignInActivity::class.java)
+        val context: Context = ApplicationProvider.getApplicationContext()
+        val intent: Intent = Intent(context, GoogleSignInActivity::class.java)
         ActivityScenario.launch<GoogleSignInActivity>(intent).use { scenario ->
 
             val mockAdditionalUserInfo = MockAdditionalUserInfo(false)
-            val mockAuthResult  = MockAuthResult(mockAdditionalUserInfo)
+            val mockAuthResult = MockAuthResult(mockAdditionalUserInfo)
             val firebaseOptions = FirebaseOptions.fromResource(context)
 
+            val mockFirebaseApp = MockFirebaseApp(context, "test", firebaseOptions)
 
-            val mockFirebaseApp   = MockFirebaseApp(context,"test", firebaseOptions)
-
-            val mockFireBaseAuth   = MockFireBaseAuth(false,mockAuthResult,mockFirebaseApp)
+            val mockFireBaseAuth = MockFireBaseAuth(false, mockAuthResult, mockFirebaseApp)
             val mockAuthCredential: AuthCredential = MockAuthCredential()
 
             Intents.init()
 
-            scenario.onActivity {a -> a.firebaseAuthWithCredentitial(mockAuthCredential, mockFireBaseAuth) }
+            scenario.onActivity { a ->
+                a.firebaseAuthWithCredentitial(
+                    mockAuthCredential,
+                    mockFireBaseAuth
+                )
+            }
 
             Intents.intended(
                 Matchers.allOf(
@@ -134,31 +125,33 @@ class GoogleSignInActivityTest {
                     IntentMatchers.toPackage("com.github.fribourgsdp.radio")
                 )
             )
-
             Intents.release()
-
-
         }
     }
 
     @Test
     fun firebaseAuthFail() {
-        val context : Context =  ApplicationProvider.getApplicationContext()
-        val intent : Intent= Intent(context, GoogleSignInActivity::class.java)
+        val context: Context = ApplicationProvider.getApplicationContext()
+        val intent: Intent = Intent(context, GoogleSignInActivity::class.java)
         ActivityScenario.launch<GoogleSignInActivity>(intent).use { scenario ->
 
             val mockAdditionalUserInfo = MockAdditionalUserInfo(false)
-            val mockAuthResult  = MockAuthResult(mockAdditionalUserInfo)
+            val mockAuthResult = MockAuthResult(mockAdditionalUserInfo)
             val firebaseOptions = FirebaseOptions.fromResource(context)
 
 
-            val mockFirebaseApp   = MockFirebaseApp(context,"test", firebaseOptions)
+            val mockFirebaseApp = MockFirebaseApp(context, "test", firebaseOptions)
 
-            val mockFireBaseAuth   = MockFireBaseAuth(true,mockAuthResult,mockFirebaseApp)
+            val mockFireBaseAuth = MockFireBaseAuth(true, mockAuthResult, mockFirebaseApp)
             val mockAuthCredential: AuthCredential = MockAuthCredential()
 
 
-            scenario.onActivity {a -> a.firebaseAuthWithCredentitial(mockAuthCredential, mockFireBaseAuth) }
+            scenario.onActivity { a ->
+                a.firebaseAuthWithCredentitial(
+                    mockAuthCredential,
+                    mockFireBaseAuth
+                )
+            }
 
         }
     }
@@ -168,13 +161,12 @@ class GoogleSignInActivityTest {
 
         Intents.init()
         val firebaseAuth = FirebaseAuth.getInstance()
-        firebaseAuth.signInWithEmailAndPassword("test@test.com","test123!!!")
+        firebaseAuth.signInWithEmailAndPassword("test@test.com", "test123!!!")
         Thread.sleep(1000)
 
         val context: Context = ApplicationProvider.getApplicationContext()
 
         val intent: Intent = Intent(context, GoogleSignInActivity::class.java)
-
 
         ActivityScenario.launch<GoogleSignInActivity>(intent).use { scenario ->
 
@@ -184,8 +176,6 @@ class GoogleSignInActivityTest {
                     IntentMatchers.toPackage("com.github.fribourgsdp.radio")
                 )
             )
-
-
         }
         Intents.release()
         firebaseAuth.signOut()
@@ -194,24 +184,23 @@ class GoogleSignInActivityTest {
 
 }
 
-class MockFireBaseAuth( val isFail : Boolean, val mockAuthResult: MockAuthResult, p0: FirebaseApp) : FirebaseAuth(p0) {
-    override fun signInWithCredential(authCredential: AuthCredential) : Task<AuthResult> {
-        if(isFail){
+class MockFireBaseAuth(val isFail: Boolean, val mockAuthResult: MockAuthResult, p0: FirebaseApp) :
+    FirebaseAuth(p0) {
+    override fun signInWithCredential(authCredential: AuthCredential): Task<AuthResult> {
+        if (isFail) {
 
             return Tasks.forException(Exception())
 
-        }else{
+        } else {
             return Tasks.forResult(mockAuthResult)
         }
     }
 
 
-
-
 }
 
 
-class MockAdditionalUserInfo(val isNew:Boolean) : AdditionalUserInfo{
+class MockAdditionalUserInfo(val isNew: Boolean) : AdditionalUserInfo {
     override fun describeContents(): Int {
         TODO("Not yet implemented")
     }
@@ -239,9 +228,7 @@ class MockAdditionalUserInfo(val isNew:Boolean) : AdditionalUserInfo{
 }
 
 
-class MockAuthResult(val userInfo : AdditionalUserInfo):AuthResult{
-
-
+class MockAuthResult(val userInfo: AdditionalUserInfo) : AuthResult {
 
 
     override fun describeContents(): Int {
@@ -265,7 +252,7 @@ class MockAuthResult(val userInfo : AdditionalUserInfo):AuthResult{
     }
 }
 
-class MockAuthCredential: OAuthCredential() {
+class MockAuthCredential : OAuthCredential() {
     override fun writeToParcel(p0: Parcel?, p1: Int) {
         TODO("Not yet implemented")
     }
@@ -298,9 +285,8 @@ class MockAuthCredential: OAuthCredential() {
 }
 
 
-class MockFirebaseApp(applicationContext: Context?, name: String?, options: FirebaseOptions?) : FirebaseApp(applicationContext, name, options) {
+class MockFirebaseApp(applicationContext: Context?, name: String?, options: FirebaseOptions?) :
+    FirebaseApp(applicationContext, name, options) {
 
 
 }
-
-

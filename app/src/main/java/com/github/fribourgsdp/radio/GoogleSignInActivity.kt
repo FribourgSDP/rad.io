@@ -9,7 +9,6 @@ import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import com.github.fribourgsdp.radio.databinding.ActivityGoogleSignInBinding
 import com.google.android.gms.auth.api.signin.GoogleSignIn
-import com.google.android.gms.auth.api.signin.GoogleSignInAccount
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.android.gms.common.api.ApiException
@@ -29,11 +28,9 @@ class GoogleSignInActivity : AppCompatActivity() {
     private lateinit var firebaseAuth: FirebaseAuth
 
     //constants
-    private companion object{
+    private companion object {
         private const val TAG = "GOOGLE_SIGN_TAG"
     }
-
-
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -54,7 +51,7 @@ class GoogleSignInActivity : AppCompatActivity() {
         checkUser()
 
         //Google SignIn Button, click to begin Google SignIn
-        binding.googleSignInButton.setOnClickListener{
+        binding.googleSignInButton.setOnClickListener {
 
             val intent = googleSignInClient.signInIntent
             launcher.launch(intent)
@@ -63,32 +60,29 @@ class GoogleSignInActivity : AppCompatActivity() {
     }
 
     private val launcher =
-        registerForActivityResult(ActivityResultContracts.StartActivityForResult()){
-            result ->
+        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
             //handle intent result here
-            if(result.resultCode == Activity.RESULT_OK){
-                Log.d(TAG, "onActivityResult: Google SignIn intent result")
+            if (result.resultCode == Activity.RESULT_OK) {
                 val accountTask = GoogleSignIn.getSignedInAccountFromIntent(result.data)
-                try{
+                try {
                     //Google SignIn success, now authenticate with firebase
                     val account = accountTask.getResult(ApiException::class.java)
-                    val credential  = GoogleAuthProvider.getCredential(account.idToken, null)
+                    val credential = GoogleAuthProvider.getCredential(account.idToken, null)
                     this.firebaseAuthWithCredentitial(credential, firebaseAuth)
-                }
-                catch (e :Exception){
+                } catch (e: Exception) {
                     //failed Google SignIn
                     Log.d(TAG, "onActivityResult: ${e.message}")
                 }
-            }else{
+            } else {
                 //cancelled
-                Toast.makeText(this@GoogleSignInActivity,"Cancelled", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this@GoogleSignInActivity, "Cancelled", Toast.LENGTH_SHORT).show()
             }
         }
 
-    private fun checkUser(){
+    private fun checkUser() {
         //check if user is logged in or not
         val firebaseUser = firebaseAuth.currentUser
-        if(firebaseUser != null){
+        if (firebaseUser != null) {
             //user is already logged in
             //start profile activity
 
@@ -102,39 +96,33 @@ class GoogleSignInActivity : AppCompatActivity() {
     }
 
 
-    fun firebaseAuthWithCredentitial(credential: AuthCredential, firebaseAuth : FirebaseAuth){
-        //Log.d(TAG, "firebaseAuthWithGoogleAccount: begin firebase auth with google account")
+    fun firebaseAuthWithCredentitial(credential: AuthCredential, firebaseAuth: FirebaseAuth) {
+        firebaseAuth.signInWithCredential(credential).addOnSuccessListener { authResult ->
+            //login success
+            //check if user is new or existing
+            if (authResult.additionalUserInfo!!.isNewUser) {
+                //user is new - Account Create
+                Toast.makeText(this@GoogleSignInActivity, "Account created", Toast.LENGTH_SHORT)
+                    .show()
 
-
-        firebaseAuth.signInWithCredential(credential).addOnSuccessListener { authResult->
-                //login success
-            Log.d(TAG, "ture")
-                //check if user is new or existing
-                if(authResult.additionalUserInfo!!.isNewUser) {
-                    //user is new - Account Create
-                    Toast.makeText(this@GoogleSignInActivity,"Account created", Toast.LENGTH_SHORT).show()
-
-                }else{
-                    //existing user - LoggedIn
-                    Toast.makeText(this@GoogleSignInActivity,"LoggedIn", Toast.LENGTH_SHORT).show()
-                }
-                //start profile activity
-                val intent : Intent = Intent(this, UserProfileActivity::class.java)
-                intent.putExtra(USERNAME, "Default")
-
-                startActivity(intent)
-                finish()
-
+            } else {
+                //existing user - LoggedIn
+                Toast.makeText(this@GoogleSignInActivity, "LoggedIn", Toast.LENGTH_SHORT).show()
             }
-            .addOnFailureListener{e->
+            //start profile activity
+            val intent: Intent = Intent(this, UserProfileActivity::class.java)
+            intent.putExtra(USERNAME, "Default")
+
+            startActivity(intent)
+            finish()
+
+        }
+            .addOnFailureListener { e ->
                 //login failed
-                Log.d(TAG, "false")
-                Toast.makeText(this@GoogleSignInActivity,"Loggin Failed due to ${e.message}",
-                    Toast.LENGTH_SHORT).show()
+                Toast.makeText(
+                    this@GoogleSignInActivity, "Loggin Failed due to ${e.message}",
+                    Toast.LENGTH_SHORT
+                ).show()
             }
-
     }
-
 }
-
-

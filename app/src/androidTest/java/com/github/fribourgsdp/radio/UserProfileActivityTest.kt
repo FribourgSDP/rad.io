@@ -15,10 +15,6 @@ import org.hamcrest.Matchers
 import androidx.test.espresso.action.ViewActions.click
 
 
-
-
-
-
 /**
  * Main Activity Tests
  *
@@ -27,13 +23,12 @@ import androidx.test.espresso.action.ViewActions.click
 class UserProfileActivityTest {
 
 
-
     @Test
     fun logoutButtonTest() {
 
         Intents.init()
         val firebaseAuth = FirebaseAuth.getInstance()
-        firebaseAuth.signInWithEmailAndPassword("test@test.com","test123!!!")
+        firebaseAuth.signInWithEmailAndPassword("test@test.com", "test123!!!")
         Thread.sleep(1000)
 
         val context: Context = ApplicationProvider.getApplicationContext()
@@ -45,9 +40,7 @@ class UserProfileActivityTest {
 
         ActivityScenario.launch<UserProfileActivity>(intent).use { scenario ->
 
-
             val logoutButton = Espresso.onView(ViewMatchers.withId(R.id.logoutButton))
-
             logoutButton.perform(click())
 
             Intents.intended(
@@ -56,8 +49,6 @@ class UserProfileActivityTest {
                     IntentMatchers.toPackage("com.github.fribourgsdp.radio")
                 )
             )
-
-
         }
         Intents.release()
     }
@@ -67,9 +58,9 @@ class UserProfileActivityTest {
     fun NoUserConnectedTest() {
 
         Intents.init()
-        val context : Context =  ApplicationProvider.getApplicationContext()
+        val context: Context = ApplicationProvider.getApplicationContext()
 
-        val intent : Intent = Intent(context, UserProfileActivity::class.java).apply {
+        val intent: Intent = Intent(context, UserProfileActivity::class.java).apply {
             putExtra(USERNAME, "Default")
         }
         ActivityScenario.launch<UserProfileActivity>(intent).use { scenario ->
@@ -80,15 +71,7 @@ class UserProfileActivityTest {
                     IntentMatchers.toPackage("com.github.fribourgsdp.radio")
                 )
             )
-
-
         }
         Intents.release()
     }
-
 }
-
-
-
-
-
