@@ -10,6 +10,7 @@ import com.google.android.gms.tasks.Tasks
 import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
+import java.lang.Exception
 
 import java.util.concurrent.CompletableFuture
 
@@ -25,29 +26,29 @@ class Database {
 
     /**
      * Gets the [User], wrapped in a [Task], linked to the [userId] given.
-     * @return [User] wrapped in a task, if the [userId] doesn't exists, it returns a TODO
+     * @return [User] wrapped in a task, if the [userId] doesn't exists, it returns a null [User]
      *
      */
      fun getUser(userId : String): Task<User> {
-         return  db.collection("user").document(userId).get().continueWith(Continuation { l-> User(l.result["first"].toString()) })
-     }
+
+         return  db.collection("user").document(userId).get().continueWith { l ->
+             val found = l.result["first"].toString()
+             if (found == "null"){
+                 null
+             }else{
+                 User(found)
+             }
+         }
+    }
 
     /**
      * Sets the [User] information in the database and link it the to [userId] given
      */
     fun setUser(userId : String, user : User){
-        val user = hashMapOf(
+        val userHash = hashMapOf(
             "first" to user.name
         )
-        db.collection("user").document(userId).set(user)
-            .addOnSuccessListener{ documentReference ->
-                //Log.d(TAG, "DocumentSnapshot added with ID: ${documentReference.id}")
-                Log.d(ContentValues.TAG, "DocumentSnapshot added with ID put: ")
-
-            }
-            .addOnFailureListener{e ->
-                Log.w(ContentValues.TAG, "Error adding document", e)
-            }
+        db.collection("user").document(userId).set(userHash)
     }
 
 }
