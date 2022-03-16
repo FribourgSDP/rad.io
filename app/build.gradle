@@ -42,7 +42,13 @@ android {
 
 }
 
+
 apply plugin: 'com.google.gms.google-services'
+
+jacoco {
+    toolVersion = "0.8.7"
+}
+
 
 dependencies {
 
@@ -75,6 +81,16 @@ dependencies {
     androidTestImplementation 'androidx.test:rules:1.4.0'
     androidTestImplementation 'androidx.test.espresso:espresso-intents:3.4.0'
 
+}
+
+configurations.all{
+    resolutionStrategy {
+        eachDependency { details ->
+            if ('org.jacoco' == details.requested.group) {
+                details.useVersion "0.8.7"
+            }
+        }
+    }
 }
 
 tasks.withType(Test) {
