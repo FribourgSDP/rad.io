@@ -18,13 +18,6 @@ class UserProfileActivityTest : TestCase() {
     )
 
     @Test
-    fun testPressingOnSpotifyLoginLaunchesProcess() {
-        val loginButton = Espresso.onView(withId(R.id.launchSpotifyButton))
-        loginButton.perform(ViewActions.click())
-        assertEquals("9dc40237547f4ffaa41bf1e07ea0bba1", MY_CLIENT_ID)
-    }
-
-    @Test
     fun testBuildReqest() {
         val request = UserProfileActivity.buildReqest()
         assertEquals(MY_CLIENT_ID, request.clientId)
