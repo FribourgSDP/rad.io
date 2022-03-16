@@ -39,6 +39,10 @@ android {
     }
 }
 
+jacoco {
+    toolVersion = "0.8.7"
+}
+
 dependencies {
 
     implementation 'androidx.core:core-ktx:1.7.0'
