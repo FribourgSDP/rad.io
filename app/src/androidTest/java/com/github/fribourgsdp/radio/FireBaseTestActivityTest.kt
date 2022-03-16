@@ -10,10 +10,11 @@ class FireBaseTestActivityTest {
     @get:Rule
     var FireBaseTestRule = ActivityScenarioRule(FireBaseTestActivity::class.java)
 
-    //my
+    //this class is to test the Database feature easily, it doesn't have any functionality so I just run the activity to have the coverage
     @Test
-    fun oui(){
+    fun launchTheActivity(){
         Intents.init()
+        Intents.release()
     }
 
 
