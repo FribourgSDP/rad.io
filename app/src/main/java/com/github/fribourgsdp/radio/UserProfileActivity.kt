@@ -11,6 +11,10 @@ import com.spotify.sdk.android.auth.AuthorizationClient
 import com.spotify.sdk.android.auth.AuthorizationRequest
 import com.spotify.sdk.android.auth.AuthorizationResponse
 
+const val MY_CLIENT_ID = "9dc40237547f4ffaa41bf1e07ea0bba1"
+const val REDIRECT_URI = "com.github.fribourgsdp.radio://callback"
+const val SCOPES = "playlist-read-private,playlist-read-collaborative"
+
 class UserProfileActivity : AppCompatActivity() {
     private lateinit var user : User
 

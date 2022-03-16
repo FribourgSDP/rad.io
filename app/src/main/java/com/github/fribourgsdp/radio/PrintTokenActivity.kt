@@ -22,18 +22,28 @@ class PrintTokenActivity : AppCompatActivity() {
         val userToken = intent.getStringExtra("auth_token")
         TOKEN = userToken
 
-        var playlistNames: String = String()
         val playlistMap: CompletableFuture<HashMap<String, String>> = getUserPlaylists()
         val map = playlistMap.get()
-        for ((name, id) in map){
-            println(name + ":" + getPlaylistContent(id).get())
-            playlistNames += name + "\n"
-        }
         val messageTextView: TextView = findViewById(R.id.playlistsTextView)
-        messageTextView.text = playlistNames
+        messageTextView.text = getPlaylistNames(map)
     }
 
-    private fun getPlaylistContent(playlistId: String, client: OkHttpClient = OkHttpClient(), parser : JSONParser = JSONStandardParser()) : CompletableFuture<String> {
+    fun getPlaylistNames(playlistNameToId: HashMap<String, String>): String {
+        return if (playlistNameToId.isEmpty()){
+            "No Spotify playlists were found for this user."
+        } else {
+            var playlistNames = String()
+            for ((name, id) in playlistNameToId){
+                //Remove this print after the demo
+                println(name + ":" + getPlaylistContent(id).get())
+                playlistNames += name + "\n"
+            }
+            playlistNames
+        }
+    }
+
+
+    fun getPlaylistContent(playlistId: String, client: OkHttpClient = OkHttpClient(), parser : JSONParser = JSONStandardParser()) : CompletableFuture<String> {
         val future = CompletableFuture<String>()
         val auth: String? = "Bearer $TOKEN"
         val url = SPOTIFY_PLAYLIST_INFO_BASE_URL + playlistId + SPOTIFY_SONG_FILTER_NAME_ARTIST
@@ -46,7 +56,7 @@ class PrintTokenActivity : AppCompatActivity() {
         return future
     }
 
-    private fun getUserPlaylists(client: OkHttpClient = OkHttpClient(), parser : JSONParser = JSONStandardParser()) : CompletableFuture<HashMap<String, String>> {
+    fun getUserPlaylists(client: OkHttpClient = OkHttpClient(), parser : JSONParser = JSONStandardParser()) : CompletableFuture<HashMap<String, String>> {
         val future = CompletableFuture<HashMap<String, String>>()
         val auth: String? = "Bearer $TOKEN"
         val request = Request.Builder().url(SPOTIFY_GET_PLAYLIST_IDS_BASE_URL)
