@@ -25,7 +25,7 @@ class Database {
     private val db = Firebase.firestore
 
     /**
-     * Gets the [User], wrapped in a [Task], linked to the [userId] given.
+     * Gets the [User], wrapped in a [Task], linked to the [userId] given, [userId] should be the authentication token
      * @return [User] wrapped in a task, if the [userId] doesn't exists, it returns a null [User]
      *
      */
@@ -42,7 +42,7 @@ class Database {
     }
 
     /**
-     * Sets the [User] information in the database and link it the to [userId] given
+     * Sets the [User] information in the database and link it the to [userId] given, [userId] should be the authentication token
      */
     fun setUser(userId : String, user : User){
         val userHash = hashMapOf(
