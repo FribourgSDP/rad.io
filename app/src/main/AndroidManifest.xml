@@ -32,10 +32,6 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".SpotifyLaunchActivity"
-            android:exported="true">
-        </activity>
-        <activity
             android:name=".UserProfileActivity"
             android:exported="false" />
         <activity
