@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.github.fribourgsdp.radio">
-
     <uses-permission android:name="android.permission.INTERNET" />
 
     <application
@@ -14,6 +13,9 @@
         android:usesCleartextTraffic="true">
         <activity
             android:name=".UserProfileActivity"
+            android:exported="false" />
+        <activity
+            android:name=".FireBaseTestActivity"
             android:exported="false" />
         <activity
             android:name=".DisplayLyricsActivity"
@@ -37,5 +39,6 @@
             </intent-filter>
         </activity>
     </application>
+
 
 </manifest>
