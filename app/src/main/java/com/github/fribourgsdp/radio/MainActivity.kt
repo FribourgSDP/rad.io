@@ -22,7 +22,7 @@ class MainActivity : AppCompatActivity() {
         settingsButton.setOnClickListener {
             startActivity(Intent(this, SettingsActivity::class.java))
         }
-        
+
         val button : Button = findViewById(R.id.button)
         button.setOnClickListener {
             startActivity(Intent(this, DisplayLyricsActivity::class.java))

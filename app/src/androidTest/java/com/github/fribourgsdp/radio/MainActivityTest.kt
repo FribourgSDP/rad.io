@@ -54,7 +54,7 @@ class MainActivityTest {
 
         Intents.release()
     }
-    
+
     @Test
     fun correctTransitionToDisplayLyricsActivity(){
         Intents.init()

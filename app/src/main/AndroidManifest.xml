@@ -25,6 +25,9 @@
             android:name=".GameSettingsActivity"
             android:exported="true" />
         <activity
+            android:name=".GoogleSignInActivity"
+            android:exported="false" />
+        <activity
             android:name=".MainActivity"
             android:exported="true">
             <intent-filter>
