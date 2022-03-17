@@ -78,6 +78,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="16dp"
                 android:queryHint="@string/playlist_hint"
+                android:iconifiedByDefault="false"
                 app:layout_constraintBottom_toBottomOf="@id/playlist"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toEndOf="@id/playlist"
