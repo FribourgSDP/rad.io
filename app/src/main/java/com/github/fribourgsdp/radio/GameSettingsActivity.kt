@@ -39,6 +39,7 @@ class GameSettingsActivity : AppCompatActivity() {
             playlistListView.visibility = View.VISIBLE
         }
 
+        var selectedPlaylist = ""
         playlistSearchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener{
             override fun onQueryTextSubmit(query: String?): Boolean {
                 playlistSearchView.clearFocus()
@@ -46,8 +47,9 @@ class GameSettingsActivity : AppCompatActivity() {
                 // When selected, hide the possibilities
                 playlistListView.visibility = View.GONE
 
-                if (playlistsNames.contains(query)) {
+                if (playlistsNames.contains(query) && query != null) {
                     playlistAdapter.filter.filter(query)
+                    selectedPlaylist = query
                 } else {
                     Toast.makeText(applicationContext, "Playlist $query not found", Toast.LENGTH_SHORT).show()
                 }
@@ -64,7 +66,6 @@ class GameSettingsActivity : AppCompatActivity() {
             }
         })
 
-        var selectedPlaylist = ""
         playlistListView.setOnItemClickListener{ parent, _, position, _ ->
             selectedPlaylist = parent.getItemAtPosition(position).toString()
             playlistSearchView.setQuery(selectedPlaylist, true)
