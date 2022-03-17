@@ -46,10 +46,7 @@ class UserProfileActivity : AppCompatActivity() {
         findViewById<TextView>(R.id.spotifyStatus).apply {
             text = if (user.spotifyLinked) "linked" else "unlinked"
         }
-
-
-
-
+        
         firebaseAuth = FirebaseAuth.getInstance()
         checkUser()
 
@@ -59,24 +56,12 @@ class UserProfileActivity : AppCompatActivity() {
             startActivity(Intent(this, MainActivity::class.java))
             finish()
         }
-
-
-
-
         findViewById<ImageView>(R.id.userIcon).setColorFilter(PorterDuffColorFilter(user.color, PorterDuff.Mode.ADD))
     }
 
-    companion object {
-        fun buildReqest(): AuthorizationRequest{
-            return AuthorizationRequest.Builder(MY_CLIENT_ID, AuthorizationResponse.Type.TOKEN, REDIRECT_URI)
-                .setScopes(arrayOf(SCOPES))
-                .setShowDialog(true)
-                .build()
-        }
-    }
 
     private fun authenticateUser() {
-        AuthorizationClient.openLoginInBrowser(this, buildReqest())
+        AuthorizationClient.openLoginInBrowser(this, buildRequest())
     }
 
 
@@ -92,6 +77,14 @@ class UserProfileActivity : AppCompatActivity() {
             //get user info
             /* TODO MAP FIREBASE INFO TO USER*/
 
+        }
+    }
+    companion object {
+        fun buildRequest(): AuthorizationRequest{
+            return AuthorizationRequest.Builder(MY_CLIENT_ID, AuthorizationResponse.Type.TOKEN, REDIRECT_URI)
+                .setScopes(arrayOf(SCOPES))
+                .setShowDialog(true)
+                .build()
         }
     }
 }
