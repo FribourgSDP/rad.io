@@ -20,7 +20,6 @@ class LobbyActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_lobby)
-
         val host = intent.getStringExtra(GAME_HOST_KEY)?.let { User(it) }!!
         val gameName  = intent.getStringExtra(GAME_NAME_KEY)!!
         val playlist  = intent.getStringExtra(GAME_PLAYLIST_KEY)?.let { Playlist(it) }!!
@@ -28,14 +27,7 @@ class LobbyActivity : AppCompatActivity() {
         val withHint  = intent.getBooleanExtra(GAME_HINT_KEY, false)
         val isPrivate = intent.getBooleanExtra(GAME_PRIVACY_KEY, false)
 
-        // Init text views
-        uuidTextView     = findViewById(R.id.uuidText)
-        hostNameTextView = findViewById(R.id.hostNameText)
-        gameNameTextView = findViewById(R.id.gameNameText)
-        playlistTextView = findViewById(R.id.playlistText)
-        nbRoundsTextView = findViewById(R.id.nbRoundsText)
-        withHintTextView = findViewById(R.id.withHintText)
-        privateTextView  = findViewById(R.id.privateText)
+        initTextViews()
 
         // Update their values
         uuidTextView.text     = getString(R.string.uuid_text_format, uuid)
@@ -51,5 +43,15 @@ class LobbyActivity : AppCompatActivity() {
     private fun createUUID() : Int {
         // TODO: When we will be able to connect to the server, this will get the key and increment it by 1.
         return 1
+    }
+
+    private fun initTextViews() {
+        uuidTextView     = findViewById(R.id.uuidText)
+        hostNameTextView = findViewById(R.id.hostNameText)
+        gameNameTextView = findViewById(R.id.gameNameText)
+        playlistTextView = findViewById(R.id.playlistText)
+        nbRoundsTextView = findViewById(R.id.nbRoundsText)
+        withHintTextView = findViewById(R.id.withHintText)
+        privateTextView  = findViewById(R.id.privateText)
     }
 }
