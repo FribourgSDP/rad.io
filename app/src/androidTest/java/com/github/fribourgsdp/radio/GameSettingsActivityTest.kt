@@ -27,7 +27,7 @@ import org.junit.runner.RunWith
 @RunWith(AndroidJUnit4::class)
 class GameSettingsActivityTest {
     @get:Rule
-    var mainActivityRule = ActivityScenarioRule(GameSettingsActivity::class.java)
+    var gameSettingsActivityRule = ActivityScenarioRule(GameSettingsActivity::class.java)
 
     private val ctx: Context = ApplicationProvider.getApplicationContext()
 
