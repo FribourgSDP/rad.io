@@ -14,6 +14,7 @@ const val GAME_HINT_KEY = "com.github.fribourgsdp.radio.GAME_HINT"
 const val GAME_PRIVACY_KEY = "com.github.fribourgsdp.radio.GAME_PRIVACY"
 
 class GameSettingsActivity : AppCompatActivity() {
+    private val host = getHost()
 
     private lateinit var nameInput : EditText
     private lateinit var nbRoundsInput : EditText
@@ -32,27 +33,22 @@ class GameSettingsActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_game_settings)
 
-        val host = getHost()
-
         nameInput = findViewById(R.id.nameInput)
         nbRoundsInput = findViewById(R.id.nbRoundsInput)
         hintCheckBox = findViewById(R.id.hintCheckBox)
         privacyCheckBox = findViewById(R.id.privacyCheckBox)
         startButton = findViewById(R.id.startButton)
-
         playlistSearchView = findViewById(R.id.playlistSearchView)
         playlistListView = findViewById(R.id.playlistListView)
         playlistsNames = getUserPlaylistNames(host)
+        
         playlistAdapter = ArrayAdapter(
             this, android.R.layout.simple_list_item_1, playlistsNames
         )
-
         playlistListView.adapter = playlistAdapter
 
-        playlistSearchView.setOnSearchClickListener {
-            // When user is clicks on the bar, show the possibilities
-            playlistListView.visibility = View.VISIBLE
-        }
+        // When user is clicks on the bar, show the possibilities
+        playlistSearchView.setOnSearchClickListener { playlistListView.visibility = View.VISIBLE }
 
         playlistSearchView.setOnQueryTextListener(searchViewOnQueryBehavior())
 
@@ -62,16 +58,7 @@ class GameSettingsActivity : AppCompatActivity() {
             startButton.isEnabled = true
         }
 
-        startButton.setOnClickListener(
-            startButtonBehavior(
-                selectedPlaylist,
-                host.name,
-                nameInput.text.toString().ifEmpty { getString(R.string.default_game_name) },
-                nbRoundsInput.text.toString().ifEmpty { getString(R.string.default_game_nb_rounds) }.toInt(),
-                hintCheckBox.isChecked,
-                privacyCheckBox.isChecked
-            )
-        )
+        startButton.setOnClickListener(startButtonBehavior())
 
     }
 
@@ -88,15 +75,15 @@ class GameSettingsActivity : AppCompatActivity() {
             .toTypedArray()
     }
 
-    private fun startButtonBehavior(selectedPlaylist: String, hostName: String, gameName: String, nbRound: Int, withHint: Boolean, private: Boolean) : View.OnClickListener {
+    private fun startButtonBehavior() : View.OnClickListener {
         return View.OnClickListener {
             val intent: Intent = Intent(this, LobbyActivity::class.java).apply {
-                putExtra(GAME_HOST_KEY, hostName)
-                putExtra(GAME_NAME_KEY, gameName)
+                putExtra(GAME_HOST_KEY, host.name)
+                putExtra(GAME_NAME_KEY, nameInput.text.toString().ifEmpty { getString(R.string.default_game_name) })
                 putExtra(GAME_PLAYLIST_KEY, selectedPlaylist)
-                putExtra(GAME_NB_ROUNDS_KEY, nbRound)
-                putExtra(GAME_HINT_KEY, withHint)
-                putExtra(GAME_PRIVACY_KEY, private)
+                putExtra(GAME_NB_ROUNDS_KEY, nbRoundsInput.text.toString().ifEmpty { getString(R.string.default_game_nb_rounds) }.toInt())
+                putExtra(GAME_HINT_KEY, hintCheckBox.isChecked,)
+                putExtra(GAME_PRIVACY_KEY, privacyCheckBox.isChecked)
             }
             startActivity(intent)
         }
