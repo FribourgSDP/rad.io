@@ -1,14 +1,12 @@
 package com.github.fribourgsdp.radio
 
 import java.util.*
+import kotlinx.serialization.Serializable
 
-class Song (songName: String, artistName: String, songLyrics: String) {
-
-    var name: String = reformatName(songName)
-        set(value) {field = reformatName(value)}
-    var artist: String = reformatName(artistName)
-        set(value) {field = reformatName(value)}
-    var lyrics: String = songLyrics
+@Serializable
+class Song (private val rawName: String, private val rawArtist: String, val lyrics: String) {
+    val name: String = reformatName(rawName)
+    val artist: String = reformatName(rawArtist)
 
     constructor (song_name: String): this(song_name, "", "")
     constructor(song_name:String, artist_name: String): this(song_name, artist_name, "")

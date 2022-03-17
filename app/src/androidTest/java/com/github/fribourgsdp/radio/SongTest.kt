@@ -20,13 +20,14 @@ internal class SongTest {
         assertEquals("", test.lyrics)
     }
 
-    @Test
-    //In the case where a user creates a playlist, he may have mistakenly written the title wrong and may want to change it
-    fun changing_song_name_is_possible() {
-        val test: Song = Song("Song Name")
-        test.name = "this new name is better"
-        assertEquals("This New Name Is Better", test.name)
-    }
+    /* Playlists are now immutable */
+//    @Test
+//    //In the case where a user creates a playlist, he may have mistakenly written the title wrong and may want to change it
+//    fun changing_song_name_is_possible() {
+//        val test: Song = Song("Song Name")
+//        test.name = "this new name is better"
+//        assertEquals("This New Name Is Better", test.name)
+//    }
 
     @Test
     fun title_formatting_gets_rid_of_redundant_whitespaces(){
@@ -40,19 +41,19 @@ internal class SongTest {
         assertEquals("Story Of My Life Loser Hello", test.name)
     }
 
-    @Test
-    fun addingArtistNameWorks(){
-        val test: Song = Song("new song")
-        test.artist = "best artist"
-        assertEquals("Best Artist", test.artist)
-    }
+//    @Test
+//    fun addingArtistNameWorks(){
+//        val test: Song = Song("new song")
+//        test.artist = "best artist"
+//        assertEquals("Best Artist", test.artist)
+//    }
 
-    @Test
-    fun addingLyricsWorks(){
-        val test: Song = Song("new song")
-        test.lyrics = "louloulou these are great lyrics"
-        assertEquals("louloulou these are great lyrics", test.lyrics)
-    }
+//    @Test
+//    fun addingLyricsWorks(){
+//        val test: Song = Song("new song")
+//        test.lyrics = "louloulou these are great lyrics"
+//        assertEquals("louloulou these are great lyrics", test.lyrics)
+//    }
 
     @Test
     fun songsAreEqualIfSongNameAndArtistAreTheSame(){
@@ -72,12 +73,12 @@ internal class SongTest {
         assertEquals(false, test2.equals(test3))
     }
 
-    @Test
-    fun changingSongNameWorksAndSatisfiesFormat(){
-        val test1: Song = Song("abc", "bobby")
-        test1.name = "lala the    pig"
-        assertEquals("Lala The Pig", test1.name)
-    }
+//    @Test
+//    fun changingSongNameWorksAndSatisfiesFormat(){
+//        val test1: Song = Song("abc", "bobby")
+//        test1.name = "lala the    pig"
+//        assertEquals("Lala The Pig", test1.name)
+//    }
 
     @Test
     fun equalityHoldsWhenTitleAndArtistMatch(){
