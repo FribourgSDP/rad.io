@@ -22,6 +22,16 @@ android {
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
 
+
+    signingConfigs {
+        debug {
+            storeFile file('../keystore/debug.keystore')
+            storePassword "android"
+            keyAlias "androiddebugkey"
+            keyPassword "android"
+        }
+    }
+
     buildTypes {
         release {
             minifyEnabled false
@@ -40,22 +50,21 @@ android {
     }
 
     //enable viewBinding
-    buildFeatures{
+    buildFeatures {
         viewBinding true
     }
 
 }
 
 
-apply plugin: 'com.google.gms.google-services'
 
 jacoco {
     toolVersion = "0.8.7"
 }
 
+apply plugin: 'com.google.gms.google-services'
 
 dependencies {
-
     implementation 'androidx.core:core-ktx:1.7.0'
     implementation 'androidx.appcompat:appcompat:1.4.1'
     implementation 'com.google.android.material:material:1.5.0'
@@ -69,11 +78,13 @@ dependencies {
     implementation 'com.google.android.gms:play-services-auth:20.1.0'
 
 
+
     //for firebase
     implementation 'com.google.firebase:firebase-analytics-ktx'
     implementation 'com.google.firebase:firebase-auth-ktx'
     implementation 'com.google.firebase:firebase-firestore-ktx'
     implementation platform('com.google.firebase:firebase-bom:29.2.0')
+
 
 
     implementation 'com.squareup.okhttp3:okhttp:3.10.0'
