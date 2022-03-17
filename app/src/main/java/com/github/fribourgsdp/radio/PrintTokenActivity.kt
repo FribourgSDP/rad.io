@@ -47,30 +47,20 @@ class PrintTokenActivity : AppCompatActivity() {
 
         fun getPlaylistContent(playlistId: String, client: OkHttpClient = OkHttpClient(), parser : JSONParser = JSONStandardParser()) : CompletableFuture<String> {
             val future = CompletableFuture<String>()
-            val request = buildGetPlaylistContentRequest(playlistId, TOKEN)
+            val request = buildSpotifyRequest(SPOTIFY_PLAYLIST_INFO_BASE_URL + playlistId + SPOTIFY_SONG_FILTER_NAME_ARTIST, TOKEN)
             client.newCall(request).enqueue(GetPlaylistInfoCallback(future, parser))
             return future
         }
 
-        fun buildGetPlaylistContentRequest(playlistId: String, user_token: String?): Request{
-            val auth: String? = "Bearer $user_token"
-            val url = SPOTIFY_PLAYLIST_INFO_BASE_URL + playlistId + SPOTIFY_SONG_FILTER_NAME_ARTIST
-            return Request.Builder().url(url)
-                .addHeader("Accept", "application/json")
-                .addHeader("Content-Type", "application/json")
-                .addHeader("Authorization", auth)
-                .build()
-        }
-
         fun getUserPlaylists(client: OkHttpClient = OkHttpClient(), parser : JSONParser = JSONStandardParser()) : CompletableFuture<HashMap<String, String>> {
             val future = CompletableFuture<HashMap<String, String>>()
-            val request = buildGetPlaylistsRequest(TOKEN)
+            val request = buildSpotifyRequest(SPOTIFY_GET_PLAYLIST_IDS_BASE_URL, TOKEN)
             client.newCall(request).enqueue(GetPlaylistIdsCallback(future, parser))
             return future
         }
 
-        fun buildGetPlaylistsRequest(user_token: String?): Request {
-            return Request.Builder().url(SPOTIFY_GET_PLAYLIST_IDS_BASE_URL)
+        fun buildSpotifyRequest(url: String, user_token: String?): Request{
+            return Request.Builder().url(url)
                 .addHeader("Accept", "application/json")
                 .addHeader("Content-Type", "application/json")
                 .addHeader("Authorization", "Bearer $user_token")
@@ -124,21 +114,6 @@ class PrintTokenActivity : AppCompatActivity() {
                     }
                 }
                 future.complete(playlistInfo)
-            }
-        }
-
-        abstract class JSONParser : JSONObject(){
-            abstract fun parse(s : String?) : JSONObject?
-        }
-
-        class JSONStandardParser() : JSONParser() {
-            override fun parse(s : String?) : JSONObject? {
-                val out : JSONObject? = try{
-                    s?.let { JSONObject(it) }
-                } catch (e : JSONException){
-                    null
-                }
-                return out
             }
         }
     }

@@ -101,20 +101,5 @@ class LyricsGetter {
                 }
             }
         }
-
-        abstract class JSONParser : JSONObject(){
-            abstract fun parse(s : String?) : JSONObject?
-        }
-        
-        class JSONStandardParser() : JSONParser() {
-            override fun parse(s : String?) : JSONObject? {
-                val out : JSONObject? = try{
-                    s?.let { JSONObject(it) }
-                } catch (e : JSONException){
-                    null
-                }
-                return out
-            }
-        }
     }
 }

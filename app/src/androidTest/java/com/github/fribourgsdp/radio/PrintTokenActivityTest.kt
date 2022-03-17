@@ -24,30 +24,21 @@ class PrintTokenActivityTest {
     }
 
     @Test
-    fun buildGetPlaylistsRequestWorks(){
+    fun buildSpotifyRequestWorks(){
         val tokenTest = "123456"
         assert(
             Request.Builder().url(SPOTIFY_GET_PLAYLIST_IDS_BASE_URL)
             .addHeader("Accept", "application/json")
             .addHeader("Content-Type", "application/json")
             .addHeader("Authorization", "Bearer $tokenTest")
-            .build().url() == PrintTokenActivity.buildGetPlaylistsRequest(tokenTest).url())
+            .build().url() == PrintTokenActivity.buildSpotifyRequest(
+                SPOTIFY_GET_PLAYLIST_IDS_BASE_URL, tokenTest).url())
     }
 
-    @Test
-    fun buildGetPlaylistContentRequestWorks(){
-        val tokenTest = "123456"
-        val playlistId = "uniqueId"
-        assert(Request.Builder().url(SPOTIFY_PLAYLIST_INFO_BASE_URL + playlistId + SPOTIFY_SONG_FILTER_NAME_ARTIST)
-            .addHeader("Accept", "application/json")
-            .addHeader("Content-Type", "application/json")
-            .addHeader("Authorization", "Bearer $tokenTest")
-            .build().url() == PrintTokenActivity.buildGetPlaylistContentRequest(playlistId, tokenTest).url())
-    }
 
     @Test(expected = ExecutionException::class)
     fun getPlaylistsFailingHttpClient(){
-        val future = PrintTokenActivity.getUserPlaylists(FailingHTTPClient(), PrintTokenActivity.Companion.JSONStandardParser())
+        val future = PrintTokenActivity.getUserPlaylists(FailingHTTPClient(), JSONStandardParser())
         println(future.get())
     }
 
@@ -177,19 +168,19 @@ class PrintTokenActivityTest {
             }
         }
     }
-    private class NullJSONParser() : PrintTokenActivity.Companion.JSONParser() {
+    private class NullJSONParser() : JSONParser() {
         override fun parse(s: String?): JSONObject? {
             return null
         }
     }
 
-    private class ErrorJSONParser : PrintTokenActivity.Companion.JSONParser(){
+    private class ErrorJSONParser : JSONParser(){
         override fun parse(s: String?): JSONObject {
             return JSONObject("{\"error\": \"bla\"}")
         }
     }
 
-    private class mockPlaylistJSONParser : PrintTokenActivity.Companion.JSONParser(){
+    private class mockPlaylistJSONParser : JSONParser(){
         override fun parse(s: String?): JSONObject? {
             return JSONObject()
                 .put("items",
@@ -199,7 +190,7 @@ class PrintTokenActivityTest {
         }
     }
 
-    private class mockPlaylistContentJSONParser : PrintTokenActivity.Companion.JSONParser(){
+    private class mockPlaylistContentJSONParser : JSONParser(){
         override fun parse(s: String?): JSONObject? {
             return JSONObject()
                 .put("items",
