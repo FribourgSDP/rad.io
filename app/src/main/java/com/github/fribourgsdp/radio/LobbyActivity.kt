@@ -21,24 +21,26 @@ class LobbyActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_lobby)
-        val host = intent.getStringExtra(GAME_HOST_KEY)?.let { User(it) }!!
-        val gameName  = intent.getStringExtra(GAME_NAME_KEY)!!
-        val playlist  = intent.getStringExtra(GAME_PLAYLIST_KEY)?.let { Playlist(it) }!!
-        val nbRounds  = intent.getIntExtra(GAME_NB_ROUNDS_KEY, getString(R.string.default_game_nb_rounds).toInt())
-        val withHint  = intent.getBooleanExtra(GAME_HINT_KEY, false)
-        val isPrivate = intent.getBooleanExtra(GAME_PRIVACY_KEY, false)
+        val hostName        = intent.getStringExtra(GAME_HOST_KEY)
+        val gameName        = intent.getStringExtra(GAME_NAME_KEY)
+        val playlistName    = intent.getStringExtra(GAME_PLAYLIST_KEY)
+        val nbRounds        = intent.getIntExtra(GAME_NB_ROUNDS_KEY, getString(R.string.default_game_nb_rounds).toInt())
+        val withHint        = intent.getBooleanExtra(GAME_HINT_KEY, false)
+        val isPrivate       = intent.getBooleanExtra(GAME_PRIVACY_KEY, false)
 
         initTextViews()
 
         uuidTextView.text     = getString(R.string.uuid_text_format, uuid)
-        hostNameTextView.text = getString(R.string.host_name_format, host.name)
+        hostNameTextView.text = getString(R.string.host_name_format, hostName)
         gameNameTextView.text = getString(R.string.game_name_format, gameName)
-        playlistTextView.text = getString(R.string.playlist_format, playlist.name)
+        playlistTextView.text = getString(R.string.playlist_format, playlistName)
         nbRoundsTextView.text = getString(R.string.number_of_rounds_format, nbRounds)
         withHintTextView.text = getString(R.string.hints_enabled_format, withHint)
         privateTextView.text  = getString(R.string.private_format, isPrivate)
 
-        gameBuilder.setHost(host).setName(gameName).setPlaylist(playlist).setNbRounds(nbRounds).setWithHint(withHint).setPrivacy(isPrivate)
+        if (hostName != null && gameName != null && playlistName != null) {
+            gameBuilder.setHost(User(hostName)).setName(gameName).setPlaylist(Playlist(playlistName)).setNbRounds(nbRounds).setWithHint(withHint).setPrivacy(isPrivate)
+        }
     }
 
     private fun createUUID() : Int {
