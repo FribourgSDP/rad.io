@@ -43,11 +43,13 @@ android {
 }
 
 
-apply plugin: 'com.google.gms.google-services'
+
 
 jacoco {
     toolVersion = "0.8.7"
 }
+
+apply plugin: 'com.google.gms.google-services'
 
 dependencies {
     implementation 'androidx.core:core-ktx:1.7.0'
