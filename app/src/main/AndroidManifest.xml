@@ -12,6 +12,25 @@
         android:theme="@style/Theme.Radio"
         android:usesCleartextTraffic="true">
         <activity
+            android:name=".PrintTokenActivity"
+            android:exported="false" />
+        <activity
+            android:name=".SpotifyReceiveActivity"
+            android:exported="true"
+            android:label="@string/app_name"
+            android:launchMode="singleTop">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+                <data
+                    android:host="callback"
+                    android:scheme="com.github.fribourgsdp.radio" />
+            </intent-filter>
+        </activity>
+        <activity
             android:name=".LobbyActivity"
             android:exported="true" />
         <activity
