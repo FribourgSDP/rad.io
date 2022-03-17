@@ -13,12 +13,6 @@ internal class SongTest {
         assertEquals("Bob", test.artist)
     }
 
-    @Test
-    fun secondary_constructor_works(){
-        val test: Song = Song("Song Name")
-        assertEquals("Song Name", test.name)
-        assertEquals("", test.lyrics)
-    }
 
     @Test
     //In the case where a user creates a playlist, he may have mistakenly written the title wrong and may want to change it
