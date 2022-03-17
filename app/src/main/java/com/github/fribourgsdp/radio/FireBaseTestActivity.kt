@@ -16,8 +16,10 @@ class FireBaseTestActivity : AppCompatActivity() {
 
 
         val db = Database()
+        // val userAuthUID = FirebaseAuth.getInstance().currentUser?.uid // this will be used later
+        //when working with an authenticated user
 
-        val userAuthUID = "m0sd9l"//FirebaseAuth.getInstance().currentUser?.uid
+        val userAuthUID = "m0sd9l"
         // Create a new user with a first and last name
         val userNa = User("nathanDuchesne")
         db.setUser(userAuthUID,userNa)
@@ -25,7 +27,6 @@ class FireBaseTestActivity : AppCompatActivity() {
         db.getUser("m0sd9l").addOnSuccessListener { l ->
             if (l == null){
                 findViewById<TextView>(R.id.textToChange).text = "There has been an error"
-
             }else {
                 findViewById<TextView>(R.id.textToChange).text = l.name
             }
