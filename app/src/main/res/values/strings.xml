@@ -17,4 +17,5 @@
     <string name="game_name_hint">A Fun Party</string>
     <string name="default_game_name">A fun Party</string>
     <string name="default_game_nb_rounds">3</string>
+    <string name="playlist_error_format">Playlist "%s" not found</string>
 </resources>

@@ -94,6 +94,19 @@
                 app:layout_constraintStart_toStartOf="@+id/playlistSearchView"
                 app:layout_constraintTop_toBottomOf="@+id/playlistSearchView" />
 
+            <TextView
+                android:id="@+id/playlistSearchError"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:textAlignment="center"
+                android:textColor="@color/red"
+                android:visibility="gone"
+                app:layout_constraintEnd_toEndOf="@+id/playlistSearchView"
+                app:layout_constraintStart_toStartOf="@+id/playlistSearchView"
+                app:layout_constraintTop_toBottomOf="@+id/playlistSearchView" />
+
+
         </androidx.constraintlayout.widget.ConstraintLayout>
 
         <androidx.constraintlayout.widget.ConstraintLayout
@@ -145,6 +158,7 @@
         android:layout_height="wrap_content"
         android:layout_marginBottom="16dp"
         android:text="@string/start_button_text"
+        android:enabled="false"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />

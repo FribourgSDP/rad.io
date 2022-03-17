@@ -26,6 +26,7 @@ class GameSettingsActivity : AppCompatActivity() {
     private lateinit var playlistListView : ListView
     private lateinit var playlistsNames : Array<String>
     private lateinit var playlistAdapter : ArrayAdapter<String>
+    private lateinit var errorText : TextView
 
     private var selectedPlaylist = ""
 
@@ -41,11 +42,11 @@ class GameSettingsActivity : AppCompatActivity() {
         playlistSearchView = findViewById(R.id.playlistSearchView)
         playlistListView = findViewById(R.id.playlistListView)
         playlistsNames = getUserPlaylistNames(host)
-        
-        playlistAdapter = ArrayAdapter(
-            this, android.R.layout.simple_list_item_1, playlistsNames
-        )
+        playlistAdapter = ArrayAdapter(this, android.R.layout.simple_list_item_1, playlistsNames)
+        errorText = findViewById(R.id.playlistSearchError)
+
         playlistListView.adapter = playlistAdapter
+
 
         // When user is clicks on the bar, show the possibilities
         playlistSearchView.setOnSearchClickListener { playlistListView.visibility = View.VISIBLE }
@@ -99,8 +100,10 @@ class GameSettingsActivity : AppCompatActivity() {
                     playlistAdapter.filter.filter(query)
                     selectedPlaylist = query
                     startButton.isEnabled = true
+                    errorText.visibility = View.GONE
                 } else {
-                    Toast.makeText(applicationContext, "Playlist $query not found", Toast.LENGTH_SHORT).show()
+                    errorText.text = getString(R.string.playlist_error_format, query)
+                    errorText.visibility = View.VISIBLE
                     startButton.isEnabled = false
                 }
 
@@ -115,6 +118,7 @@ class GameSettingsActivity : AppCompatActivity() {
                 playlistListView.visibility = View.VISIBLE
                 playlistAdapter.filter.filter(newText)
                 startButton.isEnabled = false
+                errorText.visibility = View.GONE
                 return false
             }
         }
