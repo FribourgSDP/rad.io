@@ -15,7 +15,7 @@ class UserProfileActivity : AppCompatActivity() {
         setContentView(R.layout.activity_user_profile)
 
         /* TODO REPLACE WITH PROPER FETCH OF USER*/
-        user = User(intent.getStringExtra(USERNAME)!!)
+        user = User(intent.getStringExtra(USERNAME)!!, User.generateColor())
 
         findViewById<TextView>(R.id.username).apply {
             text = user.name
