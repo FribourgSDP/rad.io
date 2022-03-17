@@ -5,6 +5,10 @@ plugins {
     id 'com.google.gms.google-services'
 }
 
+jacoco {
+    toolVersion = "0.8.7"
+}
+
 android {
     compileSdk 31
 

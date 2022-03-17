@@ -13,4 +13,5 @@
     <string name="save_settings_button_text">Save settings</string>
     <string name="volume_text">Volume:</string>
     <string name="spotify_text">Spotify Status:</string>
+    <string name="lyrics_not_found">---No lyrics were found for this song.---</string>
 </resources>
