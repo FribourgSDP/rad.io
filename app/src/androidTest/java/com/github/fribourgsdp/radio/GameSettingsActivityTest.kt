@@ -5,9 +5,12 @@ import android.view.KeyEvent
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.espresso.Espresso.closeSoftKeyboard
 import androidx.test.espresso.Espresso.onView
+import androidx.test.espresso.ViewAssertion
 import androidx.test.espresso.action.ViewActions
+import androidx.test.espresso.assertion.ViewAssertions
 import androidx.test.espresso.intent.Intents
 import androidx.test.espresso.intent.matcher.IntentMatchers.*
+import androidx.test.espresso.matcher.ViewMatchers
 import androidx.test.espresso.matcher.ViewMatchers.withId
 import androidx.test.ext.junit.rules.ActivityScenarioRule
 import androidx.test.ext.junit.runners.AndroidJUnit4
@@ -123,5 +126,71 @@ class GameSettingsActivityTest {
         )
 
         Intents.release()
+    }
+
+    @Test
+    fun startButtonDisabledOnNoPlaylist() {
+        onView(withId(R.id.startButton))
+            .check(
+                ViewAssertions.matches(
+                    ViewMatchers.isNotEnabled()
+                )
+            )
+    }
+
+    @Test
+    fun startButtonDisabledOnBadPlaylist() {
+        onView(withId(R.id.playlistSearchView))
+            .perform(
+                ViewActions.click(),
+                ViewActions.typeText("Not a Playlist"),
+                ViewActions.pressKey(KeyEvent.KEYCODE_ENTER)
+            )
+
+        closeSoftKeyboard()
+
+        onView(withId(R.id.startButton))
+            .check(
+                ViewAssertions.matches(
+                    ViewMatchers.isNotEnabled()
+                )
+            )
+    }
+
+    @Test
+    fun startButtonDisabledWhenRewritingPlaylist() {
+        // First type correct playlist
+        onView(withId(R.id.playlistSearchView))
+            .perform(
+                ViewActions.click(),
+                ViewActions.typeText("Rap Playlist"),
+                ViewActions.pressKey(KeyEvent.KEYCODE_ENTER)
+            )
+
+        closeSoftKeyboard()
+
+        onView(withId(R.id.startButton))
+            .check(
+                ViewAssertions.matches(
+                    ViewMatchers.isEnabled()
+                )
+            )
+
+        // Then delete on character
+        onView(withId(R.id.playlistSearchView))
+            .perform(
+                ViewActions.click(),
+                ViewActions.pressKey(KeyEvent.KEYCODE_DEL),
+                ViewActions.pressKey(KeyEvent.KEYCODE_ENTER)
+            )
+
+        closeSoftKeyboard()
+
+        onView(withId(R.id.startButton))
+            .check(
+                ViewAssertions.matches(
+                    ViewMatchers.isNotEnabled()
+                )
+            )
     }
 }
