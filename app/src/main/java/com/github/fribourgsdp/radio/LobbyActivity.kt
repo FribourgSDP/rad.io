@@ -16,6 +16,7 @@ class LobbyActivity : AppCompatActivity() {
     private lateinit var withHintTextView : TextView
     private lateinit var privateTextView : TextView
 
+    private val gameBuilder = Game.Builder()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -29,7 +30,6 @@ class LobbyActivity : AppCompatActivity() {
 
         initTextViews()
 
-        // Update their values
         uuidTextView.text     = getString(R.string.uuid_text_format, uuid)
         hostNameTextView.text = getString(R.string.host_name_format, host.name)
         gameNameTextView.text = getString(R.string.game_name_format, gameName)
@@ -38,6 +38,7 @@ class LobbyActivity : AppCompatActivity() {
         withHintTextView.text = getString(R.string.hints_enabled_format, withHint)
         privateTextView.text  = getString(R.string.private_format, isPrivate)
 
+        gameBuilder.setHost(host).setName(gameName).setPlaylist(playlist).setNbRounds(nbRounds).setWithHint(withHint).setPrivacy(isPrivate)
     }
 
     private fun createUUID() : Int {
