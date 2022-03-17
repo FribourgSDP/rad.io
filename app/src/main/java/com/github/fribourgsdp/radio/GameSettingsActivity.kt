@@ -14,24 +14,39 @@ const val GAME_HINT_KEY = "com.github.fribourgsdp.radio.GAME_HINT"
 const val GAME_PRIVACY_KEY = "com.github.fribourgsdp.radio.GAME_PRIVACY"
 
 class GameSettingsActivity : AppCompatActivity() {
+
+    private lateinit var nameInput : EditText
+    private lateinit var nbRoundsInput : EditText
+    private lateinit var hintCheckBox : CheckBox
+    private lateinit var privacyCheckBox : CheckBox
+    private lateinit var startButton : Button
+
+    private lateinit var playlistSearchView : SearchView
+    private lateinit var playlistListView : ListView
+    private lateinit var playlistsNames : Array<String>
+    private lateinit var playlistAdapter : ArrayAdapter<String>
+
+    private var selectedPlaylist = ""
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_game_settings)
 
         val host = getHost()
 
-        val nameInput : EditText = findViewById(R.id.nameInput)
-        val nbRoundsInput : EditText = findViewById(R.id.nbRoundsInput)
-        val hintCheckBox : CheckBox = findViewById(R.id.hintCheckBox)
-        val privacyCheckBox : CheckBox = findViewById(R.id.privacyCheckBox)
-        val startButton : Button = findViewById(R.id.startButton)
+        nameInput = findViewById(R.id.nameInput)
+        nbRoundsInput = findViewById(R.id.nbRoundsInput)
+        hintCheckBox = findViewById(R.id.hintCheckBox)
+        privacyCheckBox = findViewById(R.id.privacyCheckBox)
+        startButton = findViewById(R.id.startButton)
 
-        val playlistSearchView : SearchView = findViewById(R.id.playlistSearchView)
-        val playlistListView : ListView = findViewById(R.id.playlistListView)
-        val playlistsNames = getUserPlaylistNames(host)
-        val playlistAdapter : ArrayAdapter<String> = ArrayAdapter(
+        playlistSearchView = findViewById(R.id.playlistSearchView)
+        playlistListView = findViewById(R.id.playlistListView)
+        playlistsNames = getUserPlaylistNames(host)
+        playlistAdapter = ArrayAdapter(
             this, android.R.layout.simple_list_item_1, playlistsNames
         )
+
         playlistListView.adapter = playlistAdapter
 
         playlistSearchView.setOnSearchClickListener {
@@ -39,57 +54,24 @@ class GameSettingsActivity : AppCompatActivity() {
             playlistListView.visibility = View.VISIBLE
         }
 
-        var selectedPlaylist = ""
-        playlistSearchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener{
-            override fun onQueryTextSubmit(query: String?): Boolean {
-                playlistSearchView.clearFocus()
-
-                // When selected, hide the possibilities
-                playlistListView.visibility = View.GONE
-
-                if (playlistsNames.contains(query) && query != null) {
-                    playlistAdapter.filter.filter(query)
-                    selectedPlaylist = query
-                } else {
-                    Toast.makeText(applicationContext, "Playlist $query not found", Toast.LENGTH_SHORT).show()
-                }
-
-                return false
-
-            }
-
-            override fun onQueryTextChange(newText: String?): Boolean {
-                // When user is typing, show the possibilities
-                playlistListView.visibility = View.VISIBLE
-                playlistAdapter.filter.filter(newText)
-                return false
-            }
-        })
+        playlistSearchView.setOnQueryTextListener(searchViewOnQueryBehavior())
 
         playlistListView.setOnItemClickListener{ parent, _, position, _ ->
             selectedPlaylist = parent.getItemAtPosition(position).toString()
             playlistSearchView.setQuery(selectedPlaylist, true)
+            startButton.isEnabled = true
         }
 
-        startButton.setOnClickListener {
-            if (selectedPlaylist.isEmpty()) {
-                Toast.makeText(applicationContext, "You need to select a valid playlist.", Toast.LENGTH_SHORT).show()
-            } else {
-                val intent : Intent = Intent(this, LobbyActivity::class.java).apply {
-                    putExtra(GAME_HOST_KEY, host.name)
-                    putExtra(GAME_NAME_KEY,
-                        nameInput.text.toString().ifEmpty { getString(R.string.default_game_name) }
-                    )
-                    putExtra(GAME_PLAYLIST_KEY, selectedPlaylist)
-                    putExtra(GAME_NB_ROUNDS_KEY,
-                        nbRoundsInput.text.toString().ifEmpty { getString(R.string.default_game_nb_rounds) }.toInt()
-                    )
-                    putExtra(GAME_HINT_KEY, hintCheckBox.isChecked)
-                    putExtra(GAME_PRIVACY_KEY, privacyCheckBox.isChecked)
-                }
-                startActivity(intent)
-            }
-        }
+        startButton.setOnClickListener(
+            startButtonBehavior(
+                selectedPlaylist,
+                host.name,
+                nameInput.text.toString().ifEmpty { getString(R.string.default_game_name) },
+                nbRoundsInput.text.toString().ifEmpty { getString(R.string.default_game_nb_rounds) }.toInt(),
+                hintCheckBox.isChecked,
+                privacyCheckBox.isChecked
+            )
+        )
 
     }
 
@@ -104,5 +86,50 @@ class GameSettingsActivity : AppCompatActivity() {
         return user.getPlaylists()
             .map { x -> x.name }
             .toTypedArray()
+    }
+
+    private fun startButtonBehavior(selectedPlaylist: String, hostName: String, gameName: String, nbRound: Int, withHint: Boolean, private: Boolean) : View.OnClickListener {
+        return View.OnClickListener {
+            val intent: Intent = Intent(this, LobbyActivity::class.java).apply {
+                putExtra(GAME_HOST_KEY, hostName)
+                putExtra(GAME_NAME_KEY, gameName)
+                putExtra(GAME_PLAYLIST_KEY, selectedPlaylist)
+                putExtra(GAME_NB_ROUNDS_KEY, nbRound)
+                putExtra(GAME_HINT_KEY, withHint)
+                putExtra(GAME_PRIVACY_KEY, private)
+            }
+            startActivity(intent)
+        }
+    }
+
+    private fun searchViewOnQueryBehavior() : SearchView.OnQueryTextListener {
+        return object : SearchView.OnQueryTextListener {
+            override fun onQueryTextSubmit(query: String?): Boolean {
+                // When selected, hide the possibilities
+                playlistListView.visibility = View.GONE
+
+                if (playlistsNames.contains(query) && query != null) {
+                    playlistAdapter.filter.filter(query)
+                    selectedPlaylist = query
+                    startButton.isEnabled = true
+                } else {
+                    Toast.makeText(applicationContext, "Playlist $query not found", Toast.LENGTH_SHORT).show()
+                    startButton.isEnabled = false
+                }
+
+                playlistSearchView.clearFocus()
+
+                return false
+
+            }
+
+            override fun onQueryTextChange(newText: String?): Boolean {
+                // When user is typing, show the possibilities
+                playlistListView.visibility = View.VISIBLE
+                playlistAdapter.filter.filter(newText)
+                startButton.isEnabled = false
+                return false
+            }
+        }
     }
 }
