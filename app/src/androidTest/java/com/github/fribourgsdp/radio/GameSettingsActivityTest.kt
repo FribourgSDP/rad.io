@@ -193,4 +193,29 @@ class GameSettingsActivityTest {
                 )
             )
     }
+
+
+    @Test
+    fun errorTextOnBadPlaylistName() {
+        val fakeName = "Not a Playlist"
+
+        onView(withId(R.id.playlistSearchView))
+            .perform(
+                ViewActions.click(),
+                ViewActions.typeText(fakeName),
+                ViewActions.pressKey(KeyEvent.KEYCODE_ENTER)
+            )
+
+        closeSoftKeyboard()
+
+        val errorTextView = onView(withId(R.id.playlistSearchError))
+
+        errorTextView.check(ViewAssertions.matches(ViewMatchers.isDisplayed()))
+        errorTextView.check(
+            ViewAssertions.matches(
+                ViewMatchers.withText(ctx.getString(R.string.playlist_error_format, fakeName))
+            )
+        )
+
+    }
 }
