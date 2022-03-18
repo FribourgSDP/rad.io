@@ -7,18 +7,18 @@
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:1050875028942:android:d64a319ef2f2066af7779f",
+        "mobilesdk_app_id": "1:1050875028942:android:b1c51ccb8fcfc960f7779f",
         "android_client_info": {
           "package_name": "com.github.fribourgsdp.radio"
         }
       },
       "oauth_client": [
         {
-          "client_id": "1050875028942-6uoue5bnhep5q7o3ll6tk3bjd2r31ao9.apps.googleusercontent.com",
+          "client_id": "1050875028942-qdvdvhsknglplieoll18r8hlpudl899s.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
             "package_name": "com.github.fribourgsdp.radio",
-            "certificate_hash": "262cf1eca06bc5dccaad3c84465cf72d1a90f8e2"
+            "certificate_hash": "4af55e1880929b5de257b31f03b3e0983f4eac07"
           }
         },
         {
