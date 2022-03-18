@@ -25,6 +25,3 @@ hs_err_pid*
 
 #ipynb checkpoints
 .ipynb_checkpoints/
-
-#keystore
-keystore/
