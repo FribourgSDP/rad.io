@@ -61,6 +61,15 @@
             style="@style/MainButtons"
             android:text="GO TO LYRICS GETTER" />
 
+
+
+        <Button
+            android:id="@+id/FireBaseButton"
+            style="@style/MainButtons"
+            android:text="FireBase"
+             />
+
     </LinearLayout>
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>
