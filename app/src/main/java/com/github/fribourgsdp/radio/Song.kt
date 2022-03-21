@@ -3,22 +3,15 @@ package com.github.fribourgsdp.radio
 import java.util.*
 import java.util.concurrent.CompletableFuture
 
-class Song (songName: String, artistName: String, private val songLyrics: CompletableFuture<String>) {
+class Song (songName: String, artistName: String, var lyrics: String) {
 
     var name: String = reformatName(songName)
         set(value) {field = reformatName(value)}
     var artist: String = reformatName(artistName)
         set(value) {field = reformatName(value)}
-    private var userProvidedLyrics : String = ""
-    var lyrics: String
-        get() = userProvidedLyrics.ifEmpty {
-            songLyrics.get()
-        }
-        set(value) {userProvidedLyrics = value}
 
-    constructor (songName: String): this(songName, "", LyricsGetter.getLyrics(songName))
-    constructor(songName:String, artistName: String): this(songName, artistName, LyricsGetter.getLyrics(songName, artistName))
-    constructor(songName: String, artistName: String, lyrics: String): this(songName, artistName, CompletableFuture.completedFuture(lyrics))
+    constructor (songName: String): this(songName, "", "")
+    constructor(songName:String, artistName: String): this(songName, artistName, "")
 
     private fun reformatName(unformattedName: String): String {
         val noSpacesRegex = Regex(" +")
