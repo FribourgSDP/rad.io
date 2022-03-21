@@ -1,19 +1,9 @@
 package com.github.fribourgsdp.radio
 
 
-import android.content.ContentValues
-import android.content.ContentValues.TAG
-import android.util.Log
-import androidx.annotation.NonNull
-import com.google.android.gms.tasks.Continuation
 import com.google.android.gms.tasks.Task
-import com.google.android.gms.tasks.Tasks
-import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
-import java.lang.Exception
-
-import java.util.concurrent.CompletableFuture
 
 /**
  *
@@ -50,6 +40,29 @@ class Database {
             "first" to user.name
         )
         db.collection("user").document(userId).set(userHash)
+    }
+
+    /**
+     * Gets a unique ID for a lobby. It is an asynchronous operation, so it is returned in a task.
+     * @return a task loading a unique ID for the lobby.
+     */
+    fun getLobbyId() : Task<Long> {
+        val keyID = "current_id"
+        val keyMax = "max_id"
+
+        val docRef = db.collection("lobby").document("id")
+
+        return db.runTransaction { transaction ->
+            val snapshot = transaction.get(docRef)
+
+            val id = snapshot.getLong(keyID)!!
+            val nextId = (id + 1) % snapshot.getLong(keyMax)!!
+
+            transaction.update(docRef, keyID, nextId)
+
+            // Success
+            id
+        }
     }
 
 }
