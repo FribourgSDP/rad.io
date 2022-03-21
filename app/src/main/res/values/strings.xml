@@ -6,7 +6,7 @@
     <string name="playlist_hint">What playlist do you want ?</string>
     <string name="profile_picture_description">Profile picture</string>
     <string name="playlist_selection_text">Playlist:</string>
-    <string name="nb_players_text">Max number of players:</string>
+    <string name="name_settings_text">Name:</string>
     <string name="nb_rounds_text">Number of rounds:</string>
     <string name="private_option_text">Private</string>
     <string name="start_button_text">Start</string>
@@ -14,4 +14,16 @@
     <string name="volume_text">Volume:</string>
     <string name="spotify_text">Spotify Status:</string>
     <string name="lyrics_not_found">---No lyrics were found for this song.---</string>
+    <string name="hint_option_text">With hints</string>
+    <string name="game_name_hint">A Fun Party</string>
+    <string name="default_game_name">A fun Party</string>
+    <string name="default_game_nb_rounds">3</string>
+    <string name="playlist_error_format">Playlist "%s" not found</string>
+    <string name="uuid_text_format">Party id: %03d</string>
+    <string name="host_name_format">Host: %s</string>
+    <string name="game_name_format">Game: %s</string>
+    <string name="playlist_format">Playlist: %s</string>
+    <string name="number_of_rounds_format">Number of rounds: %d</string>
+    <string name="hints_enabled_format">Hints enabled: %b</string>
+    <string name="private_format">Private : %b</string>
 </resources>
