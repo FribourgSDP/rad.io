@@ -68,8 +68,9 @@ class LyricsGetterTest {
     	val LyricsGetter = LyricsGetter()
     }
     @Test
-    fun jsonStandardParserDoesntThrowException(){
-        val s = LyricsGetter.Companion.JSONStandardParser().parse("32q87rfha98 73298r7h08qwoehr703o490{{{{{")
+
+    fun JSONStandardParserDoesntThrowException(){
+        val s = JSONStandardParser().parse("32q87rfha98 73298r7h08qwoehr703o490{{{{{")
         assertNull(s)
     }
     @Test
@@ -219,12 +220,12 @@ class LyricsGetterTest {
             }
         }
     }
-    class NullJSONParser() : LyricsGetter.Companion.JSONParser() {
+    class NullJSONParser() : JSONParser() {
         override fun parse(s: String?): JSONObject? {
             return null
         }
     }
-    class EmptyLyricsJSONParser : LyricsGetter.Companion.JSONParser(){
+    class EmptyLyricsJSONParser : JSONParser(){
         override fun parse(s: String?): JSONObject {
             return JSONObject("{\"message\":{\"header\":{\"status_code\":200,\"execute_time\":0.0089538097381592},\"body\":{\"lyrics\":{\"lyrics_id\":18905350,\"explicit\":1,\"lyrics_body\":\"\"}}}}")
         }
