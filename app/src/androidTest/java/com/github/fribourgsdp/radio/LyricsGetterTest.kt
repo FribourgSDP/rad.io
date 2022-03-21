@@ -196,8 +196,7 @@ class LyricsGetterTest {
             override fun enqueue(responseCallback: Callback) {
                 if (t == 1){
                     t += 1
-                    // TODO: extract
-                    OkHttpClient().newCall(request).enqueue(responseCallback)
+                    MockOkHttpClient().newCall(request).enqueue(responseCallback)
                 } else {
                     responseCallback.onFailure(this, IOException("Failure !"))
                 }
