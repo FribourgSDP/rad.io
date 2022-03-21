@@ -19,7 +19,9 @@
     <string name="default_game_name">A fun Party</string>
     <string name="default_game_nb_rounds">3</string>
     <string name="playlist_error_format">Playlist "%s" not found</string>
-    <string name="uuid_text_format">Party id: %03d</string>
+    <string name="uid_text_format">Party id: %03d</string>
+    <string name="uid_loading_text_format">Party id: Loading</string>
+    <string name="uid_error">Failed to create lobby</string>
     <string name="host_name_format">Host: %s</string>
     <string name="game_name_format">Game: %s</string>
     <string name="playlist_format">Playlist: %s</string>

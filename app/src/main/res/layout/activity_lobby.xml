@@ -10,7 +10,7 @@
         android:id="@+id/uuidText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/uuid_text_format"
+        android:text="@string/uid_loading_text_format"
         android:textSize="34sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
