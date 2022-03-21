@@ -3,10 +3,10 @@ package com.github.fribourgsdp.radio
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.TextView
+import com.google.android.gms.tasks.Task
 
 class LobbyActivity : AppCompatActivity() {
-
-    private val uuid = createUUID()
+    private val db = Database()
 
     private lateinit var uuidTextView : TextView
     private lateinit var hostNameTextView : TextView
@@ -30,7 +30,14 @@ class LobbyActivity : AppCompatActivity() {
 
         initTextViews()
 
-        uuidTextView.text     = getString(R.string.uuid_text_format, uuid)
+        val taskUID = getUIDTask()
+
+        taskUID.addOnSuccessListener {
+            uuidTextView.text = getString(R.string.uid_text_format, it)
+        }.addOnFailureListener {
+            uuidTextView.text = getString(R.string.uid_error)
+        }
+
         hostNameTextView.text = getString(R.string.host_name_format, hostName)
         gameNameTextView.text = getString(R.string.game_name_format, gameName)
         playlistTextView.text = getString(R.string.playlist_format, playlistName)
@@ -43,9 +50,8 @@ class LobbyActivity : AppCompatActivity() {
         }
     }
 
-    private fun createUUID() : Int {
-        // TODO: When we will be able to connect to the server, this will get the key and increment it by 1.
-        return 1
+    fun getUIDTask() : Task<Long> {
+        return db.getLobbyId()
     }
 
     private fun initTextViews() {
