@@ -179,7 +179,7 @@ class LyricsGetterTest {
         override fun newCall(request: Request): Call {
             return SemiFailingCall(request)
         }
-        class SemiFailingCall(val request : Request) : Call{
+        class SemiFailingCall(private val request : Request) : Call{
 
             override fun clone(): Call {
                 throw Exception()
