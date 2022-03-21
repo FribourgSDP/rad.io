@@ -3,6 +3,7 @@ package com.github.fribourgsdp.radio
 import org.junit.Test
 
 import org.junit.Assert.*
+import java.util.concurrent.CompletableFuture
 
 internal class SongTest {
     @Test
@@ -84,5 +85,12 @@ internal class SongTest {
         assert(test.contains(song2))
         val test2: Set<Song> = mutableSetOf(song1)
         assert(test2.contains(song2))
+    }
+
+    @Test
+    fun testCompletableFutureConstructor(){
+        val testLyrics = "test"
+        val song = Song("name", "artist", CompletableFuture.completedFuture(testLyrics))
+        assert(song.lyrics==testLyrics)
     }
 }

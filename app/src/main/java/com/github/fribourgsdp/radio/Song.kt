@@ -5,19 +5,14 @@ import kotlinx.serialization.Serializable
 import java.util.concurrent.CompletableFuture
 
 @Serializable
-class Song (private val rawName: String, private val rawArtist: String, private val songLyrics: CompletableFuture<String>) {
+class Song (private val rawName: String, private val rawArtist: String, var lyrics: String) {
     val name: String = reformatName(rawName)
     val artist: String = reformatName(rawArtist)
     private var userProvidedLyrics : String = ""
-    var lyrics: String
-        get() = userProvidedLyrics.ifEmpty {
-            songLyrics.get()
-        }
-        set(value) {userProvidedLyrics = value}
 
-    constructor (songName: String): this(songName, "", LyricsGetter.getLyrics(songName))
-    constructor(songName:String, artistName: String): this(songName, artistName, LyricsGetter.getLyrics(songName, artistName))
-    constructor(songName: String, artistName: String, lyrics: String): this(songName, artistName, CompletableFuture.completedFuture(lyrics))
+    constructor(name: String, artist: String): this(name, artist,"")
+    constructor(name: String, artist: String, lyrics: CompletableFuture<String>): this(name, artist, lyrics.get())
+
 
     private fun reformatName(unformattedName: String): String {
         val noSpacesRegex = Regex(" +")
