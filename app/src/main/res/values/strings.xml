@@ -22,6 +22,7 @@
     <string name="uid_text_format">Party id: %03d</string>
     <string name="uid_loading_text_format">Party id: Loading</string>
     <string name="uid_error">Failed to create lobby</string>
+    <string name="uid_error_join">Failed to join lobby.</string>
     <string name="host_name_format">Host: %s</string>
     <string name="game_name_format">Game: %s</string>
     <string name="playlist_format">Playlist: %s</string>
