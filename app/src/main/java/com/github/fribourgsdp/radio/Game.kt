@@ -175,6 +175,26 @@ class Game private constructor(val name: String, val host: User, val playlist: P
             list.add(user)
             return this
         }
+
+        /**
+         * Add a collection of [User] to the game.
+         * @return the [Builder]
+         */
+        fun addAllUser(collection: Collection<User>): Builder {
+            list.addAll(collection)
+            return this
+        }
+
+        /**
+         * Set the [User] list with the given a collection of [User].
+         * @return the [Builder]
+         */
+        fun setUserList(collection: Collection<User>): Builder {
+            list.clear()
+            list.addAll(collection)
+            return this
+        }
+
         /**
         * Return the [Settings] of the game currently building.
         * @return the [Settings] of the game currently building.
