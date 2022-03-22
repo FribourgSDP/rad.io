@@ -50,7 +50,7 @@ class LyricsGetter {
                 return future
             }
             val url = "$BASE_URL$TRACK_LYRICS_GET?$TRACK_ID_FIELD=$trackID&$API_KEY_FIELD=$API_KEY"
-            Log.println(Log.INFO, "*******" , url)
+
             val request = Request.Builder().url(url).build()
             client.newCall(request).enqueue(GetLyricsCallback(future, parser))
             return future.thenApply { s -> cleanLyrics(s) }
@@ -69,7 +69,6 @@ class LyricsGetter {
             val future = CompletableFuture<Int>()
             val url = "$BASE_URL$TRACK_SEARCH?$QUERY_TRACK_FIELD=$songName&$QUERY_ARTIST_FIELD=$artistName&$API_KEY_FIELD=$API_KEY&$SORT_CONDITION"
 
-            Log.println(Log.INFO, "*#@#@#@#@#****" , url)
             val request = Request.Builder().url(url).build()
             client.newCall(request).enqueue(GetSongIDCallback(future, parser))
             return future
