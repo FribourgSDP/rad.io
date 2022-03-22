@@ -175,6 +175,13 @@ class Game private constructor(val name: String, val host: User, val playlist: P
             list.add(user)
             return this
         }
+        /**
+        * Return the [Settings] of the game currently building.
+        * @return the [Settings] of the game currently building.
+        */
+        fun getSettings(): Settings {
+            return Settings(host, name, playlist, nbRounds, withHint, isPrivate)
+        }
 
         /**
          * Build the [Game] with the previously given parameters.
@@ -185,4 +192,13 @@ class Game private constructor(val name: String, val host: User, val playlist: P
         }
 
     }
+
+    class Settings(
+        val host: User,
+        val name: String,
+        val playlist: Playlist,
+        val nbRounds: Int,
+        val withHint: Boolean,
+        val isPrivate: Boolean
+    )
 }
