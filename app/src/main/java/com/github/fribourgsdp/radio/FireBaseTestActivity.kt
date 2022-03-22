@@ -33,6 +33,36 @@ class FireBaseTestActivity : AppCompatActivity() {
         }.addOnFailureListener { e ->
             Log.w(ContentValues.TAG, "Error adding document", e)
         }
+
+
+        val song = Song("this is the title", "Nathan","")
+        db.registerSong(song)
+
+        db.getSong(song.name).addOnSuccessListener { l ->
+            if( l == null){
+
+            }else{
+                val text = song.name + " by " +  song.artist
+               // findViewById<TextView>(R.id.textToChange).text = text
+            }
+        }
+
+
+        val playlist = Playlist("testPlaylist",Genre.COUNTRY)
+        val song2 = Song("song2","Victor","")
+
+        playlist.addSong(song)
+        playlist.addSong(song2)
+        db.registerPlaylist(playlist)
+
+        db.getPlaylist("testPlaylist").addOnSuccessListener { l ->
+            var text = ""
+            for (songi in l.getSongs()){
+                text += ";" + songi.name
+            }
+
+            //findViewById<TextView>(R.id.textToChange).text = text
+        }
     }
 }
 
