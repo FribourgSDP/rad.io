@@ -2,10 +2,8 @@ package com.github.fribourgsdp.radio
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.widget.ArrayAdapter
-import android.widget.ListView
-import android.widget.TextView
-import android.widget.Toast
+import android.view.View
+import android.widget.*
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.gms.tasks.Task
 
@@ -28,6 +26,8 @@ class LobbyActivity : AppCompatActivity() {
     private lateinit var withHintTextView : TextView
     private lateinit var privateTextView  : TextView
 
+    private lateinit var launchGameButton: Button
+
     private lateinit var playersRecyclerView : ListView
     private lateinit var namesAdapter : ArrayAdapter<String>
 
@@ -44,12 +44,18 @@ class LobbyActivity : AppCompatActivity() {
         if (isHost) {
             getUIDTask().addOnSuccessListener { uid ->
                 uuidTextView.text = getString(R.string.uid_text_format, uid)
-                linkToDatabase(uid)
+                linkToDatabase(uid, )
             }.addOnFailureListener {
                 uuidTextView.text = getString(R.string.uid_error)
             }
         } else {
-            linkToDatabase(intent.getLongExtra(GAME_UID_KEY, -1))
+            val uid = intent.getLongExtra(GAME_UID_KEY, -1)
+            if (uid >= 0) {
+                uuidTextView.text = getString(R.string.uid_text_format, uid)
+                linkToDatabase(uid)
+            } else {
+                uuidTextView.text = getString(R.string.uid_error_join)
+            }
         }
 
     }
@@ -80,9 +86,16 @@ class LobbyActivity : AppCompatActivity() {
         nbRoundsTextView = findViewById(R.id.nbRoundsText)
         withHintTextView = findViewById(R.id.withHintText)
         privateTextView  = findViewById(R.id.privateText)
+        privateTextView  = findViewById(R.id.privateText)
         playersRecyclerView = findViewById(R.id.playersRecyclerView)
         namesAdapter = ArrayAdapter(this, android.R.layout.simple_list_item_1)
         playersRecyclerView.adapter = namesAdapter
+
+        launchGameButton = findViewById(R.id.launchGameButton)
+
+        if (!isHost) {
+            launchGameButton.visibility = View.INVISIBLE
+        }
     }
 
     private fun updateTextViews() {
@@ -95,33 +108,43 @@ class LobbyActivity : AppCompatActivity() {
     }
 
     private fun linkToDatabase(uid: Long) {
-        if (hostName != null && gameName != null && playlistName != null && uid >= 0) {
-            gameBuilder.setHost(User(hostName!!))
-                .setName(gameName!!)
-                .setPlaylist(Playlist(playlistName!!))
-                .setNbRounds(nbRounds)
-                .setWithHint(withHint)
-                .setPrivacy(isPrivate)
+        if (isHost && uid >= 0) {
+            if (hostName != null && gameName != null && playlistName != null) {
+                gameBuilder.setHost(User(hostName!!))
+                    .setName(gameName!!)
+                    .setPlaylist(Playlist(playlistName!!))
+                    .setNbRounds(nbRounds)
+                    .setWithHint(withHint)
+                    .setPrivacy(isPrivate)
 
-            openLobby(uid, gameBuilder.getSettings()).addOnSuccessListener {
-                db.listenToLobbyUpdate(uid) { snapshot, e ->
-                    if (e != null) {
-                        uuidTextView.text = getString(R.string.uid_error)
-                    }
-
-                    if (snapshot != null && snapshot.exists()) {
-                        val newList = snapshot.get("players")!! as ArrayList<String>
-                        updatePlayersList(newList)
-
-                    } else {
-                        uuidTextView.text = getString(R.string.uid_error)
-                    }
-
+                openLobby(uid, gameBuilder.getSettings()).addOnSuccessListener {
+                    listenToUpdates(uid)
+                }.addOnFailureListener {
+                    uuidTextView.text = getString(R.string.uid_error)
                 }
-
-            }.addOnFailureListener {
+            } else {
                 uuidTextView.text = getString(R.string.uid_error)
             }
+        } else if (!isHost && uid >= 0) {
+            listenToUpdates(uid)
+        }
+
+    }
+
+    private fun listenToUpdates(uid: Long) {
+        db.listenToLobbyUpdate(uid) { snapshot, e ->
+            if (e != null) {
+                uuidTextView.text = getString(R.string.uid_error)
+            }
+
+            if (snapshot != null && snapshot.exists()) {
+                val newList = snapshot.get("players")!! as ArrayList<String>
+                updatePlayersList(newList)
+
+            } else {
+                uuidTextView.text = getString(R.string.uid_error)
+            }
+
         }
     }
 
