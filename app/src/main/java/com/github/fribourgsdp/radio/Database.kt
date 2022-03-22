@@ -2,6 +2,8 @@ package com.github.fribourgsdp.radio
 
 
 import com.google.android.gms.tasks.Task
+import com.google.firebase.firestore.DocumentSnapshot
+import com.google.firebase.firestore.EventListener
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 
@@ -63,6 +65,27 @@ class Database {
             // Success
             id
         }
+    }
+
+    fun openLobby(id: Long, settings : Game.Settings) : Task<Void> {
+        val gameData = hashMapOf(
+            "name" to settings.name,
+            "host" to settings.host.name,
+            "playlist" to settings.playlist.name,
+            "nbRounds" to settings.nbRounds,
+            "withHint" to settings.withHint,
+            "private" to settings.isPrivate,
+            "players" to listOf(settings.host.name)
+        )
+
+        return db.collection("lobby").document(id.toString())
+            .set(gameData)
+
+    }
+
+    fun listenToLobbyUpdate(id: Long, listener: EventListener<DocumentSnapshot>) {
+        db.collection("lobby").document(id.toString())
+            .addSnapshotListener(listener)
     }
 
 }
