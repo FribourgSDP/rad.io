@@ -5,13 +5,21 @@ import java.text.Normalizer
 class StringComparisons {
     companion object{
         private val chars = "abcdefghijklmnopqrstuvwxyz1234567890"
-        fun compare(actual : String, expected : String, maxPts : Int = 100, tolerance : Int = 0) : Int {
+        fun compareAndGetPoints(actual : String, expected: String, maxPts: Int = 100) : Int {
+            val oneErrorPenalty = 0.9
+            val twoErrorsPenalty = 0.8
+            if (compare(actual, expected, 0)){
+                return maxPts
+            } else if (compare(actual, expected, 1)){
+                return (maxPts * oneErrorPenalty).toInt()
+            } else if (compare(actual, expected, 2)){
+                return (maxPts * twoErrorsPenalty).toInt()
+            } else return 0
+        }
+        fun compare(actual : String, expected : String, tolerance : Int = 0) : Boolean {
             val s1 = actual.replace(Regex("[!-/]|[:-@]|[\\[-`]|[{-~]| +"), "").lowercase().unaccent()
             val s2 = expected.replace(Regex("[!-/]|[:-@]|[\\[-`]|[{-~]| +"), "").lowercase().unaccent()
-            if(equal(s1, s2, tolerance)){
-                return maxPts
-            }
-            return 0
+            return equal(s1, s2, tolerance)
         }
         private fun CharSequence.unaccent() : String{
             val temp = Normalizer.normalize(this, Normalizer.Form.NFD)
