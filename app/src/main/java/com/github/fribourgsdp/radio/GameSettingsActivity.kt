@@ -12,6 +12,7 @@ const val GAME_PLAYLIST_KEY = "com.github.fribourgsdp.radio.GAME_PLAYLIST"
 const val GAME_NB_ROUNDS_KEY = "com.github.fribourgsdp.radio.GAME_NB_ROUNDS"
 const val GAME_HINT_KEY = "com.github.fribourgsdp.radio.GAME_HINT"
 const val GAME_PRIVACY_KEY = "com.github.fribourgsdp.radio.GAME_PRIVACY"
+const val GAME_IS_HOST_KEY = "com.github.fribourgsdp.radio.GAME_IS_HOST"
 
 class GameSettingsActivity : AppCompatActivity() {
     private val host = getHost()
@@ -85,6 +86,7 @@ class GameSettingsActivity : AppCompatActivity() {
                 putExtra(GAME_NB_ROUNDS_KEY, nbRoundsInput.text.toString().ifEmpty { getString(R.string.default_game_nb_rounds) }.toInt())
                 putExtra(GAME_HINT_KEY, hintCheckBox.isChecked,)
                 putExtra(GAME_PRIVACY_KEY, privacyCheckBox.isChecked)
+                putExtra(GAME_IS_HOST_KEY, true)
             }
             startActivity(intent)
         }
