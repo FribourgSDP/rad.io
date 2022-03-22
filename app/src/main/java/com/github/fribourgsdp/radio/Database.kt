@@ -31,13 +31,22 @@ class Database {
      *
      */
      fun getUser(userId : String): Task<User> {
+         return Tasks.forResult(DocumentSnapshot.())
+             /*.continueWith { l ->
+             val result = l.result
+             if(result.exists()){
+                 User(result["first"].toString())
+             }else{
+                 null
+             }*/
+        /*return db.collection("user").document(userId).get()
         return  db.collection("user").document(userId).get().continueWith { l ->
             val result = l.result
             if(result.exists()){
                 User(result["first"].toString())
             }else{
                 null
-            }
+            }*/
         }
     }
 
