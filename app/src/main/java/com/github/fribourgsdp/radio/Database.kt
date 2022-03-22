@@ -88,4 +88,38 @@ class Database {
             .addSnapshotListener(listener)
     }
 
+    fun getGameSettingsFromLobby(id: Long) :Task<Game.Settings> {
+        val docRef = db.collection("lobby").document(id.toString())
+
+        return db.runTransaction { transaction ->
+            val snapshot = transaction.get(docRef)
+
+            val host = snapshot.getString("host")!!
+            val name = snapshot.getString("name")!!
+            val playlist = snapshot.getString("playlist")!!
+            val nbRounds = snapshot.getLong("nbRounds")!!
+            val withHint = snapshot.getBoolean("withHint")!!
+            val private = snapshot.getBoolean("private")!!
+
+            // Success
+            Game.Settings(User(host), name, Playlist(playlist), nbRounds.toInt(), withHint, private)
+        }
+    }
+
+    fun addUserToLobby(id: Long, user: User) : Task<Void> {
+        val docRef = db.collection("lobby").document(id.toString())
+
+        return db.runTransaction { transaction ->
+            val snapshot = transaction.get(docRef)
+
+            val list = snapshot.get("players")!! as ArrayList<String>
+            list.add(user.name)
+
+            transaction.update(docRef, "players", list)
+
+            // Success
+            null
+        }
+    }
+
 }
