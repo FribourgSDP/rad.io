@@ -100,8 +100,16 @@ class GoogleSignInActivity : AppCompatActivity() {
         firebaseAuth.signInWithCredential(credential).addOnSuccessListener { authResult ->
             //login success
             //check if user is new or existing
+
+            val firebaseUser = authResult!!.user
+            val db = Database()
+            val id = firebaseUser!!.uid
+            val mail = firebaseUser.email
             if (authResult.additionalUserInfo!!.isNewUser) {
                 //user is new - Account Create
+
+                val user = User(mail!!)
+                db.setUser(id, user)
                 Toast.makeText(this@GoogleSignInActivity, "Account created", Toast.LENGTH_SHORT)
                     .show()
 
@@ -111,7 +119,7 @@ class GoogleSignInActivity : AppCompatActivity() {
             }
             //start profile activity
             val intent: Intent = Intent(this, UserProfileActivity::class.java)
-            intent.putExtra(USERNAME, "Default")
+            intent.putExtra(USERNAME, mail)
 
             startActivity(intent)
             finish()

@@ -21,7 +21,7 @@ class UserProfileActivity : AppCompatActivity() {
     private lateinit var user : User
 
     //firebase auth
-    lateinit var firebaseAuth: FirebaseAuth
+    private lateinit var firebaseAuth: FirebaseAuth
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -40,7 +40,7 @@ class UserProfileActivity : AppCompatActivity() {
         }
 
         findViewById<TextView>(R.id.usernameInitial).apply {
-            text = user.initial.toString()
+            text = user.initial.uppercaseChar().toString()
         }
 
         findViewById<TextView>(R.id.spotifyStatus).apply {
