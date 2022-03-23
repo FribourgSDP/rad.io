@@ -27,7 +27,12 @@ class UserProfileActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_user_profile)
 
-        user = User.load(this)
+        user = try {
+            User.load(this)
+        } catch (e: java.io.FileNotFoundException) {
+            System.out.println(e.javaClass.kotlin)
+            User("Default", User.generateColor())
+        }
 
         val playButton = findViewById<Button>(R.id.launchSpotifyButton)
         playButton.setOnClickListener {

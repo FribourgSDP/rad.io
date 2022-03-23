@@ -24,7 +24,7 @@ class User (val name: String, val color: Int) {
     val spotifyLinked get(): Boolean = linkedSpotify
 
     companion object {
-        fun load( context: Context, path: String = USER_DATA_PATH,) : User { //TODO ERROR HANDLING
+        fun load( context: Context, path: String = USER_DATA_PATH) : User {
             val userFile = File(context.filesDir, path)
             return Json.decodeFromString<User>(userFile.readText())
         }
