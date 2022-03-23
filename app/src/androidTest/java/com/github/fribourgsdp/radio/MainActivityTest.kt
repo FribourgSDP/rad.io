@@ -54,7 +54,7 @@ class MainActivityTest {
 
         Intents.release()
     }
-    
+
     @Test
     fun correctTransitionToDisplayLyricsActivity(){
         Intents.init()
@@ -68,6 +68,13 @@ class MainActivityTest {
         Intents.init()
         Espresso.onView(withId(R.id.profileButton)).perform(ViewActions.click())
         Intents.intended(IntentMatchers.hasComponent(UserProfileActivity::class.java.name))
+        Intents.release()
+    }
+    @Test
+    fun correctTransitionToFireBaseTestActivity(){
+        Intents.init()
+        Espresso.onView(withId(R.id.FireBaseButton)).perform(ViewActions.click())
+        Intents.intended(IntentMatchers.hasComponent(FireBaseTestActivity::class.java.name))
         Intents.release()
     }
 }

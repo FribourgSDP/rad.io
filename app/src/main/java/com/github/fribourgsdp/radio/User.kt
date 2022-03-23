@@ -15,6 +15,9 @@ class User (val name: String, val color: Int) {
     init {
         require(name.isNotEmpty() && name.isNotBlank())
     }
+
+    constructor(name: String): this(name, generateColor())
+
     private val playlists = mutableSetOf<Playlist>()
     private var linkedSpotify: Boolean = false
     val initial get(): Char = name.elementAt(0)

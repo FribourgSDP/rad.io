@@ -27,7 +27,7 @@ class UserTest {
     @Test
     fun constructorTest(){
         val string = "test"
-        val user = User(string, 0)
+        val user = User(string)
         Assert.assertEquals(string, user.name)
         Assert.assertEquals(true, user.getPlaylists().isEmpty())
         Assert.assertEquals(false, user.spotifyLinked)
@@ -37,21 +37,21 @@ class UserTest {
     @Test(expected = IllegalArgumentException::class)
     fun constructorWithNoNameThrowsIAE(){
         val string = ""
-        val user = User(string, 0)
+        val user = User(string)
         Assert.assertEquals(string[0], user.initial)
     }
 
     @Test(expected = IllegalArgumentException::class)
     fun constructorWithBlankNameThrowsIAE(){
         val string = " "
-        val user = User(string,0)
+        val user = User(string)
         Assert.assertEquals(string[0], user.initial)
     }
 
     @Test
     fun addPlaylistWorksAsExpected(){
         val string = "test"
-        val user = User(string, 0)
+        val user = User(string)
         Assert.assertEquals(true, user.getPlaylists().isEmpty())
         val playlist = Playlist("test", Genre.ROCK)
         user.addPlaylist(playlist)
@@ -62,7 +62,7 @@ class UserTest {
     @Test
     fun removePlaylistWorksAsExpected(){
         val string = "test"
-        val user = User(string,0)
+        val user = User(string)
         val playlist = Playlist("test", Genre.ROCK)
         user.addPlaylist(playlist)
         Assert.assertEquals(1, user.getPlaylists().size)
@@ -73,7 +73,7 @@ class UserTest {
     @Test
     fun addPlaylistsWorksAsExpected(){
         val string = "test"
-        val user = User(string, 0)
+        val user = User(string)
         Assert.assertEquals(true, user.getPlaylists().isEmpty())
         val playlist1 = Playlist("test", Genre.ROCK)
         val playlist2 = Playlist("test2", Genre.ROCK)
@@ -86,7 +86,7 @@ class UserTest {
     @Test
     fun removePlaylistsWorksAsExpected(){
         val string = "test"
-        val user = User(string, 0)
+        val user = User(string)
 
         val playlist1 = Playlist("test", Genre.ROCK)
         val playlist2 = Playlist("test2", Genre.ROCK)

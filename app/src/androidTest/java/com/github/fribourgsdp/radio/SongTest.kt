@@ -3,6 +3,7 @@ package com.github.fribourgsdp.radio
 import org.junit.Test
 
 import org.junit.Assert.*
+import java.util.concurrent.CompletableFuture
 
 internal class SongTest {
     @Test
@@ -12,22 +13,6 @@ internal class SongTest {
         assertEquals("lyrics really basic", test.lyrics)
         assertEquals("Bob", test.artist)
     }
-
-    @Test
-    fun secondary_constructor_works(){
-        val test: Song = Song("Song Name")
-        assertEquals("Song Name", test.name)
-        assertEquals("", test.lyrics)
-    }
-
-    /* Playlists are now immutable */
-//    @Test
-//    //In the case where a user creates a playlist, he may have mistakenly written the title wrong and may want to change it
-//    fun changing_song_name_is_possible() {
-//        val test: Song = Song("Song Name")
-//        test.name = "this new name is better"
-//        assertEquals("This New Name Is Better", test.name)
-//    }
 
     @Test
     fun title_formatting_gets_rid_of_redundant_whitespaces(){
@@ -40,20 +25,6 @@ internal class SongTest {
         val test: Song = Song("story Of My life loser hello", "", "test lyrics")
         assertEquals("Story Of My Life Loser Hello", test.name)
     }
-
-//    @Test
-//    fun addingArtistNameWorks(){
-//        val test: Song = Song("new song")
-//        test.artist = "best artist"
-//        assertEquals("Best Artist", test.artist)
-//    }
-
-//    @Test
-//    fun addingLyricsWorks(){
-//        val test: Song = Song("new song")
-//        test.lyrics = "louloulou these are great lyrics"
-//        assertEquals("louloulou these are great lyrics", test.lyrics)
-//    }
 
     @Test
     fun songsAreEqualIfSongNameAndArtistAreTheSame(){
@@ -73,13 +44,6 @@ internal class SongTest {
         assertEquals(false, test2.equals(test3))
     }
 
-//    @Test
-//    fun changingSongNameWorksAndSatisfiesFormat(){
-//        val test1: Song = Song("abc", "bobby")
-//        test1.name = "lala the    pig"
-//        assertEquals("Lala The Pig", test1.name)
-//    }
-
     @Test
     fun equalityHoldsWhenTitleAndArtistMatch(){
         val song1: Song = Song("a", "bob")
@@ -90,5 +54,12 @@ internal class SongTest {
         assert(test.contains(song2))
         val test2: Set<Song> = mutableSetOf(song1)
         assert(test2.contains(song2))
+    }
+
+    @Test
+    fun testCompletableFutureConstructor(){
+        val testLyrics = "test"
+        val song = Song("name", "artist", CompletableFuture.completedFuture(testLyrics))
+        assert(song.lyrics==testLyrics)
     }
 }
