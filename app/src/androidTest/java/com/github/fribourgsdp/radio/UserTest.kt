@@ -1,5 +1,8 @@
 package com.github.fribourgsdp.radio
 
+import android.content.Context
+import androidx.test.core.app.ActivityScenario
+import androidx.test.core.app.ApplicationProvider
 import androidx.test.espresso.Espresso
 import androidx.test.espresso.action.ViewActions
 import androidx.test.espresso.intent.Intents
@@ -7,6 +10,7 @@ import androidx.test.espresso.intent.matcher.IntentMatchers
 import androidx.test.espresso.matcher.ViewMatchers.withId
 import androidx.test.ext.junit.rules.ActivityScenarioRule
 import androidx.test.ext.junit.runners.AndroidJUnit4
+import androidx.test.platform.app.InstrumentationRegistry
 import org.hamcrest.Matchers
 import org.junit.Assert
 import org.junit.Before
@@ -93,5 +97,21 @@ class UserTest {
         Assert.assertEquals(1, user.getPlaylists().size)
         Assert.assertEquals(false, user.getPlaylists().contains(playlist1))
         Assert.assertEquals(false, user.getPlaylists().contains(playlist2))
+    }
+
+    @Test
+    fun savingUserToFile(){
+        val ctx = ApplicationProvider.getApplicationContext<Context>()
+        val string = "test"
+        val user = User(string, 0)
+
+        val playlist1 = Playlist("test", Genre.ROCK)
+        val playlist2 = Playlist("test2", Genre.ROCK)
+        val playlist3 = Playlist("test3", Genre.ROCK)
+        user.addPlaylists(setOf(playlist1,playlist2, playlist3))
+        Assert.assertEquals(3, user.getPlaylists().size)
+        user.save(ctx)
+        val newUser = User.load(ctx)
+        Assert.assertEquals(3, newUser.getPlaylists().size)
     }
 }

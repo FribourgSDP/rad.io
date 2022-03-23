@@ -1,8 +1,14 @@
 package com.github.fribourgsdp.radio
 
-import android.graphics.Color
+import android.content.Context
 import kotlin.random.Random
 import kotlinx.serialization.Serializable
+import kotlinx.serialization.encodeToString
+import kotlinx.serialization.json.Json
+import kotlinx.serialization.decodeFromString
+import java.io.File
+
+const val USER_DATA_PATH = "user_data_file"
 
 @Serializable
 class User (val name: String, val color: Int) {
@@ -18,14 +24,20 @@ class User (val name: String, val color: Int) {
     val spotifyLinked get(): Boolean = linkedSpotify
 
     companion object {
-        fun load(path: String) : User {
-            TODO("implement load")
+        fun load( context: Context, path: String = USER_DATA_PATH) : User {
+            val userFile = File(context.filesDir, path)
+            return Json.decodeFromString<User>(userFile.readText())
         }
 
         fun generateColor(): Int = (255 shl 24) or
                 (Random.nextInt(100, 200) shl 16) or
                 (Random.nextInt(100, 200) shl 8) or
                 Random.nextInt(100, 200)
+    }
+
+    fun save(context: Context){
+        val userFile = File(context.filesDir, USER_DATA_PATH)
+        userFile.writeText(Json.encodeToString(this))
     }
 
     fun addPlaylist(playlist: Playlist){
