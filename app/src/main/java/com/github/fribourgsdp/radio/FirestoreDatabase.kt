@@ -33,8 +33,9 @@ class FirestoreDatabase : Database {
             if(result.exists()){
                 User(result["first"].toString())
             }else{
-                throw IllegalArgumentException()
-                TODO("CREATE EXCEPTION CLASS AND THROW APPROPRIATE EXCEPTION")
+                null
+
+                //TODO("CREATE EXCEPTION CLASS AND THROW APPROPRIATE EXCEPTION")
 
             }
         }
