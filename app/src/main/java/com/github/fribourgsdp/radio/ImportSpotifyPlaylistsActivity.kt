@@ -3,7 +3,6 @@ package com.github.fribourgsdp.radio
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.widget.TextView
 import okhttp3.*
 import java.io.IOException
 import java.util.concurrent.CompletableFuture
@@ -24,21 +23,22 @@ class ImportSpotifyPlaylistsActivity : AppCompatActivity() {
 
         val playlistMap: CompletableFuture<HashMap<String, String>> = getUserPlaylists()
         val playlistsNameToUid = playlistMap.get()
-        val playlists = loadSongsFromToPlaylists(playlistsNameToUid)
+        val playlists = loadSongsToPlaylists(playlistsNameToUid)
 
         var intent = Intent(this@ImportSpotifyPlaylistsActivity, UserProfileActivity::class.java)
         intent = constructPlaylistIntent(intent, playlistsNameToUid, playlists)
         startActivity(intent)
     }
 
-    private fun constructPlaylistIntent(intent: Intent, playlistNameToUId: HashMap<String, String>, playlists: Set<Playlist>): Intent {
-        intent.putExtra("nameToUid", playlistNameToUId)
-        intent.putExtra("playlists", playlists.toHashSet())
-        intent.putExtra(COMING_FROM_SPOTIFY_ACTIVITY_FLAG, true)
-        return intent
-    }
 
     companion object {
+
+        fun constructPlaylistIntent(intent: Intent, playlistNameToUId: HashMap<String, String>, playlists: Set<Playlist>): Intent {
+            intent.putExtra("nameToUid", playlistNameToUId)
+            intent.putExtra("playlists", playlists.toHashSet())
+            intent.putExtra(COMING_FROM_SPOTIFY_ACTIVITY_FLAG, true)
+            return intent
+        }
 
         fun getPlaylistContent(playlistId: String, client: OkHttpClient = OkHttpClient(), parser : JSONParser = JSONStandardParser()) : CompletableFuture<Set<Song>> {
             val future = CompletableFuture<Set<Song>>()
@@ -47,7 +47,7 @@ class ImportSpotifyPlaylistsActivity : AppCompatActivity() {
             return future
         }
 
-        fun loadSongsFromToPlaylists(playlistNameToId: Map<String, String>): Set<Playlist> {
+        fun loadSongsToPlaylists(playlistNameToId: Map<String, String>): Set<Playlist> {
             val playlists = mutableSetOf<Playlist>()
             for ((name, id) in playlistNameToId) {
                 var newPlaylist = Playlist(name)

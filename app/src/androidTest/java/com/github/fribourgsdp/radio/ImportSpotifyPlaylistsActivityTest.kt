@@ -1,14 +1,36 @@
 package com.github.fribourgsdp.radio
 
+import android.content.Intent
+import androidx.test.espresso.Espresso
+import androidx.test.espresso.action.ViewActions
+import androidx.test.espresso.intent.Intents
+import androidx.test.espresso.intent.matcher.IntentMatchers
+import androidx.test.espresso.matcher.ViewMatchers
+import androidx.test.ext.junit.rules.ActivityScenarioRule
 import junit.framework.TestCase.assertEquals
 import okhttp3.*
+import org.hamcrest.Matchers
 import org.json.JSONArray
 import org.json.JSONObject
+import org.junit.Rule
 import org.junit.Test
 import java.io.IOException
 import java.util.concurrent.ExecutionException
 
 class ImportSpotifyPlaylistsActivityTest {
+
+    @Test
+    fun intentToUserProfileWorks() {
+        val testMap = hashMapOf<String, String>()
+        testMap["uid1"] = "playlist1"
+        testMap["uid2"] = "playlist2"
+        val testSet = mutableSetOf<Playlist>()
+        testSet.add(Playlist("one", Genre.COUNTRY))
+        val result = ImportSpotifyPlaylistsActivity.constructPlaylistIntent(Intent(), testMap, testSet)
+        assert(result.hasExtra("nameToUid"))
+        assert(result.hasExtra("playlists"))
+        assert(result.hasExtra(COMING_FROM_SPOTIFY_ACTIVITY_FLAG))
+    }
 
     @Test
     fun buildSpotifyRequestWorks(){
@@ -54,6 +76,12 @@ class ImportSpotifyPlaylistsActivityTest {
         val setValue = future.get()
         assert(setValue.contains(Song("Rouge", "Michel Sardou")))
         assert(setValue.contains(Song("Narcos", "Migos")))
+    }
+
+    @Test
+    fun loadSongsToPlaylistsOnEmptyMapWorks(){
+        val result = ImportSpotifyPlaylistsActivity.loadSongsToPlaylists(mutableMapOf())
+        assert(result.isEmpty())
     }
 
     @Test(expected = ExecutionException::class)
