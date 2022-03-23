@@ -20,6 +20,14 @@ internal class PlaylistTest {
     }
 
     @Test
+    fun doesConstructorDoADeepCopy(){
+        val set = mutableSetOf(song1, song2, song3, song4)
+        val playlist1 = Playlist("First", set, Genre.POP)
+        set.remove(song1)
+        assertEquals(4, playlist1.getSongs().size)
+    }
+
+    @Test
     fun constructorWithNameAndGenreWorks(){
         val playlist1 = Playlist("Second", Genre.ROCK)
         assertEquals(0, playlist1.getSongs().size)
