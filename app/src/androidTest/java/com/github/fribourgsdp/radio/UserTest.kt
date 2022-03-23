@@ -44,20 +44,6 @@ class UserTest {
         Assert.assertEquals(string[0], user.initial)
     }
 
-    @Test(expected = IllegalArgumentException::class)
-    fun setterWithNoNameThrowsIAE(){
-        val string = "test"
-        val user = User(string)
-        user.name = ""
-    }
-
-    @Test(expected = IllegalArgumentException::class)
-    fun setterWithBlankNameThrowsIAE(){
-        val string = "test"
-        val user = User(string)
-        user.name = "   "
-    }
-
     @Test
     fun addPlaylistWorksAsExpected(){
         val string = "test"
