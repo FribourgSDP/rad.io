@@ -12,6 +12,7 @@ import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import java.lang.Exception
+import java.lang.IllegalArgumentException
 
 import java.util.concurrent.CompletableFuture
 
@@ -26,36 +27,29 @@ class FirestoreDatabase : Database {
     private val db = Firebase.firestore
 
 
-    override fun getUser(userId : String): Task<User?> {
-         /*return Tasks.forResult(DocumentSnapshot(User("non"))).continueWith { l -> l.result }
-             /*.continueWith { l ->
-             val result = l.result
-             if(result.exists()){
-                 User(result["first"].toString())
-             }else{
-                 null
-             }*/*/
-        //return db.collection("user").document(userId).get()
+    override fun getUser(userId : String): Task<User> {
         return  db.collection("user").document(userId).get().continueWith { l ->
             val result = l.result
             if(result.exists()){
                 User(result["first"].toString())
             }else{
-                null
+                throw IllegalArgumentException()
+                TODO("CREATE EXCEPTION CLASS AND THROW APPROPRIATE EXCEPTION")
+
             }
         }
     }
 
 
-    override fun setUser(userId : String, user : User){
+    override fun setUser(userId : String, user : User): Task<Void>{
         val userHash = hashMapOf(
             "first" to user.name
         )
-        db.collection("user").document(userId).set(userHash)
+        return db.collection("user").document(userId).set(userHash)
     }
 
 
-    override fun getSong(songName : String): Task<Song?>{
+    override fun getSong(songName : String): Task<Song>{
         return  db.collection("songs").document(songName).get().continueWith { l ->
             val result = l.result
             if(result.exists()){
@@ -68,13 +62,13 @@ class FirestoreDatabase : Database {
         }
     }
 
-    override fun registerSong(song : Song){
+    override fun registerSong(song : Song): Task<Void>{
         val songHash = hashMapOf(
             "songName" to song.name,
             "artistName" to song.artist
             //todo: add lyrics when it won't be a future anymore
         )
-        db.collection("songs").document(song.name).set(songHash)
+        return db.collection("songs").document(song.name).set(songHash)
 
     }
     /**
@@ -82,8 +76,8 @@ class FirestoreDatabase : Database {
      * @return [Playlist], wrapped in a [Task], the [Playlist] is null if it doesn't exist
      * @Note the [Song] in the [Playlist] have empty [artistName] and [lyrics]
      */
-    override fun getPlaylist(playlistName : String): Task<Playlist?>{
-
+    override fun getPlaylist(playlistName : String): Task<Playlist>{
+3
         return  db.collection("playlists").document(playlistName).get().continueWith { l ->
             val result = l.result
             if(result.exists()){
@@ -106,7 +100,7 @@ class FirestoreDatabase : Database {
         }
     }
 
-    override fun registerPlaylist( playlist : Playlist){
+    override fun registerPlaylist( playlist : Playlist): Task<Void>{
         //We will only store the songName, because you don't want to fetch all the lyrics of all songs when you retrieve the playlist
         val titleList : MutableList<String> = mutableListOf()
         for( song in playlist.getSongs()){
@@ -117,7 +111,7 @@ class FirestoreDatabase : Database {
             "genre" to playlist.genre,
             "songs" to titleList
         )
-        db.collection("playlists").document(playlist.name).set(playlistHash)
+        return db.collection("playlists").document(playlist.name).set(playlistHash)
     }
 
 }
