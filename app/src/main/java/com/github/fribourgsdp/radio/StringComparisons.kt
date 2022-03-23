@@ -2,25 +2,34 @@ package com.github.fribourgsdp.radio
 
 import java.text.Normalizer
 
+const val MAX_ALLOWED_ERRORS = 2
+
 class StringComparisons {
     companion object{
-        private val chars = "abcdefghijklmnopqrstuvwxyz1234567890"
-        fun compareAndGetPoints(actual : String, expected: String, maxPts: Int = 100) : Int {
+        private const val chars = "abcdefghijklmnopqrstuvwxyz1234567890"
+
+        fun compareAndGetPoints(actual : String, expected : String, maxPts : Int = 100) : Int {
             val oneErrorPenalty = 0.9
             val twoErrorsPenalty = 0.8
-            if (compare(actual, expected, 0)){
-                return maxPts
-            } else if (compare(actual, expected, 1)){
-                return (maxPts * oneErrorPenalty).toInt()
-            } else if (compare(actual, expected, 2)){
-                return (maxPts * twoErrorsPenalty).toInt()
-            } else return 0
+            return when(compare(actual, expected)){
+                0 -> maxPts
+                1 -> (oneErrorPenalty*maxPts).toInt()
+                2 -> (twoErrorsPenalty*maxPts).toInt()
+                else -> 0
+            }
         }
-        fun compare(actual : String, expected : String, tolerance : Int = 0) : Boolean {
+
+        fun compare(actual : String, expected : String) : Int {
             val s1 = actual.replace(Regex("[!-/]|[:-@]|[\\[-`]|[{-~]| +"), "").lowercase().unaccent()
             val s2 = expected.replace(Regex("[!-/]|[:-@]|[\\[-`]|[{-~]| +"), "").lowercase().unaccent()
-            return equal(s1, s2, tolerance)
+            for (tolerance in 0..MAX_ALLOWED_ERRORS) {
+                if( equal(s1, s2, tolerance)){
+                    return tolerance
+                }
+            }
+            return -1
         }
+
         private fun CharSequence.unaccent() : String{
             val temp = Normalizer.normalize(this, Normalizer.Form.NFD)
             return "\\p{InCombiningDiacriticalMarks}+".toRegex().replace(temp, "")
