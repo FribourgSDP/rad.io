@@ -48,6 +48,8 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/PlaylistsText"
+        android:padding="4dp"
+        tools:listitem="@layout/playlist_item"
         app:layout_constraintVertical_bias="0.0" />
 
     <TextView

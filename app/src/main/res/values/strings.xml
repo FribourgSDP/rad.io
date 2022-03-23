@@ -26,4 +26,6 @@
     <string name="number_of_rounds_format">Number of rounds: %d</string>
     <string name="hints_enabled_format">Hints enabled: %b</string>
     <string name="private_format">Private : %b</string>
+    <string name="playlist_card_text1">Playlist Name</string>
+    <string name="playlist_card_text2">Playlist Genre</string>
 </resources>
