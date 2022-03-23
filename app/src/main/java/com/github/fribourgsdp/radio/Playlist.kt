@@ -4,6 +4,7 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class Playlist (var name: String, var genre: Genre): java.io.Serializable{
+
     private val songs: MutableSet<Song> = mutableSetOf()
 
     constructor(name: String, set: Set<Song>, genre: Genre) : this(name, genre) {
