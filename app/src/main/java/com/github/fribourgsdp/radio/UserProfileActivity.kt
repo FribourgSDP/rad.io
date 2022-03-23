@@ -16,6 +16,7 @@ import com.google.firebase.auth.FirebaseAuth
 const val MY_CLIENT_ID = "9dc40237547f4ffaa41bf1e07ea0bba1"
 const val REDIRECT_URI = "com.github.fribourgsdp.radio://callback"
 const val SCOPES = "playlist-read-private,playlist-read-collaborative"
+const val COMING_FROM_SPOTIFY_ACTIVITY_FLAG = "com.github.fribourgsdp.radio.spotifyDataParsing"
 
 class UserProfileActivity : AppCompatActivity() {
     private lateinit var user : User
@@ -33,7 +34,7 @@ class UserProfileActivity : AppCompatActivity() {
         }
 
         /* TODO REPLACE WITH PROPER FETCH OF USER*/
-        user = User(intent.getStringExtra(USERNAME)!!)
+        user = User("Default")
 
         findViewById<TextView>(R.id.username).apply {
             text = user.name
@@ -57,6 +58,17 @@ class UserProfileActivity : AppCompatActivity() {
             finish()
         }
         findViewById<ImageView>(R.id.userIcon).setColorFilter(PorterDuffColorFilter(user.color, PorterDuff.Mode.ADD))
+        if (intent.getBooleanExtra(COMING_FROM_SPOTIFY_ACTIVITY_FLAG, false)){
+            addPlaylistsToUser()
+        }
+    }
+
+
+    private fun addPlaylistsToUser(){
+        val map = intent?.getSerializableExtra("nameToUid") as HashMap<String, String>
+        user.addSpotifyPlaylistUids(map)
+        val playlists = intent?.getSerializableExtra("playlists") as HashSet<Playlist>
+        user.addPlaylists(playlists)
     }
 
 
