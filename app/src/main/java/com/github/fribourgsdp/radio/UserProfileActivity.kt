@@ -27,7 +27,7 @@ class UserProfileActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_user_profile)
 
-        user = try {
+        user = try { /* TODO replace with proper error handling of asking user enter his info */
             User.load(this)
         } catch (e: java.io.FileNotFoundException) {
             System.out.println(e.javaClass.kotlin)
