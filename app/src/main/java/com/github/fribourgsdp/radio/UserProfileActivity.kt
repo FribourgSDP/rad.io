@@ -30,8 +30,7 @@ class UserProfileActivity : AppCompatActivity() {
         user = try { /* TODO replace with proper error handling of asking user enter his info */
             User.load(this)
         } catch (e: java.io.FileNotFoundException) {
-            System.out.println(e.javaClass.kotlin)
-            User("Default", User.generateColor())
+            User("No User Found", User.generateColor())
         }
 
         val playButton = findViewById<Button>(R.id.launchSpotifyButton)
