@@ -15,7 +15,7 @@ class FireBaseTestActivity : AppCompatActivity() {
         setContentView(R.layout.activity_fire_base_test)
 
 
-        val db = Database()
+        val db = FirestoreDatabase()
         // val userAuthUID = FirebaseAuth.getInstance().currentUser?.uid // this will be used later
         //when working with an authenticated user
 
@@ -24,17 +24,19 @@ class FireBaseTestActivity : AppCompatActivity() {
         val userNa = User("nathanDuchesne")
         db.setUser(userAuthUID,userNa)
 
-        db.getUser("m0sd9l").addOnSuccessListener { l ->
+        db.getUser("m0sd9ll").addOnSuccessListener { l ->
             if (l == null){
                 findViewById<TextView>(R.id.textToChange).text = "There has been an error"
             }else {
                 findViewById<TextView>(R.id.textToChange).text = l.name
             }
         }.addOnFailureListener { e ->
+            findViewById<TextView>(R.id.textToChange).text = "IL y A UNE FOTE"
+
             Log.w(ContentValues.TAG, "Error adding document", e)
         }
 
-
+/*
         val song = Song("this is the title", "Nathan","")
         db.registerSong(song)
 
@@ -56,13 +58,17 @@ class FireBaseTestActivity : AppCompatActivity() {
         db.registerPlaylist(playlist)
 
         db.getPlaylist("testPlaylist").addOnSuccessListener { l ->
-            var text = ""
-            for (songi in l.getSongs()){
-                text += ";" + songi.name
-            }
+            if(l == null){
 
-            //findViewById<TextView>(R.id.textToChange).text = text
-        }
+            }else {
+                var text = ""
+                for (songi in l.getSongs()) {
+                    text += ";" + songi.name
+                }
+                //findViewById<TextView>(R.id.textToChange).text = text
+
+            }
+        }*/
     }
 }
 
