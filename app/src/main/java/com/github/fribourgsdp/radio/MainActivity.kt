@@ -33,6 +33,6 @@ class MainActivity : AppCompatActivity() {
         val mockPlaylist2 = Playlist("empty playlist", Genre.NONE)
         mockPlaylist1.addSongs(setOf(Song("test Song 1", "test artist1"), Song("test Song 2", "test artist2")))
         mockUser.addPlaylists(setOf(mockPlaylist1, mockPlaylist2))
-        mockUser.save()
+        mockUser.save(this)
     }
 }
