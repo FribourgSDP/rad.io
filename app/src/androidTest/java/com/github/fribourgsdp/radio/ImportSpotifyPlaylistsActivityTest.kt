@@ -102,6 +102,16 @@ class ImportSpotifyPlaylistsActivityTest {
         assert(future.get().isEmpty())
     }
 
+    @Test
+    fun loadSongsToPlaylistWorksProperly(){
+        val map = mutableMapOf<String, String>()
+        map["bla"] = "bli"
+        val playlists = ImportSpotifyPlaylistsActivity.loadSongsToPlaylists(map, MockPlaylistHTTPClient(), mockPlaylistContentJSONParser())
+        assert(playlists.size == 1)
+        assert(playlists.last().name == "bla")
+        assert(playlists.last().getSongs().contains(Song("Narcos", "Migos", "")))
+    }
+
 
 
     private class FailingHTTPClient : OkHttpClient() {

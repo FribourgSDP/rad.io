@@ -47,11 +47,11 @@ class ImportSpotifyPlaylistsActivity : AppCompatActivity() {
             return future
         }
 
-        fun loadSongsToPlaylists(playlistNameToId: Map<String, String>): Set<Playlist> {
+        fun loadSongsToPlaylists(playlistNameToId: Map<String, String>, client: OkHttpClient = OkHttpClient(), parser : JSONParser = JSONStandardParser()): Set<Playlist> {
             val playlists = mutableSetOf<Playlist>()
             for ((name, id) in playlistNameToId) {
                 var newPlaylist = Playlist(name)
-                val futurePlaylist = getPlaylistContent(id)
+                val futurePlaylist = getPlaylistContent(id, client, parser)
                 val playlistSongs = futurePlaylist.get()
                 if (playlistSongs.isNotEmpty()){
                     newPlaylist.addSongs(playlistSongs)
