@@ -65,9 +65,9 @@ class UserProfileActivity : AppCompatActivity() {
 
 
     private fun addPlaylistsToUser(){
-        val map = intent?.getSerializableExtra("nameToUid") as HashMap<String, String>
+        val map = intent!!.getSerializableExtra("nameToUid") as HashMap<String, String>
         user.addSpotifyPlaylistUids(map)
-        val playlists = intent?.getSerializableExtra("playlists") as HashSet<Playlist>
+        val playlists = intent!!.getSerializableExtra("playlists") as HashSet<Playlist>
         user.addPlaylists(playlists)
     }
 
