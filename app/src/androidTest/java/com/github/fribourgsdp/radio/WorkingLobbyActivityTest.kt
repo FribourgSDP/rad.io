@@ -11,8 +11,10 @@ import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.intent.Intents
 import androidx.test.espresso.matcher.ViewMatchers.withId
 import androidx.test.espresso.matcher.ViewMatchers.withText
+import androidx.test.espresso.matcher.ViewMatchers.isDisplayed
 import androidx.test.ext.junit.rules.ActivityScenarioRule
 import androidx.test.ext.junit.runners.AndroidJUnit4
+import org.hamcrest.Matchers.not
 import org.junit.Before
 import org.junit.After
 import org.junit.Rule
@@ -20,7 +22,7 @@ import org.junit.Test
 import org.junit.runner.RunWith
 
 /**
- * Lobby Activity Tests
+ * Lobby Activity Tests with working database
  * NB: Here we test on [WorkingLobbyActivity], that uses a [LocalDatabase],
  * so that the tests don't depend on firebase.
  *
@@ -43,7 +45,7 @@ class WorkingLobbyActivityTest {
     }
 
     @Test
-    fun lobbyDisplayCorrectInfos() {
+    fun lobbyDisplayCorrectInfosWhenHost() {
         // Test values
         val testHostName = "The Boss"
         val testName = "Hello World!"
@@ -60,6 +62,7 @@ class WorkingLobbyActivityTest {
         val nbRoundsTextView = Espresso.onView(withId(R.id.nbRoundsText))
         val withHintTextView = Espresso.onView(withId(R.id.withHintText))
         val privateTextView  = Espresso.onView(withId(R.id.privateText))
+        val launchGameButton = Espresso.onView(withId(R.id.launchGameButton))
 
         val testIntent = Intent(ctx, WorkingLobbyActivity::class.java).apply {
             putExtra(GAME_HOST_KEY, testHostName)
@@ -79,15 +82,15 @@ class WorkingLobbyActivityTest {
             nbRoundsTextView.check(matches(withText(ctx.getString(R.string.number_of_rounds_format, testNbRounds))))
             withHintTextView.check(matches(withText(ctx.getString(R.string.hints_enabled_format, withHint))))
             privateTextView.check(matches(withText(ctx.getString(R.string.private_format, private))))
+            launchGameButton.check(matches(isDisplayed()))
         }
 
     }
-
-
-
+    
     @Test
-    fun lobbyDisplayCorrectInfos() {
+    fun lobbyDisplayCorrectInfosWhenInvited() {
         // Test values
+        val testUID = 42L
         val testHostName = "The Boss"
         val testName = "Hello World!"
         val testPlaylist = "Rap Playlist"
@@ -103,27 +106,44 @@ class WorkingLobbyActivityTest {
         val nbRoundsTextView = Espresso.onView(withId(R.id.nbRoundsText))
         val withHintTextView = Espresso.onView(withId(R.id.withHintText))
         val privateTextView  = Espresso.onView(withId(R.id.privateText))
+        val launchGameButton = Espresso.onView(withId(R.id.launchGameButton))
 
         val testIntent = Intent(ctx, WorkingLobbyActivity::class.java).apply {
+            putExtra(GAME_UID_KEY, testUID)
             putExtra(GAME_HOST_KEY, testHostName)
             putExtra(GAME_NAME_KEY, testName)
             putExtra(GAME_PLAYLIST_KEY, testPlaylist)
             putExtra(GAME_NB_ROUNDS_KEY, testNbRounds)
             putExtra(GAME_HINT_KEY, withHint)
             putExtra(GAME_PRIVACY_KEY, private)
-            putExtra(GAME_IS_HOST_KEY, true)
+            putExtra(GAME_IS_HOST_KEY, false)
         }
 
         ActivityScenario.launch<WorkingLobbyActivity>(testIntent).use {
-            uuidTextView.check(matches(withText(ctx.getString(R.string.uid_text_format, LocalDatabase.EXPECTED_UID))))
+            uuidTextView.check(matches(withText(ctx.getString(R.string.uid_text_format, testUID))))
             hostNameTextView.check(matches(withText(ctx.getString(R.string.host_name_format, testHostName))))
             gameNameTextView.check(matches(withText(ctx.getString(R.string.game_name_format, testName))))
             playlistTextView.check(matches(withText(ctx.getString(R.string.playlist_format, testPlaylist))))
             nbRoundsTextView.check(matches(withText(ctx.getString(R.string.number_of_rounds_format, testNbRounds))))
             withHintTextView.check(matches(withText(ctx.getString(R.string.hints_enabled_format, withHint))))
             privateTextView.check(matches(withText(ctx.getString(R.string.private_format, private))))
+            launchGameButton.check(matches(not(isDisplayed())))
+        }
+    }
+
+    @Test
+    fun displayErrorMessageOnBadUIDWhenInvited() {
+        // Init views
+        val uuidTextView = Espresso.onView(withId(R.id.uuidText))
+
+        val testIntent = Intent(ctx, WorkingLobbyActivity::class.java).apply {
+            putExtra(GAME_UID_KEY, -1)
+            putExtra(GAME_IS_HOST_KEY, false)
         }
 
+        ActivityScenario.launch<WorkingLobbyActivity>(testIntent).use {
+            uuidTextView.check(matches(withText(ctx.getString(R.string.uid_error_join))))
+        }
     }
 
 }
