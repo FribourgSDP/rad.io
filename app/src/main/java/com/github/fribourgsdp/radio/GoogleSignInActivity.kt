@@ -14,6 +14,7 @@ import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.android.gms.common.api.ApiException
 import com.google.firebase.auth.AuthCredential
+import com.google.firebase.auth.AuthResult
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.GoogleAuthProvider
 import java.lang.Exception
@@ -97,14 +98,9 @@ class GoogleSignInActivity : AppCompatActivity() {
         firebaseAuth.signInWithCredential(credential).addOnSuccessListener { authResult ->
             //login success
             //check if user is new or existing
-            val firebaseUser = authResult!!.user
-            val db = Database()
-            val id = firebaseUser!!.uid
-            val mail = firebaseUser.email
             if (authResult.additionalUserInfo!!.isNewUser) {
                 //user is new - Account Create
-                val user = User(mail!!)
-                db.setUser(id, user)
+                val mail = saveUserInDatabse(authResult)
                 saveTestUser(this, mail)
                 Toast.makeText(this@GoogleSignInActivity, "Account created", Toast.LENGTH_SHORT)
                     .show()
@@ -136,4 +132,14 @@ private fun saveTestUser(context : Context, mail : String){
     mockPlaylist1.addSongs(setOf(Song("test Song 1", "test artist1"), Song("test Song 2", "test artist2")))
     mockUser.addPlaylists(setOf(mockPlaylist1, mockPlaylist2))
     mockUser.save(context)
+}
+
+private fun saveUserInDatabse(authResult : AuthResult) : String{
+    val firebaseUser = authResult!!.user
+    val db = Database()
+    val id = firebaseUser!!.uid
+    val mail = firebaseUser.email
+    val user = User(mail!!)
+    db.setUser(id, user)
+    return mail
 }
