@@ -4,25 +4,31 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".PrintTokenActivity">
+    android:backgroundTint="#168A25"
+    tools:context=".ImportSpotifyPlaylistsActivity">
 
     <TextView
-        android:id="@+id/playlistsTextView"
+        android:id="@+id/loadingPlaylists"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="TextView"
+        android:text="Your Spotify playlists are loading...!"
+        android:textColor="#168A25"
+        android:textSize="16sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/loadingPlaylistsComment"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="#168A25"
+        android:textSize="16sp"
+        android:text="This could take some time...!"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.498"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <TextView
-        android:id="@+id/titlePlaylists"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="User Playlists"
-        android:textSize="34sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toBottomOf="@+id/loadingPlaylists"
+        app:layout_constraintVertical_bias="0.117" />
 </androidx.constraintlayout.widget.ConstraintLayout>

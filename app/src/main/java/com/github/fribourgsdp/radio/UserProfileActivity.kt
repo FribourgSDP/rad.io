@@ -21,6 +21,7 @@ const val MY_CLIENT_ID = "9dc40237547f4ffaa41bf1e07ea0bba1"
 const val REDIRECT_URI = "com.github.fribourgsdp.radio://callback"
 const val SCOPES = "playlist-read-private,playlist-read-collaborative"
 const val PLAYLIST_DATA = "com.github.fribourgsdp.radio.PLAYLIST_INNER_DATA"
+const val COMING_FROM_SPOTIFY_ACTIVITY_FLAG = "com.github.fribourgsdp.radio.spotifyDataParsing"
 
 class UserProfileActivity : AppCompatActivity(), PlaylistAdapter.OnPlaylistClickListener {
     private lateinit var user : User
@@ -67,7 +68,9 @@ class UserProfileActivity : AppCompatActivity(), PlaylistAdapter.OnPlaylistClick
             finish()
         }
         findViewById<ImageView>(R.id.userIcon).setColorFilter(PorterDuffColorFilter(user.color, PorterDuff.Mode.ADD))
-
+        if (intent.getBooleanExtra(COMING_FROM_SPOTIFY_ACTIVITY_FLAG, false)){
+            addPlaylistsToUser()
+        }
 
         userPlaylists = user.getPlaylists().toList()
         val playlistDisplay : RecyclerView = findViewById(R.id.playlist_recycler_view)
@@ -80,6 +83,14 @@ class UserProfileActivity : AppCompatActivity(), PlaylistAdapter.OnPlaylistClick
         val intent = Intent(this, PlaylistDisplayActivity::class.java)
             .putExtra(PLAYLIST_DATA, Json.encodeToString(userPlaylists[position]))
         startActivity(intent)
+    }
+
+
+    private fun addPlaylistsToUser(){
+        val map = intent!!.getSerializableExtra("nameToUid") as HashMap<String, String>
+        user.addSpotifyPlaylistUids(map)
+        val playlists = intent!!.getSerializableExtra("playlists") as HashSet<Playlist>
+        user.addPlaylists(playlists)
     }
 
 
