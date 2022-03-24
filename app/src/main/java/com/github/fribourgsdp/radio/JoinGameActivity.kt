@@ -42,7 +42,7 @@ open class JoinGameActivity : AppCompatActivity() {
 
         // trigger the button when the user presses "enter" in the text field
         idInput.setOnEditorActionListener { _: TextView?, actionId: Int, _: KeyEvent? ->
-            if (actionId == EditorInfo.IME_ACTION_DONE) {
+            if (actionId == EditorInfo.IME_ACTION_DONE && joinButton.isEnabled) {
                 joinButton.callOnClick()
                 return@setOnEditorActionListener true
             }
