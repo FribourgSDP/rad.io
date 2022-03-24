@@ -51,16 +51,16 @@ class StringComparisons {
             var result : Boolean = false
             if (tolerance >= 0){
                 if (s1 == s2){
-                    result |= true
+                    result = result | true
                 }
             }
             if (tolerance >= 1){
                 if (s1.length == s2.length){
-                    result |= (equalWithSubstitution(s1, s2, tolerance))
+                    result = result | (equalWithSubstitution(s1, s2, tolerance))
                 }else if (s1.length < s2.length){
-                    result |= (equalWithDeletion(s1, s2, tolerance))
+                    result = result | (equalWithDeletion(s1, s2, tolerance))
                 }else if (s1.length > s2.length){
-                    result |= (equalWithInsertion(s1, s2, tolerance))
+                    result = result | (equalWithInsertion(s1, s2, tolerance))
                 }
             }
             return result
@@ -74,6 +74,7 @@ class StringComparisons {
                     }
                 }
             }
+            return false
         }
         private fun equalWithDeletion(s1 : String, s2 : String, tolerance : Int) : Boolean{
             for (i in s2.indices){
@@ -81,6 +82,7 @@ class StringComparisons {
                     return true
                 }
             }
+            return false
         }
         private fun equalWithInsertion(s1 : String, s2 : String, tolerance : Int) : Boolean{
             for (i in s2.indices){
@@ -90,6 +92,7 @@ class StringComparisons {
                     }
                 }
             }
+            return false
         }
     }
 }
