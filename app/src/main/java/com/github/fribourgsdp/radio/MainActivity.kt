@@ -26,6 +26,5 @@ class MainActivity : AppCompatActivity() {
             startActivity(Intent(this, UserProfileActivity::class.java))
         }
 
-        User("bla", User.generateColor()).save(this)
     }
 }
