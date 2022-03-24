@@ -5,6 +5,7 @@ import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.firestore.EventListener
+import java.lang.Exception
 
 /**
  *
@@ -110,6 +111,10 @@ class FirestoreDatabase : Database {
         return db.runTransaction { transaction ->
             val snapshot = transaction.get(docRef)
 
+            if (!snapshot.exists()) {
+                throw Exception("Document not found.")
+            }
+
             val id = snapshot.getLong(keyID)!!
             val nextId = (id + 1) % snapshot.getLong(keyMax)!!
 
@@ -147,6 +152,10 @@ class FirestoreDatabase : Database {
         return db.runTransaction { transaction ->
             val snapshot = transaction.get(docRef)
 
+            if (!snapshot.exists()) {
+                throw IllegalArgumentException("Document $id not found.")
+            }
+
             val host = snapshot.getString("host")!!
             val name = snapshot.getString("name")!!
             val playlist = snapshot.getString("playlist")!!
@@ -164,6 +173,10 @@ class FirestoreDatabase : Database {
 
         return db.runTransaction { transaction ->
             val snapshot = transaction.get(docRef)
+
+            if (!snapshot.exists()) {
+                throw IllegalArgumentException("Document $id not found.")
+            }
 
             val list = snapshot.get("players")!! as ArrayList<String>
             list.add(user.name)
