@@ -19,8 +19,6 @@ import androidx.test.espresso.matcher.ViewMatchers.isDisplayed
 import androidx.test.espresso.matcher.ViewMatchers.withId
 import com.google.android.gms.tasks.Tasks
 import java.util.concurrent.TimeUnit
-import com.google.android.gms.tasks.Tasks
-import java.util.concurrent.TimeUnit
 
 @RunWith(AndroidJUnit4::class)
 class UserProfileActivityTest : TestCase() {
