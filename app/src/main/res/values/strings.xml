@@ -28,4 +28,7 @@
     <string name="private_format">Private : %b</string>
     <string name="playlist_card_text1">Playlist Name</string>
     <string name="playlist_card_text2">Playlist Genre</string>
+    <string name="song_card_text1">Song Name</string>
+    <string name="song_card_text2">Artist Name</string>
+    <string name="playlist_name_placeholder">Playlist</string>
 </resources>

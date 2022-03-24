@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.github.fribourgsdp.radio">
+
     <uses-permission android:name="android.permission.INTERNET" />
 
     <application
@@ -11,6 +12,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Radio"
         android:usesCleartextTraffic="true">
+        <activity
+            android:name=".PlaylistDisplayActivity"
+            android:exported="false" />
         <activity
             android:name=".PrintTokenActivity"
             android:exported="false" />
@@ -61,6 +65,5 @@
             </intent-filter>
         </activity>
     </application>
-
 
 </manifest>
