@@ -29,6 +29,7 @@ interface Database {
     /**
      * Get the [Playlist], wrapped in a [Task], given its [playlistName]
      * @return [Playlist], wrapped in a [Task], the [Playlist] is null if it doesn't exist
+     * @Note the [Song] in the [Playlist] have empty [artistName] and [lyrics]
      */
    fun getPlaylist(playlistName : String): Task<Playlist>
 
