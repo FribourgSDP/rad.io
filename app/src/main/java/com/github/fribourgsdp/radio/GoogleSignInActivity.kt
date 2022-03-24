@@ -86,13 +86,10 @@ class GoogleSignInActivity : AppCompatActivity() {
         if (firebaseUser != null) {
             //user is already logged in
             //start profile activity
-
             val intent = Intent(this@GoogleSignInActivity, UserProfileActivity::class.java)
             startActivity(intent)
-
             finish()
         }
-
     }
 
 
@@ -100,7 +97,6 @@ class GoogleSignInActivity : AppCompatActivity() {
         firebaseAuth.signInWithCredential(credential).addOnSuccessListener { authResult ->
             //login success
             //check if user is new or existing
-
             val firebaseUser = authResult!!.user
             val db = Database()
             val id = firebaseUser!!.uid
