@@ -13,7 +13,7 @@ class LocalDatabaseTest
 
     @Test
     fun registeringUserAndFetchingItWorks(){
-        val db = LocalDatabase()
+        val db : Database = LocalDatabase()
         val name = "TestingThings"
         val userTest = User(name)
         db.setUser(userAuthUID,userTest)
@@ -23,7 +23,7 @@ class LocalDatabaseTest
 
     @Test
     fun fetchingUnregisteredUserReturnsNull(){
-        val db = LocalDatabase()
+        val db : Database = LocalDatabase()
         val user = Tasks.withTimeout(db.getUser("rubbish"),10,TimeUnit.SECONDS)
         Log.d(ContentValues.TAG, "DocumentSnapshot added with ID put: " + Tasks.await(user))
         assert(Tasks.await(user) == null)
@@ -31,7 +31,7 @@ class LocalDatabaseTest
 
     @Test
     fun registerSongAndFetchingItWorks(){
-        val db = LocalDatabase()
+        val db : Database = LocalDatabase()
         val song1 = Song("Hello","Adele","")
         db.registerSong(song1)
         assert(Tasks.await(db.getSong(song1.name)) == song1)
@@ -40,14 +40,14 @@ class LocalDatabaseTest
 
     @Test
     fun fetchingInexistantSongReturnsNull(){
-        val db = LocalDatabase()
+        val db : Database = LocalDatabase()
         val song = db.getSong("Rubbish")
         assert(Tasks.await(song) == null)
     }
 
     @Test
     fun registerPlaylistAndFetchingItWorks(){
-        val db = LocalDatabase()
+        val db : Database = LocalDatabase()
         val song1 = Song("Hello","Adele","")
         val song2 = Song("World","NAthan","")
         val playlist = Playlist("test",Genre.COUNTRY)
@@ -60,7 +60,7 @@ class LocalDatabaseTest
 
     @Test
     fun fetchingInexistantPlaylistReturnsNull(){
-        val db = LocalDatabase()
+        val db : Database = LocalDatabase()
         val playlist = db.getPlaylist("Rubbish")
         assert(Tasks.await(playlist) == null)
 
