@@ -77,17 +77,4 @@ class UserProfileActivityTest : TestCase() {
         assertEquals(REDIRECT_URI, request.redirectUri)
         assert(request.scopes[0].equals("playlist-read-private,playlist-read-collaborative"))
     }
-
-
-    @Test
-    fun playlistRecyclerViewIsDisplayed(){
-        Intents.init()
-        val firebaseAuth = FirebaseAuth.getInstance()
-        val task = Tasks.withTimeout(firebaseAuth.signInWithEmailAndPassword("test@test.com", "test123!!!"),10, TimeUnit.SECONDS)
-        Tasks.await(task)
-
-        Espresso.onView(withId(R.id.playlist_recycler_view)).check(matches(isDisplayed()))
-        firebaseAuth.signOut()
-        Intents.release()
-    }
 }
