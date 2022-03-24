@@ -1,125 +1,41 @@
 package com.github.fribourgsdp.radio
 
-
 import com.google.android.gms.tasks.Task
-import com.google.firebase.firestore.DocumentSnapshot
-import com.google.firebase.firestore.EventListener
-import com.google.firebase.firestore.ktx.firestore
-import com.google.firebase.ktx.Firebase
 
-/**
- *
- *This class represents a database. It communicates with the database(Firestore)
- * and translates the result in classes
- *
- * @constructor Creates a database linked to Firestore
- */
-class Database {
-    private val db = Firebase.firestore
+interface Database {
 
     /**
      * Gets the [User], wrapped in a [Task], linked to the [userId] given, [userId] should be the authentication token
      * @return [User] wrapped in a task, if the [userId] doesn't exists, it returns a null [User]
-     *
      */
-     fun getUser(userId : String): Task<User> {
+   fun getUser(userId : String): Task<User>
 
-         return  db.collection("user").document(userId).get().continueWith { l ->
-             val found = l.result["first"].toString()
-             if (found == "null"){
-                 null
-             }else{
-                 User(found)
-             }
-         }
-    }
+   /**
+    * Sets the [User] information in the database and link it the to [userId] given, [userId] should be the authentication token
+    */
+   fun setUser(userId : String, user : User): Task<Void>
 
     /**
-     * Sets the [User] information in the database and link it the to [userId] given, [userId] should be the authentication token
+     * Gets the [Song], wrapped in a [Task], given its [songName]
+     * @return [Song], wrapped in a [Task], the [Song] is null if it doesn't exist
      */
-    fun setUser(userId : String, user : User){
-        val userHash = hashMapOf(
-            "first" to user.name
-        )
-        db.collection("user").document(userId).set(userHash)
-    }
+   fun getSong(songName : String): Task<Song>
 
     /**
-     * Gets a unique ID for a lobby. It is an asynchronous operation, so it is returned in a task.
-     * @return a task loading a unique ID for the lobby.
+     * Register the [Song] in the database
      */
-    fun getLobbyId() : Task<Long> {
-        val keyID = "current_id"
-        val keyMax = "max_id"
+   fun registerSong(song : Song): Task<Void>
 
-        val docRef = db.collection("lobby").document("id")
+    /**
+     * Get the [Playlist], wrapped in a [Task], given its [playlistName]
+     * @return [Playlist], wrapped in a [Task], the [Playlist] is null if it doesn't exist
+     * @Note the [Song] in the [Playlist] have empty [artistName] and [lyrics]
+     */
+   fun getPlaylist(playlistName : String): Task<Playlist>
 
-        return db.runTransaction { transaction ->
-            val snapshot = transaction.get(docRef)
-
-            val id = snapshot.getLong(keyID)!!
-            val nextId = (id + 1) % snapshot.getLong(keyMax)!!
-
-            transaction.update(docRef, keyID, nextId)
-
-            // Success
-            id
-        }
-    }
-
-    fun openLobby(id: Long, settings : Game.Settings) : Task<Void> {
-        val gameData = hashMapOf(
-            "name" to settings.name,
-            "host" to settings.host.name,
-            "playlist" to settings.playlist.name,
-            "nbRounds" to settings.nbRounds,
-            "withHint" to settings.withHint,
-            "private" to settings.isPrivate,
-            "players" to listOf(settings.host.name)
-        )
-
-        return db.collection("lobby").document(id.toString())
-            .set(gameData)
-
-    }
-
-    fun listenToLobbyUpdate(id: Long, listener: EventListener<DocumentSnapshot>) {
-        db.collection("lobby").document(id.toString())
-            .addSnapshotListener(listener)
-    }
-
-    fun getGameSettingsFromLobby(id: Long) :Task<Game.Settings> {
-        val docRef = db.collection("lobby").document(id.toString())
-
-        return db.runTransaction { transaction ->
-            val snapshot = transaction.get(docRef)
-
-            val host = snapshot.getString("host")!!
-            val name = snapshot.getString("name")!!
-            val playlist = snapshot.getString("playlist")!!
-            val nbRounds = snapshot.getLong("nbRounds")!!
-            val withHint = snapshot.getBoolean("withHint")!!
-            val private = snapshot.getBoolean("private")!!
-
-            // Success
-            Game.Settings(User(host), name, Playlist(playlist), nbRounds.toInt(), withHint, private)
-        }
-    }
-
-    fun addUserToLobby(id: Long, user: User) : Task<Void> {
-        val docRef = db.collection("lobby").document(id.toString())
-
-        return db.runTransaction { transaction ->
-            val snapshot = transaction.get(docRef)
-
-            val list = snapshot.get("players")!! as ArrayList<String>
-            list.add(user.name)
-
-            transaction.update(docRef, "players", list)
-
-            // Success
-            null
-        }
-    }
-
+    /**
+     * Register the [Playlist] in the database
+     */
+   fun registerPlaylist( playlist : Playlist): Task<Void>
+  
 }

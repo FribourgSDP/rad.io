@@ -7,14 +7,25 @@
     tools:context=".SpotifyReceiveActivity">
 
     <Button
-        android:id="@+id/getTokenButton"
+        android:id="@+id/importSpotifyPlaylistsButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Show my playlists!"
+        android:backgroundTint="#168A25"
+        android:text="Import my Spotify playlists"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.498"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.587" />
+        app:layout_constraintTop_toBottomOf="@+id/successSpotifyLogin" />
+
+    <TextView
+        android:id="@+id/successSpotifyLogin"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="You have successfully logged into Spotify!"
+        android:textColor="#168A25"
+        android:textSize="16sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 </androidx.constraintlayout.widget.ConstraintLayout>
