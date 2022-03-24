@@ -213,7 +213,7 @@ class Game private constructor(val name: String, val host: User, val playlist: P
 
     }
 
-    class Settings(
+    data class Settings(
         val host: User,
         val name: String,
         val playlist: Playlist,
