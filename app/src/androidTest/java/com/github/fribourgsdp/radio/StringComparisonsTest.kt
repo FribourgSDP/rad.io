@@ -52,12 +52,5 @@ class StringComparisonsTest {
         assert(1 != StringComparisons.compare("rge", "rouge"))
         assert(0 != StringComparisons.compare("rougf", "rouge"))
     }
-    @Test
-    fun compareAndGetPointsTest(){
-        assert(100 == StringComparisons.compareAndGetPoints("comfortably numb", "comfortably numb"))
-        assert(90 == StringComparisons.compareAndGetPoints("comfortably num", "comfortably numb"))
-        assert(80 == StringComparisons.compareAndGetPoints("confortably num", "comfortably numb"))
-        assert(0 == StringComparisons.compareAndGetPoints("confortably nu", "comfortably numb"))
-    }
 
 }

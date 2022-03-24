@@ -3,25 +3,11 @@ package com.github.fribourgsdp.radio
 import java.text.Normalizer
 
 const val MAX_ALLOWED_ERRORS = 2
-const val ONE_ERROR_PENALTY = 0.9
-const val TWO_ERRORS_PENALTY = 0.8
 const val NOT_THE_SAME = -1
 
 class StringComparisons {
     companion object{
         private const val chars = "abcdefghijklmnopqrstuvwxyz1234567890"
-
-        /**
-        * Function that returns a number of points depending on the number of mistakes in the comparison of the two provided strings.
-        */
-        fun compareAndGetPoints(actual : String, expected : String, maxPts : Int = 100) : Int {
-            return when(compare(actual, expected)){
-                0 -> maxPts
-                1 -> (ONE_ERROR_PENALTY*maxPts).toInt()
-                2 -> (TWO_ERRORS_PENALTY*maxPts).toInt()
-                else -> 0
-            }
-        }
 
         /**
         * Function that compares two strings and returns the number of differences between them.
@@ -52,16 +38,16 @@ class StringComparisons {
             var result : Boolean = false
             if (tolerance == 0){
                 if (s1 == s2){
-                    result = result || true
+                    result = true
                 }
             }
             if (tolerance >= 1 && !result){
                 if (s1.length == s2.length){
-                    result = result || (equalWithSubstitution(s1, s2, tolerance))
+                    result = equalWithSubstitution(s1, s2, tolerance)
                 }else if (s1.length < s2.length){
-                    result = result || (equalWithDeletion(s1, s2, tolerance))
+                    result = equalWithDeletion(s1, s2, tolerance)
                 }else if (s1.length > s2.length){
-                    result = result || (equalWithInsertion(s1, s2, tolerance))
+                    result = equalWithInsertion(s1, s2, tolerance)
                 }
             }
             return result
