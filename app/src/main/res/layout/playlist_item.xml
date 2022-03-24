@@ -10,7 +10,7 @@
         android:padding="8dp">
 
         <TextView
-            android:id="@+id/text_view_1"
+            android:id="@+id/playlist_title_view"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentStart="true"
@@ -21,11 +21,11 @@
             android:textStyle="bold" />
 
         <TextView
-            android:id="@+id/text_view_2"
+            android:id="@+id/playlist_subtitle_view"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@id/text_view_1"
-            android:layout_alignStart="@+id/text_view_1"
+            android:layout_below="@id/playlist_title_view"
+            android:layout_alignStart="@+id/playlist_title_view"
             android:layout_marginStart="8sp"
             android:text="@string/playlist_card_text2" />
 
