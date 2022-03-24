@@ -1,6 +1,7 @@
 package com.github.fribourgsdp.radio
 
 import android.app.Activity
+import android.content.Context
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -13,6 +14,7 @@ import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.android.gms.common.api.ApiException
 import com.google.firebase.auth.AuthCredential
+import com.google.firebase.auth.AuthResult
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.GoogleAuthProvider
 import java.lang.Exception
@@ -85,13 +87,10 @@ class GoogleSignInActivity : AppCompatActivity() {
         if (firebaseUser != null) {
             //user is already logged in
             //start profile activity
-
             val intent = Intent(this@GoogleSignInActivity, UserProfileActivity::class.java)
             startActivity(intent)
-
             finish()
         }
-
     }
 
 
@@ -101,19 +100,18 @@ class GoogleSignInActivity : AppCompatActivity() {
             //check if user is new or existing
             if (authResult.additionalUserInfo!!.isNewUser) {
                 //user is new - Account Create
+                val mail = saveUserInDatabse(authResult)
+                saveTestUser(this, mail)
                 Toast.makeText(this@GoogleSignInActivity, "Account created", Toast.LENGTH_SHORT)
                     .show()
-
             } else {
                 //existing user - LoggedIn
                 Toast.makeText(this@GoogleSignInActivity, "LoggedIn", Toast.LENGTH_SHORT).show()
             }
             //start profile activity
             val intent: Intent = Intent(this, UserProfileActivity::class.java)
-
             startActivity(intent)
             finish()
-
         }
             .addOnFailureListener { e ->
                 //login failed
@@ -123,4 +121,25 @@ class GoogleSignInActivity : AppCompatActivity() {
                 ).show()
             }
     }
+}
+
+private fun saveTestUser(context : Context, mail : String){
+    /** this user allows quick demo's as it is data that is written to the app
+     * specific storage and can be easily read without intents */
+    val mockUser = User(mail, User.generateColor())
+    val mockPlaylist1 = Playlist("test playlist", Genre.COUNTRY)
+    val mockPlaylist2 = Playlist("empty playlist", Genre.NONE)
+    mockPlaylist1.addSongs(setOf(Song("test Song 1", "test artist1"), Song("test Song 2", "test artist2")))
+    mockUser.addPlaylists(setOf(mockPlaylist1, mockPlaylist2))
+    mockUser.save(context)
+}
+
+private fun saveUserInDatabse(authResult : AuthResult) : String{
+    val firebaseUser = authResult!!.user
+    val db = Database()
+    val id = firebaseUser!!.uid
+    val mail = firebaseUser.email
+    val user = User(mail!!)
+    db.setUser(id, user)
+    return mail
 }
