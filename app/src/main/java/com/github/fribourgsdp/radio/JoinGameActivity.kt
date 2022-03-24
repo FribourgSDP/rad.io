@@ -16,7 +16,7 @@ const val GAME_UID_KEY = "com.github.fribourgsdp.radio.GAME_UID"
 
 
 class JoinGameActivity : AppCompatActivity() {
-    private val db = Database()
+    private val db = this.initDatabase()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -44,14 +44,13 @@ class JoinGameActivity : AppCompatActivity() {
 
     }
 
-    fun addUserToLobby(id: Long): Task<Void> {
-        // TODO: Get the user using the phone
-        return db.addUserToLobby(id, User("Archibald"))
+    open fun initDatabase(): Database {
+        return FirestoreDatabase()
     }
 
     private fun connectToLobby(id: Long) {
         db.getGameSettingsFromLobby(id).addOnSuccessListener { settings ->
-            addUserToLobby(id).addOnSuccessListener {
+            db.addUserToLobby(id, User("Archibald")).addOnSuccessListener {
 
                 startActivity(Intent(this, LobbyActivity::class.java).apply {
                     putExtra(GAME_HOST_KEY, settings.host.name)
