@@ -73,6 +73,9 @@
         <activity
             android:name=".mockimplementations.WorkingLobbyActivity"
             android:exported="false" />
+        <activity
+            android:name=".mockimplementations.BuggyLobbyActivity"
+            android:exported="false" />
 
     </application>
 

@@ -8,3 +8,9 @@ class WorkingLobbyActivity : LobbyActivity() {
         return LocalDatabase()
     }
 }
+
+class BuggyLobbyActivity : LobbyActivity() {
+    override fun initDatabase(): Database {
+        return BuggyDatabase()
+    }
+}
