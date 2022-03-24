@@ -6,7 +6,8 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 
-class PlaylistAdapter(private val playlistList: List<Playlist>) :
+class PlaylistAdapter(private val playlistList: List<Playlist>,
+                      private val listener: OnPlaylistClickListener) :
     RecyclerView.Adapter<PlaylistAdapter.PlaylistViewHolder>(){
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PlaylistViewHolder {
@@ -24,8 +25,24 @@ class PlaylistAdapter(private val playlistList: List<Playlist>) :
 
     override fun getItemCount(): Int = playlistList.size
 
-    class PlaylistViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+    inner class PlaylistViewHolder(itemView: View) :    RecyclerView.ViewHolder(itemView),
+                                                        View.OnClickListener {
         val titleView: TextView = itemView.findViewById(R.id.playlist_title_view)
         val subtitleView: TextView = itemView.findViewById(R.id.playlist_subtitle_view)
+
+        init {
+            itemView.setOnClickListener(this)
+        }
+
+        override fun onClick(p0: View?) {
+            val position = absoluteAdapterPosition
+            if (position != RecyclerView.NO_POSITION) {
+                listener.onItemClick(position)
+            }
+        }
+    }
+
+    interface OnPlaylistClickListener {
+        fun onItemClick(position: Int)
     }
 }

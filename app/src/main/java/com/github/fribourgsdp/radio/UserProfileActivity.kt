@@ -19,7 +19,7 @@ const val MY_CLIENT_ID = "9dc40237547f4ffaa41bf1e07ea0bba1"
 const val REDIRECT_URI = "com.github.fribourgsdp.radio://callback"
 const val SCOPES = "playlist-read-private,playlist-read-collaborative"
 
-class UserProfileActivity : AppCompatActivity() {
+class UserProfileActivity : AppCompatActivity(), PlaylistAdapter.OnPlaylistClickListener {
     private lateinit var user : User
 
     //firebase auth
@@ -64,9 +64,13 @@ class UserProfileActivity : AppCompatActivity() {
         findViewById<ImageView>(R.id.userIcon).setColorFilter(PorterDuffColorFilter(user.color, PorterDuff.Mode.ADD))
 
         val playlistDisplay : RecyclerView = findViewById(R.id.playlist_recycler_view)
-        playlistDisplay.adapter = PlaylistAdapter(user.getPlaylists().toList())
+        playlistDisplay.adapter = PlaylistAdapter(user.getPlaylists().toList(), this)
         playlistDisplay.layoutManager = (LinearLayoutManager(this))
         playlistDisplay.setHasFixedSize(true)
+    }
+
+    override fun onItemClick(position: Int) {
+        startActivity(Intent(this, PlaylistDisplayActivity::class.java))
     }
 
 
