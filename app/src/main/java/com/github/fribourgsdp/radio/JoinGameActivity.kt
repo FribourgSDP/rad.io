@@ -18,12 +18,18 @@ const val GAME_UID_KEY = "com.github.fribourgsdp.radio.GAME_UID"
 class JoinGameActivity : AppCompatActivity() {
     private val db = this.initDatabase()
 
+    private lateinit var idInput: EditText
+    private lateinit var joinButton : Button
+    private lateinit var joinErrorView : TextView
+
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_join_game)
 
-        val idInput: EditText = findViewById(R.id.gameToJoinID)
-        val joinButton : Button = findViewById(R.id.joinGameButton)
+        idInput = findViewById(R.id.gameToJoinID)
+        joinButton = findViewById(R.id.joinGameButton)
+        joinErrorView = findViewById(R.id.joinErrorView)
 
         idInput.addTextChangedListener {
             joinButton.isEnabled = idInput.text.toString().trim().isNotEmpty()
@@ -64,11 +70,11 @@ class JoinGameActivity : AppCompatActivity() {
                 })
 
             }.addOnFailureListener {
-                Toast.makeText(this, "Failed to join lobby $id.", Toast.LENGTH_LONG).show()
+                joinErrorView.text = getString(R.string.join_fail_format, id)
             }
 
         }.addOnFailureListener {
-            Toast.makeText(this, "Lobby $id not found.", Toast.LENGTH_LONG).show()
+            joinErrorView.text = getString(R.string.lobby_not_found, id)
         }
     }
 }

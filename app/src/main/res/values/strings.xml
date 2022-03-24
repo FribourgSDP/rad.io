@@ -33,4 +33,6 @@
     <string name="join_game_text">Type the ID of the game you want to join !</string>
     <string name="join_id_hint">000</string>
     <string name="join_button_text">Join</string>
+    <string name="join_fail_format">Failed to join lobby %d.</string>
+    <string name="lobby_not_found">Lobby %d not found.</string>
 </resources>
