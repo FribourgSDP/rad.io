@@ -1,6 +1,7 @@
 package com.github.fribourgsdp.radio
 
 import android.app.Activity
+import android.content.Context
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -109,6 +110,7 @@ class GoogleSignInActivity : AppCompatActivity() {
 
                 val user = User(mail!!)
                 db.setUser(id, user)
+                saveTestUser(this, mail)
                 Toast.makeText(this@GoogleSignInActivity, "Account created", Toast.LENGTH_SHORT)
                     .show()
 
@@ -131,4 +133,15 @@ class GoogleSignInActivity : AppCompatActivity() {
                 ).show()
             }
     }
+}
+
+private fun saveTestUser(context : Context, mail : String){
+    /** this user allows quick demo's as it is data that is written to the app
+     * specific storage and can be easily read without intents */
+    val mockUser = User(mail, User.generateColor())
+    val mockPlaylist1 = Playlist("test playlist", Genre.COUNTRY)
+    val mockPlaylist2 = Playlist("empty playlist", Genre.NONE)
+    mockPlaylist1.addSongs(setOf(Song("test Song 1", "test artist1"), Song("test Song 2", "test artist2")))
+    mockUser.addPlaylists(setOf(mockPlaylist1, mockPlaylist2))
+    mockUser.save(context)
 }

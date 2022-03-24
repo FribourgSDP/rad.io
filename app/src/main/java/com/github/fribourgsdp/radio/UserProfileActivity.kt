@@ -27,6 +27,9 @@ class UserProfileActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_user_profile)
 
+        firebaseAuth = FirebaseAuth.getInstance()
+        checkUser()
+
         user = try {
             User.load(this)
         } catch (e: java.io.FileNotFoundException) {
@@ -51,8 +54,7 @@ class UserProfileActivity : AppCompatActivity() {
             text = if (user.spotifyLinked) "linked" else "unlinked"
         }
 
-        firebaseAuth = FirebaseAuth.getInstance()
-        checkUser()
+
 
         val logoutButton: Button = findViewById(R.id.logoutButton)
         logoutButton.setOnClickListener{
