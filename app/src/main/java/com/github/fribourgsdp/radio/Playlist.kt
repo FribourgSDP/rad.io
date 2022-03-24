@@ -3,7 +3,7 @@ package com.github.fribourgsdp.radio
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class Playlist (var name: String, var genre: Genre): java.io.Serializable{
+data class Playlist (var name: String, var genre: Genre){
 
     private val songs: MutableSet<Song> = mutableSetOf()
 

@@ -5,7 +5,7 @@ import kotlinx.serialization.Serializable
 import java.util.concurrent.CompletableFuture
 
 @Serializable
-class Song (private val rawName: String, private val rawArtist: String, var lyrics: String): java.io.Serializable {
+class Song (private val rawName: String, private val rawArtist: String, var lyrics: String){
 
     val name: String = reformatName(rawName)
     val artist: String = reformatName(rawArtist)
