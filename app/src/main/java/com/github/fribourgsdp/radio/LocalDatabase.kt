@@ -5,9 +5,9 @@ import com.google.android.gms.tasks.Tasks
 import java.lang.IllegalArgumentException
 
 class LocalDatabase : Database {
-    val userMap: MutableMap<String, User> = mutableMapOf()
-    val songMap: MutableMap<String,Song> = mutableMapOf()
-    val playlistMap: MutableMap<String,Playlist> = mutableMapOf()
+    private val userMap: MutableMap<String, User> = mutableMapOf()
+    private val songMap: MutableMap<String,Song> = mutableMapOf()
+    private val playlistMap: MutableMap<String,Playlist> = mutableMapOf()
 
 
     override fun getUser(userId: String): Task<User> {
