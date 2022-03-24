@@ -1,55 +1,40 @@
 package com.github.fribourgsdp.radio
 
-
-import android.content.ContentValues
-import android.content.ContentValues.TAG
-import android.util.Log
-import androidx.annotation.NonNull
-import com.google.android.gms.tasks.Continuation
 import com.google.android.gms.tasks.Task
-import com.google.android.gms.tasks.Tasks
-import com.google.firebase.firestore.DocumentSnapshot
-import com.google.firebase.firestore.ktx.firestore
-import com.google.firebase.ktx.Firebase
-import java.lang.Exception
 
-import java.util.concurrent.CompletableFuture
-
-/**
- *
- *This class represents a database. It communicates with the database(Firestore)
- * and translates the result in classes
- *
- * @constructor Creates a database linked to Firestore
- */
-class Database {
-    private val db = Firebase.firestore
+interface Database {
 
     /**
      * Gets the [User], wrapped in a [Task], linked to the [userId] given, [userId] should be the authentication token
      * @return [User] wrapped in a task, if the [userId] doesn't exists, it returns a null [User]
-     *
      */
-     fun getUser(userId : String): Task<User> {
+   fun getUser(userId : String): Task<User>
 
-         return  db.collection("user").document(userId).get().continueWith { l ->
-             val found = l.result["first"].toString()
-             if (found == "null"){
-                 null
-             }else{
-                 User(found)
-             }
-         }
-    }
+   /**
+    * Sets the [User] information in the database and link it the to [userId] given, [userId] should be the authentication token
+    */
+   fun setUser(userId : String, user : User): Task<Void>
 
     /**
-     * Sets the [User] information in the database and link it the to [userId] given, [userId] should be the authentication token
+     * Gets the [Song], wrapped in a [Task], given its [songName]
+     * @return [Song], wrapped in a [Task], the [Song] is null if it doesn't exist
      */
-    fun setUser(userId : String, user : User){
-        val userHash = hashMapOf(
-            "first" to user.name
-        )
-        db.collection("user").document(userId).set(userHash)
-    }
+   fun getSong(songName : String): Task<Song>
 
+    /**
+     * Register the [Song] in the database
+     */
+   fun registerSong(song : Song): Task<Void>
+
+    /**
+     * Get the [Playlist], wrapped in a [Task], given its [playlistName]
+     * @return [Playlist], wrapped in a [Task], the [Playlist] is null if it doesn't exist
+     * @Note the [Song] in the [Playlist] have empty [artistName] and [lyrics]
+     */
+   fun getPlaylist(playlistName : String): Task<Playlist>
+
+    /**
+     * Register the [Playlist] in the database
+     */
+   fun registerPlaylist( playlist : Playlist): Task<Void>
 }
