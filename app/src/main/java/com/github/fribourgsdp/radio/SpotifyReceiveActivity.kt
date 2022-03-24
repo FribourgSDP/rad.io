@@ -16,22 +16,14 @@ class SpotifyReceiveActivity : AppCompatActivity() {
         setContentView(R.layout.activity_spotify_receive)
         ACCESS_TOKEN = handleSpotifyResponse(intent)
 
-        val tokenButton = findViewById<Button>(R.id.getTokenButton)
-        tokenButton.setOnClickListener {
-            //println("Acces token is $ACCESS_TOKEN")
-            val intent = Intent(this@SpotifyReceiveActivity, PrintTokenActivity::class.java)
+        val importSpotifyPlaylistsButton = findViewById<Button>(R.id.importSpotifyPlaylistsButton)
+        importSpotifyPlaylistsButton.setOnClickListener {
+            val intent = Intent(this@SpotifyReceiveActivity, ImportSpotifyPlaylistsActivity::class.java)
             intent.putExtra("auth_token", ACCESS_TOKEN)
             startActivity(intent)
         }
 
     }
-
-    override fun onNewIntent(intent: Intent?) {
-        super.onNewIntent(intent)
-        setIntent(intent)
-        handleSpotifyResponse(intent)
-    }
-
 
     companion object {
         fun handleSpotifyResponse(intent: Intent?): String {

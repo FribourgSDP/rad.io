@@ -1,11 +1,9 @@
 package com.github.fribourgsdp.radio
 
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.widget.TextView
 import okhttp3.*
-import org.json.JSONException
-import org.json.JSONObject
 import java.io.IOException
 import java.util.concurrent.CompletableFuture
 
@@ -16,40 +14,51 @@ const val PLAYLIST_INFO_ERROR = "---An error occured while fetching the playlist
 
 var TOKEN: String? = null
 
-class PrintTokenActivity : AppCompatActivity() {
+class ImportSpotifyPlaylistsActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_print_token)
+        setContentView(R.layout.activity_import_spotify_playlists)
         val userToken = intent.getStringExtra("auth_token")
         TOKEN = userToken
 
         val playlistMap: CompletableFuture<HashMap<String, String>> = getUserPlaylists()
-        val map = playlistMap.get()
-        val messageTextView: TextView = findViewById(R.id.playlistsTextView)
-        messageTextView.text = getPlaylistNames(map)
+        val playlistsNameToUid = playlistMap.get()
+        val playlists = loadSongsToPlaylists(playlistsNameToUid)
+
+        var intent = Intent(this@ImportSpotifyPlaylistsActivity, UserProfileActivity::class.java)
+        intent = constructPlaylistIntent(intent, playlistsNameToUid, playlists)
+        startActivity(intent)
     }
 
+
     companion object {
-        fun getPlaylistNames(playlistNameToId: HashMap<String, String>): String {
-            return if (playlistNameToId.isEmpty()){
-                "No Spotify playlists were found for this user."
-            } else {
-                var playlistNames = String()
-                for ((name, id) in playlistNameToId){
-                    //Remove this print after the demo
-                    //println(name + ":" + getPlaylistContent(id).get())
-                    playlistNames += name + "\n"
-                }
-                playlistNames
-            }
+
+        fun constructPlaylistIntent(intent: Intent, playlistNameToUId: HashMap<String, String>, playlists: Set<Playlist>): Intent {
+            intent.putExtra("nameToUid", playlistNameToUId)
+            intent.putExtra("playlists", playlists.toHashSet())
+            intent.putExtra(COMING_FROM_SPOTIFY_ACTIVITY_FLAG, true)
+            return intent
         }
 
-
-        fun getPlaylistContent(playlistId: String, client: OkHttpClient = OkHttpClient(), parser : JSONParser = JSONStandardParser()) : CompletableFuture<String> {
-            val future = CompletableFuture<String>()
+        fun getPlaylistContent(playlistId: String, client: OkHttpClient = OkHttpClient(), parser : JSONParser = JSONStandardParser()) : CompletableFuture<Set<Song>> {
+            val future = CompletableFuture<Set<Song>>()
             val request = buildSpotifyRequest(SPOTIFY_PLAYLIST_INFO_BASE_URL + playlistId + SPOTIFY_SONG_FILTER_NAME_ARTIST, TOKEN)
             client.newCall(request).enqueue(GetPlaylistInfoCallback(future, parser))
             return future
+        }
+
+        fun loadSongsToPlaylists(playlistNameToId: Map<String, String>, client: OkHttpClient = OkHttpClient(), parser : JSONParser = JSONStandardParser()): Set<Playlist> {
+            val playlists = mutableSetOf<Playlist>()
+            for ((name, id) in playlistNameToId) {
+                var newPlaylist = Playlist(name)
+                val futurePlaylist = getPlaylistContent(id, client, parser)
+                val playlistSongs = futurePlaylist.get()
+                if (playlistSongs.isNotEmpty()){
+                    newPlaylist.addSongs(playlistSongs)
+                    playlists.add(newPlaylist)
+                }
+            }
+            return playlists
         }
 
         fun getUserPlaylists(client: OkHttpClient = OkHttpClient(), parser : JSONParser = JSONStandardParser()) : CompletableFuture<HashMap<String, String>> {
@@ -93,7 +102,7 @@ class PrintTokenActivity : AppCompatActivity() {
         }
 
 
-        private class GetPlaylistInfoCallback(private val future : CompletableFuture<String>, private val parser : JSONParser) :
+        private class GetPlaylistInfoCallback(private val future : CompletableFuture<Set<Song>>, private val parser : JSONParser) :
             Callback {
             override fun onFailure(call: Call, e: IOException) {
                 future.completeExceptionally(e)
@@ -102,15 +111,22 @@ class PrintTokenActivity : AppCompatActivity() {
             override fun onResponse(call: Call, response: Response) {
                 val parsedResponseString = response.body()?.string()
                 val parsedResponse = parser.parse(parsedResponseString)
-                var playlistInfo : String? = ""
+                var playlistInfo = mutableSetOf<Song>()
                 println(parsedResponse.toString())
                 if (parsedResponse == null || parsedResponse.has("error")){
-                    playlistInfo = PLAYLIST_INFO_ERROR
+
                 }
                 else {
                     val songs = parsedResponse.getJSONArray("items")
                     for (i in 0 until songs.length()){
-                        playlistInfo += songs.getJSONObject(i).getJSONObject("track").getJSONArray("artists").getJSONObject(0).getString("name") + " || " + songs.getJSONObject(i).getJSONObject("track").getString("name") + "\n"
+                        var songObject = songs.getJSONObject(i).getJSONObject("track")
+                        var artists = ""
+                        var songArtists = songObject.getJSONArray("artists")
+                        for(j in 0 until songArtists.length()){
+                            artists += songArtists.getJSONObject(j).getString("name") + ", "
+                        }
+                        artists = artists.substring(0, artists.length - 2)
+                        playlistInfo.add(Song(songs.getJSONObject(i).getJSONObject("track").getString("name"), artists))
                     }
                 }
                 future.complete(playlistInfo)
