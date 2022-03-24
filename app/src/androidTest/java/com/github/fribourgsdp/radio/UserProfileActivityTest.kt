@@ -14,6 +14,11 @@ import androidx.test.core.app.ApplicationProvider
 import com.google.firebase.auth.*
 import org.hamcrest.Matchers
 import androidx.test.espresso.action.ViewActions.click
+import androidx.test.espresso.assertion.ViewAssertions.matches
+import androidx.test.espresso.matcher.ViewMatchers.isDisplayed
+import androidx.test.espresso.matcher.ViewMatchers.withId
+import com.google.android.gms.tasks.Tasks
+import java.util.concurrent.TimeUnit
 
 @RunWith(AndroidJUnit4::class)
 class UserProfileActivityTest : TestCase() {
@@ -74,4 +79,16 @@ class UserProfileActivityTest : TestCase() {
         assert(request.scopes[0].equals("playlist-read-private,playlist-read-collaborative"))
     }
 
+
+    @Test
+    fun playlistRecyclerViewIsDisplayed(){
+        Intents.init()
+        val firebaseAuth = FirebaseAuth.getInstance()
+        val task = Tasks.withTimeout(firebaseAuth.signInWithEmailAndPassword("test@test.com", "test123!!!"),10, TimeUnit.SECONDS)
+        Tasks.await(task)
+
+        Espresso.onView(withId(R.id.playlist_recycler_view)).check(matches(isDisplayed()))
+        firebaseAuth.signOut()
+        Intents.release()
+    }
 }
