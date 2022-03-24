@@ -64,6 +64,12 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <!-- Test implementations of activities -->
+        <activity
+            android:name=".mockimplementations.WorkingLobbyActivity"
+            android:exported="false" />
+
     </application>
 
 </manifest>
