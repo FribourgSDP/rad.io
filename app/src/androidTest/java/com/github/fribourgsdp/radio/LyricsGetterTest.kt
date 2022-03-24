@@ -75,7 +75,7 @@ class LyricsGetterTest {
     }
     @Test
     fun cleanLyricsTest1(){
-        val lyrics = LyricsGetter.getLyrics("rouge", "sardou").get()
+        val lyrics = LyricsGetter.getLyrics("rouge", "sardou", MockOkHttpClient()).get()
         assertFalse(lyrics.contains("commercial"))
     }
     @Test
