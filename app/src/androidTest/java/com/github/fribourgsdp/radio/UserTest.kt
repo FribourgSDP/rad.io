@@ -11,6 +11,7 @@ import androidx.test.espresso.matcher.ViewMatchers.withId
 import androidx.test.ext.junit.rules.ActivityScenarioRule
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.platform.app.InstrumentationRegistry
+import junit.framework.Assert.assertEquals
 import org.hamcrest.Matchers
 import org.junit.Assert
 import org.junit.Before
@@ -113,5 +114,27 @@ class UserTest {
         user.save(ctx)
         val newUser = User.load(ctx)
         Assert.assertEquals(3, newUser.getPlaylists().size)
+    }
+
+    @Test
+    fun addSpotifyPlaylistUIdWorks(){
+        val user = User("nathan", 0)
+        user.addSpotifyPlaylistUId("name", "uid")
+        assertEquals("uid", user.getSpotifyPlaylistUId("name"))
+    }
+
+    @Test
+    fun getSpotifyPlaylistUidWorks(){
+        val user = User("nathan", 0)
+        val map = hashMapOf<String, String>()
+        map.put("test1", "bla")
+        map.put("test2", "hihi")
+        user.addSpotifyPlaylistUids(map)
+        assertEquals("bla", user.getSpotifyPlaylistUId("test1"))
+    }
+
+    @Test
+    fun getSpotifyPlaylistUidWhenNonExistent(){
+        assertEquals(null, User("testUser", 0).getSpotifyPlaylistUId("none"))
     }
 }

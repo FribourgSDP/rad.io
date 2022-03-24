@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.github.fribourgsdp.radio">
+
     <uses-permission android:name="android.permission.INTERNET" />
 
     <application
@@ -11,9 +12,6 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Radio"
         android:usesCleartextTraffic="true">
-        <activity
-            android:name=".PrintTokenActivity"
-            android:exported="false" />
         <activity
             android:name=".SpotifyReceiveActivity"
             android:exported="true"
@@ -31,11 +29,15 @@
             </intent-filter>
         </activity>
         <activity
+            android:name=".ImportSpotifyPlaylistsActivity"
+            android:exported="false" />
+        <activity
             android:name=".LobbyActivity"
             android:exported="true" />
         <activity
             android:name=".UserProfileActivity"
-            android:exported="false" />
+            android:exported="false"
+            android:launchMode="singleTop"/>
         <activity
             android:name=".FireBaseTestActivity"
             android:exported="false" />
