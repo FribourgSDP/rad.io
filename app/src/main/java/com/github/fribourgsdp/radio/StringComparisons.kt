@@ -3,6 +3,9 @@ package com.github.fribourgsdp.radio
 import java.text.Normalizer
 
 const val MAX_ALLOWED_ERRORS = 2
+const val ONE_ERROR_PENALTY = 0.9
+const val TWO_ERRORS_PENALTY = 0.8
+const val NOT_THE_SAME = -1
 
 class StringComparisons {
     companion object{
@@ -12,19 +15,17 @@ class StringComparisons {
         * Function that returns a number of points depending on the number of mistakes in the comparison of the two provided strings.
         */
         fun compareAndGetPoints(actual : String, expected : String, maxPts : Int = 100) : Int {
-            val oneErrorPenalty = 0.9
-            val twoErrorsPenalty = 0.8
             return when(compare(actual, expected)){
                 0 -> maxPts
-                1 -> (oneErrorPenalty*maxPts).toInt()
-                2 -> (twoErrorsPenalty*maxPts).toInt()
+                1 -> (ONE_ERROR_PENALTY*maxPts).toInt()
+                2 -> (TWO_ERRORS_PENALTY*maxPts).toInt()
                 else -> 0
             }
         }
 
         /**
         * Function that compares two strings and returns the number of differences between them.
-        * Returns -1 if the number of differences is bigger than 2, to avoid taking too much time.
+        * Returns NOT_THE_SAME (= -1) if the number of differences is bigger than 2, to avoid taking too much time.
         */
         fun compare(actual : String, expected : String) : Int {
             val s1 = actual.replace(Regex("[!-/]|[:-@]|[\\[-`]|[{-~]| +"), "").lowercase().unaccent()
@@ -34,7 +35,7 @@ class StringComparisons {
                     return tolerance
                 }
             }
-            return -1
+            return NOT_THE_SAME
         }
 
         /**
@@ -49,12 +50,12 @@ class StringComparisons {
         */
         private fun equal(s1 : String, s2 : String, tolerance: Int) : Boolean {
             var result : Boolean = false
-            if (tolerance >= 0){
+            if (tolerance == 0){
                 if (s1 == s2){
                     result = result || true
                 }
             }
-            if (tolerance >= 1){
+            if (tolerance >= 1 && !result){
                 if (s1.length == s2.length){
                     result = result || (equalWithSubstitution(s1, s2, tolerance))
                 }else if (s1.length < s2.length){
