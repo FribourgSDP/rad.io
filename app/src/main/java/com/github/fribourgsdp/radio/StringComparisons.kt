@@ -51,16 +51,16 @@ class StringComparisons {
             var result : Boolean = false
             if (tolerance >= 0){
                 if (s1 == s2){
-                    result = result | true
+                    result = result || true
                 }
             }
             if (tolerance >= 1){
                 if (s1.length == s2.length){
-                    result = result | (equalWithSubstitution(s1, s2, tolerance))
+                    result = result || (equalWithSubstitution(s1, s2, tolerance))
                 }else if (s1.length < s2.length){
-                    result = result | (equalWithDeletion(s1, s2, tolerance))
+                    result = result || (equalWithDeletion(s1, s2, tolerance))
                 }else if (s1.length > s2.length){
-                    result = result | (equalWithInsertion(s1, s2, tolerance))
+                    result = result || (equalWithInsertion(s1, s2, tolerance))
                 }
             }
             return result
