@@ -7,8 +7,8 @@ import android.widget.*
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.gms.tasks.Task
 
-class LobbyActivity : AppCompatActivity() {
-    private val db = Database()
+open class LobbyActivity : AppCompatActivity() {
+    private val db = this.initDatabase()
 
     private var hostName : String? = null
     private var gameName : String? = null
@@ -42,9 +42,9 @@ class LobbyActivity : AppCompatActivity() {
         updateTextViews()
 
         if (isHost) {
-            getUIDTask().addOnSuccessListener { uid ->
+            db.getLobbyId().addOnSuccessListener { uid ->
                 uuidTextView.text = getString(R.string.uid_text_format, uid)
-                linkToDatabase(uid, )
+                linkToDatabase(uid)
             }.addOnFailureListener {
                 uuidTextView.text = getString(R.string.uid_error)
             }
@@ -60,12 +60,8 @@ class LobbyActivity : AppCompatActivity() {
 
     }
 
-    fun getUIDTask() : Task<Long> {
-        return db.getLobbyId()
-    }
-
-    fun openLobby(uid: Long, settings: Game.Settings) : Task<Void> {
-        return db.openLobby(uid, settings)
+    open fun initDatabase(): Database {
+        return FirestoreDatabase()
     }
 
     private fun initVariables() {
@@ -117,7 +113,7 @@ class LobbyActivity : AppCompatActivity() {
                     .setWithHint(withHint)
                     .setPrivacy(isPrivate)
 
-                openLobby(uid, gameBuilder.getSettings()).addOnSuccessListener {
+                db.openLobby(uid, gameBuilder.getSettings()).addOnSuccessListener {
                     listenToUpdates(uid)
                 }.addOnFailureListener {
                     uuidTextView.text = getString(R.string.uid_error)
