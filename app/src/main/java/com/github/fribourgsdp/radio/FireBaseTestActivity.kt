@@ -24,19 +24,19 @@ class FireBaseTestActivity : AppCompatActivity() {
         val userNa = User("nathanDuchesne")
         db.setUser(userAuthUID,userNa)
 
-        db.getUser("m0sd9ll").addOnSuccessListener { l ->
+        db.getUser("m0sd9l").addOnSuccessListener { l ->
             if (l == null){
-                findViewById<TextView>(R.id.textToChange).text = "There has been an error"
+                findViewById<TextView>(R.id.userNameChange).text = "There has been an error"
             }else {
-                findViewById<TextView>(R.id.textToChange).text = l.name
+                findViewById<TextView>(R.id.userNameChange).text = l.name
             }
         }.addOnFailureListener { e ->
-            findViewById<TextView>(R.id.textToChange).text = "IL y A UNE FOTE"
+            findViewById<TextView>(R.id.userNameChange).text = "IL y A UNE FOTE"
 
             Log.w(ContentValues.TAG, "Error adding document", e)
         }
 
-/*
+
         val song = Song("this is the title", "Nathan","")
         db.registerSong(song)
 
@@ -45,7 +45,7 @@ class FireBaseTestActivity : AppCompatActivity() {
 
             }else{
                 val text = song.name + " by " +  song.artist
-               // findViewById<TextView>(R.id.textToChange).text = text
+                findViewById<TextView>(R.id.songNameChange).text = text
             }
         }
 
@@ -65,10 +65,10 @@ class FireBaseTestActivity : AppCompatActivity() {
                 for (songi in l.getSongs()) {
                     text += ";" + songi.name
                 }
-                //findViewById<TextView>(R.id.textToChange).text = text
+                findViewById<TextView>(R.id.playlistNameChange).text = text
 
             }
-        }*/
+        }
     }
 }
 
