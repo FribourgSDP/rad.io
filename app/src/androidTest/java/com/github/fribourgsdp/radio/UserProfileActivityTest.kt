@@ -19,6 +19,8 @@ import androidx.test.espresso.matcher.ViewMatchers.isDisplayed
 import androidx.test.espresso.matcher.ViewMatchers.withId
 import com.google.android.gms.tasks.Tasks
 import java.util.concurrent.TimeUnit
+import com.google.android.gms.tasks.Tasks
+import java.util.concurrent.TimeUnit
 
 @RunWith(AndroidJUnit4::class)
 class UserProfileActivityTest : TestCase() {
@@ -28,9 +30,8 @@ class UserProfileActivityTest : TestCase() {
 
         Intents.init()
         val firebaseAuth = FirebaseAuth.getInstance()
-        firebaseAuth.signInWithEmailAndPassword("test@test.com", "test123!!!")
-        Thread.sleep(5000)
-
+        val task = Tasks.withTimeout(firebaseAuth.signInWithEmailAndPassword("test@test.com", "test123!!!"),10, TimeUnit.SECONDS)
+        Tasks.await(task)
         val context: Context = ApplicationProvider.getApplicationContext()
 
         val intent: Intent = Intent(context, UserProfileActivity::class.java)

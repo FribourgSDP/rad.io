@@ -27,11 +27,14 @@ class UserProfileActivity : AppCompatActivity(), PlaylistAdapter.OnPlaylistClick
     private lateinit var userPlaylists : List<Playlist>
 
     //firebase auth
-    lateinit var firebaseAuth: FirebaseAuth
+    private lateinit var firebaseAuth: FirebaseAuth
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_user_profile)
+
+        firebaseAuth = FirebaseAuth.getInstance()
+        checkUser()
 
         user = try { /* TODO replace with proper error handling of asking user enter his info */
             User.load(this)
@@ -49,15 +52,13 @@ class UserProfileActivity : AppCompatActivity(), PlaylistAdapter.OnPlaylistClick
         }
 
         findViewById<TextView>(R.id.usernameInitial).apply {
-            text = user.initial.toString()
+            text = user.initial.uppercaseChar().toString()
         }
 
         findViewById<TextView>(R.id.spotifyStatus).apply {
             text = if (user.spotifyLinked) "linked" else "unlinked"
         }
 
-        firebaseAuth = FirebaseAuth.getInstance()
-        checkUser()
 
         val logoutButton: Button = findViewById(R.id.logoutButton)
         logoutButton.setOnClickListener{
