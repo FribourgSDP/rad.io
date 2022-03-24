@@ -8,6 +8,8 @@ import android.os.Bundle
 import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.spotify.sdk.android.auth.AuthorizationClient
 import com.spotify.sdk.android.auth.AuthorizationRequest
 import com.spotify.sdk.android.auth.AuthorizationResponse
@@ -60,6 +62,11 @@ class UserProfileActivity : AppCompatActivity() {
             finish()
         }
         findViewById<ImageView>(R.id.userIcon).setColorFilter(PorterDuffColorFilter(user.color, PorterDuff.Mode.ADD))
+
+        val playlistDisplay : RecyclerView = findViewById(R.id.playlist_recycler_view)
+        playlistDisplay.adapter = PlaylistAdapter(user.getPlaylists().toList())
+        playlistDisplay.layoutManager = (LinearLayoutManager(this))
+        playlistDisplay.setHasFixedSize(true)
     }
 
 
