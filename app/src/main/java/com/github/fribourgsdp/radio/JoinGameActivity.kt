@@ -4,6 +4,7 @@ import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.KeyEvent
+import android.view.View
 import android.view.inputmethod.EditorInfo
 import android.widget.Button
 import android.widget.EditText
@@ -71,10 +72,12 @@ open class JoinGameActivity : AppCompatActivity() {
 
             }.addOnFailureListener {
                 joinErrorView.text = getString(R.string.join_fail_format, id)
+                joinErrorView.visibility = View.VISIBLE
             }
 
         }.addOnFailureListener {
             joinErrorView.text = getString(R.string.lobby_not_found, id)
+            joinErrorView.visibility = View.VISIBLE
         }
     }
 }
