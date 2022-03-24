@@ -29,9 +29,7 @@ class UserProfileActivityTest : TestCase() {
         Tasks.await(task)
         val context: Context = ApplicationProvider.getApplicationContext()
 
-        val intent: Intent = Intent(context, UserProfileActivity::class.java).apply {
-            putExtra(USERNAME, "Default")
-        }
+        val intent: Intent = Intent(context, UserProfileActivity::class.java)
 
         ActivityScenario.launch<UserProfileActivity>(intent).use { scenario ->
 
@@ -55,9 +53,7 @@ class UserProfileActivityTest : TestCase() {
         Intents.init()
         val context: Context = ApplicationProvider.getApplicationContext()
 
-        val intent: Intent = Intent(context, UserProfileActivity::class.java).apply {
-            putExtra(USERNAME, "Default")
-        }
+        val intent: Intent = Intent(context, UserProfileActivity::class.java)
         ActivityScenario.launch<UserProfileActivity>(intent).use { scenario ->
 
             Intents.intended(

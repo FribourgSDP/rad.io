@@ -27,13 +27,17 @@ class UserProfileActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_user_profile)
 
+        user = try {
+            User.load(this)
+        } catch (e: java.io.FileNotFoundException) {
+            System.out.println(e.javaClass.kotlin)
+            User("Default", User.generateColor())
+        }
+
         val playButton = findViewById<Button>(R.id.launchSpotifyButton)
         playButton.setOnClickListener {
             authenticateUser()
         }
-
-        /* TODO REPLACE WITH PROPER FETCH OF USER*/
-        user = User(intent.getStringExtra(USERNAME)!!)
 
         findViewById<TextView>(R.id.username).apply {
             text = user.name
@@ -46,7 +50,7 @@ class UserProfileActivity : AppCompatActivity() {
         findViewById<TextView>(R.id.spotifyStatus).apply {
             text = if (user.spotifyLinked) "linked" else "unlinked"
         }
-        
+
         firebaseAuth = FirebaseAuth.getInstance()
         checkUser()
 

@@ -9,9 +9,6 @@ import androidx.appcompat.app.AppCompatActivity
 import com.github.fribourgsdp.radio.databinding.ActivityMainBinding
 import android.widget.ImageButton
 
-const val USERNAME = "com.github.fribourgsdp.radio.USERNAME"
-
-
 class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -25,10 +22,10 @@ class MainActivity : AppCompatActivity() {
         val button : Button = findViewById(R.id.button)
         button.setOnClickListener {startActivity(Intent(this, DisplayLyricsActivity::class.java))}
         val profileButton: ImageButton = findViewById(R.id.profileButton)
-        profileButton.setOnClickListener {val intent : Intent = Intent(this, UserProfileActivity::class.java).apply {
-                putExtra(USERNAME, "Default")
-            }
-            startActivity(intent)
+        profileButton.setOnClickListener {
+            startActivity(Intent(this, UserProfileActivity::class.java))
         }
+
+        User("bla", User.generateColor()).save(this)
     }
 }

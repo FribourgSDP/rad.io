@@ -1,19 +1,16 @@
 package com.github.fribourgsdp.radio
 
-class Playlist (playlistName: String, songSet: Set<Song>, genreType: Genre){
-    var name: String = playlistName
-    private val songs: MutableSet<Song>
-    var genre: Genre = genreType
+import kotlinx.serialization.Serializable
 
-    init {
-        val result = mutableSetOf<Song>()
-        for (song in songSet){
-            result.add(Song(song.name, song.artist, song.lyrics))
-        }
-        songs = result
+@Serializable
+data class Playlist (var name: String, var genre: Genre){
+    private val songs: MutableSet<Song> = mutableSetOf()
+
+    constructor(name: String, set: Set<Song>, genre: Genre) : this(name, genre) {
+        this.addSongs(set)
     }
-    constructor(playlistName: String, genreType: Genre): this(playlistName, mutableSetOf(), genreType)
-    constructor(playlistName: String): this(playlistName, mutableSetOf(), Genre.NONE)
+
+    constructor(playlistName: String): this(playlistName, Genre.NONE)
 
 
     fun addSong(song: Song){
@@ -41,7 +38,6 @@ class Playlist (playlistName: String, songSet: Set<Song>, genreType: Genre){
     }
 
     fun getSongs(): Set<Song> {
-        //return songs.toMutableSet()
         return songs.toSet()
     }
 }

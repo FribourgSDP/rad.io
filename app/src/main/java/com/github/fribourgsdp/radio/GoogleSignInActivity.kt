@@ -87,7 +87,6 @@ class GoogleSignInActivity : AppCompatActivity() {
             //start profile activity
 
             val intent = Intent(this@GoogleSignInActivity, UserProfileActivity::class.java)
-            intent.putExtra(USERNAME, "Default")
             startActivity(intent)
 
             finish()
@@ -119,7 +118,6 @@ class GoogleSignInActivity : AppCompatActivity() {
             }
             //start profile activity
             val intent: Intent = Intent(this, UserProfileActivity::class.java)
-            intent.putExtra(USERNAME, mail)
 
             startActivity(intent)
             finish()

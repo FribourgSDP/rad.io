@@ -3,6 +3,7 @@ package com.github.fribourgsdp.radio
 import org.junit.Test
 
 import org.junit.Assert.*
+import java.util.concurrent.CompletableFuture
 
 internal class SongTest {
     @Test
@@ -11,15 +12,6 @@ internal class SongTest {
         assertEquals("Song Name", test.name)
         assertEquals("lyrics really basic", test.lyrics)
         assertEquals("Bob", test.artist)
-    }
-
-
-    @Test
-    //In the case where a user creates a playlist, he may have mistakenly written the title wrong and may want to change it
-    fun changing_song_name_is_possible() {
-        val test: Song = Song("Song Name")
-        test.name = "this new name is better"
-        assertEquals("This New Name Is Better", test.name)
     }
 
     @Test
@@ -32,20 +24,6 @@ internal class SongTest {
     fun title_formatting_makes_first_letter_of_every_word_uppercase(){
         val test: Song = Song("story Of My life loser hello", "", "test lyrics")
         assertEquals("Story Of My Life Loser Hello", test.name)
-    }
-
-    @Test
-    fun addingArtistNameWorks(){
-        val test: Song = Song("new song")
-        test.artist = "best artist"
-        assertEquals("Best Artist", test.artist)
-    }
-
-    @Test
-    fun addingLyricsWorks(){
-        val test: Song = Song("new song")
-        test.lyrics = "louloulou these are great lyrics"
-        assertEquals("louloulou these are great lyrics", test.lyrics)
     }
 
     @Test
@@ -67,13 +45,6 @@ internal class SongTest {
     }
 
     @Test
-    fun changingSongNameWorksAndSatisfiesFormat(){
-        val test1: Song = Song("abc", "bobby")
-        test1.name = "lala the    pig"
-        assertEquals("Lala The Pig", test1.name)
-    }
-
-    @Test
     fun equalityHoldsWhenTitleAndArtistMatch(){
         val song1: Song = Song("a", "bob")
         val song2: Song = Song("A", "bob")
@@ -83,5 +54,12 @@ internal class SongTest {
         assert(test.contains(song2))
         val test2: Set<Song> = mutableSetOf(song1)
         assert(test2.contains(song2))
+    }
+
+    @Test
+    fun testCompletableFutureConstructor(){
+        val testLyrics = "test"
+        val song = Song("name", "artist", CompletableFuture.completedFuture(testLyrics))
+        assert(song.lyrics==testLyrics)
     }
 }
