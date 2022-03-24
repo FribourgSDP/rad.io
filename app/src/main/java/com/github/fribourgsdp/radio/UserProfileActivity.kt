@@ -21,11 +21,14 @@ class UserProfileActivity : AppCompatActivity() {
     private lateinit var user : User
 
     //firebase auth
-    lateinit var firebaseAuth: FirebaseAuth
+    private lateinit var firebaseAuth: FirebaseAuth
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_user_profile)
+
+        firebaseAuth = FirebaseAuth.getInstance()
+        checkUser()
 
         user = try {
             User.load(this)
@@ -44,15 +47,14 @@ class UserProfileActivity : AppCompatActivity() {
         }
 
         findViewById<TextView>(R.id.usernameInitial).apply {
-            text = user.initial.toString()
+            text = user.initial.uppercaseChar().toString()
         }
 
         findViewById<TextView>(R.id.spotifyStatus).apply {
             text = if (user.spotifyLinked) "linked" else "unlinked"
         }
 
-        firebaseAuth = FirebaseAuth.getInstance()
-        checkUser()
+
 
         val logoutButton: Button = findViewById(R.id.logoutButton)
         logoutButton.setOnClickListener{
