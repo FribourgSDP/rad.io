@@ -15,7 +15,7 @@ import com.google.android.gms.tasks.Task
 const val GAME_UID_KEY = "com.github.fribourgsdp.radio.GAME_UID"
 
 
-class JoinGameActivity : AppCompatActivity() {
+open class JoinGameActivity : AppCompatActivity() {
     private val db = this.initDatabase()
 
     private lateinit var idInput: EditText
