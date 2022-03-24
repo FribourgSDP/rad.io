@@ -72,11 +72,7 @@ class FirestoreDatabase : Database {
         return db.collection("songs").document(song.name).set(songHash)
 
     }
-    /**
-     * Get the [Playlist], wrapped in a [Task], given its [playlistName]
-     * @return [Playlist], wrapped in a [Task], the [Playlist] is null if it doesn't exist
-     * @Note the [Song] in the [Playlist] have empty [artistName] and [lyrics]
-     */
+
     override fun getPlaylist(playlistName : String): Task<Playlist>{
 3
         return  db.collection("playlists").document(playlistName).get().continueWith { l ->
