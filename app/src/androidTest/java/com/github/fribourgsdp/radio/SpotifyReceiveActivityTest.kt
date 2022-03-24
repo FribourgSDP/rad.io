@@ -69,12 +69,12 @@ class SpotifyReceiveActivityTest {
     @Test
     fun clickingButtonSendsToGetPlaylistActivity(){
         Intents.init()
-        val settingsButton = Espresso.onView(ViewMatchers.withId(R.id.getTokenButton))
+        val settingsButton = Espresso.onView(ViewMatchers.withId(R.id.importSpotifyPlaylistsButton))
         settingsButton.perform(ViewActions.click())
 
         Intents.intended(
             Matchers.allOf(
-                IntentMatchers.hasComponent(PrintTokenActivity::class.java.name),
+                IntentMatchers.hasComponent(ImportSpotifyPlaylistsActivity::class.java.name),
                 IntentMatchers.toPackage("com.github.fribourgsdp.radio")
             )
         )

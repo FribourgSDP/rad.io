@@ -1,5 +1,6 @@
 package com.github.fribourgsdp.radio
 
+
 import android.content.Context
 import kotlin.random.Random
 import kotlinx.serialization.Serializable
@@ -19,6 +20,7 @@ class User (val name: String, val color: Int) {
     constructor(name: String): this(name, generateColor())
 
     private val playlists = mutableSetOf<Playlist>()
+    private val playlistNamesToSpotifyId = mutableMapOf<String, String>()
     private var linkedSpotify: Boolean = false
     val initial get(): Char = name.elementAt(0)
     val spotifyLinked get(): Boolean = linkedSpotify
@@ -58,5 +60,17 @@ class User (val name: String, val color: Int) {
 
     fun getPlaylists(): Set<Playlist> {
         return playlists.toSet()
-   }
+    }
+
+    fun addSpotifyPlaylistUId(playlistName: String, spotifyUid: String){
+        playlistNamesToSpotifyId[playlistName] = spotifyUid
+    }
+
+    fun addSpotifyPlaylistUids(map: HashMap<String, String>){
+        playlistNamesToSpotifyId.putAll(map)
+    }
+
+    fun getSpotifyPlaylistUId(playlistName: String): String? {
+        return playlistNamesToSpotifyId[playlistName]
+    }
 }

@@ -1,26 +1,35 @@
 package com.github.fribourgsdp.radio
 
+import android.content.Intent
+import androidx.test.espresso.Espresso
+import androidx.test.espresso.action.ViewActions
+import androidx.test.espresso.intent.Intents
+import androidx.test.espresso.intent.matcher.IntentMatchers
+import androidx.test.espresso.matcher.ViewMatchers
+import androidx.test.ext.junit.rules.ActivityScenarioRule
 import junit.framework.TestCase.assertEquals
 import okhttp3.*
+import org.hamcrest.Matchers
 import org.json.JSONArray
 import org.json.JSONObject
+import org.junit.Rule
 import org.junit.Test
 import java.io.IOException
 import java.util.concurrent.ExecutionException
 
-class PrintTokenActivityTest {
-    @Test
-    fun playlistNamesForEmptyPlaylist(){
-        assertEquals("No Spotify playlists were found for this user.", PrintTokenActivity.getPlaylistNames(
-            HashMap()
-        ))
-    }
+class ImportSpotifyPlaylistsActivityTest {
 
     @Test
-    fun playlistNamesForAUserWithPlaylists(){
-        assert(PrintTokenActivity.getPlaylistNames(hashMapOf("classical music" to "abcid123", "football evening" to "123456playlistid")).contains("classical music"))
-        assert(PrintTokenActivity.getPlaylistNames(hashMapOf("classical music" to "abcid123", "football evening" to "123456playlistid")).contains("football evening"))
-
+    fun intentToUserProfileWorks() {
+        val testMap = hashMapOf<String, String>()
+        testMap["uid1"] = "playlist1"
+        testMap["uid2"] = "playlist2"
+        val testSet = mutableSetOf<Playlist>()
+        testSet.add(Playlist("one", Genre.COUNTRY))
+        val result = ImportSpotifyPlaylistsActivity.constructPlaylistIntent(Intent(), testMap, testSet)
+        assert(result.hasExtra("nameToUid"))
+        assert(result.hasExtra("playlists"))
+        assert(result.hasExtra(COMING_FROM_SPOTIFY_ACTIVITY_FLAG))
     }
 
     @Test
@@ -28,67 +37,79 @@ class PrintTokenActivityTest {
         val tokenTest = "123456"
         assert(
             Request.Builder().url(SPOTIFY_GET_PLAYLIST_IDS_BASE_URL)
-            .addHeader("Accept", "application/json")
-            .addHeader("Content-Type", "application/json")
-            .addHeader("Authorization", "Bearer $tokenTest")
-            .build().url() == PrintTokenActivity.buildSpotifyRequest(
+                .addHeader("Accept", "application/json")
+                .addHeader("Content-Type", "application/json")
+                .addHeader("Authorization", "Bearer $tokenTest")
+                .build().url() == ImportSpotifyPlaylistsActivity.buildSpotifyRequest(
                 SPOTIFY_GET_PLAYLIST_IDS_BASE_URL, tokenTest).url())
     }
 
 
     @Test(expected = ExecutionException::class)
     fun getPlaylistsFailingHttpClient(){
-        val future = PrintTokenActivity.getUserPlaylists(FailingHTTPClient(), JSONStandardParser())
+        val future = ImportSpotifyPlaylistsActivity.getUserPlaylists(FailingHTTPClient(), JSONStandardParser())
         println(future.get())
     }
 
     @Test
     fun getPlaylistsFailingParser(){
-        val future = PrintTokenActivity.getUserPlaylists(MockPlaylistHTTPClient(), NullJSONParser())
+        val future = ImportSpotifyPlaylistsActivity.getUserPlaylists(MockPlaylistHTTPClient(), NullJSONParser())
         assert(future.get().isEmpty())
     }
 
     @Test
     fun getPlaylistsWhenResponseHasErrorMessage(){
-        val future = PrintTokenActivity.getUserPlaylists(MockPlaylistHTTPClient(), ErrorJSONParser())
+        val future = ImportSpotifyPlaylistsActivity.getUserPlaylists(MockPlaylistHTTPClient(), ErrorJSONParser())
         assert(future.get().isEmpty())
     }
 
     @Test
     fun getPlaylistsWithMockServerWorks(){
-       val future = PrintTokenActivity.getUserPlaylists(MockPlaylistHTTPClient(), mockPlaylistJSONParser())
-       assertEquals("1234", future.get()["80's classics"])
+        val future = ImportSpotifyPlaylistsActivity.getUserPlaylists(MockPlaylistHTTPClient(), mockPlaylistJSONParser())
+        assertEquals("1234", future.get()["80's classics"])
         assertEquals("8976", future.get()["rock music"])
     }
 
     @Test
     fun getPlaylistsContentWorks(){
-        val future = PrintTokenActivity.getPlaylistContent("1234", MockPlaylistHTTPClient(), mockPlaylistContentJSONParser())
-        val stringValue = future.get()
-        assert(stringValue.contains("Narcos"))
-        assert(future.get().contains("Rouge"))
-        assert(future.get().contains("Migos"))
-        assert(future.get().contains("Michel Sardou"))
+        val future = ImportSpotifyPlaylistsActivity.getPlaylistContent("1234", MockPlaylistHTTPClient(), mockPlaylistContentJSONParser())
+        val setValue = future.get()
+        assert(setValue.contains(Song("Rouge", "Michel Sardou")))
+        assert(setValue.contains(Song("Narcos", "Migos")))
+    }
 
+    @Test
+    fun loadSongsToPlaylistsOnEmptyMapWorks(){
+        val result = ImportSpotifyPlaylistsActivity.loadSongsToPlaylists(mutableMapOf())
+        assert(result.isEmpty())
     }
 
     @Test(expected = ExecutionException::class)
     fun getPlaylistContentWithFaultyServerCrashes(){
-        val future = PrintTokenActivity.getPlaylistContent("1234", FailingHTTPClient())
+        val future = ImportSpotifyPlaylistsActivity.getPlaylistContent("1234", FailingHTTPClient())
         println(future.get())
     }
 
     @Test
     fun getPlaylistContentWithNullParsedResponseFails(){
-        val future = PrintTokenActivity.getPlaylistContent("1234", MockPlaylistHTTPClient(), NullJSONParser())
-        assertEquals(PLAYLIST_INFO_ERROR, future.get())
+        val future = ImportSpotifyPlaylistsActivity.getPlaylistContent("1234", MockPlaylistHTTPClient(), NullJSONParser())
+        assert(future.get().isEmpty())
     }
 
     @Test
     fun getPlaylistContentFailsIfJsonContainsError(){
-        val future = PrintTokenActivity.getPlaylistContent("1224", MockPlaylistHTTPClient(), ErrorJSONParser())
-        assertEquals(PLAYLIST_INFO_ERROR, future.get())
+        val future = ImportSpotifyPlaylistsActivity.getPlaylistContent("1224", MockPlaylistHTTPClient(), ErrorJSONParser())
+        assert(future.get().isEmpty())
+    }
 
+    @Test
+    fun loadSongsToPlaylistWorksProperly(){
+        val map = mutableMapOf<String, String>()
+        map["bla"] = "bli"
+        val playlists = ImportSpotifyPlaylistsActivity.loadSongsToPlaylists(map, MockPlaylistHTTPClient(), mockPlaylistContentJSONParser())
+        assert(playlists.size == 1)
+        assert(playlists.last().name == "bla")
+        assert(playlists.last().getSongs().contains(Song("Narcos", "Migos", "")))
     }
 
 
