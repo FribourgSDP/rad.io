@@ -57,7 +57,7 @@ open class JoinGameActivity : AppCompatActivity() {
 
     private fun connectToLobby(id: Long) {
         db.getGameSettingsFromLobby(id).addOnSuccessListener { settings ->
-            db.addUserToLobby(id, User("Archibald")).addOnSuccessListener {
+            db.addUserToLobby(id, getUser()).addOnSuccessListener {
 
                 startActivity(Intent(this, LobbyActivity::class.java).apply {
                     putExtra(GAME_HOST_KEY, settings.host.name)
@@ -79,5 +79,10 @@ open class JoinGameActivity : AppCompatActivity() {
             joinErrorView.text = getString(R.string.lobby_not_found, id)
             joinErrorView.visibility = View.VISIBLE
         }
+    }
+
+    private fun getUser() : User {
+        // TODO: Update once we can get the user of the phone
+        return User("Victor")
     }
 }
