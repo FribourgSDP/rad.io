@@ -1,20 +1,11 @@
 package com.github.fribourgsdp.radio
 
-
-import android.content.ContentValues
-import android.content.ContentValues.TAG
-import android.util.Log
-import androidx.annotation.NonNull
-import com.google.android.gms.tasks.Continuation
 import com.google.android.gms.tasks.Task
-import com.google.android.gms.tasks.Tasks
 import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
+import com.google.firebase.firestore.EventListener
 import java.lang.Exception
-import java.lang.IllegalArgumentException
-
-import java.util.concurrent.CompletableFuture
 
 /**
  *
@@ -109,6 +100,92 @@ class FirestoreDatabase : Database {
             "songs" to titleList
         )
         return db.collection("playlists").document(playlist.name).set(playlistHash)
+    }
+
+    override fun getLobbyId() : Task<Long> {
+        val keyID = "current_id"
+        val keyMax = "max_id"
+
+        val docRef = db.collection("lobby").document("id")
+
+        return db.runTransaction { transaction ->
+            val snapshot = transaction.get(docRef)
+
+            if (!snapshot.exists()) {
+                throw Exception("Document not found.")
+            }
+
+            val id = snapshot.getLong(keyID)!!
+            val nextId = (id + 1) % snapshot.getLong(keyMax)!!
+
+            transaction.update(docRef, keyID, nextId)
+
+            // Success
+            id
+        }
+    }
+
+    override fun openLobby(id: Long, settings : Game.Settings) : Task<Void> {
+        val gameData = hashMapOf(
+            "name" to settings.name,
+            "host" to settings.host.name,
+            "playlist" to settings.playlist.name,
+            "nbRounds" to settings.nbRounds,
+            "withHint" to settings.withHint,
+            "private" to settings.isPrivate,
+            "players" to listOf(settings.host.name)
+        )
+
+        return db.collection("lobby").document(id.toString())
+            .set(gameData)
+
+    }
+
+    override fun listenToLobbyUpdate(id: Long, listener: EventListener<DocumentSnapshot>) {
+        db.collection("lobby").document(id.toString())
+            .addSnapshotListener(listener)
+    }
+
+    override fun getGameSettingsFromLobby(id: Long) :Task<Game.Settings> {
+        val docRef = db.collection("lobby").document(id.toString())
+
+        return db.runTransaction { transaction ->
+            val snapshot = transaction.get(docRef)
+
+            if (!snapshot.exists()) {
+                throw IllegalArgumentException("Document $id not found.")
+            }
+
+            val host = snapshot.getString("host")!!
+            val name = snapshot.getString("name")!!
+            val playlist = snapshot.getString("playlist")!!
+            val nbRounds = snapshot.getLong("nbRounds")!!
+            val withHint = snapshot.getBoolean("withHint")!!
+            val private = snapshot.getBoolean("private")!!
+
+            // Success
+            Game.Settings(User(host), name, Playlist(playlist), nbRounds.toInt(), withHint, private)
+        }
+    }
+
+    override fun addUserToLobby(id: Long, user: User) : Task<Void> {
+        val docRef = db.collection("lobby").document(id.toString())
+
+        return db.runTransaction { transaction ->
+            val snapshot = transaction.get(docRef)
+
+            if (!snapshot.exists()) {
+                throw IllegalArgumentException("Document $id not found.")
+            }
+
+            val list = snapshot.get("players")!! as ArrayList<String>
+            list.add(user.name)
+
+            transaction.update(docRef, "players", list)
+
+            // Success
+            null
+        }
     }
 
 }

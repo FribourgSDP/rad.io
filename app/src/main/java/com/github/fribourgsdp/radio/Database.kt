@@ -1,6 +1,8 @@
 package com.github.fribourgsdp.radio
 
 import com.google.android.gms.tasks.Task
+import com.google.firebase.firestore.DocumentSnapshot
+import com.google.firebase.firestore.EventListener
 
 interface Database {
 
@@ -37,4 +39,34 @@ interface Database {
      * Register the [Playlist] in the database
      */
    fun registerPlaylist( playlist : Playlist): Task<Void>
+
+    /**
+     * Get a unique ID for a lobby. It is an asynchronous operation, so it is returned in a task.
+     * @return a task loading a unique ID for the lobby.
+     */
+    fun getLobbyId() : Task<Long>
+
+    /**
+     * Open a lobby on the database.
+     * @return a task void so that we know if the lobby was correctly opened.
+     */
+    fun openLobby(id: Long, settings : Game.Settings) : Task<Void>
+
+    /**
+     * Listen to the updates of the lobby with [id].
+     * Executes the [listener] on every update.
+     */
+    fun listenToLobbyUpdate(id: Long, listener: EventListener<DocumentSnapshot>)
+
+    /**
+     * Get the [Game.Settings] of the lobby [id]
+     * @return a task loading the [Game.Settings] of the lobby [id].
+     */
+    fun getGameSettingsFromLobby(id: Long) :Task<Game.Settings>
+
+    /**
+     * Add [user] to the lobby [id].
+     * @return a task void  so that we know if the [user] was correctly added to the lobby [id].
+     */
+    fun addUserToLobby(id: Long, user: User) : Task<Void>
 }

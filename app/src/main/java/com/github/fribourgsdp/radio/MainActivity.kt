@@ -17,6 +17,8 @@ class MainActivity : AppCompatActivity() {
         fireBaseButton.setOnClickListener{startActivity(Intent(this,FireBaseTestActivity::class.java))}
         val playButton = findViewById<Button>(R.id.playButton)
         playButton.setOnClickListener {startActivity(Intent(this, GameSettingsActivity::class.java))}
+        val joinButton : Button = findViewById(R.id.joinButton)
+        joinButton.setOnClickListener {startActivity(Intent(this, JoinGameActivity::class.java))}
         val settingsButton = findViewById<Button>(R.id.settingsButton)
         settingsButton.setOnClickListener {startActivity(Intent(this, SettingsActivity::class.java))}
         val button : Button = findViewById(R.id.button)
