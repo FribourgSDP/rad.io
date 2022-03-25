@@ -8,18 +8,24 @@ import android.os.Bundle
 import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.spotify.sdk.android.auth.AuthorizationClient
 import com.spotify.sdk.android.auth.AuthorizationRequest
 import com.spotify.sdk.android.auth.AuthorizationResponse
 import com.google.firebase.auth.FirebaseAuth
+import kotlinx.serialization.encodeToString
+import kotlinx.serialization.json.Json
 
 const val MY_CLIENT_ID = "9dc40237547f4ffaa41bf1e07ea0bba1"
 const val REDIRECT_URI = "com.github.fribourgsdp.radio://callback"
 const val SCOPES = "playlist-read-private,playlist-read-collaborative"
+const val PLAYLIST_DATA = "com.github.fribourgsdp.radio.PLAYLIST_INNER_DATA"
 const val COMING_FROM_SPOTIFY_ACTIVITY_FLAG = "com.github.fribourgsdp.radio.spotifyDataParsing"
 
-class UserProfileActivity : AppCompatActivity() {
+class UserProfileActivity : AppCompatActivity(), PlaylistAdapter.OnPlaylistClickListener {
     private lateinit var user : User
+    private lateinit var userPlaylists : List<Playlist>
 
     //firebase auth
     private lateinit var firebaseAuth: FirebaseAuth
@@ -31,11 +37,10 @@ class UserProfileActivity : AppCompatActivity() {
         firebaseAuth = FirebaseAuth.getInstance()
         checkUser()
 
-        user = try {
+        user = try { /* TODO replace with proper error handling of asking user enter his info */
             User.load(this)
         } catch (e: java.io.FileNotFoundException) {
-            System.out.println(e.javaClass.kotlin)
-            User("Default", User.generateColor())
+            User("No User Found", User.generateColor())
         }
 
         val playButton = findViewById<Button>(R.id.launchSpotifyButton)
@@ -56,7 +61,6 @@ class UserProfileActivity : AppCompatActivity() {
         }
 
 
-
         val logoutButton: Button = findViewById(R.id.logoutButton)
         logoutButton.setOnClickListener{
             firebaseAuth.signOut()
@@ -67,6 +71,18 @@ class UserProfileActivity : AppCompatActivity() {
         if (intent.getBooleanExtra(COMING_FROM_SPOTIFY_ACTIVITY_FLAG, false)){
             addPlaylistsToUser()
         }
+
+        userPlaylists = user.getPlaylists().toList()
+        val playlistDisplay : RecyclerView = findViewById(R.id.playlist_recycler_view)
+        playlistDisplay.adapter = PlaylistAdapter(userPlaylists, this)
+        playlistDisplay.layoutManager = (LinearLayoutManager(this))
+        playlistDisplay.setHasFixedSize(true)
+    }
+
+    override fun onItemClick(position: Int) {
+        val intent = Intent(this, PlaylistDisplayActivity::class.java)
+            .putExtra(PLAYLIST_DATA, Json.encodeToString(userPlaylists[position]))
+        startActivity(intent)
     }
 
 

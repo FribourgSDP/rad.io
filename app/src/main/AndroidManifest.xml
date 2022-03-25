@@ -13,6 +13,9 @@
         android:theme="@style/Theme.Radio"
         android:usesCleartextTraffic="true">
         <activity
+            android:name=".PlaylistDisplayActivity"
+            android:exported="false" />
+        <activity
             android:name=".JoinGameActivity"
             android:exported="true" />
         <activity
@@ -81,5 +84,6 @@
             android:exported="false" />
 
     </application>
+
 
 </manifest>
