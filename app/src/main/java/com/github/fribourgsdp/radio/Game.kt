@@ -177,6 +177,33 @@ class Game private constructor(val name: String, val host: User, val playlist: P
         }
 
         /**
+         * Add a collection of [User] to the game.
+         * @return the [Builder]
+         */
+        fun addAllUser(collection: Collection<User>): Builder {
+            list.addAll(collection)
+            return this
+        }
+
+        /**
+         * Set the [User] list with the given a collection of [User].
+         * @return the [Builder]
+         */
+        fun setUserList(collection: Collection<User>): Builder {
+            list.clear()
+            list.addAll(collection)
+            return this
+        }
+
+        /**
+        * Return the [Settings] of the game currently building.
+        * @return the [Settings] of the game currently building.
+        */
+        fun getSettings(): Settings {
+            return Settings(host, name, playlist, nbRounds, withHint, isPrivate)
+        }
+
+        /**
          * Build the [Game] with the previously given parameters.
          * @return the [Game] built with the previously given parameters.
          */
@@ -185,4 +212,13 @@ class Game private constructor(val name: String, val host: User, val playlist: P
         }
 
     }
+
+    data class Settings(
+        val host: User,
+        val name: String,
+        val playlist: Playlist,
+        val nbRounds: Int,
+        val withHint: Boolean,
+        val isPrivate: Boolean
+    )
 }

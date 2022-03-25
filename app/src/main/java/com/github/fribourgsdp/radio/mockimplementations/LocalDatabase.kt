@@ -1,11 +1,11 @@
 package com.github.fribourgsdp.radio.mockimplementations
 
-import com.github.fribourgsdp.radio.Database
-import com.github.fribourgsdp.radio.Playlist
-import com.github.fribourgsdp.radio.Song
-import com.github.fribourgsdp.radio.User
+import com.github.fribourgsdp.radio.*
 import com.google.android.gms.tasks.Task
 import com.google.android.gms.tasks.Tasks
+import com.google.firebase.firestore.DocumentSnapshot
+import com.google.firebase.firestore.EventListener
+import java.lang.IllegalArgumentException
 
 class LocalDatabase : Database {
     private val userMap: MutableMap<String, User> = mutableMapOf()
@@ -43,5 +43,31 @@ class LocalDatabase : Database {
         playlistMap[playlist.name] = Playlist(playlist.name,titleList.toSet(),playlist.genre)
 
         return Tasks.forResult(null)
+    }
+
+    override fun getLobbyId(): Task<Long> {
+        return Tasks.forResult(EXPECTED_UID)
+    }
+
+    override fun openLobby(id: Long, settings: Game.Settings): Task<Void> {
+        return Tasks.forResult(null)
+    }
+
+    override fun listenToLobbyUpdate(id: Long, listener: EventListener<DocumentSnapshot>) {
+        return
+    }
+
+    override fun getGameSettingsFromLobby(id: Long): Task<Game.Settings> {
+        return Tasks.forResult(EXPECTED_SETTINGS)
+    }
+
+    override fun addUserToLobby(id: Long, user: User): Task<Void> {
+        return Tasks.forResult(null)
+    }
+
+    companion object {
+        const val EXPECTED_UID = 794L
+        val EXPECTED_SETTINGS = Game.Settings(User("Host"), "Hello World!", Playlist("Host's Playlist"), 42, true, true)
+
     }
 }

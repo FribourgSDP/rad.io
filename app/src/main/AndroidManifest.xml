@@ -16,6 +16,9 @@
             android:name=".PlaylistDisplayActivity"
             android:exported="false" />
         <activity
+            android:name=".JoinGameActivity"
+            android:exported="true" />
+        <activity
             android:name=".SpotifyReceiveActivity"
             android:exported="true"
             android:label="@string/app_name"
@@ -65,6 +68,22 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <!-- Test implementations of activities -->
+        <activity
+            android:name=".mockimplementations.WorkingLobbyActivity"
+            android:exported="false" />
+        <activity
+            android:name=".mockimplementations.BuggyLobbyActivity"
+            android:exported="false" />
+        <activity
+            android:name=".mockimplementations.WorkingJoinGameActivity"
+            android:exported="false" />
+        <activity
+            android:name=".mockimplementations.BuggyJoinGameActivity"
+            android:exported="false" />
+
     </application>
+
 
 </manifest>

@@ -19,7 +19,10 @@
     <string name="default_game_name">A fun Party</string>
     <string name="default_game_nb_rounds">3</string>
     <string name="playlist_error_format">Playlist "%s" not found</string>
-    <string name="uuid_text_format">Party id: %03d</string>
+    <string name="uid_text_format">Party id: %03d</string>
+    <string name="uid_loading_text_format">Party id: Loading</string>
+    <string name="uid_error">Failed to create lobby</string>
+    <string name="uid_error_join">Failed to join lobby.</string>
     <string name="host_name_format">Host: %s</string>
     <string name="game_name_format">Game: %s</string>
     <string name="playlist_format">Playlist: %s</string>
@@ -31,4 +34,10 @@
     <string name="song_card_text1">Song Name</string>
     <string name="song_card_text2">Artist Name</string>
     <string name="playlist_name_placeholder">Playlist</string>
+    <string name="launch_game">Launch</string>
+    <string name="join_game_text">Type the ID of the game you want to join !</string>
+    <string name="join_id_hint">000</string>
+    <string name="join_button_text">Join</string>
+    <string name="join_fail_format">Failed to join lobby %d.</string>
+    <string name="lobby_not_found">Lobby %d not found.</string>
 </resources>
