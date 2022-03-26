@@ -6,7 +6,6 @@ import android.content.Intent
 import android.os.Bundle
 import android.widget.Button
 import androidx.appcompat.app.AppCompatActivity
-import com.github.fribourgsdp.radio.databinding.ActivityMainBinding
 import android.widget.ImageButton
 
 class MainActivity : AppCompatActivity() {
@@ -30,11 +29,13 @@ class MainActivity : AppCompatActivity() {
 
         /** this user allows quick demo's as it is data that is written to the app
          * specific storage and can be easily read without intents */
-        val mockUser = User("Saved User", User.generateColor())
-        val mockPlaylist1 = Playlist("test playlist", Genre.COUNTRY)
-        val mockPlaylist2 = Playlist("empty playlist", Genre.NONE)
-        mockPlaylist1.addSongs(setOf(Song("test Song 1", "test artist1"), Song("test Song 2", "test artist2")))
-        mockUser.addPlaylists(setOf(mockPlaylist1, mockPlaylist2))
-        mockUser.save(this)
+        if (intent.getBooleanExtra(RECREATE_USER, true)){
+            val mockUser = User("Saved User", User.generateColor())
+            val mockPlaylist1 = Playlist("test playlist", Genre.COUNTRY)
+            val mockPlaylist2 = Playlist("empty playlist", Genre.NONE)
+            mockPlaylist1.addSongs(setOf(Song("test Song 1", "test artist1"), Song("test Song 2", "test artist2")))
+            mockUser.addPlaylists(setOf(mockPlaylist1, mockPlaylist2))
+            mockUser.save(this)
+        }
     }
 }
