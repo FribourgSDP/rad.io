@@ -6,9 +6,8 @@ import android.os.Bundle
 import android.view.View
 import android.widget.*
 import com.github.fribourgsdp.radio.R
-import com.github.fribourgsdp.radio.activities.LobbyActivity
-import com.github.fribourgsdp.radio.backend.Playlist
-import com.github.fribourgsdp.radio.backend.User
+import com.github.fribourgsdp.radio.backend.music.Playlist
+import com.github.fribourgsdp.radio.backend.gameplay.User
 
 const val GAME_HOST_KEY = "com.github.fribourgsdp.radio.GAME_HOST"
 const val GAME_NAME_KEY = "com.github.fribourgsdp.radio.GAME_NAME"

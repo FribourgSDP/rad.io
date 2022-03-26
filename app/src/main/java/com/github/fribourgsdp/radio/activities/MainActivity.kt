@@ -10,10 +10,10 @@ import android.widget.ImageButton
 import com.github.fribourgsdp.radio.*
 import com.github.fribourgsdp.radio.activities.testActivities.DisplayLyricsActivity
 import com.github.fribourgsdp.radio.activities.testActivities.FireBaseTestActivity
-import com.github.fribourgsdp.radio.backend.Genre
-import com.github.fribourgsdp.radio.backend.Playlist
-import com.github.fribourgsdp.radio.backend.Song
-import com.github.fribourgsdp.radio.backend.User
+import com.github.fribourgsdp.radio.backend.music.Genre
+import com.github.fribourgsdp.radio.backend.music.Playlist
+import com.github.fribourgsdp.radio.backend.music.Song
+import com.github.fribourgsdp.radio.backend.gameplay.User
 
 class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {

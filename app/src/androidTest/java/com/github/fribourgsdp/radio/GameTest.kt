@@ -1,6 +1,11 @@
 package com.github.fribourgsdp.radio
 
 import com.github.fribourgsdp.radio.backend.*
+import com.github.fribourgsdp.radio.backend.gameplay.Game
+import com.github.fribourgsdp.radio.backend.gameplay.User
+import com.github.fribourgsdp.radio.backend.music.Genre
+import com.github.fribourgsdp.radio.backend.music.Playlist
+import com.github.fribourgsdp.radio.backend.music.Song
 import org.junit.Test
 
 import org.junit.Assert.*

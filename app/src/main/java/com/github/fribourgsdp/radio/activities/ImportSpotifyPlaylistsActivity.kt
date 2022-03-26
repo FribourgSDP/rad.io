@@ -4,10 +4,10 @@ import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import com.github.fribourgsdp.radio.R
-import com.github.fribourgsdp.radio.backend.JSONParser
-import com.github.fribourgsdp.radio.backend.JSONStandardParser
-import com.github.fribourgsdp.radio.backend.Playlist
-import com.github.fribourgsdp.radio.backend.Song
+import com.github.fribourgsdp.radio.backend.music.JSONParser
+import com.github.fribourgsdp.radio.backend.music.JSONStandardParser
+import com.github.fribourgsdp.radio.backend.music.Playlist
+import com.github.fribourgsdp.radio.backend.music.Song
 import okhttp3.*
 import java.io.IOException
 import java.util.concurrent.CompletableFuture

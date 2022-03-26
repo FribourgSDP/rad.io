@@ -1,4 +1,4 @@
-package com.github.fribourgsdp.radio.backend
+package com.github.fribourgsdp.radio.backend.music
 
 import android.util.Log
 import okhttp3.*

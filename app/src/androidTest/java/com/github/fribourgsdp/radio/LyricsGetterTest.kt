@@ -1,9 +1,9 @@
 package com.github.fribourgsdp.radio
 
 import android.util.Log
-import com.github.fribourgsdp.radio.backend.JSONParser
-import com.github.fribourgsdp.radio.backend.JSONStandardParser
-import com.github.fribourgsdp.radio.backend.LyricsGetter
+import com.github.fribourgsdp.radio.backend.music.JSONParser
+import com.github.fribourgsdp.radio.backend.music.JSONStandardParser
+import com.github.fribourgsdp.radio.backend.music.LyricsGetter
 import okhttp3.*
 import org.json.JSONObject
 import org.junit.Test

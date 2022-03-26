@@ -6,6 +6,11 @@ import android.view.View
 import android.widget.*
 import com.github.fribourgsdp.radio.*
 import com.github.fribourgsdp.radio.backend.*
+import com.github.fribourgsdp.radio.backend.database.Database
+import com.github.fribourgsdp.radio.backend.database.FirestoreDatabase
+import com.github.fribourgsdp.radio.backend.gameplay.Game
+import com.github.fribourgsdp.radio.backend.gameplay.User
+import com.github.fribourgsdp.radio.backend.music.Playlist
 
 open class LobbyActivity : AppCompatActivity() {
     private val db = this.initDatabase()

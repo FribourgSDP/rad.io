@@ -13,10 +13,10 @@ import androidx.test.espresso.matcher.ViewMatchers.*
 import androidx.test.ext.junit.rules.ActivityScenarioRule
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.github.fribourgsdp.radio.activities.UserProfileActivity
-import com.github.fribourgsdp.radio.backend.Genre
-import com.github.fribourgsdp.radio.backend.Playlist
-import com.github.fribourgsdp.radio.backend.PlaylistAdapter
-import com.github.fribourgsdp.radio.backend.User
+import com.github.fribourgsdp.radio.backend.music.Genre
+import com.github.fribourgsdp.radio.backend.music.Playlist
+import com.github.fribourgsdp.radio.backend.music.PlaylistAdapter
+import com.github.fribourgsdp.radio.backend.gameplay.User
 import com.google.android.gms.tasks.Tasks
 import com.google.firebase.auth.FirebaseAuth
 import org.junit.Rule

@@ -5,6 +5,7 @@ import com.github.fribourgsdp.radio.activities.COMING_FROM_SPOTIFY_ACTIVITY_FLAG
 import com.github.fribourgsdp.radio.activities.ImportSpotifyPlaylistsActivity
 import com.github.fribourgsdp.radio.activities.SPOTIFY_GET_PLAYLIST_IDS_BASE_URL
 import com.github.fribourgsdp.radio.backend.*
+import com.github.fribourgsdp.radio.backend.music.*
 import junit.framework.TestCase.assertEquals
 import okhttp3.*
 import org.json.JSONArray

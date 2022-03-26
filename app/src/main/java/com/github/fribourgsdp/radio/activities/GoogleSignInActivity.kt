@@ -10,6 +10,11 @@ import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import com.github.fribourgsdp.radio.R
 import com.github.fribourgsdp.radio.backend.*
+import com.github.fribourgsdp.radio.backend.database.FirestoreDatabase
+import com.github.fribourgsdp.radio.backend.gameplay.User
+import com.github.fribourgsdp.radio.backend.music.Genre
+import com.github.fribourgsdp.radio.backend.music.Playlist
+import com.github.fribourgsdp.radio.backend.music.Song
 import com.github.fribourgsdp.radio.databinding.ActivityGoogleSignInBinding
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInClient

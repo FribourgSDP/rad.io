@@ -11,10 +11,9 @@ import android.widget.EditText
 import android.widget.TextView
 import androidx.core.widget.addTextChangedListener
 import com.github.fribourgsdp.radio.R
-import com.github.fribourgsdp.radio.activities.LobbyActivity
-import com.github.fribourgsdp.radio.backend.Database
-import com.github.fribourgsdp.radio.backend.FirestoreDatabase
-import com.github.fribourgsdp.radio.backend.User
+import com.github.fribourgsdp.radio.backend.database.Database
+import com.github.fribourgsdp.radio.backend.database.FirestoreDatabase
+import com.github.fribourgsdp.radio.backend.gameplay.User
 
 const val GAME_UID_KEY = "com.github.fribourgsdp.radio.GAME_UID"
 

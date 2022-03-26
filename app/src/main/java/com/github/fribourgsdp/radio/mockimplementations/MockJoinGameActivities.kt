@@ -1,6 +1,6 @@
 package com.github.fribourgsdp.radio.mockimplementations
 
-import com.github.fribourgsdp.radio.backend.Database
+import com.github.fribourgsdp.radio.backend.database.Database
 //import com.github.fribourgsdp.radio.JoinGameActivity
 import com.github.fribourgsdp.radio.activities.JoinGameActivity
 

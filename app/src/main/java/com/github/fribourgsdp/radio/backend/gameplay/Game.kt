@@ -1,6 +1,8 @@
-package com.github.fribourgsdp.radio.backend
+package com.github.fribourgsdp.radio.backend.gameplay
 
-import com.github.fribourgsdp.radio.backend.User
+import com.github.fribourgsdp.radio.backend.music.Playlist
+import com.github.fribourgsdp.radio.backend.music.Song
+import com.github.fribourgsdp.radio.backend.gameplay.User
 import java.util.*
 import kotlin.collections.ArrayList
 import kotlin.collections.HashMap

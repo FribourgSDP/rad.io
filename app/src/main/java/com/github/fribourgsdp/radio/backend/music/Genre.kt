@@ -1,4 +1,4 @@
-package com.github.fribourgsdp.radio.backend
+package com.github.fribourgsdp.radio.backend.music
 
 enum class Genre (val genreName: String){
     POP("POP"),

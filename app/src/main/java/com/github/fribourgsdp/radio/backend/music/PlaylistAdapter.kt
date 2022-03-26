@@ -1,4 +1,4 @@
-package com.github.fribourgsdp.radio.backend
+package com.github.fribourgsdp.radio.backend.music
 
 import android.view.LayoutInflater
 import android.view.View

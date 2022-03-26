@@ -5,7 +5,7 @@ import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Button
-//import com.github.fribourgsdp.radio.ImportSpotifyPlaylistsActivity
+import com.github.fribourgsdp.radio.activities.ImportSpotifyPlaylistsActivity
 import com.github.fribourgsdp.radio.R
 import com.spotify.sdk.android.auth.AuthorizationResponse
 

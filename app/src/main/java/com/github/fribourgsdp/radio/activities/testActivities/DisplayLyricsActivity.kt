@@ -5,7 +5,7 @@ import android.widget.Button
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.text.HtmlCompat
-import com.github.fribourgsdp.radio.backend.LyricsGetter
+import com.github.fribourgsdp.radio.backend.music.LyricsGetter
 import com.github.fribourgsdp.radio.R
 import okhttp3.OkHttpClient
 

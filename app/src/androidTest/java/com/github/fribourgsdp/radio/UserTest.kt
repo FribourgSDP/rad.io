@@ -3,9 +3,9 @@ package com.github.fribourgsdp.radio
 import android.content.Context
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.ext.junit.runners.AndroidJUnit4
-import com.github.fribourgsdp.radio.backend.Genre
-import com.github.fribourgsdp.radio.backend.Playlist
-import com.github.fribourgsdp.radio.backend.User
+import com.github.fribourgsdp.radio.backend.music.Genre
+import com.github.fribourgsdp.radio.backend.music.Playlist
+import com.github.fribourgsdp.radio.backend.gameplay.User
 import junit.framework.Assert.assertEquals
 import org.junit.Assert
 

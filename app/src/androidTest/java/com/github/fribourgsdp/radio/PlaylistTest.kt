@@ -1,8 +1,8 @@
 package com.github.fribourgsdp.radio
 
-import com.github.fribourgsdp.radio.backend.Genre
-import com.github.fribourgsdp.radio.backend.Playlist
-import com.github.fribourgsdp.radio.backend.Song
+import com.github.fribourgsdp.radio.backend.music.Genre
+import com.github.fribourgsdp.radio.backend.music.Playlist
+import com.github.fribourgsdp.radio.backend.music.Song
 import org.junit.Test
 
 import org.junit.Assert.*

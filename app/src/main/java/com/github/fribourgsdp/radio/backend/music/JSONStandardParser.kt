@@ -1,4 +1,4 @@
-package com.github.fribourgsdp.radio.backend
+package com.github.fribourgsdp.radio.backend.music
 
 import org.json.JSONException
 import org.json.JSONObject

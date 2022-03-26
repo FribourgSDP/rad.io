@@ -1,6 +1,9 @@
-package com.github.fribourgsdp.radio.backend
+package com.github.fribourgsdp.radio.backend.database
 
-import com.github.fribourgsdp.radio.backend.User
+import com.github.fribourgsdp.radio.backend.gameplay.Game
+import com.github.fribourgsdp.radio.backend.music.Playlist
+import com.github.fribourgsdp.radio.backend.music.Song
+import com.github.fribourgsdp.radio.backend.gameplay.User
 import com.google.android.gms.tasks.Task
 import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.EventListener

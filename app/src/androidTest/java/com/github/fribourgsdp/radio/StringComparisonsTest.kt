@@ -1,6 +1,6 @@
 package com.github.fribourgsdp.radio
 
-import com.github.fribourgsdp.radio.backend.StringComparisons
+import com.github.fribourgsdp.radio.backend.music.StringComparisons
 import org.junit.Test
 
 class StringComparisonsTest {
