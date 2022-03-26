@@ -16,7 +16,7 @@
             android:name=".activities.PlaylistDisplayActivity"
             android:exported="false" />
         <activity
-            android:name=".JoinGameActivity"
+            android:name=".activities.JoinGameActivity"
             android:exported="true" />
         <activity
             android:name=".activities.SpotifyReceiveActivity"
@@ -35,13 +35,13 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".ImportSpotifyPlaylistsActivity"
+            android:name=".activities.ImportSpotifyPlaylistsActivity"
             android:exported="false" />
         <activity
             android:name=".activities.LobbyActivity"
             android:exported="true" />
         <activity
-            android:name=".UserProfileActivity"
+            android:name=".activities.UserProfileActivity"
             android:exported="false"
             android:launchMode="singleTop"/>
         <activity
@@ -54,10 +54,10 @@
             android:name=".activities.SettingsActivity"
             android:exported="true" />
         <activity
-            android:name=".GameSettingsActivity"
+            android:name=".activities.GameSettingsActivity"
             android:exported="true" />
         <activity
-            android:name=".GoogleSignInActivity"
+            android:name=".activities.GoogleSignInActivity"
             android:exported="false" />
         <activity
             android:name=".activities.MainActivity"
