@@ -1,10 +1,14 @@
-package com.github.fribourgsdp.radio
+package com.github.fribourgsdp.radio.activities
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.TextView
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+//import com.github.fribourgsdp.radio.PLAYLIST_DATA
+import com.github.fribourgsdp.radio.R
+import com.github.fribourgsdp.radio.backend.SongAdapter
+import com.github.fribourgsdp.radio.backend.Playlist
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.json.Json
 

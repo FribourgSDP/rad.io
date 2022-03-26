@@ -1,5 +1,6 @@
-package com.github.fribourgsdp.radio
+package com.github.fribourgsdp.radio.backend
 
+import com.github.fribourgsdp.radio.*
 import com.google.android.gms.tasks.Task
 import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.ktx.firestore

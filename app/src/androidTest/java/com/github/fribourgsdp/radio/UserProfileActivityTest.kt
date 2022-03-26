@@ -14,9 +14,7 @@ import androidx.test.core.app.ApplicationProvider
 import com.google.firebase.auth.*
 import org.hamcrest.Matchers
 import androidx.test.espresso.action.ViewActions.click
-import androidx.test.espresso.assertion.ViewAssertions.matches
-import androidx.test.espresso.matcher.ViewMatchers.isDisplayed
-import androidx.test.espresso.matcher.ViewMatchers.withId
+import com.github.fribourgsdp.radio.activities.*
 import com.google.android.gms.tasks.Tasks
 import java.util.concurrent.TimeUnit
 

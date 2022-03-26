@@ -1,4 +1,4 @@
-package com.github.fribourgsdp.radio
+package com.github.fribourgsdp.radio.activities
 
 
 
@@ -6,15 +6,21 @@ import android.content.Intent
 import android.os.Bundle
 import android.widget.Button
 import androidx.appcompat.app.AppCompatActivity
-import com.github.fribourgsdp.radio.databinding.ActivityMainBinding
 import android.widget.ImageButton
+import com.github.fribourgsdp.radio.*
+import com.github.fribourgsdp.radio.activities.testActivities.DisplayLyricsActivity
+import com.github.fribourgsdp.radio.activities.testActivities.FireBaseTestActivity
+import com.github.fribourgsdp.radio.backend.Genre
+import com.github.fribourgsdp.radio.backend.Playlist
+import com.github.fribourgsdp.radio.backend.Song
+import com.github.fribourgsdp.radio.backend.User
 
 class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         val fireBaseButton = findViewById<Button>(R.id.FireBaseButton)
-        fireBaseButton.setOnClickListener{startActivity(Intent(this,FireBaseTestActivity::class.java))}
+        fireBaseButton.setOnClickListener{startActivity(Intent(this, FireBaseTestActivity::class.java))}
         val playButton = findViewById<Button>(R.id.playButton)
         playButton.setOnClickListener {startActivity(Intent(this, GameSettingsActivity::class.java))}
         val joinButton : Button = findViewById(R.id.joinButton)

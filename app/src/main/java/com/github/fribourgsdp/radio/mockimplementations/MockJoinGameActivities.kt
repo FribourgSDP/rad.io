@@ -1,7 +1,8 @@
 package com.github.fribourgsdp.radio.mockimplementations
 
-import com.github.fribourgsdp.radio.Database
-import com.github.fribourgsdp.radio.JoinGameActivity
+import com.github.fribourgsdp.radio.backend.Database
+//import com.github.fribourgsdp.radio.JoinGameActivity
+import com.github.fribourgsdp.radio.activities.JoinGameActivity
 
 class WorkingJoinGameActivity : JoinGameActivity() {
     override fun initDatabase(): Database {

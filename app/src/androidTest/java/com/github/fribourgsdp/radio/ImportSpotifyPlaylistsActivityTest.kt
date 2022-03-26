@@ -1,18 +1,14 @@
 package com.github.fribourgsdp.radio
 
 import android.content.Intent
-import androidx.test.espresso.Espresso
-import androidx.test.espresso.action.ViewActions
-import androidx.test.espresso.intent.Intents
-import androidx.test.espresso.intent.matcher.IntentMatchers
-import androidx.test.espresso.matcher.ViewMatchers
-import androidx.test.ext.junit.rules.ActivityScenarioRule
+import com.github.fribourgsdp.radio.activities.COMING_FROM_SPOTIFY_ACTIVITY_FLAG
+import com.github.fribourgsdp.radio.activities.ImportSpotifyPlaylistsActivity
+import com.github.fribourgsdp.radio.activities.SPOTIFY_GET_PLAYLIST_IDS_BASE_URL
+import com.github.fribourgsdp.radio.backend.*
 import junit.framework.TestCase.assertEquals
 import okhttp3.*
-import org.hamcrest.Matchers
 import org.json.JSONArray
 import org.json.JSONObject
-import org.junit.Rule
 import org.junit.Test
 import java.io.IOException
 import java.util.concurrent.ExecutionException

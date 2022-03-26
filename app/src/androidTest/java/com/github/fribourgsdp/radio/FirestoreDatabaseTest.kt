@@ -2,6 +2,8 @@ package com.github.fribourgsdp.radio
 
 import android.content.ContentValues
 import android.util.Log
+import com.github.fribourgsdp.radio.backend.FirestoreDatabase
+import com.github.fribourgsdp.radio.backend.User
 import com.google.android.gms.tasks.Tasks
 import org.junit.Test
 import java.util.concurrent.TimeUnit

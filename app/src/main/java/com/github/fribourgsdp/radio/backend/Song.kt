@@ -1,4 +1,4 @@
-package com.github.fribourgsdp.radio
+package com.github.fribourgsdp.radio.backend
 
 import java.util.*
 import kotlinx.serialization.Serializable

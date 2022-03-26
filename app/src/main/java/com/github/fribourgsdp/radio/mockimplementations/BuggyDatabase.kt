@@ -1,6 +1,7 @@
 package com.github.fribourgsdp.radio.mockimplementations
 
 import com.github.fribourgsdp.radio.*
+import com.github.fribourgsdp.radio.backend.*
 import com.google.android.gms.tasks.Task
 import com.google.android.gms.tasks.Tasks
 import com.google.firebase.firestore.DocumentSnapshot

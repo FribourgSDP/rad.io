@@ -1,4 +1,4 @@
-package com.github.fribourgsdp.radio
+package com.github.fribourgsdp.radio.activities
 
 import android.content.Intent
 import android.graphics.PorterDuff
@@ -10,6 +10,12 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.github.fribourgsdp.radio.R
+import com.github.fribourgsdp.radio.activities.MainActivity
+import com.github.fribourgsdp.radio.activities.PlaylistDisplayActivity
+import com.github.fribourgsdp.radio.backend.Playlist
+import com.github.fribourgsdp.radio.backend.PlaylistAdapter
+import com.github.fribourgsdp.radio.backend.User
 import com.spotify.sdk.android.auth.AuthorizationClient
 import com.spotify.sdk.android.auth.AuthorizationRequest
 import com.spotify.sdk.android.auth.AuthorizationResponse

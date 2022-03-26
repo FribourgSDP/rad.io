@@ -1,4 +1,4 @@
-package com.github.fribourgsdp.radio
+package com.github.fribourgsdp.radio.activities
 
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
@@ -9,9 +9,12 @@ import android.view.inputmethod.EditorInfo
 import android.widget.Button
 import android.widget.EditText
 import android.widget.TextView
-import android.widget.Toast
 import androidx.core.widget.addTextChangedListener
-import com.google.android.gms.tasks.Task
+import com.github.fribourgsdp.radio.R
+import com.github.fribourgsdp.radio.activities.LobbyActivity
+import com.github.fribourgsdp.radio.backend.Database
+import com.github.fribourgsdp.radio.backend.FirestoreDatabase
+import com.github.fribourgsdp.radio.backend.User
 
 const val GAME_UID_KEY = "com.github.fribourgsdp.radio.GAME_UID"
 

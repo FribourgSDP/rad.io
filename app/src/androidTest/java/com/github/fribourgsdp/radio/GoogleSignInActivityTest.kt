@@ -20,6 +20,8 @@ import com.google.firebase.FirebaseOptions
 import com.google.firebase.auth.*
 import org.hamcrest.Matchers
 import androidx.test.espresso.action.ViewActions.click
+import com.github.fribourgsdp.radio.activities.GoogleSignInActivity
+import com.github.fribourgsdp.radio.activities.UserProfileActivity
 import java.lang.Exception
 import java.util.concurrent.TimeUnit
 import com.google.firebase.auth.FirebaseUser

@@ -1,5 +1,6 @@
-package com.github.fribourgsdp.radio
+package com.github.fribourgsdp.radio.backend
 
+import com.github.fribourgsdp.radio.backend.User
 import java.util.*
 import kotlin.collections.ArrayList
 import kotlin.collections.HashMap

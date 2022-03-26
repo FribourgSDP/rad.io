@@ -7,6 +7,12 @@ import androidx.test.espresso.intent.matcher.IntentMatchers
 import androidx.test.espresso.matcher.ViewMatchers.withId
 import androidx.test.ext.junit.rules.ActivityScenarioRule
 import androidx.test.ext.junit.runners.AndroidJUnit4
+import com.github.fribourgsdp.radio.activities.GameSettingsActivity
+import com.github.fribourgsdp.radio.activities.testActivities.DisplayLyricsActivity
+import com.github.fribourgsdp.radio.activities.MainActivity
+import com.github.fribourgsdp.radio.activities.SettingsActivity
+import com.github.fribourgsdp.radio.activities.UserProfileActivity
+import com.github.fribourgsdp.radio.activities.testActivities.FireBaseTestActivity
 import org.hamcrest.Matchers
 
 import org.junit.Rule

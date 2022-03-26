@@ -13,13 +13,13 @@
         android:theme="@style/Theme.Radio"
         android:usesCleartextTraffic="true">
         <activity
-            android:name=".PlaylistDisplayActivity"
+            android:name=".activities.PlaylistDisplayActivity"
             android:exported="false" />
         <activity
             android:name=".JoinGameActivity"
             android:exported="true" />
         <activity
-            android:name=".SpotifyReceiveActivity"
+            android:name=".activities.SpotifyReceiveActivity"
             android:exported="true"
             android:label="@string/app_name"
             android:launchMode="singleTop">
@@ -38,20 +38,20 @@
             android:name=".ImportSpotifyPlaylistsActivity"
             android:exported="false" />
         <activity
-            android:name=".LobbyActivity"
+            android:name=".activities.LobbyActivity"
             android:exported="true" />
         <activity
             android:name=".UserProfileActivity"
             android:exported="false"
             android:launchMode="singleTop"/>
         <activity
-            android:name=".FireBaseTestActivity"
+            android:name=".activities.testActivities.FireBaseTestActivity"
             android:exported="false" />
         <activity
-            android:name=".DisplayLyricsActivity"
+            android:name=".activities.testActivities.DisplayLyricsActivity"
             android:exported="true" />
         <activity
-            android:name=".SettingsActivity"
+            android:name=".activities.SettingsActivity"
             android:exported="true" />
         <activity
             android:name=".GameSettingsActivity"
@@ -60,7 +60,7 @@
             android:name=".GoogleSignInActivity"
             android:exported="false" />
         <activity
-            android:name=".MainActivity"
+            android:name=".activities.MainActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

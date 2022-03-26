@@ -1,11 +1,11 @@
-package com.github.fribourgsdp.radio
+package com.github.fribourgsdp.radio.activities
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
 import android.widget.*
-import androidx.recyclerview.widget.RecyclerView
-import com.google.android.gms.tasks.Task
+import com.github.fribourgsdp.radio.*
+import com.github.fribourgsdp.radio.backend.*
 
 open class LobbyActivity : AppCompatActivity() {
     private val db = this.initDatabase()

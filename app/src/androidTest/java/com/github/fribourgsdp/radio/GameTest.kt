@@ -1,5 +1,6 @@
 package com.github.fribourgsdp.radio
 
+import com.github.fribourgsdp.radio.backend.*
 import org.junit.Test
 
 import org.junit.Assert.*

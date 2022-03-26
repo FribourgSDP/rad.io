@@ -1,8 +1,13 @@
-package com.github.fribourgsdp.radio
+package com.github.fribourgsdp.radio.activities
 
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import com.github.fribourgsdp.radio.R
+import com.github.fribourgsdp.radio.backend.JSONParser
+import com.github.fribourgsdp.radio.backend.JSONStandardParser
+import com.github.fribourgsdp.radio.backend.Playlist
+import com.github.fribourgsdp.radio.backend.Song
 import okhttp3.*
 import java.io.IOException
 import java.util.concurrent.CompletableFuture

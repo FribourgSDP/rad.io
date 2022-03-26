@@ -8,9 +8,10 @@ import androidx.test.espresso.intent.Intents
 import androidx.test.espresso.intent.matcher.IntentMatchers
 import androidx.test.espresso.matcher.ViewMatchers
 import androidx.test.ext.junit.rules.ActivityScenarioRule
+import com.github.fribourgsdp.radio.activities.ImportSpotifyPlaylistsActivity
+import com.github.fribourgsdp.radio.activities.SpotifyReceiveActivity
 import com.spotify.sdk.android.auth.AccountsQueryParameters
 import org.junit.Test
-import junit.framework.TestCase
 import junit.framework.TestCase.assertEquals
 import org.hamcrest.Matchers
 import org.junit.Rule

@@ -1,13 +1,12 @@
-package com.github.fribourgsdp.radio
+package com.github.fribourgsdp.radio.activities.testActivities
 
 import android.content.ContentValues
-import android.content.ContentValues.TAG
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.widget.TextView
-import com.google.firebase.firestore.ktx.firestore
-import com.google.firebase.ktx.Firebase
+import com.github.fribourgsdp.radio.*
+import com.github.fribourgsdp.radio.backend.*
 
 class FireBaseTestActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -50,7 +49,7 @@ class FireBaseTestActivity : AppCompatActivity() {
         }
 
 
-        val playlist = Playlist("testPlaylist",Genre.COUNTRY)
+        val playlist = Playlist("testPlaylist", Genre.COUNTRY)
         val song2 = Song("song2","Victor","")
 
         playlist.addSong(song)

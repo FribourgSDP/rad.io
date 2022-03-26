@@ -1,17 +1,20 @@
-package com.github.fribourgsdp.radio
+package com.github.fribourgsdp.radio.backend
 
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
+import com.github.fribourgsdp.radio.R
 
 class PlaylistAdapter(private val playlistList: List<Playlist>,
-                      private val listener: OnPlaylistClickListener) :
+                      private val listener: OnPlaylistClickListener
+) :
     RecyclerView.Adapter<PlaylistAdapter.PlaylistViewHolder>(){
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PlaylistViewHolder {
-        val itemView = LayoutInflater.from(parent.context).inflate(R.layout.playlist_item,
+        val itemView = LayoutInflater.from(parent.context).inflate(
+            R.layout.playlist_item,
             parent, false)
         return PlaylistViewHolder(itemView)
     }

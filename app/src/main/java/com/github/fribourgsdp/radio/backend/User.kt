@@ -1,7 +1,8 @@
-package com.github.fribourgsdp.radio
+package com.github.fribourgsdp.radio.backend
 
 
 import android.content.Context
+import com.github.fribourgsdp.radio.backend.Playlist
 import kotlin.random.Random
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.encodeToString
