@@ -8,7 +8,7 @@ class PlaylistNotFoundException : Exception("Playlist was not found")
 
 class LobbyNotFoundException  : Exception("Lobby was not found")
 
-class LobbyNotAvailableException  : Exception("Lobby was not availabe")
+class LobbyNotAvailableException  : Exception("Lobby was not available")
 
 class LyricsNotFoundException : Exception("No lyrics were found")
 
