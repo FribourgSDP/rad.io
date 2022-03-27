@@ -38,7 +38,7 @@ class MainActivityTest {
         Intents.intended(
             Matchers.allOf(
                 IntentMatchers.hasComponent(GameSettingsActivity::class.java.name),
-                IntentMatchers.toPackage("com.github.fribourgsdp.radio.activities")
+                IntentMatchers.toPackage("com.github.fribourgsdp.radio")
             )
         )
 
@@ -54,7 +54,7 @@ class MainActivityTest {
         Intents.intended(
             Matchers.allOf(
                 IntentMatchers.hasComponent(SettingsActivity::class.java.name),
-                IntentMatchers.toPackage("com.github.fribourgsdp.radio.*")
+                IntentMatchers.toPackage("com.github.fribourgsdp.radio")
             )
         )
 
