@@ -1,6 +1,6 @@
 package com.github.fribourgsdp.radio
 
-import com.github.fribourgsdp.radio.mockimplementations.*
+import com.github.fribourgsdp.radio.activities.mockimplementations.*
 
 import android.content.Context
 import android.content.Intent
@@ -15,6 +15,7 @@ import androidx.test.espresso.matcher.ViewMatchers.isDisplayed
 import androidx.test.ext.junit.rules.ActivityScenarioRule
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.github.fribourgsdp.radio.activities.*
+import com.github.fribourgsdp.radio.backend.mockimplementations.LocalDatabase
 import org.hamcrest.Matchers.not
 import org.junit.Before
 import org.junit.After

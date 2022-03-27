@@ -71,16 +71,16 @@
 
         <!-- Test implementations of activities -->
         <activity
-            android:name=".mockimplementations.WorkingLobbyActivity"
+            android:name=".activities.mockimplementations.WorkingLobbyActivity"
             android:exported="false" />
         <activity
-            android:name=".mockimplementations.BuggyLobbyActivity"
+            android:name=".activities.mockimplementations.BuggyLobbyActivity"
             android:exported="false" />
         <activity
-            android:name=".mockimplementations.WorkingJoinGameActivity"
+            android:name=".activities.mockimplementations.WorkingJoinGameActivity"
             android:exported="false" />
         <activity
-            android:name=".mockimplementations.BuggyJoinGameActivity"
+            android:name=".activities.mockimplementations.BuggyJoinGameActivity"
             android:exported="false" />
 
     </application>

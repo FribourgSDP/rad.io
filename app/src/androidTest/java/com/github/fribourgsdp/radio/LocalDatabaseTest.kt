@@ -2,13 +2,12 @@ package com.github.fribourgsdp.radio
 
 import android.content.ContentValues
 import android.util.Log
-import com.github.fribourgsdp.radio.backend.*
 import com.github.fribourgsdp.radio.backend.database.Database
 import com.github.fribourgsdp.radio.backend.gameplay.User
 import com.github.fribourgsdp.radio.backend.music.Genre
 import com.github.fribourgsdp.radio.backend.music.Playlist
 import com.github.fribourgsdp.radio.backend.music.Song
-import com.github.fribourgsdp.radio.mockimplementations.LocalDatabase
+import com.github.fribourgsdp.radio.backend.mockimplementations.LocalDatabase
 import com.google.android.gms.tasks.Tasks
 import org.junit.Test
 import java.util.concurrent.TimeUnit

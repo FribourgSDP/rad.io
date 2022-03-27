@@ -1,4 +1,4 @@
-package com.github.fribourgsdp.radio.mockimplementations
+package com.github.fribourgsdp.radio.backend.mockimplementations
 
 import com.github.fribourgsdp.radio.backend.*
 import com.github.fribourgsdp.radio.backend.database.Database
