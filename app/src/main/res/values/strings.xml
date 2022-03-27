@@ -40,4 +40,7 @@
     <string name="join_button_text">Join</string>
     <string name="join_fail_format">Failed to join lobby %d.</string>
     <string name="lobby_not_found">Lobby %d not found.</string>
+    <string name="create_profile_text">Profile</string>
+    <string name="save_button_text">save</string>
+    <string name="name_text">Name:</string>
 </resources>
