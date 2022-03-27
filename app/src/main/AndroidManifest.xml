@@ -13,6 +13,9 @@
         android:theme="@style/Theme.Radio"
         android:usesCleartextTraffic="true">
         <activity
+            android:name=".CreateUserProfileActivity"
+            android:exported="false" />
+        <activity
             android:name=".PlaylistDisplayActivity"
             android:exported="false" />
         <activity
@@ -43,7 +46,7 @@
         <activity
             android:name=".UserProfileActivity"
             android:exported="false"
-            android:launchMode="singleTop"/>
+            android:launchMode="singleTop" />
         <activity
             android:name=".FireBaseTestActivity"
             android:exported="false" />
@@ -67,9 +70,7 @@
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-        </activity>
-
-        <!-- Test implementations of activities -->
+        </activity> <!-- Test implementations of activities -->
         <activity
             android:name=".mockimplementations.WorkingLobbyActivity"
             android:exported="false" />
@@ -82,8 +83,6 @@
         <activity
             android:name=".mockimplementations.BuggyJoinGameActivity"
             android:exported="false" />
-
     </application>
-
 
 </manifest>
