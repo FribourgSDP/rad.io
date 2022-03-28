@@ -17,11 +17,15 @@ import androidx.test.espresso.action.ViewActions.click
 import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.matcher.ViewMatchers.isDisplayed
 import androidx.test.espresso.matcher.ViewMatchers.withId
+import androidx.test.ext.junit.rules.ActivityScenarioRule
 import com.google.android.gms.tasks.Tasks
+import org.junit.Rule
 import java.util.concurrent.TimeUnit
 
 @RunWith(AndroidJUnit4::class)
 class UserProfileActivityTest : TestCase() {
+    @get:Rule
+    var userProfileActivityRule = ActivityScenarioRule(UserProfileActivityt::class.java)
 
     @Test
     fun logoutButtonTest() {
@@ -46,6 +50,16 @@ class UserProfileActivityTest : TestCase() {
                 )
             )
         }
+        Intents.release()
+    }
+
+    @Test
+    fun pressingBackButtonTakesUserToMainActivity(){
+        Intents.init()
+        Espresso.pressBack()
+        Intents.intended(
+            IntentMatchers.hasComponent(MainActivity::class.java.name)
+        )
         Intents.release()
     }
 
