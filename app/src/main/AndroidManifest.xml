@@ -3,6 +3,12 @@
     package="com.github.fribourgsdp.radio">
 
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.RECORD_AUDIO" />
+    <uses-permission android:name="android.permission.MODIFY_AUDIO_SETTINGS" />
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.BLUETOOTH" />
 
     <application
         android:allowBackup="true"
@@ -12,6 +18,14 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Radio"
         android:usesCleartextTraffic="true">
+        <activity
+            android:name=".VoiceOverIPActivity"
+            android:exported="false" />
+        <activity
+            android:name=".VoiceOverIpActivity"
+            android:exported="false"
+            android:label="@string/title_activity_voice_over_ip"
+            android:theme="@style/Theme.Radio.NoActionBar" />
         <activity
             android:name=".PlaylistDisplayActivity"
             android:exported="false" />
@@ -43,7 +57,7 @@
         <activity
             android:name=".UserProfileActivity"
             android:exported="false"
-            android:launchMode="singleTop"/>
+            android:launchMode="singleTop" />
         <activity
             android:name=".FireBaseTestActivity"
             android:exported="false" />
@@ -67,9 +81,7 @@
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-        </activity>
-
-        <!-- Test implementations of activities -->
+        </activity> <!-- Test implementations of activities -->
         <activity
             android:name=".mockimplementations.WorkingLobbyActivity"
             android:exported="false" />
@@ -82,8 +94,6 @@
         <activity
             android:name=".mockimplementations.BuggyJoinGameActivity"
             android:exported="false" />
-
     </application>
-
 
 </manifest>
