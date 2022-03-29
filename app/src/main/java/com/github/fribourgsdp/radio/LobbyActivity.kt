@@ -105,6 +105,7 @@ open class LobbyActivity : AppCompatActivity() {
         if (isHost && uid >= 0) {
             if (hostName != null && gameName != null && playlistName != null) {
                 gameBuilder.setHost(User(hostName!!))
+                    .setID(uid)
                     .setName(gameName!!)
                     .setPlaylist(Playlist(playlistName!!))
                     .setNbRounds(nbRounds)

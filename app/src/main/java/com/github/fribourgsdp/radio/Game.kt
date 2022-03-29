@@ -16,7 +16,7 @@ import kotlin.collections.HashSet
  * @property isPrivate whether the game is private or public.
  * @property currentRound the current round of the game.
  */
-class Game private constructor(val name: String, val host: User, val playlist: Playlist, val nbRounds: Int,
+class Game private constructor(val id: Long, val name: String, val host: User, val playlist: Playlist, val nbRounds: Int,
                                val withHint: Boolean, val isPrivate: Boolean, private val listUser: List<User>) {
 
     private val scoreMap = HashMap(listUser.associateWith { 0 })
@@ -100,6 +100,7 @@ class Game private constructor(val name: String, val host: User, val playlist: P
      * A builder for the [Game] class.
      */
     class Builder {
+        private var id = 0L
         private lateinit var host: User
         private var name = "A Fun Party"
         private lateinit var playlist: Playlist
@@ -107,6 +108,15 @@ class Game private constructor(val name: String, val host: User, val playlist: P
         private var withHint  = false
         private var isPrivate = false
         private var list = ArrayList<User>()
+
+        /**
+         * Set the [id] of the game.
+         * @return the [Builder]
+         */
+        fun setID(id: Long): Builder {
+            this.id = id
+            return this
+        }
 
         /**
          * Set the [host] for the game.
@@ -208,7 +218,7 @@ class Game private constructor(val name: String, val host: User, val playlist: P
          * @return the [Game] built with the previously given parameters.
          */
         fun build() : Game {
-            return Game(name, host, playlist, nbRounds, withHint, isPrivate, list)
+            return Game(id, name, host, playlist, nbRounds, withHint, isPrivate, list)
         }
 
     }
