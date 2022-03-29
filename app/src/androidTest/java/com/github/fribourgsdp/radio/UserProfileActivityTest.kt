@@ -25,7 +25,7 @@ import java.util.concurrent.TimeUnit
 @RunWith(AndroidJUnit4::class)
 class UserProfileActivityTest : TestCase() {
     @get:Rule
-    var userProfileActivityRule = ActivityScenarioRule(UserProfileActivityt::class.java)
+    var userProfileActivityRule = ActivityScenarioRule(UserProfileActivity::class.java)
 
     @Test
     fun logoutButtonTest() {
