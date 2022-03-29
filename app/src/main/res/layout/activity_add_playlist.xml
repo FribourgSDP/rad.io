@@ -98,15 +98,4 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/linearLayout" />
 
-    <Spinner
-        android:id="@+id/genreSpinner"
-        android:layout_width="317dp"
-        android:layout_height="wrap_content"
-        android:contentDescription="Genre"
-        android:minHeight="48dp"
-        app:layout_constraintBottom_toTopOf="@+id/linearLayout"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/newPlaylistName" />
-
 </androidx.constraintlayout.widget.ConstraintLayout>
