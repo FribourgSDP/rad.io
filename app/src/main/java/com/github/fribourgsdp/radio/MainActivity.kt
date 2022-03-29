@@ -6,10 +6,11 @@ import android.content.Intent
 import android.os.Bundle
 import android.widget.Button
 import androidx.appcompat.app.AppCompatActivity
-import com.github.fribourgsdp.radio.databinding.ActivityMainBinding
+//import com.github.fribourgsdp.radio.databinding.ActivityMainBinding
 import android.widget.ImageButton
 
 class MainActivity : AppCompatActivity() {
+    private val db = FirestoreDatabase()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
@@ -30,11 +31,28 @@ class MainActivity : AppCompatActivity() {
 
         /** this user allows quick demo's as it is data that is written to the app
          * specific storage and can be easily read without intents */
-        val mockUser = User("Saved User", User.generateColor())
-        val mockPlaylist1 = Playlist("test playlist", Genre.COUNTRY)
-        val mockPlaylist2 = Playlist("empty playlist", Genre.NONE)
-        mockPlaylist1.addSongs(setOf(Song("test Song 1", "test artist1"), Song("test Song 2", "test artist2")))
-        mockUser.addPlaylists(setOf(mockPlaylist1, mockPlaylist2))
-        mockUser.save(this)
+        try {
+            //if this is successful, we don't need to do anything
+            val user = User.load(this)
+
+        } catch (e: java.io.FileNotFoundException) {
+            createUser()
+        }
+
+
+    }
+    private fun createUser(){
+        //for now, we set to 1 the user ID, we will then use the database function
+         db.generateUserId().addOnSuccessListener { id->
+            val userName = "User$id"
+            val generatedUser = User(userName)
+            generatedUser.save(this)
+            db.setUser(id.toString(),generatedUser)
+        }
+
+
+
+
+
     }
 }
