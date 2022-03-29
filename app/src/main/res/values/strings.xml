@@ -40,4 +40,7 @@
     <string name="join_button_text">Join</string>
     <string name="join_fail_format">Failed to join lobby %d.</string>
     <string name="lobby_not_found">Lobby %d not found.</string>
+    <string name="current_round_format">Current round: %d</string>
+    <string name="singing_format">%s is singing!</string>
+    <string name="guess_the_song">Guess the song!</string>
 </resources>
