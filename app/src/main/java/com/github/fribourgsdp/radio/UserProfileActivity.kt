@@ -58,10 +58,6 @@ class UserProfileActivity : AppCompatActivity(), PlaylistAdapter.OnPlaylistClick
             text = user.initial.uppercaseChar().toString()
         }
 
-        findViewById<TextView>(R.id.spotifyStatus).apply {
-            text = if (user.spotifyLinked) "linked" else "unlinked"
-        }
-
 
         val logoutButton: Button = findViewById(R.id.logoutButton)
         logoutButton.setOnClickListener{
@@ -72,6 +68,12 @@ class UserProfileActivity : AppCompatActivity(), PlaylistAdapter.OnPlaylistClick
         findViewById<ImageView>(R.id.userIcon).setColorFilter(PorterDuffColorFilter(user.color, PorterDuff.Mode.ADD))
         if (intent.getBooleanExtra(COMING_FROM_SPOTIFY_ACTIVITY_FLAG, false)){
             addPlaylistsToUser()
+            user.linkedSpotify = true
+            user.save(this)
+        }
+
+        findViewById<TextView>(R.id.spotifyStatus).apply {
+            text = if (user.spotifyLinked) "linked" else "unlinked"
         }
         if (intent.getBooleanExtra(COMING_FROM_ADD_PLAYLIST_ACTIVITY_FLAG, false)){
             addManualPlaylistToUser()
@@ -84,6 +86,14 @@ class UserProfileActivity : AppCompatActivity(), PlaylistAdapter.OnPlaylistClick
         playlistDisplay.setHasFixedSize(true)
 
         findViewById<FloatingActionButton>(R.id.addPlaylistButton).setOnClickListener{startActivity(Intent(this, AddPlaylistActivity::class.java))}
+    }
+
+    override fun onBackPressed() {
+        super.onBackPressed()
+        val intent = Intent(this, MainActivity::class.java)
+        intent.putExtra(RECREATE_USER, false)
+        startActivity(intent)
+        finish()
     }
 
     override fun onItemClick(position: Int) {
