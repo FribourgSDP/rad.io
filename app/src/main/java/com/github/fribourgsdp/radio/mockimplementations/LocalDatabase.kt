@@ -49,6 +49,10 @@ class LocalDatabase : Database {
         return Tasks.forResult(EXPECTED_UID)
     }
 
+    override fun generateUserId(): Task<Long> {
+        return Tasks.forResult(EXPECTED_USER_UID)
+    }
+
     override fun openLobby(id: Long, settings: Game.Settings): Task<Void> {
         return Tasks.forResult(null)
     }
@@ -66,6 +70,7 @@ class LocalDatabase : Database {
     }
 
     companion object {
+        const val EXPECTED_USER_UID = 392L
         const val EXPECTED_UID = 794L
         val EXPECTED_SETTINGS = Game.Settings(User("Host"), "Hello World!", Playlist("Host's Playlist"), 42, true, true)
 
