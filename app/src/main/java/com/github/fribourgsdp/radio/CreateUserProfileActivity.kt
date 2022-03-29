@@ -41,8 +41,8 @@ class CreateUserProfileActivity : AppCompatActivity() {
 
     }
     private fun prefillFields(){
-        user = User.load(this)
-        nameInput.setText(user.name)
+       // user = User.load(this)
+        //nameInput.setText(user.name)
 
     }
 }
