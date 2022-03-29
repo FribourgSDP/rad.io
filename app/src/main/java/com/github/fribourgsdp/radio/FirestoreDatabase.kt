@@ -125,6 +125,29 @@ class FirestoreDatabase : Database {
         }
     }
 
+    override fun generateUserId() : Task<Long> {
+        val keyID = "current_id"
+        val keyMax = "max_id"
+
+        val docRef = db.collection("metadata").document("UserInfo")
+
+        return db.runTransaction { transaction ->
+            val snapshot = transaction.get(docRef)
+
+            if (!snapshot.exists()) {
+                throw Exception("Document not found.")
+            }
+
+            val id = snapshot.getLong(keyID)!!
+            val nextId = (id + 1) % snapshot.getLong(keyMax)!!
+
+            transaction.update(docRef, keyID, nextId)
+
+            // Success
+            id
+        }
+    }
+
     override fun openLobby(id: Long, settings : Game.Settings) : Task<Void> {
         val gameData = hashMapOf(
             "name" to settings.name,
