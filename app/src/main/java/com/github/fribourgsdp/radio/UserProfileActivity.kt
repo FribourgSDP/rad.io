@@ -6,6 +6,7 @@ import android.graphics.PorterDuffColorFilter
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Button
+import android.widget.EditText
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -26,6 +27,17 @@ const val COMING_FROM_SPOTIFY_ACTIVITY_FLAG = "com.github.fribourgsdp.radio.spot
 class UserProfileActivity : AppCompatActivity(), PlaylistAdapter.OnPlaylistClickListener {
     private lateinit var user : User
     private lateinit var userPlaylists : List<Playlist>
+    private lateinit var usernameField : EditText
+    private lateinit var usernameInitialText : TextView
+    private lateinit var spotifyStatusText : TextView
+    private lateinit var saveChangeButton : Button
+    private lateinit var launchSpotifyButton : Button
+    private lateinit var logoutButton : Button
+    private lateinit var googleSignInButton : Button
+    private lateinit var playlistDisplay : RecyclerView
+    private lateinit var userIcon : ImageView
+
+    private var db = FirestoreDatabase()
 
     //firebase auth
     private lateinit var firebaseAuth: FirebaseAuth
@@ -34,46 +46,47 @@ class UserProfileActivity : AppCompatActivity(), PlaylistAdapter.OnPlaylistClick
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_user_profile)
 
-        firebaseAuth = FirebaseAuth.getInstance()
-        checkUser()
+        instantiateViews()
 
-        user = try { /* TODO replace with proper error handling of asking user enter his info */
-            User.load(this)
+
+        try { /* TODO replace with proper error handling of asking user enter his info */
+             user = User.load(this)
         } catch (e: java.io.FileNotFoundException) {
-            User("No User Found", User.generateColor())
+            //this should never happen
+            createDefaultUser()
         }
 
-        val playButton = findViewById<Button>(R.id.launchSpotifyButton)
-        playButton.setOnClickListener {
+        checkUser()
+
+        launchSpotifyButton.setOnClickListener {
             authenticateUser()
         }
 
-        findViewById<TextView>(R.id.username).apply {
-            text = user.name
+        saveChangeButton.setOnClickListener{
+            updateUser()
         }
-
-        findViewById<TextView>(R.id.usernameInitial).apply {
-            text = user.initial.uppercaseChar().toString()
-        }
-
-        findViewById<TextView>(R.id.spotifyStatus).apply {
-            text = if (user.spotifyLinked) "linked" else "unlinked"
-        }
+        usernameField.setText(user.name)
+        usernameInitialText.setText(user.initial.uppercaseChar().toString())
+        spotifyStatusText.apply {text = if (user.spotifyLinked) "linked" else "unlinked"}
 
 
-        val logoutButton: Button = findViewById(R.id.logoutButton)
         logoutButton.setOnClickListener{
             firebaseAuth.signOut()
             startActivity(Intent(this, MainActivity::class.java))
             finish()
         }
-        findViewById<ImageView>(R.id.userIcon).setColorFilter(PorterDuffColorFilter(user.color, PorterDuff.Mode.ADD))
+
+        googleSignInButton.setOnClickListener{
+            startActivity(Intent(this,GoogleSignInActivity::class.java))
+        }
+
+
+        userIcon.setColorFilter(PorterDuffColorFilter(user.color, PorterDuff.Mode.ADD))
         if (intent.getBooleanExtra(COMING_FROM_SPOTIFY_ACTIVITY_FLAG, false)){
             addPlaylistsToUser()
         }
 
         userPlaylists = user.getPlaylists().toList()
-        val playlistDisplay : RecyclerView = findViewById(R.id.playlist_recycler_view)
         playlistDisplay.adapter = PlaylistAdapter(userPlaylists, this)
         playlistDisplay.layoutManager = (LinearLayoutManager(this))
         playlistDisplay.setHasFixedSize(true)
@@ -85,7 +98,42 @@ class UserProfileActivity : AppCompatActivity(), PlaylistAdapter.OnPlaylistClick
         startActivity(intent)
     }
 
+    private fun instantiateViews(){
+        firebaseAuth = FirebaseAuth.getInstance()
+        usernameField = findViewById(R.id.username)
+        launchSpotifyButton = findViewById(R.id.launchSpotifyButton)
+        logoutButton = findViewById(R.id.logoutButton)
+        saveChangeButton = findViewById(R.id.saveUserButton)
+        usernameInitialText = findViewById(R.id.usernameInitial)
+        spotifyStatusText = findViewById(R.id.spotifyStatus)
+        googleSignInButton = findViewById(R.id.googleSignInButton)
+        playlistDisplay = findViewById(R.id.playlist_recycler_view)
+        userIcon = findViewById(R.id.userIcon)
+    }
+    //I think this should be on the main page, this way, we don't have to go to this activity to lauch a game
+    private fun createDefaultUser(){
+        user = User("Default")
+        db.setUser("1",user)
+        user.save(this)
 
+    }
+
+    private fun updateUser(){
+        user = User(usernameField.text.toString())
+        val firebaseUser = firebaseAuth.currentUser
+        if(firebaseUser == null){
+            db.setUser("1",user)
+        }else{
+            db.setUser(firebaseUser.uid,user)
+        }
+        user.save(this)
+    }
+
+    private fun prefillFields(){
+
+
+
+    };
     private fun addPlaylistsToUser(){
         val map = intent!!.getSerializableExtra("nameToUid") as HashMap<String, String>
         user.addSpotifyPlaylistUids(map)
@@ -104,9 +152,23 @@ class UserProfileActivity : AppCompatActivity(), PlaylistAdapter.OnPlaylistClick
         val firebaseUser = firebaseAuth.currentUser
         if(firebaseUser == null){
             //user not logged in
-            startActivity(Intent(this, GoogleSignInActivity::class.java))
-            finish()
+            //startActivity(Intent(this, GoogleSignInActivity::class.java))
+            //finish()
         }else{
+            //check whether it is a new user of not, if yes, we saved the default user info in the cloud
+            //if no we load the data from the cloud.
+            var mockUser = db.getUser(firebaseUser.uid)
+            mockUser.addOnSuccessListener { l ->
+                if(l == null){
+                    db.setUser(firebaseUser.uid,user)
+                }else{
+                    user = l
+                    user.save(this)
+                }
+                usernameField.setText(user.name)
+
+            }
+
             //user logged in
             //get user info
             /* TODO MAP FIREBASE INFO TO USER*/
