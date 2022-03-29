@@ -4,8 +4,6 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
 import android.widget.*
-import androidx.recyclerview.widget.RecyclerView
-import com.google.android.gms.tasks.Task
 
 open class LobbyActivity : AppCompatActivity() {
     private val db = this.initDatabase()
@@ -83,7 +81,7 @@ open class LobbyActivity : AppCompatActivity() {
         withHintTextView = findViewById(R.id.withHintText)
         privateTextView  = findViewById(R.id.privateText)
         privateTextView  = findViewById(R.id.privateText)
-        playersRecyclerView = findViewById(R.id.playersRecyclerView)
+        playersRecyclerView = findViewById(R.id.playersListView)
         namesAdapter = ArrayAdapter(this, android.R.layout.simple_list_item_1)
         playersRecyclerView.adapter = namesAdapter
 
