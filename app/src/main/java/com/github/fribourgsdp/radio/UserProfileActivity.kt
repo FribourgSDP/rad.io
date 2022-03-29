@@ -5,11 +5,13 @@ import android.graphics.PorterDuff
 import android.graphics.PorterDuffColorFilter
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.view.View
 import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.spotify.sdk.android.auth.AuthorizationClient
 import com.spotify.sdk.android.auth.AuthorizationRequest
 import com.spotify.sdk.android.auth.AuthorizationResponse
@@ -71,12 +73,17 @@ class UserProfileActivity : AppCompatActivity(), PlaylistAdapter.OnPlaylistClick
         if (intent.getBooleanExtra(COMING_FROM_SPOTIFY_ACTIVITY_FLAG, false)){
             addPlaylistsToUser()
         }
+        if (intent.getBooleanExtra(COMING_FROM_ADD_PLAYLIST_ACTIVITY_FLAG, false)){
+            addManualPlaylistToUser()
+        }
 
         userPlaylists = user.getPlaylists().toList()
         val playlistDisplay : RecyclerView = findViewById(R.id.playlist_recycler_view)
         playlistDisplay.adapter = PlaylistAdapter(userPlaylists, this)
         playlistDisplay.layoutManager = (LinearLayoutManager(this))
         playlistDisplay.setHasFixedSize(true)
+
+        findViewById<FloatingActionButton>(R.id.addPlaylistButton).setOnClickListener{startActivity(Intent(this, AddPlaylistActivity::class.java))}
     }
 
     override fun onItemClick(position: Int) {
@@ -91,6 +98,11 @@ class UserProfileActivity : AppCompatActivity(), PlaylistAdapter.OnPlaylistClick
         user.addSpotifyPlaylistUids(map)
         val playlists = intent!!.getSerializableExtra("playlists") as HashSet<Playlist>
         user.addPlaylists(playlists)
+    }
+
+    private fun addManualPlaylistToUser(){
+        val playlist = intent!!.getSerializableExtra("playlists") as HashSet<Playlist>
+        user.addPlaylists(playlist)
     }
 
 
