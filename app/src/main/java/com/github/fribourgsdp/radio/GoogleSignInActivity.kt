@@ -100,8 +100,8 @@ class GoogleSignInActivity : AppCompatActivity() {
             //check if user is new or existing
             if (authResult.additionalUserInfo!!.isNewUser) {
                 //user is new - Account Create
-                val mail = saveUserInDatabse(authResult)
-                saveTestUser(this, mail)
+               // val mail = saveUserInDatabse(authResult)
+                //saveTestUser(this, mail)
                 Toast.makeText(this@GoogleSignInActivity, "Account created", Toast.LENGTH_SHORT)
                     .show()
             } else {
