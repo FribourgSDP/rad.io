@@ -6,6 +6,7 @@ import android.content.pm.PackageManager
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import android.Manifest
+import android.content.Intent
 import java.lang.Exception
 import io.agora.rtc.RtcEngine
 import io.agora.rtc.IRtcEngineEventHandler
@@ -57,9 +58,17 @@ class VoiceOverIPActivity : AppCompatActivity() {
         mRtcEngine!!.joinChannel(TOKEN, CHANNEL, "", 0)
     }
 
+    
     override fun onDestroy() {
         super.onDestroy()
         mRtcEngine?.leaveChannel()
         RtcEngine.destroy()
+    }
+
+    override fun onBackPressed() {
+        super.onBackPressed()
+        val intent = Intent(this, MainActivity::class.java)
+        startActivity(intent)
+        finish()
     }
 }
