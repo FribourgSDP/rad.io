@@ -3,17 +3,17 @@ package com.github.fribourgsdp.radio
 import android.content.Intent
 import android.graphics.PorterDuff
 import android.graphics.PorterDuffColorFilter
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.google.firebase.auth.FirebaseAuth
 import com.spotify.sdk.android.auth.AuthorizationClient
 import com.spotify.sdk.android.auth.AuthorizationRequest
 import com.spotify.sdk.android.auth.AuthorizationResponse
-import com.google.firebase.auth.FirebaseAuth
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 
@@ -22,6 +22,7 @@ const val REDIRECT_URI = "com.github.fribourgsdp.radio://callback"
 const val SCOPES = "playlist-read-private,playlist-read-collaborative"
 const val PLAYLIST_DATA = "com.github.fribourgsdp.radio.PLAYLIST_INNER_DATA"
 const val COMING_FROM_SPOTIFY_ACTIVITY_FLAG = "com.github.fribourgsdp.radio.spotifyDataParsing"
+const val RECREATE_USER = "com.github.fribourgsdp.radio.avoidRecreatingUser"
 
 class UserProfileActivity : AppCompatActivity(), PlaylistAdapter.OnPlaylistClickListener {
     private lateinit var user : User
@@ -56,10 +57,6 @@ class UserProfileActivity : AppCompatActivity(), PlaylistAdapter.OnPlaylistClick
             text = user.initial.uppercaseChar().toString()
         }
 
-        findViewById<TextView>(R.id.spotifyStatus).apply {
-            text = if (user.spotifyLinked) "linked" else "unlinked"
-        }
-
 
         val logoutButton: Button = findViewById(R.id.logoutButton)
         logoutButton.setOnClickListener{
@@ -70,6 +67,12 @@ class UserProfileActivity : AppCompatActivity(), PlaylistAdapter.OnPlaylistClick
         findViewById<ImageView>(R.id.userIcon).setColorFilter(PorterDuffColorFilter(user.color, PorterDuff.Mode.ADD))
         if (intent.getBooleanExtra(COMING_FROM_SPOTIFY_ACTIVITY_FLAG, false)){
             addPlaylistsToUser()
+            user.linkedSpotify = true
+            user.save(this)
+        }
+
+        findViewById<TextView>(R.id.spotifyStatus).apply {
+            text = if (user.spotifyLinked) "linked" else "unlinked"
         }
 
         userPlaylists = user.getPlaylists().toList()
@@ -77,6 +80,14 @@ class UserProfileActivity : AppCompatActivity(), PlaylistAdapter.OnPlaylistClick
         playlistDisplay.adapter = PlaylistAdapter(userPlaylists, this)
         playlistDisplay.layoutManager = (LinearLayoutManager(this))
         playlistDisplay.setHasFixedSize(true)
+    }
+
+    override fun onBackPressed() {
+        super.onBackPressed()
+        val intent = Intent(this, MainActivity::class.java)
+        intent.putExtra(RECREATE_USER, false)
+        startActivity(intent)
+        finish()
     }
 
     override fun onItemClick(position: Int) {
