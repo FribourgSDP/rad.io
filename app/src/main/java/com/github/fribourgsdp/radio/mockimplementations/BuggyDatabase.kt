@@ -36,6 +36,10 @@ class BuggyDatabase : Database {
         return Tasks.forException(Exception("Error"))
     }
 
+    override fun generateUserId(): Task<Long> {
+        return Tasks.forException(Exception("Error"))
+    }
+
     override fun openLobby(id: Long, settings: Game.Settings): Task<Void> {
         return Tasks.forException(Exception("Error"))
     }
