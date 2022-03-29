@@ -33,8 +33,12 @@ class MainActivity : AppCompatActivity() {
         val mockUser = User("Saved User", User.generateColor())
         val mockPlaylist1 = Playlist("test playlist", Genre.COUNTRY)
         val mockPlaylist2 = Playlist("empty playlist", Genre.NONE)
+        val mockPlaylist3 = Playlist("empty playlist2", Genre.HIPHOP)
+        val mockPlaylist4 = Playlist("empty playlist3", Genre.HIPHOP)
+        val mockPlaylist5 = Playlist("empty playlist4", Genre.KPOP)
+        val mockPlaylist6 = Playlist("empty playlist5", Genre.ROCK)
         mockPlaylist1.addSongs(setOf(Song("test Song 1", "test artist1"), Song("test Song 2", "test artist2")))
-        mockUser.addPlaylists(setOf(mockPlaylist1, mockPlaylist2))
+        mockUser.addPlaylists(setOf(mockPlaylist1, mockPlaylist2, mockPlaylist3, mockPlaylist4, mockPlaylist5, mockPlaylist6))
         mockUser.save(this)
     }
 }
