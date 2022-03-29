@@ -44,19 +44,19 @@
             android:layout_height="60dp">
 
             <EditText
-                android:id="@+id/songName"
+                android:id="@+id/addSongToPlaylistSongName"
                 android:layout_width="170dp"
                 android:layout_height="49dp"
                 android:hint="@string/song_name"
                 android:minWidth="48dp"
                 android:minHeight="48dp"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toStartOf="@+id/artistName"
+                app:layout_constraintEnd_toStartOf="@+id/addSongToPlaylistArtistName"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
             <EditText
-                android:id="@+id/artistName"
+                android:id="@+id/addSongToPlaylistArtistName"
                 android:layout_width="195dp"
                 android:layout_height="48dp"
                 android:hint="@string/artist_name"
@@ -68,17 +68,17 @@
         </androidx.constraintlayout.widget.ConstraintLayout>
 
         <TextView
-            android:id="@+id/errorTextView"
+            android:id="@+id/addPlaylistErrorTextView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textColor="#F44336" />
 
         <Button
-            android:id="@+id/addBtn"
+            android:id="@+id/addSongToPlaylistBtn"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:onClick="addItems"
-            android:text="@string/add_new_item" />
+            android:text="@string/add_song" />
 
         <ListView
             android:id="@android:id/list"
@@ -92,7 +92,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:onClick="createPlaylist"
-        android:text="CREATE PLAYLIST"
+        android:text="@string/create_playlist"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

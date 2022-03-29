@@ -21,11 +21,13 @@ class AddPlaylistActivity : AppCompatActivity() {
         listAdapter = ArrayAdapter(this, android.R.layout.simple_list_item_1, listNames)
         listView = findViewById(android.R.id.list)
         listView.adapter = listAdapter
-        errorTextView = findViewById(R.id.errorTextView)
+        errorTextView = findViewById(R.id.addPlaylistErrorTextView)
     }
     fun addItems(view : View) : Unit {
-        val songName : String = findViewById<EditText>(R.id.songName).text.toString()
-        val artistName : String = findViewById<EditText>(R.id.artistName).text.toString()
+        val songNameTextView : EditText = findViewById(R.id.addSongToPlaylistSongName)
+        val artistNameTextView : EditText = findViewById(R.id.addSongToPlaylistArtistName)
+        val songName : String = songNameTextView.text.toString()
+        val artistName : String = artistNameTextView.text.toString()
 
         if (songName.isEmpty()){
             errorTextView.text = this.applicationContext.resources.getText(R.string.name_cannot_be_empty)
@@ -33,6 +35,8 @@ class AddPlaylistActivity : AppCompatActivity() {
             listSongs.add(Song(songName, artistName))
             listNames.add(0, "$artistName : $songName")
             errorTextView.text = ""
+            songNameTextView.setText("")
+            artistNameTextView.setText("")
             listAdapter.notifyDataSetChanged()
         }
     }
@@ -48,7 +52,7 @@ class AddPlaylistActivity : AppCompatActivity() {
             // TODO: Add feature to select genre
             playlist.add(Playlist(playlistName, listSongs.toSet(), Genre.NONE))
             intent.putExtra("playlists", playlist)
-            intent.putExtra(COMING_FROM_ADD_PLAYLIST_ACTIVITY_FLAG, false)
+            intent.putExtra(COMING_FROM_ADD_PLAYLIST_ACTIVITY_FLAG, true)
             startActivity(intent)
         }
     }

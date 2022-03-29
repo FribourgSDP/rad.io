@@ -47,4 +47,6 @@
     <string name="add_new_item">Add New Item</string>
     <string name="song_name">Song Name</string>
     <string name="artist_name">Artist Name</string>
+    <string name="create_playlist">CREATE PLAYLIST</string>
+    <string name="add_song">ADD SONG</string>
 </resources>
