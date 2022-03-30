@@ -1,5 +1,6 @@
 package com.github.fribourgsdp.radio
 
+
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.content.pm.PackageManager
@@ -10,10 +11,15 @@ import android.content.Intent
 import java.lang.Exception
 import io.agora.rtc.RtcEngine
 import io.agora.rtc.IRtcEngineEventHandler
+import java.io.File
+import java.io.FileInputStream
+import java.util.*
+
+const val AGORA_INVALID_USER = "This user should not be using the service."
 
 class VoiceOverIPActivity : AppCompatActivity() {
+    private val APP_ID: String = "971046257e964b73bafc7f9458fa9996"
 
-    private val APP_ID = "971046257e964b73bafc7f9458fa9996"
     private val CHANNEL = "testNathanMaxence"
     private val CERTIFICATE = "5822360c68714dcca1382167d4070673"
     private val TOKEN = "006971046257e964b73bafc7f9458fa9996IAAbJr0QnsdkBXv2l5DoNI6N/JcK5z0gdkxdY24umGNotRwU6J0AAAAAEAAg4mLWLjNDYgEAAQAuM0Ni"
@@ -22,7 +28,6 @@ class VoiceOverIPActivity : AppCompatActivity() {
     }
 
     private val PERMISSION_REQ_ID_RECORD_AUDIO = 22
-    private val PERMISSION_REQ_ID_CAMERA = PERMISSION_REQ_ID_RECORD_AUDIO + 1
     /*
         Check if the permissions necessary for voice calls are granted in the app.
         If they're nt granted, use Android built-in functionality to request them.
@@ -45,6 +50,7 @@ class VoiceOverIPActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_voice_over_ipactivity)
+        println("APP id is $APP_ID")
         if (checkSelfPermission(Manifest.permission.RECORD_AUDIO, PERMISSION_REQ_ID_RECORD_AUDIO)) {
             initializeAndJoinChannel();
         }
@@ -58,7 +64,7 @@ class VoiceOverIPActivity : AppCompatActivity() {
         mRtcEngine!!.joinChannel(TOKEN, CHANNEL, "", 0)
     }
 
-    
+
     override fun onDestroy() {
         super.onDestroy()
         mRtcEngine?.leaveChannel()
