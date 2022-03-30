@@ -6,14 +6,13 @@ import android.view.View
 import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
 
-const val COMING_FROM_ADD_PLAYLIST_ACTIVITY_FLAG : String = "com.github.fribourgsdp.radio.addPlaylistManually"
-
 class AddPlaylistActivity : AppCompatActivity() {
     private val listSongs = ArrayList<Song>()
     private var listNames = ArrayList<String>()
     lateinit var listAdapter: ArrayAdapter<String>
     lateinit var listView : ListView
     lateinit var errorTextView : TextView
+    lateinit var user : User
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -22,6 +21,12 @@ class AddPlaylistActivity : AppCompatActivity() {
         listView = findViewById(android.R.id.list)
         listView.adapter = listAdapter
         errorTextView = findViewById(R.id.addPlaylistErrorTextView)
+
+        user = try { /* TODO replace with proper error handling of asking user enter his info */
+            User.load(this)
+        } catch (e: java.io.FileNotFoundException) {
+            User("No User Found", User.generateColor())
+        }
     }
     fun addItems(view : View) : Unit {
         val songNameTextView : EditText = findViewById(R.id.addSongToPlaylistSongName)
@@ -48,11 +53,10 @@ class AddPlaylistActivity : AppCompatActivity() {
             errorTextView.text = this.applicationContext.resources.getText(R.string.playlist_is_empty)
         } else {
             val intent = Intent(this@AddPlaylistActivity, UserProfileActivity::class.java)
-            val playlist = HashSet<Playlist>()
+            val playlist = Playlist(playlistName, listSongs.toSet(), Genre.NONE)
             // TODO: Add feature to select genre
-            playlist.add(Playlist(playlistName, listSongs.toSet(), Genre.NONE))
-            intent.putExtra("playlists", playlist)
-            intent.putExtra(COMING_FROM_ADD_PLAYLIST_ACTIVITY_FLAG, true)
+            user.addPlaylist(playlist)
+            user.save(this)
             startActivity(intent)
         }
     }

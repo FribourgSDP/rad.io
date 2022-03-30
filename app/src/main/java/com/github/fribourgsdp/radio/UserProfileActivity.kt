@@ -79,10 +79,6 @@ class UserProfileActivity : AppCompatActivity(), PlaylistAdapter.OnPlaylistClick
             text = if (user.spotifyLinked) "linked" else "unlinked"
         }
 
-        if (intent.getBooleanExtra(COMING_FROM_ADD_PLAYLIST_ACTIVITY_FLAG, false)){
-            addManualPlaylistToUser()
-            user.save(this)
-        }
 
         userPlaylists = user.getPlaylists().toList()
         val playlistDisplay : RecyclerView = findViewById(R.id.playlist_recycler_view)
@@ -113,11 +109,6 @@ class UserProfileActivity : AppCompatActivity(), PlaylistAdapter.OnPlaylistClick
         user.addSpotifyPlaylistUids(map)
         val playlists = intent!!.getSerializableExtra("playlists") as HashSet<Playlist>
         user.addPlaylists(playlists)
-    }
-
-    private fun addManualPlaylistToUser(){
-        val playlist = intent!!.getSerializableExtra("playlists") as HashSet<Playlist>
-        user.addPlaylists(playlist)
     }
 
 
