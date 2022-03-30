@@ -65,10 +65,7 @@ class GameSettingsActivity : AppCompatActivity() {
     }
 
     private fun getHost() : User {
-        // TODO: Update once we can get the user of the phone
-        val host = User("The best player")
-        host.addPlaylists(setOf(Playlist("Rap Playlist"), Playlist("Country Playlist")))
-        return host
+        return User.load(this)
     }
 
     private fun getUserPlaylistNames(user: User) : Array<String> {
