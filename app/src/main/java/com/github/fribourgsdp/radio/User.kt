@@ -2,6 +2,7 @@ package com.github.fribourgsdp.radio
 
 
 import android.content.Context
+import com.google.android.gms.tasks.Task
 import kotlin.random.Random
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.encodeToString
@@ -24,6 +25,7 @@ class User (val name: String, val color: Int) {
     private var linkedSpotify: Boolean = false
     val initial get(): Char = name.elementAt(0)
     val spotifyLinked get(): Boolean = linkedSpotify
+    var id : String = ""
 
     companion object {
         fun load( context: Context, path: String = USER_DATA_PATH) : User {
@@ -35,6 +37,7 @@ class User (val name: String, val color: Int) {
                 (Random.nextInt(100, 200) shl 16) or
                 (Random.nextInt(100, 200) shl 8) or
                 Random.nextInt(100, 200)
+
     }
 
     fun save(context: Context){
