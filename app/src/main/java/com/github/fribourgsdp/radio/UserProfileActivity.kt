@@ -23,7 +23,6 @@ const val MY_CLIENT_ID = "9dc40237547f4ffaa41bf1e07ea0bba1"
 const val REDIRECT_URI = "com.github.fribourgsdp.radio://callback"
 const val SCOPES = "playlist-read-private,playlist-read-collaborative"
 const val PLAYLIST_DATA = "com.github.fribourgsdp.radio.PLAYLIST_INNER_DATA"
-const val COMING_FROM_SPOTIFY_ACTIVITY_FLAG = "com.github.fribourgsdp.radio.spotifyDataParsing"
 const val RECREATE_USER = "com.github.fribourgsdp.radio.avoidRecreatingUser"
 
 class UserProfileActivity : AppCompatActivity(), PlaylistAdapter.OnPlaylistClickListener {
@@ -69,12 +68,6 @@ class UserProfileActivity : AppCompatActivity(), PlaylistAdapter.OnPlaylistClick
         findViewById<ImageView>(R.id.userIcon).colorFilter =
             PorterDuffColorFilter(user.color, PorterDuff.Mode.ADD)
 
-        if (intent.getBooleanExtra(COMING_FROM_SPOTIFY_ACTIVITY_FLAG, false)){
-            addPlaylistsToUser()
-            user.linkedSpotify = true
-            user.save(this)
-        }
-
         findViewById<TextView>(R.id.spotifyStatus).apply {
             text = if (user.spotifyLinked) "linked" else "unlinked"
         }
@@ -103,13 +96,6 @@ class UserProfileActivity : AppCompatActivity(), PlaylistAdapter.OnPlaylistClick
         startActivity(intent)
     }
 
-
-    private fun addPlaylistsToUser(){
-        val map = intent!!.getSerializableExtra("nameToUid") as HashMap<String, String>
-        user.addSpotifyPlaylistUids(map)
-        val playlists = intent!!.getSerializableExtra("playlists") as HashSet<Playlist>
-        user.addPlaylists(playlists)
-    }
 
 
     private fun authenticateUser() {
