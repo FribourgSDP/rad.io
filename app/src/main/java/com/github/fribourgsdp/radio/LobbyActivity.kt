@@ -27,7 +27,7 @@ open class LobbyActivity : AppCompatActivity() {
 
     private lateinit var launchGameButton: Button
 
-    private lateinit var playersRecyclerView : ListView
+    private lateinit var playersListView : ListView
     private lateinit var namesAdapter : ArrayAdapter<String>
 
     private val gameBuilder = Game.Builder()
@@ -112,9 +112,9 @@ open class LobbyActivity : AppCompatActivity() {
         withHintTextView = findViewById(R.id.withHintText)
         privateTextView  = findViewById(R.id.privateText)
         privateTextView  = findViewById(R.id.privateText)
-        playersRecyclerView = findViewById(R.id.playersListView)
+        playersListView = findViewById(R.id.playersListView)
         namesAdapter = ArrayAdapter(this, android.R.layout.simple_list_item_1)
-        playersRecyclerView.adapter = namesAdapter
+        playersListView.adapter = namesAdapter
 
         launchGameButton = findViewById(R.id.launchGameButton)
 
