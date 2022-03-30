@@ -22,11 +22,6 @@
             android:name=".VoiceOverIPActivity"
             android:exported="false" />
         <activity
-            android:name=".VoiceOverIpActivity"
-            android:exported="false"
-            android:label="@string/title_activity_voice_over_ip"
-            android:theme="@style/Theme.Radio.NoActionBar" />
-        <activity
             android:name=".PlaylistDisplayActivity"
             android:exported="false" />
         <activity
