@@ -74,7 +74,7 @@ class MainActivityTest {
     fun correctTransitionToFireBaseTestActivity(){
         Intents.init()
         Espresso.onView(withId(R.id.FireBaseButton)).perform(ViewActions.click())
-        Intents.intended(IntentMatchers.hasComponent(FireBaseTestActivity::class.java.name))
+        Intents.intended(IntentMatchers.hasComponent(CreateUserProfileActivity::class.java.name))
         Intents.release()
     }
 }
