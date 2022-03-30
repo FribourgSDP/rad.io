@@ -22,11 +22,7 @@ class AddPlaylistActivity : AppCompatActivity() {
         listView.adapter = listAdapter
         errorTextView = findViewById(R.id.addPlaylistErrorTextView)
 
-        user = try { /* TODO replace with proper error handling of asking user enter his info */
-            User.load(this)
-        } catch (e: java.io.FileNotFoundException) {
-            User("No User Found", User.generateColor())
-        }
+        user = UserProfileActivity.loadUser(this)
     }
     fun addItems(view : View) : Unit {
         val songNameTextView : EditText = findViewById(R.id.addSongToPlaylistSongName)

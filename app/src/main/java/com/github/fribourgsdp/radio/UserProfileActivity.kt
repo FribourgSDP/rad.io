@@ -1,5 +1,6 @@
 package com.github.fribourgsdp.radio
 
+import android.content.Context
 import android.content.Intent
 import android.graphics.PorterDuff
 import android.graphics.PorterDuffColorFilter
@@ -39,11 +40,7 @@ class UserProfileActivity : AppCompatActivity(), PlaylistAdapter.OnPlaylistClick
         firebaseAuth = FirebaseAuth.getInstance()
         checkUser()
 
-        user = try { /* TODO replace with proper error handling of asking user enter his info */
-            User.load(this)
-        } catch (e: java.io.FileNotFoundException) {
-            User("No User Found", User.generateColor())
-        }
+        user = loadUser(this)
 
         val playButton = findViewById<Button>(R.id.launchSpotifyButton)
         playButton.setOnClickListener {
@@ -97,7 +94,6 @@ class UserProfileActivity : AppCompatActivity(), PlaylistAdapter.OnPlaylistClick
     }
 
 
-
     private fun authenticateUser() {
         AuthorizationClient.openLoginInBrowser(this, buildRequest())
     }
@@ -123,6 +119,13 @@ class UserProfileActivity : AppCompatActivity(), PlaylistAdapter.OnPlaylistClick
                 .setScopes(arrayOf(SCOPES))
                 .setShowDialog(true)
                 .build()
+        }
+        fun loadUser(ctx : Context) : User{
+            return try { /* TODO replace with proper error handling of asking user enter his info */
+                User.load(ctx)
+            } catch (e: java.io.FileNotFoundException) {
+                User("No User Found", User.generateColor())
+            }
         }
     }
 }

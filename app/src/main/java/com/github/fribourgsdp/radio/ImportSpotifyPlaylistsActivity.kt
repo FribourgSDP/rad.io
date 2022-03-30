@@ -36,11 +36,7 @@ class ImportSpotifyPlaylistsActivity : AppCompatActivity() {
     companion object {
 
         fun saveInfoToUser(playlistNameToUId: HashMap<String, String>, playlists: Set<Playlist>, ctx : Context): Unit {
-            val user = try { /* TODO replace with proper error handling of asking user enter his info */
-                User.load(ctx)
-            } catch (e: java.io.FileNotFoundException) {
-                User("No User Found", User.generateColor())
-            }
+            val user = UserProfileActivity.loadUser(ctx)
             user.addSpotifyPlaylistUids(playlistNameToUId)
             user.addPlaylists(playlists)
             user.save(ctx)
