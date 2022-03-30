@@ -24,6 +24,7 @@ const val REDIRECT_URI = "com.github.fribourgsdp.radio://callback"
 const val SCOPES = "playlist-read-private,playlist-read-collaborative"
 const val PLAYLIST_DATA = "com.github.fribourgsdp.radio.PLAYLIST_INNER_DATA"
 const val COMING_FROM_SPOTIFY_ACTIVITY_FLAG = "com.github.fribourgsdp.radio.spotifyDataParsing"
+const val RECREATE_USER = "com.github.fribourgsdp.radio.avoidRecreatingUser"
 
 class UserProfileActivity : AppCompatActivity(), PlaylistAdapter.OnPlaylistClickListener {
     private lateinit var user : User
@@ -65,7 +66,9 @@ class UserProfileActivity : AppCompatActivity(), PlaylistAdapter.OnPlaylistClick
             startActivity(Intent(this, MainActivity::class.java))
             finish()
         }
-        findViewById<ImageView>(R.id.userIcon).setColorFilter(PorterDuffColorFilter(user.color, PorterDuff.Mode.ADD))
+        findViewById<ImageView>(R.id.userIcon).colorFilter =
+            PorterDuffColorFilter(user.color, PorterDuff.Mode.ADD)
+
         if (intent.getBooleanExtra(COMING_FROM_SPOTIFY_ACTIVITY_FLAG, false)){
             addPlaylistsToUser()
             user.linkedSpotify = true
@@ -75,8 +78,10 @@ class UserProfileActivity : AppCompatActivity(), PlaylistAdapter.OnPlaylistClick
         findViewById<TextView>(R.id.spotifyStatus).apply {
             text = if (user.spotifyLinked) "linked" else "unlinked"
         }
+
         if (intent.getBooleanExtra(COMING_FROM_ADD_PLAYLIST_ACTIVITY_FLAG, false)){
             addManualPlaylistToUser()
+            user.save(this)
         }
 
         userPlaylists = user.getPlaylists().toList()
