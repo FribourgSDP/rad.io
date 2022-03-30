@@ -38,13 +38,14 @@ class UserProfileActivityTest : TestCase() {
     fun userSavedLocallyIsDisplayed(){
         Intents.init()
 
-        val testUser = User("Test")
+        val testUser = User("TestSavedLocally")
         testUser.save(ctx)
         val intent: Intent = Intent(ctx, UserProfileActivity::class.java)
 
         ActivityScenario.launch<UserProfileActivity>(intent).use { scenario ->
 
-            onView(withId(R.id.username)).check(matches(withText(testUser.name)));
+            onView(withId(R.id.username)).
+            check(matches(withText(testUser.name)));
 
 
         }
@@ -132,13 +133,16 @@ class UserProfileActivityTest : TestCase() {
 
 
     @Test
-    fun NoUserConnectedTest() {
+    fun cliclOnGoogleButtonSendToGoogleSignInActivityTest() {
 
         Intents.init()
         val context: Context = ApplicationProvider.getApplicationContext()
 
         val intent: Intent = Intent(context, UserProfileActivity::class.java)
         ActivityScenario.launch<UserProfileActivity>(intent).use { scenario ->
+
+            val googleSignInButton = Espresso.onView(ViewMatchers.withId(R.id.googleSignInButton))
+            googleSignInButton.perform(click())
 
             Intents.intended(
                 Matchers.allOf(
