@@ -8,6 +8,7 @@ import androidx.test.espresso.Espresso
 import androidx.test.espresso.intent.Intents
 import androidx.test.espresso.intent.matcher.IntentMatchers
 import androidx.test.ext.junit.rules.ActivityScenarioRule
+import androidx.test.rule.GrantPermissionRule
 import io.agora.rtc.*
 import io.agora.rtc.audio.AudioRecordingConfiguration
 import io.agora.rtc.gl.EglBase
@@ -28,6 +29,8 @@ import org.junit.Test
 import java.util.ArrayList
 
 class VoiceOverIPActivityTest {
+
+    @get:Rule var permissionRule = GrantPermissionRule.grant(android.Manifest.permission.RECORD_AUDIO)
 
     @Test
     fun pressBackWorks(){
