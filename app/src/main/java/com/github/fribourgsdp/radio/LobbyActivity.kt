@@ -1,5 +1,6 @@
 package com.github.fribourgsdp.radio
 
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
@@ -40,22 +41,52 @@ open class LobbyActivity : AppCompatActivity() {
         updateTextViews()
 
         if (isHost) {
-            db.getLobbyId().addOnSuccessListener { uid ->
-                uuidTextView.text = getString(R.string.uid_text_format, uid)
-                linkToDatabase(uid)
-            }.addOnFailureListener {
-                uuidTextView.text = getString(R.string.uid_error)
-            }
+            initLobbyAsHost()
         } else {
-            val uid = intent.getLongExtra(GAME_UID_KEY, -1)
-            if (uid >= 0) {
-                uuidTextView.text = getString(R.string.uid_text_format, uid)
-                linkToDatabase(uid)
-            } else {
-                uuidTextView.text = getString(R.string.uid_error_join)
-            }
+            initLobbyAsPlayer()
         }
 
+    }
+
+    private fun initLobbyAsHost() {
+        db.getLobbyId().addOnSuccessListener { uid ->
+            uuidTextView.text = getString(R.string.uid_text_format, uid)
+            linkToDatabase(uid)
+
+            // Setup the launch button for hosts
+            launchGameButton.setOnClickListener {
+
+                // Try to open the game on the database
+                db.openGame(uid).addOnSuccessListener {
+
+                    // If the game is created, try to launch it
+                    db.launchGame(uid).addOnSuccessListener {
+
+                        // When launched correctly, go to the game activity
+                        goToGameActivity(true)
+
+                    }.addOnFailureListener {
+                        uuidTextView.text = getString(R.string.launch_game_error)
+                    }
+
+                }.addOnFailureListener {
+                    uuidTextView.text = getString(R.string.open_game_error)
+                }
+            }
+
+        }.addOnFailureListener {
+            uuidTextView.text = getString(R.string.uid_error)
+        }
+    }
+
+    private fun initLobbyAsPlayer() {
+        val uid = intent.getLongExtra(GAME_UID_KEY, -1)
+        if (uid >= 0) {
+            uuidTextView.text = getString(R.string.uid_text_format, uid)
+            linkToDatabase(uid)
+        } else {
+            uuidTextView.text = getString(R.string.uid_error_join)
+        }
     }
 
     open fun initDatabase(): Database {
@@ -136,6 +167,12 @@ open class LobbyActivity : AppCompatActivity() {
                 val newList = snapshot.get("players")!! as ArrayList<String>
                 updatePlayersList(newList)
 
+                val isGameLaunched = snapshot.getBoolean("launched")
+
+                if (!isHost && isGameLaunched != null && isGameLaunched) {
+                    goToGameActivity(false)
+                }
+
             } else {
                 uuidTextView.text = getString(R.string.uid_error)
             }
@@ -148,5 +185,12 @@ open class LobbyActivity : AppCompatActivity() {
         namesAdapter.addAll(playersList)
         namesAdapter.notifyDataSetChanged()
         gameBuilder.setUserList(playersList.map { name -> User(name) })
+    }
+
+    private fun goToGameActivity(isHost: Boolean) {
+        val intent: Intent = Intent(this, GameActivity::class.java).apply {
+            putExtra(GAME_IS_HOST_KEY, isHost)
+        }
+        startActivity(intent)
     }
 }
