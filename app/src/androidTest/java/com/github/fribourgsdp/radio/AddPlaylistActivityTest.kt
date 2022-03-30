@@ -108,11 +108,19 @@ class AddPlaylistActivityTest {
 
         Intents.intended(
             allOf(
-                hasComponent(UserProfileActivity::class.java.name),
-                hasExtra(COMING_FROM_ADD_PLAYLIST_ACTIVITY_FLAG, true),
-                hasExtraWithKey("playlists")
+                hasComponent(UserProfileActivity::class.java.name)
             )
         )
+
+        val user = UserProfileActivity.loadUser(ctx)
+        assert(user.getPlaylists().any { p -> p.name == "Sardou playlist" })
+        user.getPlaylists().filter { p -> p.name == "Sardou playlist" }.forEach{p ->
+            run {
+                assert(p.getSongs().any { s -> s.name == "Rouge" && s.artist == "Sardou" })
+                assert(p.getSongs().any { s -> s.name == "En Chantant" && s.artist == "Sardou" })
+                assert(p.getSongs().any { s -> s.name == "Le France" && s.artist == "Sardou" })
+            }
+        }
 
         Intents.release()
     }
