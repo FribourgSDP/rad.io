@@ -1,10 +1,12 @@
 package com.github.fribourgsdp.radio
 
+import android.content.ContentValues
 import android.content.Intent
 import android.graphics.PorterDuff
 import android.graphics.PorterDuffColorFilter
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import android.widget.Button
 import android.widget.EditText
 import android.widget.ImageView
@@ -49,10 +51,11 @@ class UserProfileActivity : AppCompatActivity(), PlaylistAdapter.OnPlaylistClick
         instantiateViews()
 
 
-        try { /* TODO replace with proper error handling of asking user enter his info */
+        try {
              user = User.load(this)
         } catch (e: java.io.FileNotFoundException) {
-            //this should never happen
+            //this should never happen as a user is created and saved in the first activity
+
             createDefaultUser()
         }
 
@@ -119,21 +122,23 @@ class UserProfileActivity : AppCompatActivity(), PlaylistAdapter.OnPlaylistClick
     }
 
     private fun updateUser(){
+        val id = user.id
         user = User(usernameField.text.toString())
+        user.id = id
         val firebaseUser = firebaseAuth.currentUser
         if(firebaseUser == null){
-            db.setUser("1",user)
+            Log.w(ContentValues.TAG, "Error adding document"+id)
+
+            db.setUser(id,user)
         }else{
             db.setUser(firebaseUser.uid,user)
         }
+
         user.save(this)
+
+        usernameInitialText.setText(user.initial.uppercaseChar().toString())
     }
 
-    private fun prefillFields(){
-
-
-
-    };
     private fun addPlaylistsToUser(){
         val map = intent!!.getSerializableExtra("nameToUid") as HashMap<String, String>
         user.addSpotifyPlaylistUids(map)
@@ -150,11 +155,7 @@ class UserProfileActivity : AppCompatActivity(), PlaylistAdapter.OnPlaylistClick
     private fun checkUser(){
         //get current user
         val firebaseUser = firebaseAuth.currentUser
-        if(firebaseUser == null){
-            //user not logged in
-            //startActivity(Intent(this, GoogleSignInActivity::class.java))
-            //finish()
-        }else{
+        if(firebaseUser != null){
             //check whether it is a new user of not, if yes, we saved the default user info in the cloud
             //if no we load the data from the cloud.
             var mockUser = db.getUser(firebaseUser.uid)
@@ -168,11 +169,6 @@ class UserProfileActivity : AppCompatActivity(), PlaylistAdapter.OnPlaylistClick
                 usernameField.setText(user.name)
 
             }
-
-            //user logged in
-            //get user info
-            /* TODO MAP FIREBASE INFO TO USER*/
-
         }
     }
     companion object {
