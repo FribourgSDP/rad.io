@@ -69,4 +69,37 @@ interface Database {
      * @return a task void  so that we know if the [user] was correctly added to the lobby [id].
      */
     fun addUserToLobby(id: Long, user: User) : Task<Void>
+
+    /**
+     * Open a game on the database.
+     * @return a task void so that we know if the lobby was correctly opened.
+     */
+    fun openGame(id: Long) : Task<Void>
+
+    /**
+     * Launches a game from the lobby.
+     * @return a task void so that we know if a game was correctly launched.
+     */
+    fun launchGame(id: Long) : Task<Void>
+
+    /**
+     * Listen to the updates of the game with [id].
+     * Executes the [listener] on every update.
+     */
+    fun listenToGameUpdate(id: Long, listener: EventListener<DocumentSnapshot>)
+
+    /**
+     * Update the game [id] with the values in the [updatesMap].
+     * @return a task void so that we know if the game was correctly updated.
+     */
+    fun updateGame(id: Long, updatesMap: Map<String, Any>) : Task<Void>
+
+    /**
+     * Update the current song to [songName] in the game [id].
+     * @return a task void so that we know if the current song of the game was correctly updated.
+     */
+    fun updateCurrentSongOfGame(id: Long, songName: String) : Task<Void> {
+        return updateGame(id, hashMapOf("current_song" to songName))
+    }
+
 }

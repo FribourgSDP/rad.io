@@ -133,7 +133,8 @@ class FirestoreDatabase : Database {
             "nbRounds" to settings.nbRounds,
             "withHint" to settings.withHint,
             "private" to settings.isPrivate,
-            "players" to listOf(settings.host.name)
+            "players" to listOf(settings.host.name),
+            "launched" to false
         )
 
         return db.collection("lobby").document(id.toString())
@@ -186,6 +187,26 @@ class FirestoreDatabase : Database {
             // Success
             null
         }
+    }
+
+    override fun openGame(id: Long): Task<Void> {
+        return db.collection("games").document(id.toString())
+            .set(hashMapOf("test" to 5))
+    }
+
+    override fun launchGame(id: Long): Task<Void> {
+        return db.collection("lobby").document(id.toString())
+            .update("launched", true)
+    }
+
+    override fun listenToGameUpdate(id: Long, listener: EventListener<DocumentSnapshot>) {
+        db.collection("game").document(id.toString())
+            .addSnapshotListener(listener)
+    }
+
+    override fun updateGame(id: Long, updatesMap: Map<String, Any>): Task<Void> {
+        return db.collection("games").document(id.toString())
+            .update(updatesMap)
     }
 
 }
