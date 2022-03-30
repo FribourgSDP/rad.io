@@ -1,12 +1,9 @@
 package com.github.fribourgsdp.radio
 
-import android.util.Log
 import okhttp3.*
-import org.json.JSONException
 import java.io.IOException
-import java.util.concurrent.CompletableFuture
-import org.json.JSONObject
 import java.util.*
+import java.util.concurrent.CompletableFuture
 
 const val API_KEY = "a3454edb65483e706c127deaa11df69d"
 const val BASE_URL = "http://api.musixmatch.com/ws/1.1/"
@@ -87,10 +84,10 @@ class LyricsGetter {
                     lyrics = LYRICS_NOT_FOUND
                 } else {
                     val status = parsedResponse.getJSONObject("message").getJSONObject("header").getInt("status_code")
-                    if (status == 404) {
-                        lyrics = LYRICS_NOT_FOUND
+                    lyrics = if (status == 404) {
+                        LYRICS_NOT_FOUND
                     } else {
-                        lyrics = parsedResponse
+                        parsedResponse
                             .getJSONObject("message")
                             .getJSONObject("body")
                             .getJSONObject("lyrics")

@@ -1,5 +1,6 @@
 package com.github.fribourgsdp.radio
 
+import android.content.Context
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -17,6 +18,7 @@ var TOKEN: String? = null
 class ImportSpotifyPlaylistsActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
         setContentView(R.layout.activity_import_spotify_playlists)
         val userToken = intent.getStringExtra("auth_token")
         TOKEN = userToken
@@ -25,19 +27,19 @@ class ImportSpotifyPlaylistsActivity : AppCompatActivity() {
         val playlistsNameToUid = playlistMap.get()
         val playlists = loadSongsToPlaylists(playlistsNameToUid)
 
-        var intent = Intent(this@ImportSpotifyPlaylistsActivity, UserProfileActivity::class.java)
-        intent = constructPlaylistIntent(intent, playlistsNameToUid, playlists)
+        val intent = Intent(this@ImportSpotifyPlaylistsActivity, UserProfileActivity::class.java)
+        saveInfoToUser(playlistsNameToUid, playlists, this)
         startActivity(intent)
     }
 
 
     companion object {
 
-        fun constructPlaylistIntent(intent: Intent, playlistNameToUId: HashMap<String, String>, playlists: Set<Playlist>): Intent {
-            intent.putExtra("nameToUid", playlistNameToUId)
-            intent.putExtra("playlists", playlists.toHashSet())
-            intent.putExtra(COMING_FROM_SPOTIFY_ACTIVITY_FLAG, true)
-            return intent
+        fun saveInfoToUser(playlistNameToUId: HashMap<String, String>, playlists: Set<Playlist>, ctx : Context): Unit {
+            val user = UserProfileActivity.loadUser(ctx)
+            user.addSpotifyPlaylistUids(playlistNameToUId)
+            user.addPlaylists(playlists)
+            user.save(ctx)
         }
 
         fun getPlaylistContent(playlistId: String, client: OkHttpClient = OkHttpClient(), parser : JSONParser = JSONStandardParser()) : CompletableFuture<Set<Song>> {
