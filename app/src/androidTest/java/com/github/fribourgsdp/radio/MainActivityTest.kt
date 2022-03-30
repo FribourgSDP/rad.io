@@ -71,10 +71,10 @@ class MainActivityTest {
         Intents.release()
     }
     @Test
-    fun correctTransitionToFireBaseTestActivity(){
+    fun correctTransitionToVoiceOverIpActivity(){
         Intents.init()
-        Espresso.onView(withId(R.id.FireBaseButton)).perform(ViewActions.click())
-        Intents.intended(IntentMatchers.hasComponent(FireBaseTestActivity::class.java.name))
+        Espresso.onView(withId(R.id.VoiceOverIpButton)).perform(ViewActions.click())
+        Intents.intended(IntentMatchers.hasComponent(VoiceOverIPActivity::class.java.name))
         Intents.release()
     }
 }

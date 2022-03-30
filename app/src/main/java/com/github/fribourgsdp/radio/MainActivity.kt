@@ -13,7 +13,7 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        val fireBaseButton = findViewById<Button>(R.id.FireBaseButton)
+        val fireBaseButton = findViewById<Button>(R.id.VoiceOverIpButton)
         fireBaseButton.setOnClickListener{startActivity(Intent(this,VoiceOverIPActivity::class.java))}
         val playButton = findViewById<Button>(R.id.playButton)
         playButton.setOnClickListener {startActivity(Intent(this, GameSettingsActivity::class.java))}

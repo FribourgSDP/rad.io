@@ -12,6 +12,11 @@ import io.agora.rtc.RtcEngine
 import io.agora.rtc.IRtcEngineEventHandler
 import RtcTokenBuilder.RtcTokenBuilder
 
+import java.io.File
+import java.io.FileInputStream
+import java.util.*
+
+const val AGORA_INVALID_USER = "This user should not be using the service."
 
 class VoiceOverIPActivity : AppCompatActivity() {
 
@@ -53,7 +58,6 @@ class VoiceOverIPActivity : AppCompatActivity() {
         setContentView(R.layout.activity_voice_over_ipactivity)
         token = getToken(uid)
         if (checkSelfPermission(Manifest.permission.RECORD_AUDIO, PERMISSION_REQ_ID_RECORD_AUDIO)) {
-
             initializeAndJoinChannel();
         }
     }
