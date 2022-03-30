@@ -65,7 +65,7 @@ class LyricsGetterTest {
     }
     @Test
     fun lyricsGetterCreationTest(){
-    	val LyricsGetter = LyricsGetter()
+        LyricsGetter()
     }
     @Test
 

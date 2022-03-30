@@ -44,7 +44,6 @@
     <string name="join_fail_format">Failed to join lobby %d.</string>
     <string name="lobby_not_found">Lobby %d not found.</string>
     <string name="add_a_playlist_manually">Add a playlist manually</string>
-    <string name="add_new_item">Add New Item</string>
     <string name="song_name">Song Name</string>
     <string name="artist_name">Artist Name</string>
     <string name="create_playlist">CREATE PLAYLIST</string>

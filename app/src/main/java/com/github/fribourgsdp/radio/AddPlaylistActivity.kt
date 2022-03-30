@@ -24,7 +24,7 @@ class AddPlaylistActivity : AppCompatActivity() {
 
         user = UserProfileActivity.loadUser(this)
     }
-    fun addItems(view : View) : Unit {
+    fun addItems(view : View) {
         val songNameTextView : EditText = findViewById(R.id.addSongToPlaylistSongName)
         val artistNameTextView : EditText = findViewById(R.id.addSongToPlaylistArtistName)
         val songName : String = songNameTextView.text.toString()
@@ -41,7 +41,7 @@ class AddPlaylistActivity : AppCompatActivity() {
             listAdapter.notifyDataSetChanged()
         }
     }
-    fun createPlaylist(view : View) : Unit {
+    fun createPlaylist(view : View) {
         val playlistName : String = findViewById<EditText>(R.id.newPlaylistName).text.toString()
         if (playlistName.isEmpty()){
             errorTextView.text = this.applicationContext.resources.getText(R.string.playlist_has_no_name)
