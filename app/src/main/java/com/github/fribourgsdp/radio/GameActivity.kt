@@ -14,7 +14,7 @@ import kotlinx.serialization.json.Json
 
 class GameActivity : AppCompatActivity(), GameView {
     // TODO: Use 'User.load(this)' when available
-    private var user = User("Simon")
+    private var user = User("The second best player")
     private var isHost: Boolean = false
 
     private lateinit var currentRoundTextView : TextView

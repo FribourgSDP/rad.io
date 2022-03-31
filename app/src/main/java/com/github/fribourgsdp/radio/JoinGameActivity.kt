@@ -88,6 +88,6 @@ open class JoinGameActivity : AppCompatActivity() {
 
     private fun getUser() : User {
         // TODO: Update once we can get the user of the phone
-        return User("Victor")
+        return User("The second best player")
     }
 }
