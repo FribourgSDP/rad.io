@@ -1,9 +1,8 @@
 package com.github.fribourgsdp.radio
 
 import com.google.firebase.firestore.DocumentSnapshot
-import com.google.firebase.firestore.EventListener
 
-class PlayerGameHandler(private val gameID: Long, private val view: GameView): GameHandler(view) {
+class PlayerGameHandler(private val gameID: Long, private val view: GameView, db: Database = FirestoreDatabase()): GameHandler(view, db) {
 
     override fun linkToDatabase() {
         db.listenToGameUpdate(gameID, executeOnUpdate())
