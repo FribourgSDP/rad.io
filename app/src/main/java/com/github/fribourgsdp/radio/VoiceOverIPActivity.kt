@@ -13,10 +13,6 @@ import io.agora.rtc.IRtcEngineEventHandler
 import RtcTokenBuilder.RtcTokenBuilder
 import android.util.Log
 
-import java.io.File
-import java.io.FileInputStream
-import java.util.*
-
 const val MAX_SERVER_CONNECT_TENTATIVES = 5
 
 class VoiceOverIPActivity : AppCompatActivity() {
@@ -56,7 +52,7 @@ class VoiceOverIPActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_voice_over_ipactivity)
+        setContentView(R.layout.activity_voice_over_ip)
         token = getToken(uid)
         if (checkSelfPermission(Manifest.permission.RECORD_AUDIO, PERMISSION_REQ_ID_RECORD_AUDIO)) {
             initializeAndJoinChannel();
