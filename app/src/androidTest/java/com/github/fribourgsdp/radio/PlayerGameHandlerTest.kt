@@ -168,6 +168,10 @@ private class FakeView(private val playerID: String = ""): GameView {
         errorVisibility = View.VISIBLE
     }
 
+    override fun hideError() {
+        errorVisibility = View.GONE
+    }
+
     override fun checkPlayer(id: String): Boolean {
         return playerID == id
     }
