@@ -69,7 +69,7 @@ class Game private constructor(val id: Long, val name: String, val host: User, v
      * It returns a smaller subset if the asked number is bigger than the number of songs left.
      * @return a random subset of songs.
      */
-    fun getChoices(nb: Int): Set<Song> {
+    fun getChoices(nb: Int): List<Song> {
         // Check if all the songs have been done and restart if so
         if (songsNotDone.isEmpty()) {
             songsNotDone.addAll(playlist.getSongs())
@@ -77,7 +77,7 @@ class Game private constructor(val id: Long, val name: String, val host: User, v
 
         val nbRandom = if (songsNotDone.size < nb) songsNotDone.size else nb
 
-        val chosen = HashSet<Song>()
+        val chosen = ArrayList<Song>()
 
         for (i in 1..nbRandom) {
             val random = songsNotDone.random()
