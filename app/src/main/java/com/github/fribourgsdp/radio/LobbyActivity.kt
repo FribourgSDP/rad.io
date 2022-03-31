@@ -187,7 +187,7 @@ open class LobbyActivity : AppCompatActivity() {
                 val isGameLaunched = snapshot.getBoolean("launched")
 
                 if (!isHost && isGameLaunched != null && isGameLaunched) {
-                    goToGameActivity(false)
+                    goToGameActivity(false, gameID = uid)
                 }
 
             } else {
@@ -204,13 +204,15 @@ open class LobbyActivity : AppCompatActivity() {
         gameBuilder.setUserList(playersList.map { name -> User(name) })
     }
 
-    private fun goToGameActivity(isHost: Boolean, game: Game? = null) {
+    private fun goToGameActivity(isHost: Boolean, game: Game? = null, gameID: Long? = null) {
         val intent: Intent = Intent(this, GameActivity::class.java).apply {
             putExtra(GAME_IS_HOST_KEY, isHost)
         }
 
         if (isHost && game != null) {
             intent.putExtra(GAME_KEY, json.encodeToString(game))
+        } else if (gameID != null) {
+            intent.putExtra(GAME_UID_KEY, gameID)
         }
 
         startActivity(intent)
