@@ -49,13 +49,10 @@ class UserProfileActivity : AppCompatActivity(), PlaylistAdapter.OnPlaylistClick
         setContentView(R.layout.activity_user_profile)
 
         instantiateViews()
-
-
         try {
              user = User.load(this)
         } catch (e: java.io.FileNotFoundException) {
             //this should never happen as a user is created and saved in the first activity
-
             createDefaultUser()
         }
 
@@ -68,10 +65,10 @@ class UserProfileActivity : AppCompatActivity(), PlaylistAdapter.OnPlaylistClick
         saveChangeButton.setOnClickListener{
             updateUser()
         }
+
         usernameField.setText(user.name)
         usernameInitialText.setText(user.initial.uppercaseChar().toString())
         spotifyStatusText.apply {text = if (user.spotifyLinked) "linked" else "unlinked"}
-
 
         logoutButton.setOnClickListener{
             firebaseAuth.signOut()
@@ -82,7 +79,6 @@ class UserProfileActivity : AppCompatActivity(), PlaylistAdapter.OnPlaylistClick
         googleSignInButton.setOnClickListener{
             startActivity(Intent(this,GoogleSignInActivity::class.java))
         }
-
 
         userIcon.setColorFilter(PorterDuffColorFilter(user.color, PorterDuff.Mode.ADD))
         if (intent.getBooleanExtra(COMING_FROM_SPOTIFY_ACTIVITY_FLAG, false)){
@@ -113,10 +109,11 @@ class UserProfileActivity : AppCompatActivity(), PlaylistAdapter.OnPlaylistClick
         playlistDisplay = findViewById(R.id.playlist_recycler_view)
         userIcon = findViewById(R.id.userIcon)
     }
-    //I think this should be on the main page, this way, we don't have to go to this activity to lauch a game
+
+    //this is theoritecally never called
     private fun createDefaultUser(){
         user = User("Default")
-        db.setUser("1",user)
+        db.setUser("defUserProfileActivity",user)
         user.save(this)
 
     }
@@ -127,15 +124,12 @@ class UserProfileActivity : AppCompatActivity(), PlaylistAdapter.OnPlaylistClick
         user.id = id
         val firebaseUser = firebaseAuth.currentUser
         if(firebaseUser == null){
-            Log.w(ContentValues.TAG, "Error adding document"+id)
-
             db.setUser(id,user)
         }else{
             db.setUser(firebaseUser.uid,user)
         }
 
         user.save(this)
-
         usernameInitialText.setText(user.initial.uppercaseChar().toString())
     }
 
@@ -167,7 +161,6 @@ class UserProfileActivity : AppCompatActivity(), PlaylistAdapter.OnPlaylistClick
                     user.save(this)
                 }
                 usernameField.setText(user.name)
-
             }
         }
     }
