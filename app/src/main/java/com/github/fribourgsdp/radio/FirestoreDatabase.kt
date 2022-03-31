@@ -6,6 +6,7 @@ import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.firestore.EventListener
 import java.lang.Exception
+import java.util.stream.Collectors
 
 /**
  *
@@ -191,7 +192,23 @@ class FirestoreDatabase : Database {
 
     override fun openGame(id: Long): Task<Void> {
         return db.collection("games").document(id.toString())
-            .set(hashMapOf("test" to 5))
+            .set(
+                hashMapOf(
+                    "current_round" to 0L,
+                    "current_song" to "",
+                    "singer" to "",
+                    "song_choices" to ArrayList<String>()
+                )
+            )
+    }
+
+    override fun openGameMetadata(id: Long, users: List<User>): Task<Void> {
+        return db.collection("games_metadata").document(id.toString())
+            .set(
+                hashMapOf(
+                    "player_done_map" to users.stream().collect(Collectors.toMap({ u -> u.name }, { true }))
+                )
+            )
     }
 
     override fun launchGame(id: Long): Task<Void> {
