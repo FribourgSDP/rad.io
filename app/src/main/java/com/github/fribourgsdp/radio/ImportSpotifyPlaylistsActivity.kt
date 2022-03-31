@@ -4,14 +4,16 @@ import android.content.Context
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import okhttp3.*
+import org.json.JSONException
 import java.io.IOException
 import java.util.concurrent.CompletableFuture
 
 const val SPOTIFY_PLAYLIST_INFO_BASE_URL = "https://api.spotify.com/v1/playlists/"
 const val SPOTIFY_GET_PLAYLIST_IDS_BASE_URL = "https://api.spotify.com/v1/me/playlists"
 const val SPOTIFY_SONG_FILTER_NAME_ARTIST = "/tracks?fields=items(track(name%2C%20artists(name)))"
-const val PLAYLIST_INFO_ERROR = "---An error occured while fetching the playlist information.---"
+const val PLAYLIST_INFO_ERROR = "---An error occurred while fetching the playlist information.---"
 
 var TOKEN: String? = null
 
@@ -22,6 +24,7 @@ class ImportSpotifyPlaylistsActivity : AppCompatActivity() {
         setContentView(R.layout.activity_import_spotify_playlists)
         val userToken = intent.getStringExtra("auth_token")
         TOKEN = userToken
+        Log.println(Log.INFO, "***", TOKEN.toString())
 
         val playlistMap: CompletableFuture<HashMap<String, String>> = getUserPlaylists()
         val playlistsNameToUid = playlistMap.get()
@@ -114,14 +117,19 @@ class ImportSpotifyPlaylistsActivity : AppCompatActivity() {
                 val parsedResponseString = response.body()?.string()
                 val parsedResponse = parser.parse(parsedResponseString)
                 var playlistInfo = mutableSetOf<Song>()
-                println(parsedResponse.toString())
                 if (parsedResponse == null || parsedResponse.has("error")){
 
                 }
                 else {
                     val songs = parsedResponse.getJSONArray("items")
                     for (i in 0 until songs.length()){
-                        var songObject = songs.getJSONObject(i).getJSONObject("track")
+                        var songObject =
+                        try {
+                            songs.getJSONObject(i).getJSONObject("track")
+                        } catch (e : JSONException){
+                            // TODO: handle error
+                            continue
+                        }
                         var artists = ""
                         var songArtists = songObject.getJSONArray("artists")
                         for(j in 0 until songArtists.length()){
