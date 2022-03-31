@@ -39,6 +39,9 @@ class GameActivity : AppCompatActivity(), GameView {
             val hostGameHandler = HostGameHandler(game, this)
             hostGameHandler.linkToDatabase()
 
+            user = User("The best player")
+        } else {
+            user = User("Victor")
         }
 
         playerGameHandler.linkToDatabase()
