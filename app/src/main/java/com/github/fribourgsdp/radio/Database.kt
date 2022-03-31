@@ -89,6 +89,12 @@ interface Database {
     fun listenToGameUpdate(id: Long, listener: EventListener<DocumentSnapshot>)
 
     /**
+     * Listen to the updates of the metadata of game with [id].
+     * Executes the [listener] on every update.
+     */
+    fun listenToGameMetadataUpdate(id: Long, listener: EventListener<DocumentSnapshot>)
+
+    /**
      * Update the game [id] with the values in the [updatesMap].
      * @return a task void so that we know if the game was correctly updated.
      */
@@ -101,5 +107,17 @@ interface Database {
     fun updateCurrentSongOfGame(id: Long, songName: String) : Task<Void> {
         return updateGame(id, hashMapOf("current_song" to songName))
     }
+
+    /**
+     * Set the player with id [playerID] to done in the metadata of game [gameID]
+     * @return a task void so that we know if the player with id [playerID] was correctly set to done in the metadata of game [gameID].
+     */
+    fun setPlayerDone(gameID: Long, playerID: String): Task<Void>
+
+    /**
+     * Reset the map where players are done or not to false for everyone but the singer.
+     * @return a task void so that we know if the map was correctly reset.
+     */
+    fun resetPlayerDoneMap(singer: String): Task<Void>
 
 }
