@@ -2,23 +2,29 @@ package com.github.fribourgsdp.radio
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.view.KeyEvent
 import android.view.View
+import android.view.inputmethod.EditorInfo
 import android.widget.ArrayAdapter
 import android.widget.EditText
 import android.widget.ListView
 import android.widget.TextView
 
 class GameActivity : AppCompatActivity(), GameView {
-    private val user = User.load(this)
+    // TODO: Use 'User.load(this)' when available
+    private lateinit var user: User
     private var isHost: Boolean = false
 
     private lateinit var currentRoundTextView : TextView
     private lateinit var singerTextView : TextView
     private lateinit var songTextView : TextView
+    private lateinit var errorOrFailureTextView : TextView
     private lateinit var songGuessEditText : EditText
 
     private lateinit var playersListView : ListView
     private lateinit var namesAdapter : ArrayAdapter<String>
+
+    private val playerGameHandler = PlayerGameHandler(0L, this)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -28,12 +34,13 @@ class GameActivity : AppCompatActivity(), GameView {
 
         initViews()
 
+        playerGameHandler.linkToDatabase()
+
     }
 
     override fun chooseSong(choices: List<String>): String {
-        TODO("Not yet implemented")
-        // Show popup with 3 buttons
-        // return song
+        // TODO: For later sprint, implement a way to chose between songs
+        return choices[0]
     }
 
     override fun updateSinger(singerName: String) {
@@ -64,14 +71,15 @@ class GameActivity : AppCompatActivity(), GameView {
     }
 
     override fun displayError(errorMessage: String) {
-        // Hide the edit text
-        songGuessEditText.visibility = View.GONE
-
-        // Show the error in the song TextView instead
-        songTextView.apply {
+        // Show the error
+        errorOrFailureTextView.apply {
             text = errorMessage
             visibility = View.VISIBLE
         }
+    }
+
+    override fun hideError() {
+        errorOrFailureTextView.visibility = View.GONE
     }
 
     override fun checkPlayer(id: String): Boolean {
@@ -82,9 +90,20 @@ class GameActivity : AppCompatActivity(), GameView {
         currentRoundTextView = findViewById(R.id.currentRoundView)
         singerTextView = findViewById(R.id.singerTextView)
         songTextView = findViewById(R.id.songTextView)
-        songGuessEditText = findViewById(R.id.songGuessEditText)
+        errorOrFailureTextView = findViewById(R.id.errorOrFailureTextView)
         namesAdapter = ArrayAdapter(this, android.R.layout.simple_list_item_1)
         playersListView.adapter = namesAdapter
+
+        songGuessEditText = findViewById(R.id.songGuessEditText)
+
+        // trigger the button when the user presses "enter" in the text field
+        songGuessEditText.setOnEditorActionListener { _: TextView?, actionId: Int, _: KeyEvent? ->
+            if (actionId == EditorInfo.IME_ACTION_DONE) {
+                playerGameHandler.handleGuess(songGuessEditText.text.toString(), user.name)
+                return@setOnEditorActionListener true
+            }
+            false
+        }
     }
 
 }
