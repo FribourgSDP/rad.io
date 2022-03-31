@@ -34,7 +34,7 @@ class UserProfileActivityTest : TestCase() {
 
     private val ctx: Context = ApplicationProvider.getApplicationContext()
 
-    @Test
+    /*@Test
     fun userSavedLocallyIsDisplayed(){
         Intents.init()
 
@@ -51,7 +51,7 @@ class UserProfileActivityTest : TestCase() {
         }
         Intents.release()
 
-    }
+    }*/
 
     @Test
     fun changingNameAndSavingChangesChangesUser(){
