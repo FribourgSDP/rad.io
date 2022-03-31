@@ -25,7 +25,7 @@ class User (val name: String, val color: Int) {
     private var linkedSpotify: Boolean = false
     val initial get(): Char = name.elementAt(0)
     val spotifyLinked get(): Boolean = linkedSpotify
-    var id : String = ""
+    var id : String = "def"
 
     companion object {
         fun load( context: Context, path: String = USER_DATA_PATH) : User {
