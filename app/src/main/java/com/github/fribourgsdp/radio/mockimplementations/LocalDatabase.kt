@@ -65,6 +65,22 @@ class LocalDatabase : Database {
         return Tasks.forResult(null)
     }
 
+    override fun openGame(id: Long): Task<Void> {
+        TODO("Not yet implemented")
+    }
+
+    override fun launchGame(id: Long): Task<Void> {
+        TODO("Not yet implemented")
+    }
+
+    override fun listenToGameUpdate(id: Long, listener: EventListener<DocumentSnapshot>) {
+        TODO("Not yet implemented")
+    }
+
+    override fun updateGame(id: Long, updatesMap: Map<String, Any>): Task<Void> {
+        TODO("Not yet implemented")
+    }
+
     companion object {
         const val EXPECTED_UID = 794L
         val EXPECTED_SETTINGS = Game.Settings(User("Host"), "Hello World!", Playlist("Host's Playlist"), 42, true, true)

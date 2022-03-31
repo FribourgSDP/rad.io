@@ -51,4 +51,20 @@ class BuggyDatabase : Database {
     override fun addUserToLobby(id: Long, user: User): Task<Void> {
         return Tasks.forException(Exception("Error"))
     }
+
+    override fun openGame(id: Long): Task<Void> {
+        TODO("Not yet implemented")
+    }
+
+    override fun launchGame(id: Long): Task<Void> {
+        TODO("Not yet implemented")
+    }
+
+    override fun listenToGameUpdate(id: Long, listener: EventListener<DocumentSnapshot>) {
+        TODO("Not yet implemented")
+    }
+
+    override fun updateGame(id: Long, updatesMap: Map<String, Any>): Task<Void> {
+        TODO("Not yet implemented")
+    }
 }
