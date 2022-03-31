@@ -38,8 +38,13 @@ class ImportSpotifyPlaylistsActivityTest {
 
     @Test
     fun getPlaylistsWhenResponseHasErrorMessage(){
-        val future = ImportSpotifyPlaylistsActivity.getUserPlaylists(MockPlaylistHTTPClient(), ErrorJSONParser())
+        val future = ImportSpotifyPlaylistsActivity.getUserPlaylists(MockPlaylistHTTPClient(), ErrorJSONParser2())
         assert(future.get().isEmpty())
+    }
+
+    @Test
+    fun malformedJSONResponseTest(){
+        val future = ImportSpotifyPlaylistsActivity.getUserPlaylists(MockPlaylistHTTPClient(), )
     }
 
     @Test
@@ -175,6 +180,11 @@ class ImportSpotifyPlaylistsActivityTest {
     }
 
     private class ErrorJSONParser : JSONParser(){
+        override fun parse(s: String?): JSONObject {
+            return JSONObject("{\"error\": \"bla\"}")
+        }
+    }
+    private class ErrorJSONParser2 : JSONParser(){
         override fun parse(s: String?): JSONObject {
             return JSONObject("{\"error\": \"bla\"}")
         }
