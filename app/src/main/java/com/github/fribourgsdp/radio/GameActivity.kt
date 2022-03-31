@@ -14,7 +14,7 @@ import kotlinx.serialization.json.Json
 
 class GameActivity : AppCompatActivity(), GameView {
     // TODO: Use 'User.load(this)' when available
-    private lateinit var user: User
+    private var user = User("Simon")
     private var isHost: Boolean = false
 
     private lateinit var currentRoundTextView : TextView
@@ -31,25 +31,20 @@ class GameActivity : AppCompatActivity(), GameView {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_game)
-
-        val json = Json {
-            allowStructuredMapKeys = true
-        }
-
         isHost = intent.getBooleanExtra(GAME_IS_HOST_KEY, false)
-        val game = json.decodeFromString(intent.getStringExtra(GAME_KEY)!!) as Game
-
         initViews()
-
-
         if (isHost) {
+            val json = Json {
+                allowStructuredMapKeys = true
+            }
+            val game = json.decodeFromString(intent.getStringExtra(GAME_KEY)!!) as Game
             val hostGameHandler = HostGameHandler(game, this)
             hostGameHandler.linkToDatabase()
-
             user = User("The best player")
+            playerGameHandler = PlayerGameHandler(game.id, this)
+        } else {
+            playerGameHandler = PlayerGameHandler(intent.getLongExtra(GAME_UID_KEY, -1L), this)
         }
-
-        playerGameHandler = PlayerGameHandler(game.id, this)
 
         playerGameHandler.linkToDatabase()
 
