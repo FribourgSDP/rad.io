@@ -6,6 +6,8 @@ import android.os.Bundle
 import android.view.View
 import android.widget.*
 
+const val GAME_KEY = "com.github.fribourgsdp.radio.GAME"
+
 open class LobbyActivity : AppCompatActivity() {
     private val db = this.initDatabase()
 
@@ -191,6 +193,11 @@ open class LobbyActivity : AppCompatActivity() {
         val intent: Intent = Intent(this, GameActivity::class.java).apply {
             putExtra(GAME_IS_HOST_KEY, isHost)
         }
+
+        if (isHost) {
+            intent.putExtra(GAME_KEY, gameBuilder.build())
+        }
+
         startActivity(intent)
     }
 }
