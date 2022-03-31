@@ -65,7 +65,7 @@ class UserProfileActivity : AppCompatActivity(), PlaylistAdapter.OnPlaylistClick
             PorterDuffColorFilter(user.color, PorterDuff.Mode.ADD)
 
         findViewById<TextView>(R.id.spotifyStatus).apply {
-            text = if (user.spotifyLinked) "linked" else "unlinked"
+            text = if (user.linkedSpotify) "linked" else "unlinked"
         }
 
 
