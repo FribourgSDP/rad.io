@@ -200,13 +200,58 @@ class FirestoreDatabase : Database {
     }
 
     override fun listenToGameUpdate(id: Long, listener: EventListener<DocumentSnapshot>) {
-        db.collection("game").document(id.toString())
+        db.collection("games").document(id.toString())
+            .addSnapshotListener(listener)
+    }
+
+    override fun listenToGameMetadataUpdate(id: Long, listener: EventListener<DocumentSnapshot>) {
+        db.collection("games_metadata").document(id.toString())
             .addSnapshotListener(listener)
     }
 
     override fun updateGame(id: Long, updatesMap: Map<String, Any>): Task<Void> {
         return db.collection("games").document(id.toString())
             .update(updatesMap)
+    }
+
+    override fun setPlayerDone(gameID: Long, playerID: String): Task<Void> {
+        val docRef = db.collection("games_metadata").document(gameID.toString())
+
+        return db.runTransaction { transaction ->
+            val snapshot = transaction.get(docRef)
+
+            if (!snapshot.exists()) {
+                throw IllegalArgumentException("Document $gameID in games not found.")
+            }
+
+            val updatedMap = snapshot.get("player_done_map")!! as HashMap<String, Boolean>
+            updatedMap[playerID] = true
+
+            transaction.update(docRef, "player_done_map", updatedMap)
+
+            // Success
+            null
+        }
+    }
+
+    override fun resetPlayerDoneMap(gameID: Long, singer: String): Task<Void> {
+        val docRef = db.collection("games_metadata").document(gameID.toString())
+
+        return db.runTransaction { transaction ->
+            val snapshot = transaction.get(docRef)
+
+            if (!snapshot.exists()) {
+                throw IllegalArgumentException("Document $gameID in games not found.")
+            }
+
+            val updatedMap = snapshot.get("player_done_map")!! as HashMap<String, Boolean>
+            updatedMap.replaceAll {k, _ -> k == singer}
+
+            transaction.update(docRef, "player_done_map", updatedMap)
+
+            // Success
+            null
+        }
     }
 
 }
