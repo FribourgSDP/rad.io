@@ -12,6 +12,8 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.core.widget.addTextChangedListener
 import com.google.android.gms.tasks.Task
+import kotlinx.serialization.encodeToString
+import kotlinx.serialization.json.Json
 
 const val GAME_UID_KEY = "com.github.fribourgsdp.radio.GAME_UID"
 
@@ -58,11 +60,14 @@ open class JoinGameActivity : AppCompatActivity() {
     private fun connectToLobby(id: Long) {
         db.getGameSettingsFromLobby(id).addOnSuccessListener { settings ->
             db.addUserToLobby(id, getUser()).addOnSuccessListener {
+                val json = Json {
+                    allowStructuredMapKeys = true
+                }
 
                 startActivity(Intent(this, LobbyActivity::class.java).apply {
-                    putExtra(GAME_HOST_KEY, settings.host.name)
+                    putExtra(GAME_HOST_KEY, json.encodeToString(settings.host))
                     putExtra(GAME_NAME_KEY, settings.name)
-                    putExtra(GAME_PLAYLIST_KEY, settings.playlist.name)
+                    putExtra(GAME_PLAYLIST_KEY, json.encodeToString(settings.playlist))
                     putExtra(GAME_NB_ROUNDS_KEY, settings.nbRounds)
                     putExtra(GAME_HINT_KEY, settings.withHint)
                     putExtra(GAME_PRIVACY_KEY, settings.isPrivate)

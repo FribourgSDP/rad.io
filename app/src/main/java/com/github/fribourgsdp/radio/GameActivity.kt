@@ -9,6 +9,8 @@ import android.widget.ArrayAdapter
 import android.widget.EditText
 import android.widget.ListView
 import android.widget.TextView
+import kotlinx.serialization.decodeFromString
+import kotlinx.serialization.json.Json
 
 class GameActivity : AppCompatActivity(), GameView {
     // TODO: Use 'User.load(this)' when available
@@ -34,8 +36,14 @@ class GameActivity : AppCompatActivity(), GameView {
 
         initViews()
 
+        playerGameHandler.linkToDatabase()
+
         if (isHost) {
-            val game = intent.getSerializableExtra(GAME_KEY) as Game
+            val json = Json {
+                allowStructuredMapKeys = true
+            }
+            val game = json.decodeFromString(intent.getStringExtra(GAME_KEY)!!) as Game
+
             val hostGameHandler = HostGameHandler(game, this)
             hostGameHandler.linkToDatabase()
 
@@ -43,8 +51,6 @@ class GameActivity : AppCompatActivity(), GameView {
         } else {
             user = User("Victor")
         }
-
-        playerGameHandler.linkToDatabase()
 
     }
 
