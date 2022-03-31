@@ -101,8 +101,9 @@ class GameActivity : AppCompatActivity(), GameView {
         singerTextView = findViewById(R.id.singerTextView)
         songTextView = findViewById(R.id.songTextView)
         errorOrFailureTextView = findViewById(R.id.errorOrFailureTextView)
-        namesAdapter = ArrayAdapter(this, android.R.layout.simple_list_item_1)
-        playersListView.adapter = namesAdapter
+        // TODO: Initialise in later sprint
+        // namesAdapter = ArrayAdapter(this, android.R.layout.simple_list_item_1)
+        // playersListView.adapter = namesAdapter
 
         songGuessEditText = findViewById(R.id.songGuessEditText)
 
