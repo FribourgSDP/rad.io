@@ -50,14 +50,15 @@ class UserProfileActivity : AppCompatActivity(), PlaylistAdapter.OnPlaylistClick
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_user_profile)
 
-
-        instantiateViews()
         try {
-             user = User.load(this)
+            user = User.load(this)
         } catch (e: java.io.FileNotFoundException) {
             //this should never happen as a user is created and saved in the first activity
             createDefaultUser()
         }
+
+        instantiateViews()
+
 
 
         checkUser()
@@ -140,12 +141,10 @@ class UserProfileActivity : AppCompatActivity(), PlaylistAdapter.OnPlaylistClick
     }
 
     private fun updateUser(){
-        val id = user.id
-        user = User(usernameField.text.toString())
-        user.id = id
+        user.name = usernameField.text.toString()
         val firebaseUser = firebaseAuth.currentUser
         if(firebaseUser == null){
-            db.setUser(id,user)
+            db.setUser(user.id,user)
         }else{
             db.setUser(firebaseUser.uid,user)
         }
