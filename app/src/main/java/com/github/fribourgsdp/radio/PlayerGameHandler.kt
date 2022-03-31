@@ -3,36 +3,37 @@ package com.github.fribourgsdp.radio
 import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.EventListener
 
-class PlayerGameHandler(private val game: Game, private val view: GameView): GameHandler(game, view) {
-    override fun executeOnUpdate(): EventListener<DocumentSnapshot> {
-        return EventListener<DocumentSnapshot> { snapshot, e ->
-            if (e != null) {
-                view.displayError("An error occurred")
-            }
+class PlayerGameHandler(private val gameID: Long, private val view: GameView): GameHandler(view) {
 
-            if (snapshot != null && snapshot.exists()) {
-                view.updateSinger(snapshot.getString("singer")!!)
-                view.updateRound(snapshot.getLong("current_round")!!)
+    override fun linkToDatabase() {
+        db.listenToGameUpdate(gameID, executeOnUpdate())
+    }
 
-                if (view.checkPlayer(snapshot.getString("singer")!!)) {
-                    val choices = snapshot.get("song_choices")!! as ArrayList<String>
-                    val pickedSong = view.chooseSong(choices)
+    override fun handleSnapshot(snapshot: DocumentSnapshot?) {
+        if (snapshot != null && snapshot.exists()) {
+            val singerName = snapshot.getString("singer")!!
 
-                    db.updateCurrentSongOfGame(game.id, pickedSong)
-                        .addOnSuccessListener {
-                            view.displaySong(pickedSong)
-                        }
-                        .addOnFailureListener {
-                            view.displayError("An error occurred")
-                        }
+            view.updateSinger(singerName)
+            view.updateRound(snapshot.getLong("current_round")!!)
 
-                } else {
-                    view.displayGuessInput()
-                }
+            if (view.checkPlayer(singerName)) {
+                val choices = snapshot.get("song_choices")!! as ArrayList<String>
+                val pickedSong = view.chooseSong(choices)
+
+                db.updateCurrentSongOfGame(gameID, pickedSong)
+                    .addOnSuccessListener {
+                        view.displaySong(pickedSong)
+                    }
+                    .addOnFailureListener {
+                        view.displayError("An error occurred")
+                    }
 
             } else {
-                view.displayError("An error occurred")
+                view.displayGuessInput()
             }
+
+        } else {
+            view.displayError("An error occurred")
         }
     }
 }
