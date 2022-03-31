@@ -8,7 +8,7 @@ import kotlin.streams.toList
 class HostGameHandler(private val game: Game, private val view: GameView, db: Database = FirestoreDatabase()): GameHandler(view, db) {
     override fun handleSnapshot(snapshot: DocumentSnapshot?) {
         if (snapshot != null && snapshot.exists()) {
-            val doneMap = snapshot.get("player_done_map") as HashMap<String, Boolean>
+            val doneMap = snapshot.get("player_done_map")!! as HashMap<String, Boolean>
 
             // Check that all values are 'true' => does not contains 'false'
             val allDone = !doneMap.containsValue(false)
@@ -20,7 +20,7 @@ class HostGameHandler(private val game: Game, private val view: GameView, db: Da
                 db.updateGame(game.id, updatesMap).addOnSuccessListener {
                     db.resetPlayerDoneMap(
                         game.id,
-                        (updatesMap["singer"] as User).name
+                        updatesMap["singer"] as String
                     ).addOnFailureListener {
                         view.displayError("An error occurred.")
                     }
@@ -29,6 +29,8 @@ class HostGameHandler(private val game: Game, private val view: GameView, db: Da
                 }
             }
 
+        } else {
+            view.displayError("An error occurred.")
         }
     }
 
@@ -44,7 +46,7 @@ class HostGameHandler(private val game: Game, private val view: GameView, db: Da
         return hashMapOf(
             "current_round" to game.currentRound,
             "current_song" to FieldValue.delete(),
-            "singer" to game.getUserToPlay(),
+            "singer" to game.getUserToPlay().name,
             "song_choices" to nextChoices
         )
     }
