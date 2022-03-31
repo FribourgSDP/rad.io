@@ -4,7 +4,7 @@ import java.util.*
 import kotlin.collections.ArrayList
 import kotlin.collections.HashMap
 import kotlin.collections.HashSet
-import java.io.Serializable
+import kotlinx.serialization.Serializable
 
 /**
  * An instance of a game.
@@ -18,8 +18,9 @@ import java.io.Serializable
  * @property isPrivate whether the game is private or public.
  * @property currentRound the current round of the game.
  */
+@Serializable
 class Game private constructor(val id: Long, val name: String, val host: User, val playlist: Playlist, val nbRounds: Int,
-                               val withHint: Boolean, val isPrivate: Boolean, private val listUser: List<User>): Serializable {
+                               val withHint: Boolean, val isPrivate: Boolean, private val listUser: List<User>) {
 
     private val scoreMap = HashMap(listUser.associateWith { 0 })
     private var usersToPlay = listUser.size
@@ -96,6 +97,10 @@ class Game private constructor(val id: Long, val name: String, val host: User, v
      */
     fun isDone(): Boolean {
         return nbRounds <= currentRound && usersToPlay <= 0
+    }
+
+    fun getAllPlayers(): List<User> {
+        return ArrayList(listUser)
     }
 
     /**
