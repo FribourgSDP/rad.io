@@ -21,7 +21,7 @@ class User (val name: String, val color: Int) {
 
     private val playlists = mutableSetOf<Playlist>()
     private val playlistNamesToSpotifyId = mutableMapOf<String, String>()
-    private var linkedSpotify: Boolean = false
+    var linkedSpotify: Boolean = false
     val initial get(): Char = name.elementAt(0)
     val spotifyLinked get(): Boolean = linkedSpotify
 
