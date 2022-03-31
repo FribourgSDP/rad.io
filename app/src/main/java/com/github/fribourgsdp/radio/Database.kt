@@ -118,6 +118,6 @@ interface Database {
      * Reset the map where players are done or not to false for everyone but the singer.
      * @return a task void so that we know if the map was correctly reset.
      */
-    fun resetPlayerDoneMap(singer: String): Task<Void>
+    fun resetPlayerDoneMap(gameID: Long, singer: String): Task<Void>
 
 }
