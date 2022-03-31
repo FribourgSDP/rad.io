@@ -51,7 +51,7 @@ class MainActivity : AppCompatActivity() {
 
         //for now, we set to 1 the user ID, we will then use the database function
          db.generateUserId().addOnSuccessListener { id->
-            val userName = "User$id"
+            val userName = "Guest"
             val generatedUser = User(userName)
             generatedUser.id = id.toString()
             generatedUser.save(this)
