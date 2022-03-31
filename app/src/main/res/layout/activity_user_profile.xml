@@ -44,20 +44,22 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_marginTop="16dp"
-        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_marginBottom="16dp"
+        android:padding="4dp"
+        app:layout_constraintBottom_toTopOf="@+id/launchSpotifyButton"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/PlaylistsText"
-        android:padding="4dp"
-        tools:listitem="@layout/playlist_item"
-        app:layout_constraintVertical_bias="0.0" />
+        app:layout_constraintVertical_bias="0.0"
+        tools:listitem="@layout/playlist_item" />
 
     <TextView
         android:id="@+id/spotifyDescription"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="28dp"
-        android:layout_marginTop="28dp"
+        android:layout_marginTop="16dp"
         android:text="@string/spotify_text"
         android:textSize="16sp"
         app:layout_constraintStart_toStartOf="parent"
@@ -78,7 +80,7 @@
         android:id="@+id/PlaylistsText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="12dp"
+        android:layout_marginTop="8dp"
         android:text="Playlists : "
         android:textSize="16sp"
         app:layout_constraintStart_toStartOf="@+id/spotifyDescription"
@@ -100,9 +102,28 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="LogOut"
-        app:layout_constraintBottom_toBottomOf="@+id/playlist_recycler_view"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/addPlaylistButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:contentDescription="@string/add_a_playlist_manually"
+        app:backgroundTint="@color/purple_500"
+        app:borderWidth="0dp"
+        app:elevation="12dp"
+        app:tint="#FFFFFF"
+        app:fabSize="normal"
+        android:src="@drawable/ic_baseline_add_24"
+        app:maxImageSize="50dp"
+        app:layout_constraintBottom_toBottomOf="@+id/playlist_recycler_view"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.953"
+        app:layout_constraintStart_toStartOf="@+id/playlist_recycler_view"
+        app:layout_constraintTop_toTopOf="@+id/playlist_recycler_view"
+        app:layout_constraintVertical_bias="0.965" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
 

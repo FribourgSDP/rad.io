@@ -16,6 +16,9 @@
             android:name=".GameActivity"
             android:exported="false" />
         <activity
+            android:name=".AddPlaylistActivity"
+            android:exported="false" />
+        <activity
             android:name=".PlaylistDisplayActivity"
             android:exported="false" />
         <activity

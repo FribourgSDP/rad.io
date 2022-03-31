@@ -1,27 +1,29 @@
 package com.github.fribourgsdp.radio
 
-import androidx.test.espresso.Espresso
-import androidx.test.espresso.intent.Intents
-import androidx.test.espresso.intent.matcher.IntentMatchers
-import junit.framework.TestCase
-import android.content.*
-import androidx.test.espresso.matcher.ViewMatchers
-import androidx.test.ext.junit.runners.AndroidJUnit4
-import org.junit.Test
-import org.junit.runner.RunWith
+import android.content.Context
+import android.content.Intent
 import androidx.test.core.app.ActivityScenario
 import androidx.test.core.app.ApplicationProvider
-import com.google.firebase.auth.*
-import org.hamcrest.Matchers
+import androidx.test.espresso.Espresso
 import androidx.test.espresso.action.ViewActions.click
-import androidx.test.espresso.assertion.ViewAssertions.matches
-import androidx.test.espresso.matcher.ViewMatchers.isDisplayed
-import androidx.test.espresso.matcher.ViewMatchers.withId
+import androidx.test.espresso.intent.Intents
+import androidx.test.espresso.intent.matcher.IntentMatchers
+import androidx.test.espresso.matcher.ViewMatchers
+import androidx.test.ext.junit.rules.ActivityScenarioRule
+import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.google.android.gms.tasks.Tasks
+import com.google.firebase.auth.FirebaseAuth
+import junit.framework.TestCase
+import org.hamcrest.Matchers
+import org.junit.Rule
+import org.junit.Test
+import org.junit.runner.RunWith
 import java.util.concurrent.TimeUnit
 
 @RunWith(AndroidJUnit4::class)
 class UserProfileActivityTest : TestCase() {
+    @get:Rule
+    var userProfileActivityRule = ActivityScenarioRule(UserProfileActivity::class.java)
 
     @Test
     fun logoutButtonTest() {
@@ -32,7 +34,7 @@ class UserProfileActivityTest : TestCase() {
         Tasks.await(task)
         val context: Context = ApplicationProvider.getApplicationContext()
 
-        val intent: Intent = Intent(context, UserProfileActivity::class.java)
+        val intent = Intent(context, UserProfileActivity::class.java)
 
         ActivityScenario.launch<UserProfileActivity>(intent).use { scenario ->
 
@@ -49,6 +51,16 @@ class UserProfileActivityTest : TestCase() {
         Intents.release()
     }
 
+    @Test
+    fun pressingBackButtonTakesUserToMainActivity(){
+        Intents.init()
+        Espresso.pressBack()
+        Intents.intended(
+            IntentMatchers.hasComponent(MainActivity::class.java.name)
+        )
+        Intents.release()
+    }
+
 
     @Test
     fun NoUserConnectedTest() {
@@ -56,7 +68,7 @@ class UserProfileActivityTest : TestCase() {
         Intents.init()
         val context: Context = ApplicationProvider.getApplicationContext()
 
-        val intent: Intent = Intent(context, UserProfileActivity::class.java)
+        val intent = Intent(context, UserProfileActivity::class.java)
         ActivityScenario.launch<UserProfileActivity>(intent).use { scenario ->
 
             Intents.intended(
