@@ -55,7 +55,7 @@ class UserProfileActivityTest : TestCase() {
         }
         Intents.release()
 
-    }
+    }*/
 
     @Test
     fun changingNameAndSavingChangesChangesUser(){
@@ -81,7 +81,7 @@ class UserProfileActivityTest : TestCase() {
 
         assert(user.name == testName)
 
-    }*/
+    }
 
     @Test
     fun changingNameAndNotSavingDoesntChangeUser(){
