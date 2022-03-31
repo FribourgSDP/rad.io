@@ -11,12 +11,13 @@ import java.lang.Exception
 import io.agora.rtc.RtcEngine
 import io.agora.rtc.IRtcEngineEventHandler
 import RtcTokenBuilder.RtcTokenBuilder
+import android.util.Log
 
 import java.io.File
 import java.io.FileInputStream
 import java.util.*
 
-const val AGORA_INVALID_USER = "This user should not be using the service."
+const val MAX_SERVER_CONNECT_TENTATIVES = 5
 
 class VoiceOverIPActivity : AppCompatActivity() {
 
@@ -63,12 +64,18 @@ class VoiceOverIPActivity : AppCompatActivity() {
     }
 
     private fun initializeAndJoinChannel() {
-        try {
-            mRtcEngine = RtcEngine.create(baseContext, APP_ID, mRtcEventHandler)
-        } catch (e: Exception) {
+        var nbTentatives = 0
+        while (mRtcEngine == null && nbTentatives < MAX_SERVER_CONNECT_TENTATIVES){
+            try {
+                mRtcEngine = RtcEngine.create(baseContext, APP_ID, mRtcEventHandler)
+            } catch (e: Exception) {
+                nbTentatives += 1
+                Log.e("Error while loading the voice channel.", e.toString())
+            }
         }
-
-        mRtcEngine!!.joinChannel(token, CHANNEL, "", uid)
+        if (nbTentatives != MAX_SERVER_CONNECT_TENTATIVES){
+            mRtcEngine!!.joinChannel(token, CHANNEL, "", uid)
+        }
 
     }
 
