@@ -1,14 +1,11 @@
 package com.github.fribourgsdp.radio
 
 import android.view.View
-import com.github.fribourgsdp.radio.mockimplementations.LocalDatabase
 import com.google.android.gms.tasks.Tasks
 import com.google.firebase.firestore.DocumentSnapshot
-import com.google.firebase.firestore.EventListener
 import org.junit.Assert.*
 import org.junit.Before
 import org.junit.Test
-import org.junit.rules.Timeout
 import org.mockito.Mockito.*
 
 
@@ -26,11 +23,12 @@ class PlayerGameHandlerTest {
         `when`(mockSnapshot.exists()).thenReturn(true)
         `when`(mockSnapshot.getLong("current_round")).thenReturn(round)
         `when`(mockSnapshot.get("song_choices")).thenReturn(listOfSongs)
+        `when`(mockSnapshot.getString("current_song")).thenReturn(singer)
     }
 
     @Test
     fun correctSingerUpdate() {
-        val view = FakeView()
+        val view = FakeGameView()
         val handler = PlayerGameHandler(0, view)
 
         handler.handleSnapshot(mockSnapshot)
@@ -40,7 +38,7 @@ class PlayerGameHandlerTest {
 
     @Test
     fun correctRoundUpdate() {
-        val view = FakeView()
+        val view = FakeGameView()
         val handler = PlayerGameHandler(0, view)
 
         handler.handleSnapshot(mockSnapshot)
@@ -50,7 +48,7 @@ class PlayerGameHandlerTest {
 
     @Test
     fun displayGuessWhenOtherPlayer() {
-        val view = FakeView("Not singer")
+        val view = FakeGameView("Not singer")
         val handler = PlayerGameHandler(0, view)
 
         handler.handleSnapshot(mockSnapshot)
@@ -62,7 +60,7 @@ class PlayerGameHandlerTest {
 
     @Test
     fun displaySongOnDatabaseSuccess() {
-        val view = FakeView(singer)
+        val view = FakeGameView(singer)
         val db = mock(Database::class.java)
         `when`(db.updateCurrentSongOfGame(anyLong(), anyString()))
             .thenReturn(Tasks.forResult(null))
@@ -82,7 +80,7 @@ class PlayerGameHandlerTest {
 
     @Test
     fun displayErrorOnDatabaseFailure() {
-        val view = FakeView(singer)
+        val view = FakeGameView(singer)
         val db = mock(Database::class.java)
         `when`(db.updateCurrentSongOfGame(anyLong(), anyString()))
             .thenReturn(Tasks.forException(Exception()))
@@ -101,7 +99,7 @@ class PlayerGameHandlerTest {
 
     @Test
     fun displayErrorOnNullSnapshot() {
-        val view = FakeView()
+        val view = FakeGameView()
 
         val handler = PlayerGameHandler(0, view)
 
@@ -115,7 +113,7 @@ class PlayerGameHandlerTest {
     fun displayErrorWhenSnapshotNotExists() {
         `when`(mockSnapshot.exists()).thenReturn(false)
 
-        val view = FakeView()
+        val view = FakeGameView()
 
         val handler = PlayerGameHandler(0, view)
 
@@ -123,57 +121,6 @@ class PlayerGameHandlerTest {
 
         assertEquals("An error occurred", view.error)
         assertEquals(View.VISIBLE, view.errorVisibility)
-    }
-
-}
-
-private class FakeView(private val playerID: String = ""): GameView {
-
-    var singer = ""
-    var round = 0L
-
-    var song = ""
-    var songVisibility = View.GONE
-
-    var error = ""
-    var errorVisibility= View.GONE
-
-    var guessInputVisibility = View.VISIBLE
-
-    override fun chooseSong(choices: List<String>): String {
-        return choices[0]
-    }
-
-    override fun updateSinger(singerName: String) {
-        singer = singerName
-    }
-
-    override fun updateRound(currentRound: Long) {
-        round = currentRound
-    }
-
-    override fun displaySong(songName: String) {
-        guessInputVisibility = View.GONE
-        song = songName
-        songVisibility = View.VISIBLE
-    }
-
-    override fun displayGuessInput() {
-        songVisibility = View.GONE
-        guessInputVisibility = View.VISIBLE
-    }
-
-    override fun displayError(errorMessage: String) {
-        error = errorMessage
-        errorVisibility = View.VISIBLE
-    }
-
-    override fun hideError() {
-        errorVisibility = View.GONE
-    }
-
-    override fun checkPlayer(id: String): Boolean {
-        return playerID == id
     }
 
 }
