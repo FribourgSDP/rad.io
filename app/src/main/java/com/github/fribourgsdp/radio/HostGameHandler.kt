@@ -19,6 +19,7 @@ class HostGameHandler(private val game: Game, private val view: GameView, db: Da
                 // When everybody is done, change update the game
                 db.updateGame(game.id, updatesMap).addOnSuccessListener {
                     db.resetPlayerDoneMap(
+                        game.id,
                         (updatesMap["singer"] as User).name
                     ).addOnFailureListener {
                         view.displayError("An error occurred.")
