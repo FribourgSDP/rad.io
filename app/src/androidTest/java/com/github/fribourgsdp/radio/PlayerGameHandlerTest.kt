@@ -72,7 +72,7 @@ class PlayerGameHandlerTest {
         handler.handleSnapshot(mockSnapshot)
 
         // Wait for the task of the database to execute
-        Thread.sleep(5000)
+        Thread.sleep(1000)
 
         assertTrue(view.checkPlayer(singer))
         assertEquals(View.VISIBLE, view.songVisibility)
