@@ -26,31 +26,32 @@ class GameActivity : AppCompatActivity(), GameView {
     private lateinit var playersListView : ListView
     private lateinit var namesAdapter : ArrayAdapter<String>
 
-    private val playerGameHandler = PlayerGameHandler(0L, this)
+    private lateinit var playerGameHandler: PlayerGameHandler
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_game)
 
+        val json = Json {
+            allowStructuredMapKeys = true
+        }
+
         isHost = intent.getBooleanExtra(GAME_IS_HOST_KEY, false)
+        val game = json.decodeFromString(intent.getStringExtra(GAME_KEY)!!) as Game
 
         initViews()
 
-        playerGameHandler.linkToDatabase()
 
         if (isHost) {
-            val json = Json {
-                allowStructuredMapKeys = true
-            }
-            val game = json.decodeFromString(intent.getStringExtra(GAME_KEY)!!) as Game
-
             val hostGameHandler = HostGameHandler(game, this)
             hostGameHandler.linkToDatabase()
 
             user = User("The best player")
-        } else {
-            user = User("Victor")
         }
+
+        playerGameHandler = PlayerGameHandler(game.id, this)
+
+        playerGameHandler.linkToDatabase()
 
     }
 
