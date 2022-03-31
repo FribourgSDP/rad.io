@@ -123,6 +123,7 @@ class GoogleSignInActivity : AppCompatActivity() {
     }
 }
 
+/*
 private fun saveTestUser(context : Context, mail : String){
     /** this user allows quick demo's as it is data that is written to the app
      * specific storage and can be easily read without intents */
@@ -138,4 +139,4 @@ private fun saveUserInDatabse(authResult : AuthResult) : String{
     val user = User(mail!!)
     db.setUser(id, user)
     return mail
-}
+}*/
