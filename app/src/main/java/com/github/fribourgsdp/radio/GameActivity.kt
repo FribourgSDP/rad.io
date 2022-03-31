@@ -34,6 +34,13 @@ class GameActivity : AppCompatActivity(), GameView {
 
         initViews()
 
+        if (isHost) {
+            val game = intent.getSerializableExtra(GAME_KEY) as Game
+            val hostGameHandler = HostGameHandler(game, this)
+            hostGameHandler.linkToDatabase()
+
+        }
+
         playerGameHandler.linkToDatabase()
 
     }
