@@ -1,5 +1,7 @@
 package com.github.fribourgsdp.radio
 
+import android.content.Context
+import androidx.test.core.app.ApplicationProvider
 import androidx.test.espresso.Espresso
 import androidx.test.espresso.action.ViewActions
 import androidx.test.espresso.intent.Intents
@@ -9,10 +11,11 @@ import androidx.test.ext.junit.rules.ActivityScenarioRule
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import org.hamcrest.Matchers
 
+
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
-
+import org.mockito.Mockito.*
 
 /**
  * Main Activity Tests
@@ -20,6 +23,10 @@ import org.junit.runner.RunWith
  */
 @RunWith(AndroidJUnit4::class)
 class MainActivityTest {
+
+    private val ctx: Context = ApplicationProvider.getApplicationContext()
+
+
     @get:Rule
     var mainActivityRule = ActivityScenarioRule(MainActivity::class.java)
 
@@ -80,6 +87,9 @@ class MainActivityTest {
 
     @Test
     fun createUserWhenNoUserIsHere(){
+        `when`(User.load(ctx)).thenThrow(java.io.FileNotFoundException())
+        
+
 
     }
 
