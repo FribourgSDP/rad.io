@@ -110,23 +110,24 @@
         android:id="@+id/googleSignInButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="540dp"
+        android:layout_marginBottom="472dp"
         android:text="SignIn"
         app:layout_constraintBottom_toBottomOf="@+id/playlist_recycler_view"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.95"
+        app:layout_constraintHorizontal_bias="0.913"
         app:layout_constraintStart_toStartOf="parent" />
 
     <Button
         android:id="@+id/saveUserButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="548dp"
+        android:layout_marginBottom="464dp"
         android:text="Save changes"
         app:layout_constraintBottom_toBottomOf="@+id/playlist_recycler_view"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent" />
+
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/addPlaylistButton"
         android:layout_width="wrap_content"

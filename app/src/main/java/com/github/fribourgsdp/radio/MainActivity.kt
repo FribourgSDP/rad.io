@@ -56,10 +56,5 @@ class MainActivity : AppCompatActivity() {
             db.setUser(id.toString(),generatedUser)
         }
 
-
-
-
-
-
     }
 }
