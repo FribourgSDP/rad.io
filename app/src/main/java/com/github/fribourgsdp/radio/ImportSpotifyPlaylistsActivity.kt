@@ -116,14 +116,11 @@ class ImportSpotifyPlaylistsActivity : AppCompatActivity() {
             override fun onResponse(call: Call, response: Response) {
                 val parsedResponseString = response.body()?.string()
                 val parsedResponse = parser.parse(parsedResponseString)
-                var playlistInfo = mutableSetOf<Song>()
-                if (parsedResponse == null || parsedResponse.has("error")){
-
-                }
-                else {
+                val playlistInfo = mutableSetOf<Song>()
+                if (!(parsedResponse == null || parsedResponse.has("error"))) {
                     val songs = parsedResponse.getJSONArray("items")
                     for (i in 0 until songs.length()){
-                        var songObject =
+                        val songObject =
                         try {
                             songs.getJSONObject(i).getJSONObject("track")
                         } catch (e : JSONException){
@@ -131,7 +128,7 @@ class ImportSpotifyPlaylistsActivity : AppCompatActivity() {
                             continue
                         }
                         var artists = ""
-                        var songArtists = songObject.getJSONArray("artists")
+                        val songArtists = songObject.getJSONArray("artists")
                         for(j in 0 until songArtists.length()){
                             artists += songArtists.getJSONObject(j).getString("name") + ", "
                         }
