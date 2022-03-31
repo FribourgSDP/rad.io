@@ -33,6 +33,11 @@ interface GameView {
     fun displayError(errorMessage: String)
 
     /**
+     * Hide the error on the view.
+     */
+    fun hideError()
+
+    /**
      * Check if the given [id] is the same as the player from the view.
      * @return whether the given [id] is the same as the player from the view.
      */
