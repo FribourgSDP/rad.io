@@ -13,7 +13,7 @@ import java.io.File
 const val USER_DATA_PATH = "user_data_file"
 
 @Serializable
-class User (val name: String, val color: Int) {
+class User (var name: String, val color: Int) {
     init {
         require(name.isNotEmpty() && name.isNotBlank())
     }
