@@ -72,9 +72,15 @@ interface Database {
 
     /**
      * Open a game on the database.
-     * @return a task void so that we know if the lobby was correctly opened.
+     * @return a task void so that we know if the game was correctly opened.
      */
     fun openGame(id: Long) : Task<Void>
+
+    /**
+     * Open a game metadata document on the database.
+     * @return a task void so that we know if the game metadata was correctly opened.
+     */
+    fun openGameMetadata(id: Long, users: List<User>): Task<Void>
 
     /**
      * Launches a game from the lobby.
