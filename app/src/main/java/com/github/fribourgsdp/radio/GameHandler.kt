@@ -3,7 +3,7 @@ package com.github.fribourgsdp.radio
 import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.EventListener
 
-abstract class GameHandler(private val view: GameView, protected val db: Database = FirestoreDatabase()) {
+abstract class GameHandler(private val view: GameView, protected val db: Database) {
 
     abstract fun handleSnapshot(snapshot: DocumentSnapshot?)
 
