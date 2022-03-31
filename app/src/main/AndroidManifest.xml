@@ -13,6 +13,12 @@
         android:theme="@style/Theme.Radio"
         android:usesCleartextTraffic="true">
         <activity
+            android:name=".AddPlaylistActivity"
+            android:exported="false" />
+        <activity
+            android:name=".PlaylistDisplayActivity"
+            android:exported="false" />
+        <activity
             android:name=".CreateUserProfileActivity"
             android:exported="false" />
         <activity
