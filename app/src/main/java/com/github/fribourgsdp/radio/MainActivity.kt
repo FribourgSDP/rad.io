@@ -8,7 +8,9 @@ import android.os.Bundle
 import android.util.Log
 import android.widget.Button
 import androidx.appcompat.app.AppCompatActivity
+
 //import com.github.fribourgsdp.radio.databinding.ActivityMainBinding
+
 import android.widget.ImageButton
 
 class MainActivity : AppCompatActivity() {
@@ -53,6 +55,7 @@ class MainActivity : AppCompatActivity() {
             generatedUser.save(this)
             db.setUser(id.toString(),generatedUser)
         }
+
 
 
 

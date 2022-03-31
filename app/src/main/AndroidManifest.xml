@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.github.fribourgsdp.radio">
@@ -85,4 +86,93 @@
             android:exported="false" />
     </application>
 
+=======
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.github.fribourgsdp.radio">
+
+    <uses-permission android:name="android.permission.INTERNET" />
+
+    <application
+        android:allowBackup="true"
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/app_name"
+        android:roundIcon="@mipmap/ic_launcher_round"
+        android:supportsRtl="true"
+        android:theme="@style/Theme.Radio"
+        android:usesCleartextTraffic="true">
+        <activity
+            android:name=".AddPlaylistActivity"
+            android:exported="false" />
+        <activity
+            android:name=".PlaylistDisplayActivity"
+            android:exported="false" />
+        <activity
+            android:name=".JoinGameActivity"
+            android:exported="true" />
+        <activity
+            android:name=".SpotifyReceiveActivity"
+            android:exported="true"
+            android:label="@string/app_name"
+            android:launchMode="singleTop">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+                <data
+                    android:host="callback"
+                    android:scheme="com.github.fribourgsdp.radio" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".ImportSpotifyPlaylistsActivity"
+            android:exported="false" />
+        <activity
+            android:name=".LobbyActivity"
+            android:exported="true" />
+        <activity
+            android:name=".UserProfileActivity"
+            android:exported="false"
+            android:launchMode="singleTop" />
+        <activity
+            android:name=".FireBaseTestActivity"
+            android:exported="false" />
+        <activity
+            android:name=".DisplayLyricsActivity"
+            android:exported="true" />
+        <activity
+            android:name=".SettingsActivity"
+            android:exported="true" />
+        <activity
+            android:name=".GameSettingsActivity"
+            android:exported="true" />
+        <activity
+            android:name=".GoogleSignInActivity"
+            android:exported="false" />
+        <activity
+            android:name=".MainActivity"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity> <!-- Test implementations of activities -->
+        <activity
+            android:name=".mockimplementations.WorkingLobbyActivity"
+            android:exported="false" />
+        <activity
+            android:name=".mockimplementations.BuggyLobbyActivity"
+            android:exported="false" />
+        <activity
+            android:name=".mockimplementations.WorkingJoinGameActivity"
+            android:exported="false" />
+        <activity
+            android:name=".mockimplementations.BuggyJoinGameActivity"
+            android:exported="false" />
+    </application>
+
+>>>>>>> master
 </manifest>

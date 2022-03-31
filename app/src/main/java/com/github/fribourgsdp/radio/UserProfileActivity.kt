@@ -1,22 +1,24 @@
 package com.github.fribourgsdp.radio
 
 import android.content.ContentValues
+import android.content.Context
 import android.content.Intent
 import android.graphics.PorterDuff
 import android.graphics.PorterDuffColorFilter
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.widget.Button
 import android.widget.EditText
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.google.android.material.floatingactionbutton.FloatingActionButton
+import com.google.firebase.auth.FirebaseAuth
 import com.spotify.sdk.android.auth.AuthorizationClient
 import com.spotify.sdk.android.auth.AuthorizationRequest
 import com.spotify.sdk.android.auth.AuthorizationResponse
-import com.google.firebase.auth.FirebaseAuth
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 
@@ -24,7 +26,7 @@ const val MY_CLIENT_ID = "9dc40237547f4ffaa41bf1e07ea0bba1"
 const val REDIRECT_URI = "com.github.fribourgsdp.radio://callback"
 const val SCOPES = "playlist-read-private,playlist-read-collaborative"
 const val PLAYLIST_DATA = "com.github.fribourgsdp.radio.PLAYLIST_INNER_DATA"
-const val COMING_FROM_SPOTIFY_ACTIVITY_FLAG = "com.github.fribourgsdp.radio.spotifyDataParsing"
+const val RECREATE_USER = "com.github.fribourgsdp.radio.avoidRecreatingUser"
 
 class UserProfileActivity : AppCompatActivity(), PlaylistAdapter.OnPlaylistClickListener {
     private lateinit var user : User
@@ -48,6 +50,7 @@ class UserProfileActivity : AppCompatActivity(), PlaylistAdapter.OnPlaylistClick
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_user_profile)
 
+
         instantiateViews()
         try {
              user = User.load(this)
@@ -56,11 +59,13 @@ class UserProfileActivity : AppCompatActivity(), PlaylistAdapter.OnPlaylistClick
             createDefaultUser()
         }
 
+
         checkUser()
 
         launchSpotifyButton.setOnClickListener {
             authenticateUser()
         }
+
 
         saveChangeButton.setOnClickListener{
             updateUser()
@@ -69,6 +74,7 @@ class UserProfileActivity : AppCompatActivity(), PlaylistAdapter.OnPlaylistClick
         usernameField.setText(user.name)
         usernameInitialText.setText(user.initial.uppercaseChar().toString())
         spotifyStatusText.apply {text = if (user.spotifyLinked) "linked" else "unlinked"}
+
 
         logoutButton.setOnClickListener{
             firebaseAuth.signOut()
@@ -81,14 +87,29 @@ class UserProfileActivity : AppCompatActivity(), PlaylistAdapter.OnPlaylistClick
         }
 
         userIcon.setColorFilter(PorterDuffColorFilter(user.color, PorterDuff.Mode.ADD))
-        if (intent.getBooleanExtra(COMING_FROM_SPOTIFY_ACTIVITY_FLAG, false)){
-            addPlaylistsToUser()
+
+        findViewById<ImageView>(R.id.userIcon).colorFilter =
+            PorterDuffColorFilter(user.color, PorterDuff.Mode.ADD)
+
+        findViewById<TextView>(R.id.spotifyStatus).apply {
+            text = if (user.spotifyLinked) "linked" else "unlinked"
         }
+
 
         userPlaylists = user.getPlaylists().toList()
         playlistDisplay.adapter = PlaylistAdapter(userPlaylists, this)
         playlistDisplay.layoutManager = (LinearLayoutManager(this))
         playlistDisplay.setHasFixedSize(true)
+
+        findViewById<FloatingActionButton>(R.id.addPlaylistButton).setOnClickListener{startActivity(Intent(this, AddPlaylistActivity::class.java))}
+    }
+
+    override fun onBackPressed() {
+        super.onBackPressed()
+        val intent = Intent(this, MainActivity::class.java)
+        intent.putExtra(RECREATE_USER, false)
+        startActivity(intent)
+        finish()
     }
 
     override fun onItemClick(position: Int) {
@@ -133,14 +154,6 @@ class UserProfileActivity : AppCompatActivity(), PlaylistAdapter.OnPlaylistClick
         usernameInitialText.setText(user.initial.uppercaseChar().toString())
     }
 
-    private fun addPlaylistsToUser(){
-        val map = intent!!.getSerializableExtra("nameToUid") as HashMap<String, String>
-        user.addSpotifyPlaylistUids(map)
-        val playlists = intent!!.getSerializableExtra("playlists") as HashSet<Playlist>
-        user.addPlaylists(playlists)
-    }
-
-
     private fun authenticateUser() {
         AuthorizationClient.openLoginInBrowser(this, buildRequest())
     }
@@ -170,6 +183,13 @@ class UserProfileActivity : AppCompatActivity(), PlaylistAdapter.OnPlaylistClick
                 .setScopes(arrayOf(SCOPES))
                 .setShowDialog(true)
                 .build()
+        }
+        fun loadUser(ctx : Context) : User{
+            return try { /* TODO replace with proper error handling of asking user enter his info */
+                User.load(ctx)
+            } catch (e: java.io.FileNotFoundException) {
+                User("No User Found", User.generateColor())
+            }
         }
     }
 }

@@ -28,6 +28,9 @@
     <string name="playlist_format">Playlist: %s</string>
     <string name="number_of_rounds_format">Number of rounds: %d</string>
     <string name="hints_enabled_format">Hints enabled: %b</string>
+    <string name="name_cannot_be_empty">Error : Song name cannot be empty !</string>
+    <string name="playlist_is_empty">Error : Playlist does not contain any song !</string>
+    <string name="playlist_has_no_name">Error : Playlist has no name !</string>
     <string name="private_format">Private : %b</string>
     <string name="playlist_card_text1">Playlist Name</string>
     <string name="playlist_card_text2">Playlist Genre</string>
@@ -43,4 +46,9 @@
     <string name="create_profile_text">Profile</string>
     <string name="save_button_text">save</string>
     <string name="name_text">Name:</string>
+    <string name="add_a_playlist_manually">Add a playlist manually</string>
+    <string name="song_name">Song Name</string>
+    <string name="artist_name">Artist Name</string>
+    <string name="create_playlist">CREATE PLAYLIST</string>
+    <string name="add_song">ADD SONG</string>
 </resources>
