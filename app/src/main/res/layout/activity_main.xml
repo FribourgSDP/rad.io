@@ -69,9 +69,9 @@
 
 
         <Button
-            android:id="@+id/FireBaseButton"
+            android:id="@+id/VoiceOverIpButton"
             style="@style/MainButtons"
-            android:text="FireBase"
+            android:text="Voice Call Demo!"
              />
 
     </LinearLayout>

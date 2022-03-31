@@ -5,10 +5,10 @@ plugins {
     id 'org.jetbrains.kotlin.plugin.serialization' version '1.6.10'
     id 'com.google.gms.google-services'
 }
-
 jacoco {
     toolVersion = "0.8.7"
 }
+
 
 android {
     compileSdk 31
@@ -95,6 +95,9 @@ dependencies {
     implementation 'androidx.browser:browser:1.0.0'
     implementation 'androidx.navigation:navigation-fragment-ktx:2.4.1'
     implementation 'androidx.navigation:navigation-ui-ktx:2.4.1'
+    implementation 'io.agora.rtc:voice-sdk:3.5.0'
+    implementation files('libs\\RTCBuilder.jar')
+    //implementation 'com.github.AgoraIO:Tools:master-SNAPSHOT'
     testImplementation 'junit:junit:4.13.2'
     testImplementation "org.mockito:mockito-core:2.23.4"
     androidTestImplementation('com.android.support.test.espresso:espresso-contrib:2.2') {
