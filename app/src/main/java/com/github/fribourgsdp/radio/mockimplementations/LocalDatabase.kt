@@ -69,6 +69,10 @@ class LocalDatabase : Database {
         TODO("Not yet implemented")
     }
 
+    override fun openGameMetadata(id: Long, users: List<User>): Task<Void> {
+        TODO("Not yet implemented")
+    }
+
     override fun launchGame(id: Long): Task<Void> {
         TODO("Not yet implemented")
     }
