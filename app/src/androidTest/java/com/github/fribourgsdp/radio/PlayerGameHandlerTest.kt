@@ -1,6 +1,7 @@
 package com.github.fribourgsdp.radio
 
 import android.view.View
+import com.github.fribourgsdp.radio.mockimplementations.FakeGameView
 import com.google.android.gms.tasks.Tasks
 import com.google.firebase.firestore.DocumentSnapshot
 import org.junit.Assert.*
@@ -13,6 +14,7 @@ class PlayerGameHandlerTest {
     private lateinit var mockSnapshot: DocumentSnapshot
 
     private val singer = "Singer"
+    private val song = "A good song"
     private val round = 1L
     private val listOfSongs = arrayListOf("Song0", "Song1", "Song2")
 
@@ -23,7 +25,7 @@ class PlayerGameHandlerTest {
         `when`(mockSnapshot.exists()).thenReturn(true)
         `when`(mockSnapshot.getLong("current_round")).thenReturn(round)
         `when`(mockSnapshot.get("song_choices")).thenReturn(listOfSongs)
-        `when`(mockSnapshot.getString("current_song")).thenReturn(singer)
+        `when`(mockSnapshot.getString("current_song")).thenReturn(song)
     }
 
     @Test
@@ -120,6 +122,39 @@ class PlayerGameHandlerTest {
         handler.handleSnapshot(mockSnapshot)
 
         assertEquals("An error occurred", view.error)
+        assertEquals(View.VISIBLE, view.errorVisibility)
+    }
+
+    @Test
+    fun displaySongOnGoodGuess() {
+        val view = FakeGameView("Not Singer")
+        val db = mock(Database::class.java)
+        `when`(db.setPlayerDone(anyLong(), anyString()))
+            .thenReturn(Tasks.forResult(null))
+
+        val handler = PlayerGameHandler(0, view)
+
+        handler.handleSnapshot(mockSnapshot)
+        handler.handleGuess(song, "")
+
+        assertEquals(View.VISIBLE, view.songVisibility)
+        assertEquals(song, view.song)
+        assertEquals(View.GONE, view.guessInputVisibility)
+    }
+
+    @Test
+    fun displayErrorOnBadGuess() {
+        val view = FakeGameView("Not Singer")
+        val db = mock(Database::class.java)
+        `when`(db.setPlayerDone(anyLong(), anyString()))
+            .thenReturn(Tasks.forResult(null))
+
+        val handler = PlayerGameHandler(0, view)
+
+        handler.handleSnapshot(mockSnapshot)
+        handler.handleGuess("Not the song", "")
+
+        assertEquals("Wrong answer", view.error)
         assertEquals(View.VISIBLE, view.errorVisibility)
     }
 
