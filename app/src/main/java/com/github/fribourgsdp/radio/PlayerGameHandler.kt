@@ -4,6 +4,8 @@ import com.google.firebase.firestore.DocumentSnapshot
 
 class PlayerGameHandler(private val gameID: Long, private val view: GameView, db: Database = FirestoreDatabase()): GameHandler(view, db) {
 
+    private var songToGuess: String? = null
+
     override fun linkToDatabase() {
         db.listenToGameUpdate(gameID, executeOnUpdate())
     }
@@ -29,10 +31,30 @@ class PlayerGameHandler(private val gameID: Long, private val view: GameView, db
 
             } else {
                 view.displayGuessInput()
+
+                // Get the picked song
+                // It's not null when there is one.
+                songToGuess = snapshot.getString("current_song")
             }
 
         } else {
             view.displayError("An error occurred")
         }
     }
+
+    fun handleGuess(guess: String, username: String) {
+        // TODO: In a later update, use a point system
+        if (songToGuess != null && songToGuess!!.lowercase() == guess.lowercase()) {
+
+            db.setPlayerDone(gameID, username).addOnFailureListener {
+                view.displayError("An error occurred")
+            }
+
+            view.displaySong(guess)
+        } else if (songToGuess != null) {
+            view.displayError("Wrong answer")
+        }
+    }
+
+
 }
