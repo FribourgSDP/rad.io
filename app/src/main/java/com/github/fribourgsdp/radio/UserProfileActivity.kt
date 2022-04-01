@@ -74,7 +74,7 @@ class UserProfileActivity : AppCompatActivity(), PlaylistAdapter.OnPlaylistClick
 
         usernameField.setText(user.name)
         usernameInitialText.setText(user.initial.uppercaseChar().toString())
-        spotifyStatusText.apply {text = if (user.spotifyLinked) "linked" else "unlinked"}
+        spotifyStatusText.apply {text = if (user.linkedSpotify) "linked" else "unlinked"}
 
 
         logoutButton.setOnClickListener{
