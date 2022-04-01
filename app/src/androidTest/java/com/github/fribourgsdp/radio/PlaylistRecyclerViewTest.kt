@@ -65,7 +65,7 @@ class PlaylistRecyclerViewTest {
         val intent: Intent = Intent(context, UserProfileActivity::class.java)
 
         ActivityScenario.launch<UserProfileActivity>(intent).use { scenario ->
-            Espresso.onView(withId(R.id.playlist_recycler_view)).perform(RecyclerViewActions.actionOnItemAtPosition<PlaylistAdapter.PlaylistViewHolder>(0, click()))
+            Espresso.onView(withId(R.id.playlist_recycler_view)).perform(RecyclerViewActions.actionOnItemAtPosition<ViewHolder>(0, click()))
             Espresso.onView(withId(R.id.PlaylistName)).check(matches(withText(playlistTitle)))
         }
         Intents.release()

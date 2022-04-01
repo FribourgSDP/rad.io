@@ -37,6 +37,9 @@
     <string name="song_card_text1">Song Name</string>
     <string name="song_card_text2">Artist Name</string>
     <string name="playlist_name_placeholder">Playlist</string>
+    <string name="song_name_placeholder">Song</string>
+    <string name="artist_name_placeholder">Artist</string>
+    <string name="long_text_placeholder">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque convallis dignissim ipsum sit amet blandit. Maecenas a porta tellus, quis tincidunt sem. Nullam consequat pharetra lobortis. Pellentesque luctus, mi in bibendum viverra, felis erat feugiat magna, vel sagittis massa orci nec tortor. Interdum et malesuada fames ac ante ipsum primis in faucibus. Curabitur in turpis quis lacus congue imperdiet. Mauris eget lobortis nisi. Sed quis nulla pellentesque, faucibus nisi sed, porta purus. Nulla mattis, sapien quis vehicula ultrices, odio nibh tristique sapien, et ultrices orci felis in est. Praesent ut dignissim metus. </string>
     <string name="launch_game">Launch</string>
     <string name="join_game_text">Type the ID of the game you want to join !</string>
     <string name="join_id_hint">000</string>
@@ -48,5 +51,6 @@
     <string name="artist_name">Artist Name</string>
     <string name="create_playlist">CREATE PLAYLIST</string>
     <string name="add_song">ADD SONG</string>
+    <string name="lyricsPresenter">lyrics :</string>
 </resources>
 

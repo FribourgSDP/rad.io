@@ -19,13 +19,13 @@
         android:theme="@style/Theme.Radio"
         android:usesCleartextTraffic="true">
         <activity
-            android:name=".VoiceOverIPActivity"
-            android:exported="false" />
-       <activity
-            android:name=".AddPlaylistActivity"
+            android:name=".PlaylistsFragmentHolderActivity"
             android:exported="false" />
         <activity
-            android:name=".PlaylistDisplayActivity"
+            android:name=".VoiceOverIPActivity"
+            android:exported="false" />
+        <activity
+            android:name=".AddPlaylistActivity"
             android:exported="false" />
         <activity
             android:name=".JoinGameActivity"
