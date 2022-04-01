@@ -1,6 +1,8 @@
 package com.github.fribourgsdp.radio
 
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -12,6 +14,7 @@ import kotlinx.serialization.json.Json
 
 class SongFragment : Fragment() {
     private lateinit var initialLyrics : String
+    private lateinit var currentLyrics : String
     private lateinit var playlist : Playlist
     private lateinit var song: Song
 
@@ -24,6 +27,7 @@ class SongFragment : Fragment() {
             args.getString(SONG_DATA).let { serializedSong ->
                 song = Json.decodeFromString(serializedSong!!)
                 initialLyrics = song.lyrics
+                currentLyrics = initialLyrics
             }
         }
     }
@@ -43,5 +47,31 @@ class SongFragment : Fragment() {
         songTitle.text = song.name
         artistTitle.text = song.artist
         lyrics.setText(song.lyrics)
+
+        lyrics.addTextChangedListener(object : TextWatcher {
+            override fun afterTextChanged(s: Editable?) {
+                currentLyrics = lyrics.text.toString()
+            }
+
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
+            }
+
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+            }
+        })
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+
+        if (currentLyrics != initialLyrics) {
+            val user = User.load(requireView().context)
+            user.removePlaylist(playlist)
+            playlist.removeSong(song)
+            song.lyrics = currentLyrics
+            playlist.addSong(song)
+            user.addPlaylist(playlist)
+            user.save(requireView().context)
+        }
     }
 }

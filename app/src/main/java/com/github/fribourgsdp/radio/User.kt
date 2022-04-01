@@ -45,7 +45,7 @@ data class User (val name: String, val color: Int) {
          * which is written with <user>.save().
          * This function can be used from any activity of the app and retrieves the same data
          *
-         * @param context the context to use for loading from a file (usually <this> in an activity)
+         * @param context the context to use for loading from a file (usually this in an activity)
          * @param path a specific path in app-specific storage if we don't want to use the default
          *      user location
          * @throws java.io.FileNotFoundException
@@ -71,7 +71,7 @@ data class User (val name: String, val color: Int) {
      * There can only be a single User stored on the device at the default path
      * This function can be used from any activity of the app to save data accessible from anywhere
      *
-     * @param context the context to use for saving to a file (usually <this> in an activity)
+     * @param context the context to use for saving to a file (usually this in an activity)
      * @param path a specific path in app-specific storage if we don't want to use the default
      *      user location
      */
