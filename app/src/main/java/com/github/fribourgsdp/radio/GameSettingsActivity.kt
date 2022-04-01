@@ -5,6 +5,8 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
 import android.widget.*
+import kotlinx.serialization.encodeToString
+import kotlinx.serialization.json.Json
 
 const val GAME_HOST_KEY = "com.github.fribourgsdp.radio.GAME_HOST"
 const val GAME_NAME_KEY = "com.github.fribourgsdp.radio.GAME_NAME"
@@ -15,6 +17,9 @@ const val GAME_PRIVACY_KEY = "com.github.fribourgsdp.radio.GAME_PRIVACY"
 const val GAME_IS_HOST_KEY = "com.github.fribourgsdp.radio.GAME_IS_HOST"
 
 class GameSettingsActivity : AppCompatActivity() {
+    private val json = Json {
+        allowStructuredMapKeys = true
+    }
     private val host = getHost()
 
     private lateinit var nameInput : EditText
@@ -29,7 +34,7 @@ class GameSettingsActivity : AppCompatActivity() {
     private lateinit var playlistAdapter : ArrayAdapter<String>
     private lateinit var errorText : TextView
 
-    private var selectedPlaylist = ""
+    private lateinit var selectedPlaylist: Playlist
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -55,8 +60,9 @@ class GameSettingsActivity : AppCompatActivity() {
         playlistSearchView.setOnQueryTextListener(searchViewOnQueryBehavior())
 
         playlistListView.setOnItemClickListener{ parent, _, position, _ ->
-            selectedPlaylist = parent.getItemAtPosition(position).toString()
-            playlistSearchView.setQuery(selectedPlaylist, true)
+            val name = parent.getItemAtPosition(position).toString()
+            selectedPlaylist = getPlaylist(name)
+            playlistSearchView.setQuery(name, true)
             startButton.isEnabled = true
         }
 
@@ -67,7 +73,22 @@ class GameSettingsActivity : AppCompatActivity() {
     private fun getHost() : User {
         // TODO: Update once we can get the user of the phone
         val host = User("The best player")
-        host.addPlaylists(setOf(Playlist("Rap Playlist"), Playlist("Country Playlist")))
+        host.addPlaylists(
+            setOf(
+                Playlist("Rap Playlist"),
+                Playlist(
+                    "French Playlist",
+                    setOf(
+                        Song("Rouge", "Sardou"),
+                        Song("La chenille", "La Bande à Basile"),
+                        Song("Allume le feu", "Johnny Hallyday"),
+                        Song("Que Je T'aime", "Johnny Hallyday")
+                    ),
+                    Genre.NONE
+                ),
+                Playlist("Country Playlist")
+            )
+        )
         return host
     }
 
@@ -80,9 +101,9 @@ class GameSettingsActivity : AppCompatActivity() {
     private fun startButtonBehavior() : View.OnClickListener {
         return View.OnClickListener {
             val intent: Intent = Intent(this, LobbyActivity::class.java).apply {
-                putExtra(GAME_HOST_KEY, host.name)
+                putExtra(GAME_HOST_KEY, json.encodeToString(host))
                 putExtra(GAME_NAME_KEY, nameInput.text.toString().ifEmpty { getString(R.string.default_game_name) })
-                putExtra(GAME_PLAYLIST_KEY, selectedPlaylist)
+                putExtra(GAME_PLAYLIST_KEY, json.encodeToString(selectedPlaylist))
                 putExtra(GAME_NB_ROUNDS_KEY, nbRoundsInput.text.toString().ifEmpty { getString(R.string.default_game_nb_rounds) }.toInt())
                 putExtra(GAME_HINT_KEY, hintCheckBox.isChecked,)
                 putExtra(GAME_PRIVACY_KEY, privacyCheckBox.isChecked)
@@ -100,7 +121,7 @@ class GameSettingsActivity : AppCompatActivity() {
 
                 if (playlistsNames.contains(query) && query != null) {
                     playlistAdapter.filter.filter(query)
-                    selectedPlaylist = query
+                    selectedPlaylist = getPlaylist(query)
                     startButton.isEnabled = true
                     errorText.visibility = View.GONE
                 } else {
@@ -124,5 +145,9 @@ class GameSettingsActivity : AppCompatActivity() {
                 return false
             }
         }
+    }
+
+    private fun getPlaylist(name: String): Playlist {
+        return host.getPlaylists().find { playlist -> playlist.name == name }!!
     }
 }

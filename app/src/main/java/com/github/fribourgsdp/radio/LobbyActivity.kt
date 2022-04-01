@@ -1,18 +1,26 @@
 package com.github.fribourgsdp.radio
 
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
 import android.widget.*
-import androidx.recyclerview.widget.RecyclerView
-import com.google.android.gms.tasks.Task
+import kotlinx.serialization.decodeFromString
+import kotlinx.serialization.encodeToString
+import kotlinx.serialization.json.Json
+
+const val GAME_KEY = "com.github.fribourgsdp.radio.GAME"
 
 open class LobbyActivity : AppCompatActivity() {
+    private val json = Json {
+        allowStructuredMapKeys = true
+    }
+
     private val db = this.initDatabase()
 
-    private var hostName : String? = null
+    private var host : User? = null
     private var gameName : String? = null
-    private var playlistName : String? = null
+    private var playlist : Playlist? = null
     private var nbRounds: Int = 0
     private var withHint: Boolean = false
     private var isPrivate: Boolean = false
@@ -28,7 +36,7 @@ open class LobbyActivity : AppCompatActivity() {
 
     private lateinit var launchGameButton: Button
 
-    private lateinit var playersRecyclerView : ListView
+    private lateinit var playersListView : ListView
     private lateinit var namesAdapter : ArrayAdapter<String>
 
     private val gameBuilder = Game.Builder()
@@ -42,22 +50,60 @@ open class LobbyActivity : AppCompatActivity() {
         updateTextViews()
 
         if (isHost) {
-            db.getLobbyId().addOnSuccessListener { uid ->
-                uuidTextView.text = getString(R.string.uid_text_format, uid)
-                linkToDatabase(uid)
-            }.addOnFailureListener {
-                uuidTextView.text = getString(R.string.uid_error)
-            }
+            initLobbyAsHost()
         } else {
-            val uid = intent.getLongExtra(GAME_UID_KEY, -1)
-            if (uid >= 0) {
-                uuidTextView.text = getString(R.string.uid_text_format, uid)
-                linkToDatabase(uid)
-            } else {
-                uuidTextView.text = getString(R.string.uid_error_join)
-            }
+            initLobbyAsPlayer()
         }
 
+    }
+
+    private fun initLobbyAsHost() {
+        db.getLobbyId().addOnSuccessListener { uid ->
+            uuidTextView.text = getString(R.string.uid_text_format, uid)
+            linkToDatabase(uid)
+
+            // Setup the launch button for hosts
+            launchGameButton.setOnClickListener {
+                val game = gameBuilder.build()
+
+                // Try to open the game on the database
+                db.openGame(uid).addOnSuccessListener {
+
+                    // Try to put the game metadata on the database
+                    db.openGameMetadata(uid, game.getAllPlayers()).addOnSuccessListener {
+
+                        // If the game is created, try to launch it
+                        db.launchGame(uid).addOnSuccessListener {
+
+                            // When launched correctly, go to the game activity
+                            goToGameActivity(true, game)
+
+                        }.addOnFailureListener {
+                            uuidTextView.text = getString(R.string.launch_game_error)
+                        }
+
+                    }.addOnFailureListener {
+                    uuidTextView.text = getString(R.string.open_game_error)
+                }
+
+                }.addOnFailureListener {
+                    uuidTextView.text = getString(R.string.open_game_error)
+                }
+            }
+
+        }.addOnFailureListener {
+            uuidTextView.text = getString(R.string.uid_error)
+        }
+    }
+
+    private fun initLobbyAsPlayer() {
+        val uid = intent.getLongExtra(GAME_UID_KEY, -1)
+        if (uid >= 0) {
+            uuidTextView.text = getString(R.string.uid_text_format, uid)
+            linkToDatabase(uid)
+        } else {
+            uuidTextView.text = getString(R.string.uid_error_join)
+        }
     }
 
     open fun initDatabase(): Database {
@@ -65,9 +111,15 @@ open class LobbyActivity : AppCompatActivity() {
     }
 
     private fun initVariables() {
-        hostName        = intent.getStringExtra(GAME_HOST_KEY)
+        val hostIntent = intent.getStringExtra(GAME_HOST_KEY)
+        val playlistIntent = intent.getStringExtra(GAME_PLAYLIST_KEY)
+
+        if (hostIntent != null && playlistIntent != null) {
+            host            = json.decodeFromString(hostIntent) as User
+            playlist        = json.decodeFromString(playlistIntent) as Playlist
+        }
+
         gameName        = intent.getStringExtra(GAME_NAME_KEY)
-        playlistName    = intent.getStringExtra(GAME_PLAYLIST_KEY)
         nbRounds        = intent.getIntExtra(GAME_NB_ROUNDS_KEY, getString(R.string.default_game_nb_rounds).toInt())
         withHint        = intent.getBooleanExtra(GAME_HINT_KEY, false)
         isPrivate       = intent.getBooleanExtra(GAME_PRIVACY_KEY, false)
@@ -83,9 +135,9 @@ open class LobbyActivity : AppCompatActivity() {
         withHintTextView = findViewById(R.id.withHintText)
         privateTextView  = findViewById(R.id.privateText)
         privateTextView  = findViewById(R.id.privateText)
-        playersRecyclerView = findViewById(R.id.playersRecyclerView)
+        playersListView = findViewById(R.id.playersListView)
         namesAdapter = ArrayAdapter(this, android.R.layout.simple_list_item_1)
-        playersRecyclerView.adapter = namesAdapter
+        playersListView.adapter = namesAdapter
 
         launchGameButton = findViewById(R.id.launchGameButton)
 
@@ -95,9 +147,9 @@ open class LobbyActivity : AppCompatActivity() {
     }
 
     private fun updateTextViews() {
-        hostNameTextView.text = getString(R.string.host_name_format, hostName)
+        hostNameTextView.text = getString(R.string.host_name_format, host?.name ?: "")
         gameNameTextView.text = getString(R.string.game_name_format, gameName)
-        playlistTextView.text = getString(R.string.playlist_format, playlistName)
+        playlistTextView.text = getString(R.string.playlist_format, playlist?.name ?: "")
         nbRoundsTextView.text = getString(R.string.number_of_rounds_format, nbRounds)
         withHintTextView.text = getString(R.string.hints_enabled_format, withHint)
         privateTextView.text  = getString(R.string.private_format, isPrivate)
@@ -105,10 +157,11 @@ open class LobbyActivity : AppCompatActivity() {
 
     private fun linkToDatabase(uid: Long) {
         if (isHost && uid >= 0) {
-            if (hostName != null && gameName != null && playlistName != null) {
-                gameBuilder.setHost(User(hostName!!))
+            if (gameName != null && host != null && playlist != null) {
+                gameBuilder.setHost(host!!)
+                    .setID(uid)
                     .setName(gameName!!)
-                    .setPlaylist(Playlist(playlistName!!))
+                    .setPlaylist(playlist!!)
                     .setNbRounds(nbRounds)
                     .setWithHint(withHint)
                     .setPrivacy(isPrivate)
@@ -137,6 +190,12 @@ open class LobbyActivity : AppCompatActivity() {
                 val newList = snapshot.get("players")!! as ArrayList<String>
                 updatePlayersList(newList)
 
+                val isGameLaunched = snapshot.getBoolean("launched")
+
+                if (!isHost && isGameLaunched != null && isGameLaunched) {
+                    goToGameActivity(false, gameID = uid)
+                }
+
             } else {
                 uuidTextView.text = getString(R.string.uid_error)
             }
@@ -149,5 +208,19 @@ open class LobbyActivity : AppCompatActivity() {
         namesAdapter.addAll(playersList)
         namesAdapter.notifyDataSetChanged()
         gameBuilder.setUserList(playersList.map { name -> User(name) })
+    }
+
+    private fun goToGameActivity(isHost: Boolean, game: Game? = null, gameID: Long? = null) {
+        val intent: Intent = Intent(this, GameActivity::class.java).apply {
+            putExtra(GAME_IS_HOST_KEY, isHost)
+        }
+
+        if (isHost && game != null) {
+            intent.putExtra(GAME_KEY, json.encodeToString(game))
+        } else if (gameID != null) {
+            intent.putExtra(GAME_UID_KEY, gameID)
+        }
+
+        startActivity(intent)
     }
 }

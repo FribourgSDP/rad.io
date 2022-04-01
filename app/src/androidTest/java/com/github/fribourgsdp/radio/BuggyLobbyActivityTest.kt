@@ -14,6 +14,8 @@ import androidx.test.espresso.matcher.ViewMatchers.withText
 import androidx.test.espresso.matcher.ViewMatchers.isDisplayed
 import androidx.test.ext.junit.rules.ActivityScenarioRule
 import androidx.test.ext.junit.runners.AndroidJUnit4
+import kotlinx.serialization.encodeToString
+import kotlinx.serialization.json.Json
 import org.hamcrest.Matchers.not
 import org.junit.Before
 import org.junit.After
@@ -34,6 +36,10 @@ class BuggyLobbyActivityTest {
 
     private val ctx: Context = ApplicationProvider.getApplicationContext()
 
+    private val json = Json {
+        allowStructuredMapKeys = true
+    }
+
     @Before
     fun initIntent() {
         Intents.init()
@@ -51,6 +57,8 @@ class BuggyLobbyActivityTest {
 
         val testIntent = Intent(ctx, BuggyLobbyActivity::class.java).apply {
             putExtra(GAME_IS_HOST_KEY, true)
+            putExtra(GAME_HOST_KEY, json.encodeToString(User("host")))
+            putExtra(GAME_PLAYLIST_KEY, json.encodeToString(Playlist("playlist")))
         }
 
         ActivityScenario.launch<BuggyLobbyActivity>(testIntent).use {

@@ -46,6 +46,11 @@
     <string name="join_button_text">Join</string>
     <string name="join_fail_format">Failed to join lobby %d.</string>
     <string name="lobby_not_found">Lobby %d not found.</string>
+    <string name="current_round_format">Current round: %d</string>
+    <string name="singing_format">%s is singing!</string>
+    <string name="guess_the_song">Guess the song!</string>
+    <string name="open_game_error">Failed to open the game.</string>
+    <string name="launch_game_error">Failed to launch the game.</string>
     <string name="add_a_playlist_manually">Add a playlist manually</string>
     <string name="song_name">Song Name</string>
     <string name="artist_name">Artist Name</string>
