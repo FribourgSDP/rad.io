@@ -1,0 +1,47 @@
+package com.github.fribourgsdp.radio
+
+import android.os.Bundle
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
+import android.widget.EditText
+import android.widget.TextView
+import androidx.fragment.app.Fragment
+import kotlinx.serialization.decodeFromString
+import kotlinx.serialization.json.Json
+
+class SongFragment : Fragment() {
+    private lateinit var initialLyrics : String
+    private lateinit var playlist : Playlist
+    private lateinit var song: Song
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        arguments?.let { args ->
+            args.getString(PLAYLIST_DATA).let { serializedPlaylist ->
+                playlist = Json.decodeFromString(serializedPlaylist!!)
+            }
+            args.getString(SONG_DATA).let { serializedSong ->
+                song = Json.decodeFromString(serializedSong!!)
+                initialLyrics = song.lyrics
+            }
+        }
+    }
+
+    override fun onCreateView(inflater: LayoutInflater,
+                              container: ViewGroup?,
+                              savedInstanceState: Bundle?): View? {
+        return inflater.inflate(R.layout.fragment_song, container, false)
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        val songTitle : TextView = requireView().findViewById(R.id.SongName)
+        val artistTitle : TextView = requireView().findViewById(R.id.ArtistName)
+        val lyrics : EditText = requireView().findViewById(R.id.editTextLyrics)
+
+        songTitle.text = song.name
+        artistTitle.text = song.artist
+        lyrics.setText(song.lyrics)
+    }
+}
