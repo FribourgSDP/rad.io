@@ -16,6 +16,8 @@ import androidx.test.espresso.intent.Intents
 import androidx.test.espresso.matcher.ViewMatchers.withId
 import androidx.test.espresso.matcher.ViewMatchers.withText
 import androidx.test.espresso.matcher.ViewMatchers.isDisplayed
+import kotlinx.serialization.encodeToString
+import kotlinx.serialization.json.Json
 import org.hamcrest.Matchers.not
 
 class GameActivityTest {
@@ -23,6 +25,16 @@ class GameActivityTest {
     var testRule = ActivityScenarioRule(GameActivity::class.java)
 
     private val ctx: Context = ApplicationProvider.getApplicationContext()
+
+    private val fakeGame = Game.Builder()
+        .setHost(User("host"))
+        .setPlaylist(Playlist("playlist"))
+        .build()
+
+
+    private val json = Json {
+        allowStructuredMapKeys = true
+    }
 
     @Before
     fun initIntent() {
@@ -79,7 +91,11 @@ class GameActivityTest {
         val songTextView = onView(withId(R.id.songTextView))
         val songGuessEditText = onView(withId(R.id.songGuessEditText))
 
-        val testIntent = Intent(ctx, GameActivity::class.java)
+        val testIntent = Intent(ctx, GameActivity::class.java).apply {
+            putExtra(GAME_IS_HOST_KEY, true)
+            putExtra(GAME_KEY, json.encodeToString(fakeGame))
+        }
+
         ActivityScenario.launch<GameActivity>(testIntent).use { scenario ->
             scenario.onActivity {
                 it.displaySong(songName)
