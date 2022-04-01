@@ -14,6 +14,8 @@ import androidx.test.espresso.matcher.ViewMatchers.withText
 import androidx.test.espresso.matcher.ViewMatchers.isDisplayed
 import androidx.test.ext.junit.rules.ActivityScenarioRule
 import androidx.test.ext.junit.runners.AndroidJUnit4
+import kotlinx.serialization.encodeToString
+import kotlinx.serialization.json.Json
 import org.hamcrest.Matchers.not
 import org.junit.Before
 import org.junit.After
@@ -34,6 +36,11 @@ class WorkingLobbyActivityTest {
 
     private val ctx: Context = ApplicationProvider.getApplicationContext()
 
+    private val json = Json {
+        allowStructuredMapKeys = true
+        ignoreUnknownKeys = true
+    }
+
     @Before
     fun initIntent() {
         Intents.init()
@@ -47,9 +54,9 @@ class WorkingLobbyActivityTest {
     @Test
     fun lobbyDisplayCorrectInfosWhenHost() {
         // Test values
-        val testHostName = "The Boss"
+        val testHost = User("The Boss")
         val testName = "Hello World!"
-        val testPlaylist = "Rap Playlist"
+        val testPlaylist = Playlist("Rap Playlist")
         val testNbRounds = 20
         val withHint = true
         val private = true
@@ -65,9 +72,9 @@ class WorkingLobbyActivityTest {
         val launchGameButton = Espresso.onView(withId(R.id.launchGameButton))
 
         val testIntent = Intent(ctx, WorkingLobbyActivity::class.java).apply {
-            putExtra(GAME_HOST_KEY, testHostName)
+            putExtra(GAME_HOST_KEY, json.encodeToString(testHost))
             putExtra(GAME_NAME_KEY, testName)
-            putExtra(GAME_PLAYLIST_KEY, testPlaylist)
+            putExtra(GAME_PLAYLIST_KEY, json.encodeToString(testPlaylist))
             putExtra(GAME_NB_ROUNDS_KEY, testNbRounds)
             putExtra(GAME_HINT_KEY, withHint)
             putExtra(GAME_PRIVACY_KEY, private)
@@ -76,9 +83,9 @@ class WorkingLobbyActivityTest {
 
         ActivityScenario.launch<WorkingLobbyActivity>(testIntent).use {
             uuidTextView.check(matches(withText(ctx.getString(R.string.uid_text_format, LocalDatabase.EXPECTED_UID))))
-            hostNameTextView.check(matches(withText(ctx.getString(R.string.host_name_format, testHostName))))
+            hostNameTextView.check(matches(withText(ctx.getString(R.string.host_name_format, testHost.name))))
             gameNameTextView.check(matches(withText(ctx.getString(R.string.game_name_format, testName))))
-            playlistTextView.check(matches(withText(ctx.getString(R.string.playlist_format, testPlaylist))))
+            playlistTextView.check(matches(withText(ctx.getString(R.string.playlist_format, testPlaylist.name))))
             nbRoundsTextView.check(matches(withText(ctx.getString(R.string.number_of_rounds_format, testNbRounds))))
             withHintTextView.check(matches(withText(ctx.getString(R.string.hints_enabled_format, withHint))))
             privateTextView.check(matches(withText(ctx.getString(R.string.private_format, private))))
@@ -91,9 +98,9 @@ class WorkingLobbyActivityTest {
     fun lobbyDisplayCorrectInfosWhenInvited() {
         // Test values
         val testUID = 42L
-        val testHostName = "The Boss"
+        val testHost = User("The Boss")
         val testName = "Hello World!"
-        val testPlaylist = "Rap Playlist"
+        val testPlaylist = Playlist("Rap Playlist")
         val testNbRounds = 20
         val withHint = true
         val private = true
@@ -110,9 +117,9 @@ class WorkingLobbyActivityTest {
 
         val testIntent = Intent(ctx, WorkingLobbyActivity::class.java).apply {
             putExtra(GAME_UID_KEY, testUID)
-            putExtra(GAME_HOST_KEY, testHostName)
+            putExtra(GAME_HOST_KEY, json.encodeToString(testHost))
             putExtra(GAME_NAME_KEY, testName)
-            putExtra(GAME_PLAYLIST_KEY, testPlaylist)
+            putExtra(GAME_PLAYLIST_KEY, json.encodeToString(testPlaylist))
             putExtra(GAME_NB_ROUNDS_KEY, testNbRounds)
             putExtra(GAME_HINT_KEY, withHint)
             putExtra(GAME_PRIVACY_KEY, private)
@@ -121,9 +128,9 @@ class WorkingLobbyActivityTest {
 
         ActivityScenario.launch<WorkingLobbyActivity>(testIntent).use {
             uuidTextView.check(matches(withText(ctx.getString(R.string.uid_text_format, testUID))))
-            hostNameTextView.check(matches(withText(ctx.getString(R.string.host_name_format, testHostName))))
+            hostNameTextView.check(matches(withText(ctx.getString(R.string.host_name_format, testHost.name))))
             gameNameTextView.check(matches(withText(ctx.getString(R.string.game_name_format, testName))))
-            playlistTextView.check(matches(withText(ctx.getString(R.string.playlist_format, testPlaylist))))
+            playlistTextView.check(matches(withText(ctx.getString(R.string.playlist_format, testPlaylist.name))))
             nbRoundsTextView.check(matches(withText(ctx.getString(R.string.number_of_rounds_format, testNbRounds))))
             withHintTextView.check(matches(withText(ctx.getString(R.string.hints_enabled_format, withHint))))
             privateTextView.check(matches(withText(ctx.getString(R.string.private_format, private))))
