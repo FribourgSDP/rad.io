@@ -40,6 +40,7 @@ class UserProfileActivity : AppCompatActivity() {
     private lateinit var googleSignInButton : Button
     private lateinit var playlistDisplay : RecyclerView
     private lateinit var userIcon : ImageView
+    private var signedIn : Boolean = false
 
     private var db = FirestoreDatabase()
 
@@ -79,13 +80,20 @@ class UserProfileActivity : AppCompatActivity() {
 
 
         logoutButton.setOnClickListener{
-            firebaseAuth.signOut()
             startActivity(Intent(this, MainActivity::class.java))
             finish()
         }
 
         googleSignInButton.setOnClickListener{
-            startActivity(Intent(this,GoogleSignInActivity::class.java))
+            if(signedIn){
+                firebaseAuth.signOut()
+                googleSignInButton.setText("Sign in")
+                signedIn = false
+
+            }else{
+                startActivity(Intent(this,GoogleSignInActivity::class.java))
+
+            }
         }
 
         userIcon.setColorFilter(PorterDuffColorFilter(user.color, PorterDuff.Mode.ADD))
@@ -115,7 +123,7 @@ class UserProfileActivity : AppCompatActivity() {
         firebaseAuth = FirebaseAuth.getInstance()
         usernameField = findViewById(R.id.username)
         launchSpotifyButton = findViewById(R.id.launchSpotifyButton)
-        logoutButton = findViewById(R.id.logoutButton)
+        logoutButton = findViewById(R.id.homeButton)
         saveChangeButton = findViewById(R.id.saveUserButton)
         usernameInitialText = findViewById(R.id.usernameInitial)
         spotifyStatusText = findViewById(R.id.spotifyStatus)
@@ -172,6 +180,8 @@ class UserProfileActivity : AppCompatActivity() {
                     user.save(this)
                 }
                 usernameField.setText(user.name)
+                googleSignInButton.setText("Sign out")
+                signedIn = true
             }
         }
     }
