@@ -1,5 +1,6 @@
 package com.github.fribourgsdp.radio
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -47,12 +48,9 @@ class UserPlaylistsFragment : Fragment(), PlaylistAdapter.OnPlaylistClickListene
 
     override fun onItemClick(position: Int) {
         activity?.run {
-            val bundle = Bundle()
-            bundle.putString(PLAYLIST_DATA, Json.encodeToString(userPlaylists[position]))
-            supportFragmentManager.beginTransaction()
-                .replace(R.id.container, PlaylistSongsFragment::class.java, bundle)
-                .addToBackStack("PlaylistDisplayFragment")
-                .commit()
+            val intent = Intent(this, PlaylistDisplayActivity::class.java)
+                .putExtra(PLAYLIST_DATA, Json.encodeToString(userPlaylists[position]))
+            startActivity(intent)
         }
     }
 }
