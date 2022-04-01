@@ -82,7 +82,7 @@ dependencies {
     //for fragments
     def fragment_version = "1.4.1"
     implementation "androidx.fragment:fragment-ktx:$fragment_version"
-    androidTestImplementation "androidx.fragment:fragment-testing:$fragment_version"
+    debugImplementation "androidx.fragment:fragment-testing:$fragment_version"
 
 
     implementation 'com.squareup.okhttp3:okhttp:3.10.0'
