@@ -28,9 +28,6 @@
             android:name=".AddPlaylistActivity"
             android:exported="false" />
         <activity
-            android:name=".PlaylistDisplayActivity"
-            android:exported="false" />
-        <activity
             android:name=".JoinGameActivity"
             android:exported="true" />
         <activity

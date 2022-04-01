@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -12,6 +13,7 @@ import kotlinx.serialization.json.Json
 
 class PlaylistSongsFragment : Fragment(){
     private lateinit var songs: List<Song>
+    private lateinit var playlistName: String
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -19,6 +21,7 @@ class PlaylistSongsFragment : Fragment(){
             args.getString(PLAYLIST_DATA).let { serializedPlaylist ->
                 val playlist: Playlist = Json.decodeFromString(serializedPlaylist!!)
                 songs = playlist.getSongs().toList()
+                playlistName = playlist.name
             }
         }
     }
@@ -31,6 +34,8 @@ class PlaylistSongsFragment : Fragment(){
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        val playlistTitle : TextView = requireView().findViewById(R.id.PlaylistName)
+        playlistTitle.text = playlistName
         initializeRecyclerView()
     }
 
