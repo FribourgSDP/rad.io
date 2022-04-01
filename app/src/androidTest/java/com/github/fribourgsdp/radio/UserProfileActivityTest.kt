@@ -38,25 +38,7 @@ class UserProfileActivityTest : TestCase() {
 
     private val ctx: Context = ApplicationProvider.getApplicationContext()
 
-    /*@Test
-    fun userSavedLocallyIsDisplayed(){
-        Intents.init()
-
-        val testUser = User("TestSavedLocally")
-        testUser.save(ctx)
-        val intent: Intent = Intent(ctx, UserProfileActivity::class.java)
-
-        ActivityScenario.launch<UserProfileActivity>(intent).use { scenario ->
-
-            onView(withId(R.id.username)).
-            check(matches(withText(testUser.name)));
-
-
-        }
-        Intents.release()
-
-    }*/
-
+   
     @Test
     fun changingNameAndSavingChangesChangesUser(){
         val testName = "test"
