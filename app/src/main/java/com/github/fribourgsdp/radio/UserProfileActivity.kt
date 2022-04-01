@@ -74,7 +74,6 @@ class UserProfileActivity : AppCompatActivity() {
         bundle.putString(USER_DATA, Json.encodeToString(user))
         supportFragmentManager.beginTransaction()
             .replace(R.id.container, UserPlaylistsFragment::class.java, bundle)
-            .addToBackStack("UserPlaylistsFragment")
             .commit()
     }
 
