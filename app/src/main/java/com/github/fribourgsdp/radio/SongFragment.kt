@@ -12,7 +12,7 @@ import androidx.fragment.app.Fragment
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.json.Json
 
-class SongFragment : Fragment() {
+class SongFragment : MyFragment(R.layout.fragment_song) {
     private lateinit var initialLyrics : String
     private lateinit var currentLyrics : String
     private lateinit var playlist : Playlist
@@ -30,12 +30,6 @@ class SongFragment : Fragment() {
                 currentLyrics = initialLyrics
             }
         }
-    }
-
-    override fun onCreateView(inflater: LayoutInflater,
-                              container: ViewGroup?,
-                              savedInstanceState: Bundle?): View? {
-        return inflater.inflate(R.layout.fragment_song, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {

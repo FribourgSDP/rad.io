@@ -6,16 +6,16 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 
-class SongAdapter(private val songList: List<Song>, private val listener: OnSongClickListener) :
-    RecyclerView.Adapter<SongAdapter.SongViewHolder>(){
+class SongAdapter(private val songList: List<Song>, private val listener: OnClickListener) :
+    RecyclerView.Adapter<ViewHolder>(){
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): SongViewHolder {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val itemView = LayoutInflater.from(parent.context).inflate(R.layout.song_item,
             parent, false)
-        return SongViewHolder(itemView)
+        return ViewHolder(itemView, listener)
     }
 
-    override fun onBindViewHolder(holder: SongViewHolder, position: Int) {
+    override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val song = songList[position]
 
         holder.titleView.text = song.name
@@ -24,24 +24,4 @@ class SongAdapter(private val songList: List<Song>, private val listener: OnSong
 
     override fun getItemCount(): Int = songList.size
 
-    inner class SongViewHolder(itemView: View) :    RecyclerView.ViewHolder(itemView),
-                                                    View.OnClickListener{
-        val titleView: TextView = itemView.findViewById(R.id.song_title_view)
-        val subtitleView: TextView = itemView.findViewById(R.id.song_subtitle_view)
-
-        init {
-            itemView.setOnClickListener(this)
-        }
-
-        override fun onClick(p0: View?) {
-            val position = absoluteAdapterPosition
-            if (position != RecyclerView.NO_POSITION) {
-                listener.onItemClick(position)
-            }
-        }
-    }
-
-    interface OnSongClickListener {
-        fun onItemClick(position: Int)
-    }
 }

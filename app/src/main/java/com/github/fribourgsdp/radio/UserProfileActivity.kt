@@ -72,9 +72,7 @@ class UserProfileActivity : AppCompatActivity() {
         //initialise playlists recycler view fragment
         val bundle = Bundle()
         bundle.putString(USER_DATA, Json.encodeToString(user))
-        supportFragmentManager.beginTransaction()
-            .replace(R.id.container, UserPlaylistsFragment::class.java, bundle)
-            .commit()
+        MyFragment.beginTransaction<UserPlaylistsFragment>(supportFragmentManager, bundle)
     }
 
 //    override fun onBackPressed() {

@@ -14,7 +14,7 @@ import kotlinx.serialization.json.Json
 
 const val SONG_DATA = "com.github.fribourgsdp.radio.SONG_INNER_DATA"
 
-class PlaylistSongsFragment : Fragment(), SongAdapter.OnSongClickListener{
+class PlaylistSongsFragment : MyFragment(R.layout.fragment_playlist_display), OnClickListener{
     private lateinit var playlist: Playlist
     private lateinit var songs: List<Song>
     private lateinit var playlistName: String
@@ -30,11 +30,6 @@ class PlaylistSongsFragment : Fragment(), SongAdapter.OnSongClickListener{
         }
     }
 
-    override fun onCreateView(inflater: LayoutInflater,
-            container: ViewGroup?,
-            savedInstanceState: Bundle?): View? {
-        return inflater.inflate(R.layout.fragment_playlist_display, container, false)
-    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)

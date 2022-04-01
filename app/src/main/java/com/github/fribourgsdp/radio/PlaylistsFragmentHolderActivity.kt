@@ -13,8 +13,6 @@ class PlaylistsFragmentHolderActivity : AppCompatActivity() {
         //initialise songs recycler view fragment
         val bundle = Bundle()
         bundle.putString(PLAYLIST_DATA, intent.getStringExtra(PLAYLIST_DATA))
-        supportFragmentManager.beginTransaction()
-            .replace(R.id.container, PlaylistSongsFragment::class.java, bundle)
-            .commit()
+        MyFragment.beginTransaction<PlaylistSongsFragment>(supportFragmentManager, bundle)
     }
 }

@@ -7,16 +7,16 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 
 class PlaylistAdapter(private val playlistList: List<Playlist>,
-                      private val listener: OnPlaylistClickListener) :
-    RecyclerView.Adapter<PlaylistAdapter.PlaylistViewHolder>(){
+                      private val listener: OnClickListener) :
+    RecyclerView.Adapter<ViewHolder>(){
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PlaylistViewHolder {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val itemView = LayoutInflater.from(parent.context).inflate(R.layout.playlist_item,
             parent, false)
-        return PlaylistViewHolder(itemView)
+        return ViewHolder(itemView, listener)
     }
 
-    override fun onBindViewHolder(holder: PlaylistViewHolder, position: Int) {
+    override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val playlist = playlistList[position]
 
         holder.titleView.text = playlist.name
@@ -25,24 +25,4 @@ class PlaylistAdapter(private val playlistList: List<Playlist>,
 
     override fun getItemCount(): Int = playlistList.size
 
-    inner class PlaylistViewHolder(itemView: View) :    RecyclerView.ViewHolder(itemView),
-                                                        View.OnClickListener {
-        val titleView: TextView = itemView.findViewById(R.id.playlist_title_view)
-        val subtitleView: TextView = itemView.findViewById(R.id.playlist_subtitle_view)
-
-        init {
-            itemView.setOnClickListener(this)
-        }
-
-        override fun onClick(p0: View?) {
-            val position = absoluteAdapterPosition
-            if (position != RecyclerView.NO_POSITION) {
-                listener.onItemClick(position)
-            }
-        }
-    }
-
-    interface OnPlaylistClickListener {
-        fun onItemClick(position: Int)
-    }
 }
