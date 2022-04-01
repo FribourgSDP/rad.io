@@ -15,7 +15,6 @@ class PlaylistsFragmentHolderActivity : AppCompatActivity() {
         bundle.putString(PLAYLIST_DATA, intent.getStringExtra(PLAYLIST_DATA))
         supportFragmentManager.beginTransaction()
             .replace(R.id.container, PlaylistSongsFragment::class.java, bundle)
-            .addToBackStack("UserPlaylistsFragment")
             .commit()
     }
 }

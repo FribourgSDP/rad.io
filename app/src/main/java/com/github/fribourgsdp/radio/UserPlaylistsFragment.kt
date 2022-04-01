@@ -48,7 +48,7 @@ class UserPlaylistsFragment : Fragment(), PlaylistAdapter.OnPlaylistClickListene
 
     override fun onItemClick(position: Int) {
         activity?.run {
-            val intent = Intent(this, PlaylistDisplayActivity::class.java)
+            val intent = Intent(this, PlaylistsFragmentHolderActivity::class.java)
                 .putExtra(PLAYLIST_DATA, Json.encodeToString(userPlaylists[position]))
             startActivity(intent)
         }
