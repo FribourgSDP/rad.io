@@ -13,7 +13,7 @@ class PlaylistAdapter(private val playlistList: List<Playlist>,
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val itemView = LayoutInflater.from(parent.context).inflate(R.layout.playlist_item,
             parent, false)
-        return ViewHolder(itemView, listener)
+        return ViewHolder(itemView, listener, itemView.findViewById(R.id.playlist_title_view), itemView.findViewById(R.id.playlist_subtitle_view))
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {

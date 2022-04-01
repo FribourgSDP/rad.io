@@ -4,10 +4,7 @@ import android.view.View
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 
-class ViewHolder(itemView: View, private val listener: OnClickListener) :    RecyclerView.ViewHolder(itemView),
-    View.OnClickListener{
-    val titleView: TextView = itemView.findViewById(R.id.song_title_view)
-    val subtitleView: TextView = itemView.findViewById(R.id.song_subtitle_view)
+class ViewHolder(itemView: View, private val listener: OnClickListener, val titleView: TextView, val subtitleView: TextView) : RecyclerView.ViewHolder(itemView), View.OnClickListener{
 
     init {
         itemView.setOnClickListener(this)
