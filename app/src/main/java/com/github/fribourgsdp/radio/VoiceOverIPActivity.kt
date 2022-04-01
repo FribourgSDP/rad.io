@@ -27,7 +27,7 @@ class VoiceOverIPActivity : AppCompatActivity() {
     private val mRtcEventHandler = object : IRtcEngineEventHandler() {
     }
 
-    private val uid = 1
+    private val uid = 2
     private lateinit var token : String
     private val PERMISSION_REQ_ID_RECORD_AUDIO = 22
     private val PERMISSION_REQ_ID_CAMERA = PERMISSION_REQ_ID_RECORD_AUDIO + 1

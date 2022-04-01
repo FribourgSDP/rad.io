@@ -117,15 +117,15 @@ class UserProfileActivityTest : TestCase() {
         Intents.release()
     }
 
-    @Test
-    fun pressingBackButtonTakesUserToMainActivity(){
-        Intents.init()
-        Espresso.pressBack()
-        Intents.intended(
-            IntentMatchers.hasComponent(MainActivity::class.java.name)
-        )
-        Intents.release()
-    }
+//    @Test
+//    fun pressingBackButtonTakesUserToMainActivity(){
+//        Intents.init()
+//        Espresso.pressBack()
+//        Intents.intended(
+//            IntentMatchers.hasComponent(MainActivity::class.java.name)
+//        )
+//        Intents.release()
+//    }
 
 
     @Test

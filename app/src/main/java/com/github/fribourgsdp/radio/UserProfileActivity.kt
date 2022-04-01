@@ -25,10 +25,10 @@ import kotlinx.serialization.json.Json
 const val MY_CLIENT_ID = "9dc40237547f4ffaa41bf1e07ea0bba1"
 const val REDIRECT_URI = "com.github.fribourgsdp.radio://callback"
 const val SCOPES = "playlist-read-private,playlist-read-collaborative"
-const val PLAYLIST_DATA = "com.github.fribourgsdp.radio.PLAYLIST_INNER_DATA"
 const val RECREATE_USER = "com.github.fribourgsdp.radio.avoidRecreatingUser"
+const val USER_DATA = "com.github.fribourgsdp.radio.USER_DATA"
 
-class UserProfileActivity : AppCompatActivity(), PlaylistAdapter.OnPlaylistClickListener {
+class UserProfileActivity : AppCompatActivity() {
     private lateinit var user : User
     private lateinit var userPlaylists : List<Playlist>
     private lateinit var usernameField : EditText
@@ -42,6 +42,7 @@ class UserProfileActivity : AppCompatActivity(), PlaylistAdapter.OnPlaylistClick
     private lateinit var userIcon : ImageView
 
     private var db = FirestoreDatabase()
+
 
     //firebase auth
     private lateinit var firebaseAuth: FirebaseAuth
@@ -89,34 +90,25 @@ class UserProfileActivity : AppCompatActivity(), PlaylistAdapter.OnPlaylistClick
 
         userIcon.setColorFilter(PorterDuffColorFilter(user.color, PorterDuff.Mode.ADD))
 
-        findViewById<ImageView>(R.id.userIcon).colorFilter =
-            PorterDuffColorFilter(user.color, PorterDuff.Mode.ADD)
+        /*findViewById<ImageView>(R.id.userIcon).colorFilter =
+            PorterDuffColorFilter(user.color, PorterDuff.Mode.ADD)*/
 
-        findViewById<TextView>(R.id.spotifyStatus).apply {
+        /*findViewById<TextView>(R.id.spotifyStatus).apply {
             text = if (user.linkedSpotify) "linked" else "unlinked"
-        }
+        }*/
 
-
-        userPlaylists = user.getPlaylists().toList()
+        /*userPlaylists = user.getPlaylists().toList()
         playlistDisplay.adapter = PlaylistAdapter(userPlaylists, this)
         playlistDisplay.layoutManager = (LinearLayoutManager(this))
-        playlistDisplay.setHasFixedSize(true)
+        playlistDisplay.setHasFixedSize(true)*/
+
 
         findViewById<FloatingActionButton>(R.id.addPlaylistButton).setOnClickListener{startActivity(Intent(this, AddPlaylistActivity::class.java))}
-    }
 
-    override fun onBackPressed() {
-        super.onBackPressed()
-        val intent = Intent(this, MainActivity::class.java)
-        intent.putExtra(RECREATE_USER, false)
-        startActivity(intent)
-        finish()
-    }
-
-    override fun onItemClick(position: Int) {
-        val intent = Intent(this, PlaylistDisplayActivity::class.java)
-            .putExtra(PLAYLIST_DATA, Json.encodeToString(userPlaylists[position]))
-        startActivity(intent)
+        //initialise playlists recycler view fragment
+        val bundle = Bundle()
+        bundle.putString(USER_DATA, Json.encodeToString(user))
+        MyFragment.beginTransaction<UserPlaylistsFragment>(supportFragmentManager, bundle)
     }
 
     private fun instantiateViews(){
@@ -128,7 +120,7 @@ class UserProfileActivity : AppCompatActivity(), PlaylistAdapter.OnPlaylistClick
         usernameInitialText = findViewById(R.id.usernameInitial)
         spotifyStatusText = findViewById(R.id.spotifyStatus)
         googleSignInButton = findViewById(R.id.googleSignInButton)
-        playlistDisplay = findViewById(R.id.playlist_recycler_view)
+        //playlistDisplay = findViewById(R.id.playlist_recycler_view)
         userIcon = findViewById(R.id.userIcon)
     }
 
@@ -152,6 +144,13 @@ class UserProfileActivity : AppCompatActivity(), PlaylistAdapter.OnPlaylistClick
         user.save(this)
         usernameInitialText.setText(user.initial.uppercaseChar().toString())
     }
+//    override fun onBackPressed() {
+//        super.onBackPressed()
+//        val intent = Intent(this, MainActivity::class.java)
+//        intent.putExtra(RECREATE_USER, false)
+//        startActivity(intent)
+//        finish()
+//    }
 
     private fun authenticateUser() {
         AuthorizationClient.openLoginInBrowser(this, buildRequest())

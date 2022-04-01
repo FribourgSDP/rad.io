@@ -19,13 +19,16 @@
         android:theme="@style/Theme.Radio"
         android:usesCleartextTraffic="true">
         <activity
-            android:name=".VoiceOverIPActivity"
-            android:exported="false" />
-       <activity
-            android:name=".AddPlaylistActivity"
+            android:name=".GameActivity"
             android:exported="false" />
         <activity
-            android:name=".PlaylistDisplayActivity"
+            android:name=".VoiceOverIPActivity"
+            android:exported="false" />
+        <activity
+            android:name=".PlaylistsFragmentHolderActivity"
+            android:exported="false" />
+        <activity
+            android:name=".AddPlaylistActivity"
             android:exported="false" />
         <activity
             android:name=".JoinGameActivity"
@@ -79,7 +82,9 @@
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-        </activity> <!-- Test implementations of activities -->
+        </activity>
+
+        <!-- Test implementations of activities -->
         <activity
             android:name=".mockimplementations.WorkingLobbyActivity"
             android:exported="false" />

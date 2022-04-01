@@ -87,6 +87,10 @@ dependencies {
     implementation 'com.google.firebase:firebase-firestore-ktx'
     implementation platform('com.google.firebase:firebase-bom:29.2.0')
 
+    //for fragments
+    def fragment_version = "1.4.1"
+    implementation "androidx.fragment:fragment-ktx:$fragment_version"
+    debugImplementation "androidx.fragment:fragment-testing:$fragment_version"
 
 
     implementation 'com.squareup.okhttp3:okhttp:3.10.0'

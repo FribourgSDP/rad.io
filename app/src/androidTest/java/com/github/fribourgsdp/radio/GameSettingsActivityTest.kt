@@ -5,7 +5,6 @@ import android.view.KeyEvent
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.espresso.Espresso.closeSoftKeyboard
 import androidx.test.espresso.Espresso.onView
-import androidx.test.espresso.ViewAssertion
 import androidx.test.espresso.action.ViewActions
 import androidx.test.espresso.assertion.ViewAssertions
 import androidx.test.espresso.intent.Intents
@@ -14,6 +13,8 @@ import androidx.test.espresso.matcher.ViewMatchers
 import androidx.test.espresso.matcher.ViewMatchers.withId
 import androidx.test.ext.junit.rules.ActivityScenarioRule
 import androidx.test.ext.junit.runners.AndroidJUnit4
+import kotlinx.serialization.encodeToString
+import kotlinx.serialization.json.Json
 import org.hamcrest.Matchers.allOf
 import org.junit.Rule
 import org.junit.Test
@@ -31,13 +32,17 @@ class GameSettingsActivityTest {
 
     private val ctx: Context = ApplicationProvider.getApplicationContext()
 
+    private val json = Json {
+        allowStructuredMapKeys = true
+    }
+
     @Test
     fun intentWorksWithCorrectSettings() {
         Intents.init()
 
         // Test values
         val testName = "Hello World!"
-        val testPlaylist = "Rap Playlist"
+        val testPlaylist = Playlist("Rap Playlist")
         val testNbRounds = 20
         val withHint = true
         val private = true
@@ -51,7 +56,7 @@ class GameSettingsActivityTest {
         onView(withId(R.id.playlistSearchView))
             .perform(
                 ViewActions.click(),
-                ViewActions.typeText(testPlaylist),
+                ViewActions.typeText(testPlaylist.name),
                 ViewActions.pressKey(KeyEvent.KEYCODE_ENTER)
             )
 
@@ -82,7 +87,7 @@ class GameSettingsActivityTest {
                 hasComponent(LobbyActivity::class.java.name),
                 hasExtraWithKey(GAME_HOST_KEY),
                 hasExtra(GAME_NAME_KEY, testName),
-                hasExtra(GAME_PLAYLIST_KEY, testPlaylist),
+                hasExtra(GAME_PLAYLIST_KEY, json.encodeToString(testPlaylist)),
                 hasExtra(GAME_NB_ROUNDS_KEY, testNbRounds),
                 hasExtra(GAME_HINT_KEY, withHint),
                 hasExtra(GAME_PRIVACY_KEY, private)
@@ -98,12 +103,12 @@ class GameSettingsActivityTest {
         Intents.init()
 
         // Test values
-        val testPlaylist = "Rap Playlist"
+        val testPlaylist = Playlist("Rap Playlist")
 
         onView(withId(R.id.playlistSearchView))
             .perform(
                 ViewActions.click(),
-                ViewActions.typeText(testPlaylist),
+                ViewActions.typeText(testPlaylist.name),
                 ViewActions.pressKey(KeyEvent.KEYCODE_ENTER)
             )
 
@@ -117,7 +122,7 @@ class GameSettingsActivityTest {
                 hasComponent(LobbyActivity::class.java.name),
                 hasExtraWithKey(GAME_HOST_KEY),
                 hasExtra(GAME_NAME_KEY, ctx.getString(R.string.default_game_name)),
-                hasExtra(GAME_PLAYLIST_KEY, testPlaylist),
+                hasExtra(GAME_PLAYLIST_KEY, json.encodeToString(testPlaylist)),
                 hasExtra(GAME_NB_ROUNDS_KEY, ctx.getString(R.string.default_game_nb_rounds).toInt()),
                 hasExtra(GAME_HINT_KEY, false),
                 hasExtra(GAME_PRIVACY_KEY, false),

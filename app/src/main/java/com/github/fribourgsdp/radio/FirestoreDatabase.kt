@@ -6,6 +6,7 @@ import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.firestore.EventListener
 import java.lang.Exception
+import java.util.stream.Collectors
 
 /**
  *
@@ -156,7 +157,8 @@ class FirestoreDatabase : Database {
             "nbRounds" to settings.nbRounds,
             "withHint" to settings.withHint,
             "private" to settings.isPrivate,
-            "players" to listOf(settings.host.name)
+            "players" to listOf(settings.host.name),
+            "launched" to false
         )
 
         return db.collection("lobby").document(id.toString())
@@ -205,6 +207,87 @@ class FirestoreDatabase : Database {
             list.add(user.name)
 
             transaction.update(docRef, "players", list)
+
+            // Success
+            null
+        }
+    }
+
+    override fun openGame(id: Long): Task<Void> {
+        return db.collection("games").document(id.toString())
+            .set(
+                hashMapOf(
+                    "current_round" to 0L,
+                    "current_song" to "",
+                    "singer" to "",
+                    "song_choices" to ArrayList<String>()
+                )
+            )
+    }
+
+    override fun openGameMetadata(id: Long, users: List<User>): Task<Void> {
+        return db.collection("games_metadata").document(id.toString())
+            .set(
+                hashMapOf(
+                    "player_done_map" to users.stream().collect(Collectors.toMap({ u -> u.name }, { true }))
+                )
+            )
+    }
+
+    override fun launchGame(id: Long): Task<Void> {
+        return db.collection("lobby").document(id.toString())
+            .update("launched", true)
+    }
+
+    override fun listenToGameUpdate(id: Long, listener: EventListener<DocumentSnapshot>) {
+        db.collection("games").document(id.toString())
+            .addSnapshotListener(listener)
+    }
+
+    override fun listenToGameMetadataUpdate(id: Long, listener: EventListener<DocumentSnapshot>) {
+        db.collection("games_metadata").document(id.toString())
+            .addSnapshotListener(listener)
+    }
+
+    override fun updateGame(id: Long, updatesMap: Map<String, Any>): Task<Void> {
+        return db.collection("games").document(id.toString())
+            .update(updatesMap)
+    }
+
+    override fun setPlayerDone(gameID: Long, playerID: String): Task<Void> {
+        val docRef = db.collection("games_metadata").document(gameID.toString())
+
+        return db.runTransaction { transaction ->
+            val snapshot = transaction.get(docRef)
+
+            if (!snapshot.exists()) {
+                throw IllegalArgumentException("Document $gameID in games not found.")
+            }
+
+            val updatedMap = snapshot.get("player_done_map")!! as HashMap<String, Boolean>
+            updatedMap[playerID] = true
+
+            transaction.update(docRef, "player_done_map", updatedMap)
+
+            // Success
+            null
+        }
+    }
+
+    override fun resetPlayerDoneMap(gameID: Long, singer: String): Task<Void> {
+        val docRef = db.collection("games_metadata").document(gameID.toString())
+
+        return db.runTransaction { transaction ->
+            val snapshot = transaction.get(docRef)
+
+            if (!snapshot.exists()) {
+                throw IllegalArgumentException("Document $gameID in games not found.")
+            }
+
+            val updatedMap = snapshot.get("player_done_map")!! as HashMap<String, Boolean>
+            updatedMap.replaceAll {k, _ -> k == singer}
+
+            transaction.update(docRef, "player_done_map", updatedMap)
 
             // Success
             null
