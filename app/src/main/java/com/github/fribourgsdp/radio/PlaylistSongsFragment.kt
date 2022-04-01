@@ -11,7 +11,7 @@ import androidx.recyclerview.widget.RecyclerView
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.json.Json
 
-class PlaylistSongsFragment : Fragment(){
+class PlaylistSongsFragment : Fragment(), SongAdapter.OnSongClickListener{
     private lateinit var songs: List<Song>
     private lateinit var playlistName: String
 
@@ -41,8 +41,12 @@ class PlaylistSongsFragment : Fragment(){
 
     private fun initializeRecyclerView() {
         val songDisplay : RecyclerView = requireView().findViewById(R.id.SongRecyclerView)
-        songDisplay.adapter = SongAdapter(songs)
+        songDisplay.adapter = SongAdapter(songs, this)
         songDisplay.layoutManager = (LinearLayoutManager(activity))
         songDisplay.setHasFixedSize(true)
+    }
+
+    override fun onItemClick(position: Int) {
+        TODO("change fragment")
     }
 }
