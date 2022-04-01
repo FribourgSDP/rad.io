@@ -18,9 +18,9 @@ open class LobbyActivity : AppCompatActivity() {
 
     private val db = this.initDatabase()
 
-    private lateinit var host : User
+    private var host : User? = null
     private var gameName : String? = null
-    private lateinit var playlist : Playlist
+    private var playlist : Playlist? = null
     private var nbRounds: Int = 0
     private var withHint: Boolean = false
     private var isPrivate: Boolean = false
@@ -111,9 +111,15 @@ open class LobbyActivity : AppCompatActivity() {
     }
 
     private fun initVariables() {
-        host            = json.decodeFromString(intent.getStringExtra(GAME_HOST_KEY)!!) as User
+        val hostIntent = intent.getStringExtra(GAME_HOST_KEY)
+        val playlistIntent = intent.getStringExtra(GAME_PLAYLIST_KEY)
+
+        if (hostIntent != null && playlistIntent != null) {
+            host            = json.decodeFromString(hostIntent) as User
+            playlist        = json.decodeFromString(playlistIntent) as Playlist
+        }
+
         gameName        = intent.getStringExtra(GAME_NAME_KEY)
-        playlist        = json.decodeFromString(intent.getStringExtra(GAME_PLAYLIST_KEY)!!) as Playlist
         nbRounds        = intent.getIntExtra(GAME_NB_ROUNDS_KEY, getString(R.string.default_game_nb_rounds).toInt())
         withHint        = intent.getBooleanExtra(GAME_HINT_KEY, false)
         isPrivate       = intent.getBooleanExtra(GAME_PRIVACY_KEY, false)
@@ -141,9 +147,9 @@ open class LobbyActivity : AppCompatActivity() {
     }
 
     private fun updateTextViews() {
-        hostNameTextView.text = getString(R.string.host_name_format, host.name)
+        hostNameTextView.text = getString(R.string.host_name_format, host?.name ?: "")
         gameNameTextView.text = getString(R.string.game_name_format, gameName)
-        playlistTextView.text = getString(R.string.playlist_format, playlist.name)
+        playlistTextView.text = getString(R.string.playlist_format, playlist?.name ?: "")
         nbRoundsTextView.text = getString(R.string.number_of_rounds_format, nbRounds)
         withHintTextView.text = getString(R.string.hints_enabled_format, withHint)
         privateTextView.text  = getString(R.string.private_format, isPrivate)
@@ -151,11 +157,11 @@ open class LobbyActivity : AppCompatActivity() {
 
     private fun linkToDatabase(uid: Long) {
         if (isHost && uid >= 0) {
-            if (gameName != null) {
-                gameBuilder.setHost(host)
+            if (gameName != null && host != null && playlist != null) {
+                gameBuilder.setHost(host!!)
                     .setID(uid)
                     .setName(gameName!!)
-                    .setPlaylist(playlist)
+                    .setPlaylist(playlist!!)
                     .setNbRounds(nbRounds)
                     .setWithHint(withHint)
                     .setPrivacy(isPrivate)
