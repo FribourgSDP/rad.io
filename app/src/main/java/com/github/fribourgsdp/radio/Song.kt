@@ -5,14 +5,25 @@ import kotlinx.serialization.Serializable
 import java.util.concurrent.CompletableFuture
 
 @Serializable
-class Song (private val rawName: String, private val rawArtist: String, var lyrics: String): java.io.Serializable{
-
+/**
+ * A data class for songs with immutable name and artist but mutable lyrics.
+ * Serializable: supports the use of Json.encodeToString(<song>) and Json.decodeFromString(<string>)
+ * so that it can be saved and loaded to files or passed through intents as strings
+ * (NOT as serializable Objects in intents, those implement Java.io.serializable)
+ *
+ * @property rawName name of the song which will be reformatted and accessible with <song>.name
+ * @property rawArtist name of the artist which will be reformatted and accessible with <song>.artist
+ * @property lyrics mutable lyrics of the song
+ * @property name the reformatted name of the song
+ * @property artist the reformatted name of the artist of the song
+ * @constructor creates a Song with the given name, artist name and possibly blank lyrics
+ */
+class Song (private val rawName: String, private val rawArtist: String, var lyrics: String) {
     val name: String = reformatName(rawName)
     val artist: String = reformatName(rawArtist)
 
     constructor(name: String, artist: String): this(name, artist,"")
     constructor(name: String, artist: String, lyrics: CompletableFuture<String>): this(name, artist, lyrics.get())
-
 
     private fun reformatName(unformattedName: String): String {
         val noSpacesRegex = Regex(" +")
