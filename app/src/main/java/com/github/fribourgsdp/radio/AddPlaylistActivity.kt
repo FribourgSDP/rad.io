@@ -10,6 +10,7 @@ class AddPlaylistActivity : AppCompatActivity() {
     private val listSongs = ArrayList<Song>()
     private var listNames = ArrayList<String>()
     lateinit var listAdapter: ArrayAdapter<String>
+    lateinit var genreSpinner : Spinner
     lateinit var listView : ListView
     lateinit var errorTextView : TextView
     lateinit var user : User
@@ -20,6 +21,8 @@ class AddPlaylistActivity : AppCompatActivity() {
         listAdapter = ArrayAdapter(this, android.R.layout.simple_list_item_1, listNames)
         listView = findViewById(android.R.id.list)
         listView.adapter = listAdapter
+        genreSpinner = findViewById(R.id.genreSpinner)
+        genreSpinner.adapter = ArrayAdapter(this, android.R.layout.simple_spinner_item, Genre.values())
         errorTextView = findViewById(R.id.addPlaylistErrorTextView)
 
         user = UserProfileActivity.loadUser(this)
