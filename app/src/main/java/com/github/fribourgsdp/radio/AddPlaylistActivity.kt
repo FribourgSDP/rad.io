@@ -45,10 +45,10 @@ class AddPlaylistActivity : AppCompatActivity() {
         val playlistName : String = findViewById<EditText>(R.id.newPlaylistName).text.toString()
         when {
             playlistName.isEmpty() -> {
-                errorTextView.text = this.applicationContext.resources.getText(R.string.playlist_has_no_name)
+                displayError(R.string.playlist_has_no_name)
             }
             listSongs.isEmpty() -> {
-                errorTextView.text = this.applicationContext.resources.getText(R.string.playlist_is_empty)
+                displayError(R.string.playlist_is_empty)
             }
             else -> {
                 val intent = Intent(this@AddPlaylistActivity, UserProfileActivity::class.java)
@@ -59,5 +59,8 @@ class AddPlaylistActivity : AppCompatActivity() {
                 startActivity(intent)
             }
         }
+    }
+    private fun displayError(id : Int){
+        errorTextView.text = this.applicationContext.resources.getText(id)
     }
 }

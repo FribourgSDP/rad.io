@@ -57,7 +57,7 @@ class GameSettingsActivity : AppCompatActivity() {
         // When user is clicks on the bar, show the possibilities
         playlistSearchView.setOnSearchClickListener { playlistListView.visibility = View.VISIBLE }
 
-        playlistSearchView.setOnQueryTextListener(searchViewOnQueryBehavior())
+        playlistSearchView.setOnQueryTextListener(SearchViewOnQueryBehavior())
 
         playlistListView.setOnItemClickListener{ parent, _, position, _ ->
             val name = parent.getItemAtPosition(position).toString()
@@ -112,42 +112,39 @@ class GameSettingsActivity : AppCompatActivity() {
             startActivity(intent)
         }
     }
-
-    private fun searchViewOnQueryBehavior() : SearchView.OnQueryTextListener {
-        return object : SearchView.OnQueryTextListener {
-            override fun onQueryTextSubmit(query: String?): Boolean {
-                // When selected, hide the possibilities
-                playlistListView.visibility = View.GONE
-
-                if (playlistsNames.contains(query) && query != null) {
-                    playlistAdapter.filter.filter(query)
-                    selectedPlaylist = getPlaylist(query)
-                    startButton.isEnabled = true
-                    errorText.visibility = View.GONE
-                } else {
-                    errorText.text = getString(R.string.playlist_error_format, query)
-                    errorText.visibility = View.VISIBLE
-                    startButton.isEnabled = false
-                }
-
-                playlistSearchView.clearFocus()
-
-                return false
-
-            }
-
-            override fun onQueryTextChange(newText: String?): Boolean {
-                // When user is typing, show the possibilities
-                playlistListView.visibility = View.VISIBLE
-                playlistAdapter.filter.filter(newText)
-                startButton.isEnabled = false
-                errorText.visibility = View.GONE
-                return false
-            }
-        }
-    }
-
     private fun getPlaylist(name: String): Playlist {
         return host.getPlaylists().find { playlist -> playlist.name == name }!!
+    }
+
+    inner class SearchViewOnQueryBehavior: SearchView.OnQueryTextListener {
+        override fun onQueryTextSubmit(query: String?): Boolean {
+            // When selected, hide the possibilities
+            playlistListView.visibility = View.GONE
+
+            if (playlistsNames.contains(query) && query != null) {
+                playlistAdapter.filter.filter(query)
+                selectedPlaylist = getPlaylist(query)
+                startButton.isEnabled = true
+                errorText.visibility = View.GONE
+            } else {
+                errorText.text = getString(R.string.playlist_error_format, query)
+                errorText.visibility = View.VISIBLE
+                startButton.isEnabled = false
+            }
+
+            playlistSearchView.clearFocus()
+
+            return false
+
+        }
+
+        override fun onQueryTextChange(newText: String?): Boolean {
+            // When user is typing, show the possibilities
+            playlistListView.visibility = View.VISIBLE
+            playlistAdapter.filter.filter(newText)
+            startButton.isEnabled = false
+            errorText.visibility = View.GONE
+            return false
+        }
     }
 }
