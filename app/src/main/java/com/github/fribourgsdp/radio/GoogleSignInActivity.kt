@@ -109,7 +109,7 @@ class GoogleSignInActivity : AppCompatActivity() {
                 Toast.makeText(this@GoogleSignInActivity, "LoggedIn", Toast.LENGTH_SHORT).show()
             }
             //start profile activity
-            val intent: Intent = Intent(this, UserProfileActivity::class.java)
+            val intent = Intent(this, UserProfileActivity::class.java)
             startActivity(intent)
             finish()
         }

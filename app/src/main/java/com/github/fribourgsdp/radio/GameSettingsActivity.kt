@@ -105,7 +105,7 @@ class GameSettingsActivity : AppCompatActivity() {
                 putExtra(GAME_NAME_KEY, nameInput.text.toString().ifEmpty { getString(R.string.default_game_name) })
                 putExtra(GAME_PLAYLIST_KEY, json.encodeToString(selectedPlaylist))
                 putExtra(GAME_NB_ROUNDS_KEY, nbRoundsInput.text.toString().ifEmpty { getString(R.string.default_game_nb_rounds) }.toInt())
-                putExtra(GAME_HINT_KEY, hintCheckBox.isChecked,)
+                putExtra(GAME_HINT_KEY, hintCheckBox.isChecked)
                 putExtra(GAME_PRIVACY_KEY, privacyCheckBox.isChecked)
                 putExtra(GAME_IS_HOST_KEY, true)
             }
