@@ -29,4 +29,27 @@
         android:padding="4dp"
         tools:listitem="@layout/song_item"
         tools:layout_editor_absoluteX="1dp" />
+
+    <Button
+        android:id="@+id/editButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="16dp"
+        android:text="@string/editPlaylist"
+        app:layout_constraintBottom_toTopOf="@+id/SongRecyclerView"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="1.0" />
+
+    <Button
+        android:id="@+id/deleteButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="8dp"
+        android:backgroundTint="#B71C1C"
+        android:text="@string/deletePlaylist"
+        app:layout_constraintBottom_toTopOf="@+id/SongRecyclerView"
+        app:layout_constraintEnd_toStartOf="@+id/editButton"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="1.0" />
 </androidx.constraintlayout.widget.ConstraintLayout>

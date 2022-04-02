@@ -1,7 +1,10 @@
 package com.github.fribourgsdp.radio
 
+import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.View
+import android.widget.Button
 import android.widget.TextView
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -15,6 +18,8 @@ class PlaylistSongsFragment : MyFragment(R.layout.fragment_playlist_display), On
     private lateinit var playlist: Playlist
     private lateinit var songs: List<Song>
     private lateinit var playlistName: String
+    private lateinit var editButton: Button
+    private lateinit var deleteButton: Button
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -33,6 +38,18 @@ class PlaylistSongsFragment : MyFragment(R.layout.fragment_playlist_display), On
         val playlistTitle : TextView = requireView().findViewById(R.id.PlaylistName)
         playlistTitle.text = playlistName
         initializeRecyclerView()
+
+        editButton = requireView().findViewById(R.id.editButton)
+        deleteButton = requireView().findViewById(R.id.deleteButton)
+        deleteButton.setOnClickListener{
+            Log.println(Log.ASSERT, "***", "DELETION")
+            val user = UserProfileActivity.loadUser(requireContext())
+            //removes playlist from user playlists
+            // TODO:  
+            user.getPlaylists().find { p -> p.name == playlist.name }
+                ?.let { p -> user.removePlaylist(p) }
+            activity?.supportFragmentManager?.popBackStack()
+        }
     }
 
     private fun initializeRecyclerView() {
