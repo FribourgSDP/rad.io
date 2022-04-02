@@ -42,13 +42,12 @@ class PlaylistSongsFragment : MyFragment(R.layout.fragment_playlist_display), On
         editButton = requireView().findViewById(R.id.editButton)
         deleteButton = requireView().findViewById(R.id.deleteButton)
         deleteButton.setOnClickListener{
-            Log.println(Log.ASSERT, "***", "DELETION")
             val user = UserProfileActivity.loadUser(requireContext())
             //removes playlist from user playlists
-            // TODO:  
-            user.getPlaylists().find { p -> p.name == playlist.name }
-                ?.let { p -> user.removePlaylist(p) }
-            activity?.supportFragmentManager?.popBackStack()
+            user.removePlaylist(playlist)
+            user.save(requireContext())
+            // TODO: Ask Alex best way to lose fragment
+            activity?.onBackPressed()
         }
     }
 
@@ -67,5 +66,10 @@ class PlaylistSongsFragment : MyFragment(R.layout.fragment_playlist_display), On
             ?.replace(R.id.container, SongFragment::class.java, bundle)
             ?.addToBackStack("SongFragment")
             ?.commit()
+    }
+    companion object{
+        fun log(s : Any){
+            Log.println(Log.ASSERT, "******* ", s.toString())
+        }
     }
 }

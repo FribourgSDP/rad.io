@@ -73,6 +73,16 @@ class UserProfileActivity : AppCompatActivity() {
         MyFragment.beginTransaction<UserPlaylistsFragment>(supportFragmentManager, bundle)
     }
 
+    override fun onResume() {
+        // TODO: another way ?
+        super.onResume()
+        user = loadUser(this)
+        //initialise playlists recycler view fragment
+        val bundle = Bundle()
+        bundle.putString(USER_DATA, Json.encodeToString(user))
+        MyFragment.beginTransaction<UserPlaylistsFragment>(supportFragmentManager, bundle)
+    }
+
 //    override fun onBackPressed() {
 //        super.onBackPressed()
 //        val intent = Intent(this, MainActivity::class.java)
