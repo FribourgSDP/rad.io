@@ -66,7 +66,6 @@ class FirestoreDatabase : Database {
     }
 
     override fun getPlaylist(playlistName : String): Task<Playlist>{
-3
         return  db.collection("playlists").document(playlistName).get().continueWith { l ->
             val result = l.result
             if(result.exists()){

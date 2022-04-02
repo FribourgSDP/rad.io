@@ -131,7 +131,7 @@ private fun saveTestUser(context : Context, mail : String){
 }
 
 private fun saveUserInDatabse(authResult : AuthResult) : String{
-    val firebaseUser = authResult!!.user
+    val firebaseUser = authResult.user
     val db = FirestoreDatabase()
     val id = firebaseUser!!.uid
     val mail = firebaseUser.email
