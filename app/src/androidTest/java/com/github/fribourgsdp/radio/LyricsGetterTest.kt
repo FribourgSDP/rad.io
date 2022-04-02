@@ -69,7 +69,7 @@ class LyricsGetterTest {
     }
     @Test
 
-    fun JSONStandardParserDoesntThrowException(){
+    fun jsonStandardParserDoesntThrowException(){
         val s = JSONStandardParser().parse("32q87rfha98 73298r7h08qwoehr703o490{{{{{")
         assertNull(s)
     }
@@ -77,6 +77,11 @@ class LyricsGetterTest {
     fun cleanLyricsTest1(){
         val lyrics = LyricsGetter.getLyrics("rouge", "sardou", MockOkHttpClient()).get()
         assertFalse(lyrics.contains("commercial"))
+    }
+    @Test
+    fun markSongWithNoName(){
+        val lyrics = "Rouge,\nComme un soleil couchant de Méditerrannée\nRouge,\n..."
+        assert(LyricsGetter.markSongName(lyrics, "") == lyrics)
     }
     @Test
     fun emphasizeSongNameInLyrics(){
