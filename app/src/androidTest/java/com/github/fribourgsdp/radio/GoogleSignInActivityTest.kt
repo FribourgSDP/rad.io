@@ -1,30 +1,24 @@
 package com.github.fribourgsdp.radio
 
-import android.content.*
-import androidx.test.espresso.Espresso
-import androidx.test.espresso.assertion.ViewAssertions
-import androidx.test.espresso.matcher.ViewMatchers
-import androidx.test.ext.junit.runners.AndroidJUnit4
-import org.junit.Test
-import org.junit.runner.RunWith
-import android.os.*
+import android.content.Context
+import android.content.Intent
 import androidx.test.core.app.ActivityScenario
 import androidx.test.core.app.ApplicationProvider
-import androidx.test.espresso.Espresso.*
+import androidx.test.espresso.Espresso
+import androidx.test.espresso.Espresso.onView
+import androidx.test.espresso.action.ViewActions.click
+import androidx.test.espresso.assertion.ViewAssertions
 import androidx.test.espresso.intent.Intents
 import androidx.test.espresso.intent.matcher.IntentMatchers
-import com.google.android.gms.tasks.Task
+import androidx.test.espresso.matcher.ViewMatchers
+import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.google.android.gms.tasks.Tasks
-import com.google.firebase.FirebaseApp
-import com.google.firebase.FirebaseOptions
 import com.google.firebase.auth.*
 import org.hamcrest.Matchers
-import androidx.test.espresso.action.ViewActions.click
-import java.lang.Exception
-import java.util.concurrent.TimeUnit
-import com.google.firebase.auth.FirebaseUser
+import org.junit.Test
+import org.junit.runner.RunWith
 import org.mockito.Mockito.*
-
+import java.util.concurrent.TimeUnit
 
 
 /**

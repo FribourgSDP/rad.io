@@ -9,10 +9,10 @@ import androidx.appcompat.app.AppCompatActivity
 class AddPlaylistActivity : AppCompatActivity() {
     private val listSongs = ArrayList<Song>()
     private var listNames = ArrayList<String>()
-    lateinit var listAdapter: ArrayAdapter<String>
-    lateinit var genreSpinner : Spinner
-    lateinit var listView : ListView
-    lateinit var errorTextView : TextView
+    private lateinit var listAdapter: ArrayAdapter<String>
+    private lateinit var listView : ListView
+    private lateinit var errorTextView : TextView
+    private lateinit var genreSpinner: Spinner
     lateinit var user : User
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -46,17 +46,24 @@ class AddPlaylistActivity : AppCompatActivity() {
     }
     fun createPlaylist(view : View) {
         val playlistName : String = findViewById<EditText>(R.id.newPlaylistName).text.toString()
-        if (playlistName.isEmpty()){
-            errorTextView.text = this.applicationContext.resources.getText(R.string.playlist_has_no_name)
-        } else if (listSongs.isEmpty()){
-            errorTextView.text = this.applicationContext.resources.getText(R.string.playlist_is_empty)
-        } else {
-            val intent = Intent(this@AddPlaylistActivity, UserProfileActivity::class.java)
-            val playlist = Playlist(playlistName, listSongs.toSet(), Genre.NONE)
-            // TODO: Add feature to select genre
-            user.addPlaylist(playlist)
-            user.save(this)
-            startActivity(intent)
+        when {
+            playlistName.isEmpty() -> {
+                displayError(R.string.playlist_has_no_name)
+            }
+            listSongs.isEmpty() -> {
+                displayError(R.string.playlist_is_empty)
+            }
+            else -> {
+                val intent = Intent(this@AddPlaylistActivity, UserProfileActivity::class.java)
+                val playlist = Playlist(playlistName, listSongs.toSet(), Genre.NONE)
+                // TODO: Add feature to select genre
+                user.addPlaylist(playlist)
+                user.save(this)
+                startActivity(intent)
+            }
         }
+    }
+    private fun displayError(id : Int){
+        errorTextView.text = this.applicationContext.resources.getText(id)
     }
 }

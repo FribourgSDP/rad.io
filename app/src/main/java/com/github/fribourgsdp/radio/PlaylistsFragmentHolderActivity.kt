@@ -1,9 +1,7 @@
 package com.github.fribourgsdp.radio
 
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import kotlinx.serialization.encodeToString
-import kotlinx.serialization.json.Json
+import androidx.appcompat.app.AppCompatActivity
 
 class PlaylistsFragmentHolderActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {

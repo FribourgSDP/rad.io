@@ -57,5 +57,13 @@
     <string name="create_playlist">CREATE PLAYLIST</string>
     <string name="add_song">ADD SONG</string>
     <string name="lyricsPresenter">lyrics :</string>
+    <string name="playlist_name">Playlist Name</string>
+    <string name="artistLyricsDisplay">Artist :</string>
+    <string name="songLyricsDisplay">Song :</string>
+    <string name="welcome_to_google_signin">Welcome to Google SignIn</string>
+    <string name="your_spotify_playlists_are_loading">Your Spotify playlists are loading...!</string>
+    <string name="this_could_take_some_time">This could take some time...!</string>
+    <string name="you_have_successfully_logged_into_spotify">You have successfully logged into Spotify!</string>
+    <string name="import_my_spotify_playlists">Import my Spotify playlists</string>
 </resources>
 

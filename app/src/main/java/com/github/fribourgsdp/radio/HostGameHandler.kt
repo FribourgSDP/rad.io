@@ -1,7 +1,6 @@
 package com.github.fribourgsdp.radio
 
 import com.google.firebase.firestore.DocumentSnapshot
-import com.google.firebase.firestore.EventListener
 import com.google.firebase.firestore.FieldValue
 import kotlin.streams.toList
 

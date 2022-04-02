@@ -10,17 +10,18 @@
         android:id="@+id/newPlaylistName"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:autofillHints="playlist_name"
         android:ems="10"
-        android:hint="Playlist Name"
+        android:hint="@string/playlist_name"
         android:inputType="textPersonName"
         android:textAlignment="center"
+        android:textColorHint="#78909C"
         android:textSize="24sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.060000002"
-        android:autofillHints="playlist_name" />
+        app:layout_constraintVertical_bias="0.060000002" />
 
     <LinearLayout
         android:id="@+id/linearLayout"
@@ -50,10 +51,13 @@
                 android:hint="@string/song_name"
                 android:minWidth="48dp"
                 android:minHeight="48dp"
+                android:textColorHint="#757575"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toStartOf="@+id/addSongToPlaylistArtistName"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+                app:layout_constraintTop_toTopOf="parent"
+                android:inputType="text"
+                android:autofillHints="song name" />
 
             <EditText
                 android:id="@+id/addSongToPlaylistArtistName"
@@ -62,9 +66,12 @@
                 android:hint="@string/artist_name"
                 android:minWidth="48dp"
                 android:minHeight="48dp"
+                android:textColorHint="#757575"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+                app:layout_constraintTop_toTopOf="parent"
+                android:inputType="text"
+                android:autofillHints="artist name" />
         </androidx.constraintlayout.widget.ConstraintLayout>
 
         <TextView
