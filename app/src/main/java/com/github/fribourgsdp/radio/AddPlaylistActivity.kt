@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.view.View
 import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.get
 
 class AddPlaylistActivity : AppCompatActivity() {
     private val listSongs = ArrayList<Song>()
@@ -56,7 +57,8 @@ class AddPlaylistActivity : AppCompatActivity() {
             else -> {
                 val intent = Intent(this@AddPlaylistActivity, UserProfileActivity::class.java)
                 val playlist = Playlist(playlistName, listSongs.toSet(), Genre.NONE)
-                // TODO: Add feature to select genre
+                val genre : Genre = genreSpinner.selectedItem as Genre
+                playlist.genre = genre
                 user.addPlaylist(playlist)
                 user.save(this)
                 startActivity(intent)
