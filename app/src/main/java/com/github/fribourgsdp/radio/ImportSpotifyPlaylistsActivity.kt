@@ -24,7 +24,6 @@ class ImportSpotifyPlaylistsActivity : AppCompatActivity() {
         setContentView(R.layout.activity_import_spotify_playlists)
         val userToken = intent.getStringExtra("auth_token")
         TOKEN = userToken
-        Log.println(Log.INFO, "***", TOKEN.toString())
 
         val playlistMap: CompletableFuture<HashMap<String, String>> = getUserPlaylists()
         val playlistsNameToUid = playlistMap.get()
