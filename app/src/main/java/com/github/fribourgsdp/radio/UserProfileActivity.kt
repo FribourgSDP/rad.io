@@ -97,19 +97,6 @@ class UserProfileActivity : AppCompatActivity() {
 
         userIcon.setColorFilter(PorterDuffColorFilter(user.color, PorterDuff.Mode.ADD))
 
-        /*findViewById<ImageView>(R.id.userIcon).colorFilter =
-            PorterDuffColorFilter(user.color, PorterDuff.Mode.ADD)*/
-
-        /*findViewById<TextView>(R.id.spotifyStatus).apply {
-            text = if (user.linkedSpotify) "linked" else "unlinked"
-        }*/
-
-        /*userPlaylists = user.getPlaylists().toList()
-        playlistDisplay.adapter = PlaylistAdapter(userPlaylists, this)
-        playlistDisplay.layoutManager = (LinearLayoutManager(this))
-        playlistDisplay.setHasFixedSize(true)*/
-
-
         findViewById<FloatingActionButton>(R.id.addPlaylistButton).setOnClickListener{startActivity(Intent(this, AddPlaylistActivity::class.java))}
 
         //initialise playlists recycler view fragment
@@ -151,13 +138,6 @@ class UserProfileActivity : AppCompatActivity() {
         user.save(this)
         usernameInitialText.setText(user.initial.uppercaseChar().toString())
     }
-//    override fun onBackPressed() {
-//        super.onBackPressed()
-//        val intent = Intent(this, MainActivity::class.java)
-//        intent.putExtra(RECREATE_USER, false)
-//        startActivity(intent)
-//        finish()
-//    }
 
     private fun authenticateUser() {
         AuthorizationClient.openLoginInBrowser(this, buildRequest())
