@@ -68,5 +68,7 @@
     <string name="this_could_take_some_time">This could take some time...!</string>
     <string name="you_have_successfully_logged_into_spotify">You have successfully logged into Spotify!</string>
     <string name="import_my_spotify_playlists">Import my Spotify playlists</string>
+    <string name="sign_in_message">Sign in</string>
+    <string name="sign_out_message">Sign out</string>
 </resources>
 

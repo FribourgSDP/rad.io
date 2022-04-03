@@ -52,6 +52,7 @@ class UserProfileActivityTest : TestCase() {
 
 
             onView(withId(R.id.profileButton)).perform(click())
+
         }
 
         onView(withId(R.id.username)).perform(

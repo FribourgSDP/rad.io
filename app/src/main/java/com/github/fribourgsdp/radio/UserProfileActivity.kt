@@ -1,5 +1,6 @@
 package com.github.fribourgsdp.radio
 
+import android.annotation.SuppressLint
 import android.content.ContentValues
 import android.content.Context
 import android.content.Intent
@@ -33,7 +34,7 @@ class UserProfileActivity : AppCompatActivity() {
     private lateinit var spotifyStatusText : TextView
     private lateinit var saveChangeButton : Button
     private lateinit var launchSpotifyButton : Button
-    private lateinit var logoutButton : Button
+    private lateinit var homeButton : Button
     private lateinit var googleSignInButton : Button
     private lateinit var userIcon : ImageView
     private var signedIn : Boolean = false
@@ -43,6 +44,7 @@ class UserProfileActivity : AppCompatActivity() {
 
     //firebase auth
     private lateinit var firebaseAuth: FirebaseAuth
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -75,7 +77,7 @@ class UserProfileActivity : AppCompatActivity() {
         spotifyStatusText.apply {text = if (user.linkedSpotify) "linked" else "unlinked"}
 
 
-        logoutButton.setOnClickListener{
+        homeButton.setOnClickListener{
             startActivity(Intent(this, MainActivity::class.java))
             finish()
         }
@@ -83,7 +85,7 @@ class UserProfileActivity : AppCompatActivity() {
         googleSignInButton.setOnClickListener{
             if(signedIn){
                 firebaseAuth.signOut()
-                googleSignInButton.setText("Sign in")
+                googleSignInButton.setText(getString(R.string.sign_in_message))
                 signedIn = false
 
             }else{
@@ -105,12 +107,11 @@ class UserProfileActivity : AppCompatActivity() {
         firebaseAuth = FirebaseAuth.getInstance()
         usernameField = findViewById(R.id.username)
         launchSpotifyButton = findViewById(R.id.launchSpotifyButton)
-        logoutButton = findViewById(R.id.homeButton)
+        homeButton = findViewById(R.id.homeButton)
         saveChangeButton = findViewById(R.id.saveUserButton)
         usernameInitialText = findViewById(R.id.usernameInitial)
         spotifyStatusText = findViewById(R.id.spotifyStatus)
         googleSignInButton = findViewById(R.id.googleSignInButton)
-        //playlistDisplay = findViewById(R.id.playlist_recycler_view)
         userIcon = findViewById(R.id.userIcon)
     }
 
@@ -155,7 +156,7 @@ class UserProfileActivity : AppCompatActivity() {
                     user.save(this)
                 }
                 usernameField.setText(user.name)
-                googleSignInButton.setText("Sign out")
+                googleSignInButton.setText(getString(R.string.sign_out_message))
 
                 signedIn = true
             }
