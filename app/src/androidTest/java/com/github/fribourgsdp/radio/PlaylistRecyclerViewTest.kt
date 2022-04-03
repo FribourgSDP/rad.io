@@ -27,7 +27,7 @@ import java.util.concurrent.TimeUnit
 
 @RunWith(AndroidJUnit4::class)
 class PlaylistRecyclerViewTest {
-  
+
     @Test
     fun recyclerViewDisplayedTest() {
         Intents.init()
