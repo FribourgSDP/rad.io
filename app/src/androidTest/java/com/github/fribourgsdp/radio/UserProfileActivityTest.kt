@@ -39,7 +39,7 @@ import java.util.concurrent.TimeUnit
 
 @RunWith(AndroidJUnit4::class)
 class UserProfileActivityTest : TestCase() {
-    
+
     private val ctx: Context = ApplicationProvider.getApplicationContext()
 
    
