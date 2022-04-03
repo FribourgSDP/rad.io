@@ -92,20 +92,15 @@ class UserProfileActivityTest : TestCase() {
     }
 
     @Test
-    fun logoutButtonTest() {
-
+    fun homeButtonTest() {
         Intents.init()
-        val firebaseAuth = FirebaseAuth.getInstance()
-        val task = Tasks.withTimeout(firebaseAuth.signInWithEmailAndPassword("test@test.com", "test123!!!"),10, TimeUnit.SECONDS)
-        Tasks.await(task)
         val context: Context = ApplicationProvider.getApplicationContext()
 
         val intent = Intent(context, UserProfileActivity::class.java)
-
         ActivityScenario.launch<UserProfileActivity>(intent).use { scenario ->
 
-            val logoutButton = Espresso.onView(ViewMatchers.withId(R.id.logoutButton))
-            logoutButton.perform(click())
+            val googleSignInButton = Espresso.onView(ViewMatchers.withId(R.id.homeButton))
+            googleSignInButton.perform(click())
 
             Intents.intended(
                 Matchers.allOf(
@@ -115,6 +110,7 @@ class UserProfileActivityTest : TestCase() {
             )
         }
         Intents.release()
+
     }
 
 //    @Test
@@ -148,6 +144,28 @@ class UserProfileActivityTest : TestCase() {
             )
         }
         Intents.release()
+
+        /* Intents.init()
+        val firebaseAuth = FirebaseAuth.getInstance()
+        val task = Tasks.withTimeout(firebaseAuth.signInWithEmailAndPassword("test@test.com", "test123!!!"),10, TimeUnit.SECONDS)
+        Tasks.await(task)
+        val context: Context = ApplicationProvider.getApplicationContext()
+
+        val intent = Intent(context, UserProfileActivity::class.java)
+
+        ActivityScenario.launch<UserProfileActivity>(intent).use { scenario ->
+
+            val logoutButton = Espresso.onView(ViewMatchers.withId(R.id.homeButton))
+            logoutButton.perform(click())
+
+            Intents.intended(
+                Matchers.allOf(
+                    IntentMatchers.hasComponent(MainActivity::class.java.name),
+                    IntentMatchers.toPackage("com.github.fribourgsdp.radio")
+                )
+            )
+        }
+        Intents.release()*/
     }
 
 
