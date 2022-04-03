@@ -18,19 +18,29 @@ import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
 
+
+
+
+import androidx.test.espresso.Espresso.onView
+import androidx.test.espresso.assertion.ViewAssertions.matches
+import androidx.test.espresso.matcher.ViewMatchers.withId
+import androidx.test.espresso.matcher.ViewMatchers.withText
+
+
 import androidx.test.core.app.ActivityScenario
 import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.action.ViewActions
 
 import androidx.test.espresso.matcher.ViewMatchers.*
+import java.lang.Thread.sleep
 
 
 import java.util.concurrent.TimeUnit
 
 @RunWith(AndroidJUnit4::class)
 class UserProfileActivityTest : TestCase() {
-    @get:Rule
-    var userProfileActivityRule = ActivityScenarioRule(UserProfileActivity::class.java)
+    //@get:Rule
+    //var userProfileActivityRule = ActivityScenarioRule(UserProfileActivity::class.java)
 
 
    // @get:Rule
@@ -125,15 +135,20 @@ class UserProfileActivityTest : TestCase() {
 
 
     @Test
-    fun cliclOnGoogleButtonSendToGoogleSignInActivityTest() {
+    fun cliclOnGoogleButtonSendToGoogleSignInActivityTestOrLogoutCorrectly() {
 
         Intents.init()
+        val firebaseAuth = FirebaseAuth.getInstance()
+        val task = Tasks.withTimeout(firebaseAuth.signInWithEmailAndPassword("test@test.com", "test123!!!"),10, TimeUnit.SECONDS)
+        Tasks.await(task)
         val context: Context = ApplicationProvider.getApplicationContext()
-
         val intent = Intent(context, UserProfileActivity::class.java)
         ActivityScenario.launch<UserProfileActivity>(intent).use { scenario ->
 
-            val googleSignInButton = Espresso.onView(ViewMatchers.withId(R.id.googleSignInButton))
+            val googleSignInButton = onView(withId(R.id.googleSignInButton))
+            //googleSignInButton.check(matches(withText("Sign out")))
+            googleSignInButton.perform(click())
+            //googleSignInButton.check(matches(withText("Sign in")))
             googleSignInButton.perform(click())
 
             Intents.intended(
