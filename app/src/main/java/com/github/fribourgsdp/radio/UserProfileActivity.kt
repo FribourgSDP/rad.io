@@ -28,7 +28,6 @@ const val USER_DATA = "com.github.fribourgsdp.radio.USER_DATA"
 
 class UserProfileActivity : AppCompatActivity() {
     private lateinit var user : User
-    private lateinit var userPlaylists : List<Playlist>
     private lateinit var usernameField : EditText
     private lateinit var usernameInitialText : TextView
     private lateinit var spotifyStatusText : TextView
@@ -36,7 +35,6 @@ class UserProfileActivity : AppCompatActivity() {
     private lateinit var launchSpotifyButton : Button
     private lateinit var logoutButton : Button
     private lateinit var googleSignInButton : Button
-    private lateinit var playlistDisplay : RecyclerView
     private lateinit var userIcon : ImageView
     private var signedIn : Boolean = false
 
