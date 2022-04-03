@@ -27,10 +27,7 @@ import java.util.concurrent.TimeUnit
 
 @RunWith(AndroidJUnit4::class)
 class PlaylistRecyclerViewTest {
-    @get:Rule
-    var activityRule = ActivityScenarioRule(UserProfileActivity::class.java)
-    private lateinit var user: User
-
+  
     @Test
     fun recyclerViewDisplayedTest() {
         Intents.init()
