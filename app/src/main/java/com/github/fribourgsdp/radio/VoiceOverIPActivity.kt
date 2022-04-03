@@ -55,7 +55,7 @@ class VoiceOverIPActivity : AppCompatActivity() {
         setContentView(R.layout.activity_voice_over_ip)
         token = getToken(uid)
         if (checkSelfPermission(Manifest.permission.RECORD_AUDIO, PERMISSION_REQ_ID_RECORD_AUDIO)) {
-            initializeAndJoinChannel();
+            initializeAndJoinChannel()
         }
     }
 
