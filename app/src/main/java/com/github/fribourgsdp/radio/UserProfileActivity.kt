@@ -92,7 +92,6 @@ class UserProfileActivity : AppCompatActivity() {
 
             }else{
                 startActivity(Intent(this,GoogleSignInActivity::class.java))
-
             }
         }
 
@@ -181,6 +180,7 @@ class UserProfileActivity : AppCompatActivity() {
                 }
                 usernameField.setText(user.name)
                 googleSignInButton.setText("Sign out")
+
                 signedIn = true
             }
         }
