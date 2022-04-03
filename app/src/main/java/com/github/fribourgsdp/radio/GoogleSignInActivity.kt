@@ -109,7 +109,7 @@ class GoogleSignInActivity : AppCompatActivity() {
                 Toast.makeText(this@GoogleSignInActivity, "LoggedIn", Toast.LENGTH_SHORT).show()
             }
             //start profile activity
-            val intent: Intent = Intent(this, UserProfileActivity::class.java)
+            val intent = Intent(this, UserProfileActivity::class.java)
             startActivity(intent)
             finish()
         }
@@ -132,7 +132,7 @@ private fun saveTestUser(context : Context, mail : String){
 }
 
 private fun saveUserInDatabse(authResult : AuthResult) : String{
-    val firebaseUser = authResult!!.user
+    val firebaseUser = authResult.user
     val db = FirestoreDatabase()
     val id = firebaseUser!!.uid
     val mail = firebaseUser.email

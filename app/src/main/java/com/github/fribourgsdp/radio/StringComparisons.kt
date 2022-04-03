@@ -35,19 +35,23 @@ class StringComparisons {
         * Recursive function that determines if two formatted strings are equal at a given level of tolerance.
         */
         private fun equal(s1 : String, s2 : String, tolerance: Int) : Boolean {
-            var result : Boolean = false
+            var result = false
             if (tolerance == 0){
                 if (s1 == s2){
                     result = true
                 }
             }
             if (tolerance >= 1 && !result){
-                if (s1.length == s2.length){
-                    result = equalWithSubstitution(s1, s2, tolerance)
-                }else if (s1.length < s2.length){
-                    result = equalWithDeletion(s1, s2, tolerance)
-                }else if (s1.length > s2.length){
-                    result = equalWithInsertion(s1, s2, tolerance)
+                when {
+                    s1.length == s2.length -> {
+                        result = equalWithSubstitution(s1, s2, tolerance)
+                    }
+                    s1.length < s2.length -> {
+                        result = equalWithDeletion(s1, s2, tolerance)
+                    }
+                    s1.length > s2.length -> {
+                        result = equalWithInsertion(s1, s2, tolerance)
+                    }
                 }
             }
             return result

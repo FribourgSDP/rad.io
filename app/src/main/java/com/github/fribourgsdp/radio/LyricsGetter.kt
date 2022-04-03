@@ -1,5 +1,6 @@
 package com.github.fribourgsdp.radio
 
+import android.util.Log
 import okhttp3.*
 import java.io.IOException
 import java.util.*
@@ -148,9 +149,12 @@ class LyricsGetter {
          * @param name The name of the song to cross
          */
         fun markSongName(lyrics : String, name : String) : String{
-            return lyrics
-                .replace(name, "<strike>${name[0].uppercase() + name.lowercase().substring(1)}</strike>", ignoreCase = true)
-                .replace("\n", "<br>")
+            return if (name.isEmpty()){
+                lyrics
+            } else
+                lyrics
+                    .replace(name, "<strike>${name[0].uppercase() + name.lowercase().substring(1)}</strike>", ignoreCase = true)
+                    .replace("\n", "<br>")
         }
     }
 }
