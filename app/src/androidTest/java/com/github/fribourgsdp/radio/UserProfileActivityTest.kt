@@ -39,13 +39,7 @@ import java.util.concurrent.TimeUnit
 
 @RunWith(AndroidJUnit4::class)
 class UserProfileActivityTest : TestCase() {
-    //@get:Rule
-    //var userProfileActivityRule = ActivityScenarioRule(UserProfileActivity::class.java)
-
-
-   // @get:Rule
-    //var userProfileActivityRule = ActivityScenarioRule(UserProfileActivity::class.java)
-
+    
     private val ctx: Context = ApplicationProvider.getApplicationContext()
 
    
@@ -53,7 +47,7 @@ class UserProfileActivityTest : TestCase() {
     fun changingNameAndSavingChangesChangesUser(){
         val testName = "test"
 
-        val intent: Intent = Intent(ctx, MainActivity::class.java)
+        val intent = Intent(ctx, MainActivity::class.java)
         ActivityScenario.launch<MainActivity>(intent).use { scenario ->
 
 
@@ -93,7 +87,6 @@ class UserProfileActivityTest : TestCase() {
             )
 
         Espresso.closeSoftKeyboard()
-        //onView(withId(R.id.saveUserButton)).perform(click())
 
         val user = User.load(ctx)
 
@@ -123,19 +116,8 @@ class UserProfileActivityTest : TestCase() {
 
     }
 
-//    @Test
-//    fun pressingBackButtonTakesUserToMainActivity(){
-//        Intents.init()
-//        Espresso.pressBack()
-//        Intents.intended(
-//            IntentMatchers.hasComponent(MainActivity::class.java.name)
-//        )
-//        Intents.release()
-//    }
-
-
     @Test
-    fun cliclOnGoogleButtonSendToGoogleSignInActivityTestOrLogoutCorrectly() {
+    fun clickOnGoogleButtonSendToGoogleSignInActivityTestOrLogoutCorrectly() {
 
         Intents.init()
         val firebaseAuth = FirebaseAuth.getInstance()
@@ -146,9 +128,7 @@ class UserProfileActivityTest : TestCase() {
         ActivityScenario.launch<UserProfileActivity>(intent).use { scenario ->
 
             val googleSignInButton = onView(withId(R.id.googleSignInButton))
-            //googleSignInButton.check(matches(withText("Sign out")))
             googleSignInButton.perform(click())
-            //googleSignInButton.check(matches(withText("Sign in")))
             googleSignInButton.perform(click())
 
             Intents.intended(
@@ -160,27 +140,6 @@ class UserProfileActivityTest : TestCase() {
         }
         Intents.release()
 
-        /* Intents.init()
-        val firebaseAuth = FirebaseAuth.getInstance()
-        val task = Tasks.withTimeout(firebaseAuth.signInWithEmailAndPassword("test@test.com", "test123!!!"),10, TimeUnit.SECONDS)
-        Tasks.await(task)
-        val context: Context = ApplicationProvider.getApplicationContext()
-
-        val intent = Intent(context, UserProfileActivity::class.java)
-
-        ActivityScenario.launch<UserProfileActivity>(intent).use { scenario ->
-
-            val logoutButton = Espresso.onView(ViewMatchers.withId(R.id.homeButton))
-            logoutButton.perform(click())
-
-            Intents.intended(
-                Matchers.allOf(
-                    IntentMatchers.hasComponent(MainActivity::class.java.name),
-                    IntentMatchers.toPackage("com.github.fribourgsdp.radio")
-                )
-            )
-        }
-        Intents.release()*/
     }
 
 
