@@ -2,7 +2,11 @@ package com.github.fribourgsdp.radio
 
 import com.google.firebase.firestore.DocumentSnapshot
 
-class PlayerGameHandler(private val gameID: Long, private val view: GameView, db: Database = FirestoreDatabase()): GameHandler(view, db) {
+class PlayerGameHandler(
+    private val gameID: Long,
+    private val view: GameView,
+    db: Database = FirestoreDatabase()
+): GameHandler(view, db), GameView.OnPickListener {
 
     private var songToGuess: String? = null
 
@@ -19,15 +23,7 @@ class PlayerGameHandler(private val gameID: Long, private val view: GameView, db
 
             if (view.checkPlayer(singerName)) {
                 val choices = snapshot.get("song_choices")!! as ArrayList<String>
-                val pickedSong = view.chooseSong(choices)
-
-                db.updateCurrentSongOfGame(gameID, pickedSong)
-                    .addOnSuccessListener {
-                        view.displaySong(pickedSong)
-                    }
-                    .addOnFailureListener {
-                        view.displayError("An error occurred")
-                    }
+                view.chooseSong(choices, this)
 
             } else {
                 view.displayGuessInput()
@@ -54,6 +50,16 @@ class PlayerGameHandler(private val gameID: Long, private val view: GameView, db
         } else if (songToGuess != null) {
             view.displayError("Wrong answer")
         }
+    }
+
+    override fun onPick(song: String) {
+        db.updateCurrentSongOfGame(gameID, song)
+            .addOnSuccessListener {
+                view.displaySong(song)
+            }
+            .addOnFailureListener {
+                view.displayError("An error occurred")
+            }
     }
 
 
