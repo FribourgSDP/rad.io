@@ -16,8 +16,8 @@ class FakeGameView(private val playerID: String = ""): GameView {
 
     var guessInputVisibility = View.VISIBLE
 
-    override fun chooseSong(choices: List<String>): String {
-        return choices[0]
+    override fun chooseSong(choices: List<String>, listener: GameView.OnPickListener) {
+        listener.onPick(choices[0])
     }
 
     override fun updateSinger(singerName: String) {
