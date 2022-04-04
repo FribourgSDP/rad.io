@@ -11,6 +11,7 @@ import java.lang.Exception
 import io.agora.rtc.RtcEngine
 import io.agora.rtc.IRtcEngineEventHandler
 import RtcTokenBuilder.RtcTokenBuilder
+import android.annotation.SuppressLint
 import android.util.Log
 import android.widget.*
 import io.agora.rtc.Constants
@@ -30,12 +31,22 @@ class VoiceOverIPActivity : AppCompatActivity() {
 
     private var mRtcEngine: RtcEngine ?= null
     private val mRtcEventHandler = object : IRtcEngineEventHandler() {
+
+        @SuppressLint("SetTextI18n")
+        override fun onActiveSpeaker(uid: Int) {
+            super.onActiveSpeaker(uid)
+            activeSpeakerView = findViewById(R.id.activeSpeaker)
+            activeSpeakerView.setText("active speaker : $uid")
+        }
+
     }
     private lateinit var muteButton : ImageButton
     private lateinit var radioGroupCharacter : RadioGroup
     private lateinit var radioButtonHulk : RadioButton
     private lateinit var radioButtonPingKing : RadioButton
     private lateinit var radioButtonNone : RadioButton
+
+    private lateinit var activeSpeakerView : TextView
 
 
 
@@ -106,6 +117,7 @@ class VoiceOverIPActivity : AppCompatActivity() {
         }
         if (nbTentatives != MAX_SERVER_CONNECT_TENTATIVES){
             mRtcEngine!!.joinChannel(token, CHANNEL, "", uid)
+            mRtcEngine!!.enableAudioVolumeIndication(500,3,false)
         }
 
     }
@@ -142,8 +154,12 @@ class VoiceOverIPActivity : AppCompatActivity() {
             isMuted = isMuted xor true
             if(isMuted){
                 muteButton.setImageResource(R.drawable.ic_mute)
+                Toast.makeText(this, "Muted", Toast.LENGTH_SHORT)
+                    .show()
             }else{
                 muteButton.setImageResource(R.drawable.ic_unmute)
+                Toast.makeText(this, "UnMuted", Toast.LENGTH_SHORT)
+                    .show()
             }
         }
         return ret
@@ -151,9 +167,9 @@ class VoiceOverIPActivity : AppCompatActivity() {
 
     // When radio group "Difficulty Level" checked change.
     private fun doOnDifficultyLevelChanged(group: RadioGroup, checkedId: Int) {
-        val checkedRadioId = group.checkedRadioButtonId
 
-        when(checkedRadioId) {
+
+        when(checkedId) {
             R.id.radioButton_hulk -> {mRtcEngine!!.setAudioEffectPreset(Constants.VOICE_CHANGER_EFFECT_HULK);
             Toast.makeText(this, "You choose the HULK voice", Toast.LENGTH_SHORT)
                 .show()}

@@ -37,7 +37,7 @@
         android:background="@drawable/round_button"
         android:contentDescription="@string/profile_picture_description"
         android:scaleType="fitCenter"
-        android:src="@drawable/ic_mute"
+        android:src="@drawable/ic_unmute"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.498"
@@ -48,13 +48,13 @@
         android:layout_width="0dp"
         android:layout_height="30dp"
         android:layout_marginStart="16dp"
-        android:layout_marginTop="124dp"
         android:layout_marginEnd="16dp"
+        android:layout_marginBottom="92dp"
         android:text="Voice Effect"
+        app:layout_constraintBottom_toTopOf="@+id/muteButton"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView3" />
+        app:layout_constraintStart_toStartOf="parent" />
 
     <RadioGroup
         android:id="@+id/radioGroup_voiceEffect"
@@ -65,27 +65,39 @@
         android:layout_marginTop="12dp"
         android:layout_marginEnd="16dp"
         android:layout_marginRight="16dp"
+        android:orientation="horizontal"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView2">
 
         <RadioButton
             android:id="@+id/radioButton_hulk"
-            android:layout_width="match_parent"
+            android:layout_width="88dp"
             android:layout_height="wrap_content"
             android:text="Hulk" />
 
         <RadioButton
             android:id="@+id/radioButton_pingKing"
-            android:layout_width="match_parent"
+            android:layout_width="112dp"
             android:layout_height="wrap_content"
             android:text="PINGKING" />
+
         <RadioButton
             android:id="@+id/radioButton_none"
-            android:layout_width="match_parent"
+            android:layout_width="88dp"
             android:layout_height="wrap_content"
             android:text="NONE" />
     </RadioGroup>
+
+    <TextView
+        android:id="@+id/activeSpeaker"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Active speaker : None"
+        app:layout_constraintBottom_toTopOf="@+id/textView2"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textView3" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
