@@ -67,7 +67,6 @@ class LyricsGetterTest {
         LyricsGetter()
     }
     @Test
-
     fun jsonStandardParserDoesntThrowException(){
         val s = JSONStandardParser().parse("32q87rfha98 73298r7h08qwoehr703o490{{{{{")
         assertNull(s)
@@ -80,7 +79,7 @@ class LyricsGetterTest {
     @Test
     fun markSongWithNoName(){
         val lyrics = "Rouge,\nComme un soleil couchant de Méditerrannée\nRouge,\n..."
-        assert(LyricsGetter.markSongName(lyrics, "") == lyrics)
+        assertEquals(lyrics,LyricsGetter.markSongName(lyrics, ""))
     }
     @Test
     fun emphasizeSongNameInLyrics(){

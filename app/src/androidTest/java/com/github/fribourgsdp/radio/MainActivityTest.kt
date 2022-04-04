@@ -81,6 +81,7 @@ class MainActivityTest {
         Intents.intended(IntentMatchers.hasComponent(UserProfileActivity::class.java.name))
         Intents.release()
     }
+
     @Test
     fun correctTransitionToVoiceOverIpActivity(){
         Intents.init()
@@ -88,9 +89,4 @@ class MainActivityTest {
         Intents.intended(IntentMatchers.hasComponent(VoiceOverIPActivity::class.java.name))
         Intents.release()
     }
-
-
-
-
-
 }

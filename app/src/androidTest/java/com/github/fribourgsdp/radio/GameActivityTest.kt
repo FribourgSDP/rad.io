@@ -18,8 +18,6 @@ import org.junit.Rule
 import org.junit.Test
 
 class GameActivityTest {
-    @get:Rule
-    var testRule = ActivityScenarioRule(GameActivity::class.java)
 
     private val ctx: Context = ApplicationProvider.getApplicationContext()
 

@@ -31,8 +31,6 @@ import org.junit.runner.RunWith
  */
 @RunWith(AndroidJUnit4::class)
 class WorkingLobbyActivityTest {
-    @get:Rule
-    var lobbyActivityRule = ActivityScenarioRule(WorkingLobbyActivity::class.java)
 
     private val ctx: Context = ApplicationProvider.getApplicationContext()
 

@@ -30,7 +30,7 @@ class PlaylistRecyclerViewTest {
         Tasks.await(task)
         val context: Context = ApplicationProvider.getApplicationContext()
 
-        val intent: Intent = Intent(context, UserProfileActivity::class.java)
+        val intent = Intent(context, UserProfileActivity::class.java)
 
         ActivityScenario.launch<UserProfileActivity>(intent).use { scenario ->
 
@@ -53,7 +53,7 @@ class PlaylistRecyclerViewTest {
         user.addPlaylists(setOf(playlist1))
         user.save(context)
 
-        val intent: Intent = Intent(context, UserProfileActivity::class.java)
+        val intent = Intent(context, UserProfileActivity::class.java)
 
         ActivityScenario.launch<UserProfileActivity>(intent).use { scenario ->
             Espresso.onView(withId(R.id.playlist_recycler_view)).perform(RecyclerViewActions.actionOnItemAtPosition<ViewHolder>(0, click()))

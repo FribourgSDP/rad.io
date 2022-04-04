@@ -49,16 +49,12 @@ class UserProfileActivityTest : TestCase() {
 
         val intent = Intent(ctx, MainActivity::class.java)
         ActivityScenario.launch<MainActivity>(intent).use { scenario ->
-
-
             onView(withId(R.id.profileButton)).perform(click())
-
         }
 
         onView(withId(R.id.username)).perform(
             ViewActions.clearText(),
             ViewActions.typeText(testName),
-
             )
 
         Espresso.closeSoftKeyboard()
@@ -66,7 +62,7 @@ class UserProfileActivityTest : TestCase() {
 
         val user = User.load(ctx)
 
-        assert(user.name == testName)
+        assertEquals(testName, user.name)
 
     }
 
@@ -76,22 +72,19 @@ class UserProfileActivityTest : TestCase() {
 
         val intent: Intent = Intent(ctx, MainActivity::class.java)
         ActivityScenario.launch<MainActivity>(intent).use { scenario ->
-
-
             onView(withId(R.id.profileButton)).perform(click())
         }
 
         onView(withId(R.id.username)).perform(
             ViewActions.clearText(),
             ViewActions.typeText(testName),
-
             )
 
         Espresso.closeSoftKeyboard()
 
         val user = User.load(ctx)
 
-        assert(user.name != testName)
+        assertEquals(testName,user.name)
 
     }
 
@@ -149,6 +142,6 @@ class UserProfileActivityTest : TestCase() {
         val request = UserProfileActivity.buildRequest()
         assertEquals(MY_CLIENT_ID, request.clientId)
         assertEquals(REDIRECT_URI, request.redirectUri)
-        assert(request.scopes[0].equals("playlist-read-private,playlist-read-collaborative"))
+        assertTrue(request.scopes[0].equals("playlist-read-private,playlist-read-collaborative"))
     }
 }

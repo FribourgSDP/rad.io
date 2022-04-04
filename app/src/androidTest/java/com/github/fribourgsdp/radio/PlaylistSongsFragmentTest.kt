@@ -24,7 +24,7 @@ class PlaylistSongsFragmentTest {
     fun playlistNameIsCorrect() {
         val bundle = Bundle()
         val playlistName = "test"
-        val playlist : Playlist = Playlist(playlistName, Genre.NONE)
+        val playlist = Playlist(playlistName, Genre.NONE)
         bundle.putString(PLAYLIST_DATA, Json.encodeToString(playlist))
         val scenario = launchFragmentInContainer<PlaylistSongsFragment>(bundle)
         Espresso.onView(withId(R.id.PlaylistName))
@@ -35,7 +35,7 @@ class PlaylistSongsFragmentTest {
     fun playListFragmentHasRecyclerView() {
         val bundle = Bundle()
         val playlistName = "test"
-        val playlist : Playlist = Playlist(playlistName, Genre.NONE)
+        val playlist = Playlist(playlistName, Genre.NONE)
         bundle.putString(PLAYLIST_DATA, Json.encodeToString(playlist))
         val scenario = launchFragmentInContainer<PlaylistSongsFragment>(bundle)
         Espresso.onView(withId(R.id.SongRecyclerView)).check(matches(isDisplayed()))

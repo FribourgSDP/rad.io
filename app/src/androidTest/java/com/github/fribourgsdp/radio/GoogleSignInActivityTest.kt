@@ -4,7 +4,6 @@ import android.content.Context
 import android.content.Intent
 import androidx.test.core.app.ActivityScenario
 import androidx.test.core.app.ApplicationProvider
-import androidx.test.espresso.Espresso
 import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.action.ViewActions.click
 import androidx.test.espresso.assertion.ViewAssertions
@@ -32,7 +31,7 @@ class GoogleSignInActivityTest {
     @Test
     fun correctTextOnTextView() {
         val context: Context = ApplicationProvider.getApplicationContext()
-        val intent: Intent = Intent(context, GoogleSignInActivity::class.java)
+        val intent = Intent(context, GoogleSignInActivity::class.java)
         ActivityScenario.launch<GoogleSignInActivity>(intent).use { scenario ->
 
             val txtView = onView(ViewMatchers.withId(R.id.captionTv))
@@ -48,10 +47,10 @@ class GoogleSignInActivityTest {
     fun playGoogleButton() {
 
         val context: Context = ApplicationProvider.getApplicationContext()
-        val intent: Intent = Intent(context, GoogleSignInActivity::class.java)
+        val intent = Intent(context, GoogleSignInActivity::class.java)
         ActivityScenario.launch<GoogleSignInActivity>(intent).use { scenario ->
 
-            val googleButton = Espresso.onView(ViewMatchers.withId(R.id.googleSignInButton))
+            val googleButton = onView(ViewMatchers.withId(R.id.googleSignInButton))
             googleButton.perform(click())
         }
     }
@@ -63,7 +62,7 @@ class GoogleSignInActivityTest {
         EmailAuthProvider.getCredential("test", "test2")
 
         val context: Context = ApplicationProvider.getApplicationContext()
-        val intent: Intent = Intent(context, GoogleSignInActivity::class.java)
+        val intent = Intent(context, GoogleSignInActivity::class.java)
         ActivityScenario.launch<GoogleSignInActivity>(intent).use { scenario ->
 
             val mockAdditionalUserInfo = makeMockAdditionalUserInfo(true)
@@ -95,7 +94,7 @@ class GoogleSignInActivityTest {
     @Test
     fun firebaseAuthWithUser() {
         val context: Context = ApplicationProvider.getApplicationContext()
-        val intent: Intent = Intent(context, GoogleSignInActivity::class.java)
+        val intent = Intent(context, GoogleSignInActivity::class.java)
         ActivityScenario.launch<GoogleSignInActivity>(intent).use { scenario ->
 
             val mockAdditionalUserInfo = makeMockAdditionalUserInfo(false)
@@ -126,7 +125,7 @@ class GoogleSignInActivityTest {
     @Test
     fun firebaseAuthFail() {
         val context: Context = ApplicationProvider.getApplicationContext()
-        val intent: Intent = Intent(context, GoogleSignInActivity::class.java)
+        val intent = Intent(context, GoogleSignInActivity::class.java)
         ActivityScenario.launch<GoogleSignInActivity>(intent).use { scenario ->
 
             val mockAdditionalUserInfo = makeMockAdditionalUserInfo(false)
@@ -146,7 +145,7 @@ class GoogleSignInActivityTest {
     }
 
     @Test
-    fun StartActivityWhenAlreadyLogged() {
+    fun startActivityWhenAlreadyLogged() {
 
         Intents.init()
         val firebaseAuth = FirebaseAuth.getInstance()
@@ -155,7 +154,7 @@ class GoogleSignInActivityTest {
 
         val context: Context = ApplicationProvider.getApplicationContext()
 
-        val intent: Intent = Intent(context, GoogleSignInActivity::class.java)
+        val intent = Intent(context, GoogleSignInActivity::class.java)
 
         ActivityScenario.launch<GoogleSignInActivity>(intent).use { scenario ->
 
@@ -205,10 +204,8 @@ fun makeMockAuthResult(userInfo: AdditionalUserInfo,firebaseUser : FirebaseUser)
 }
 
 
-
 fun makeMockAuthCredential(): AuthCredential {
-    val mockAuthCredential: AuthCredential = mock(AuthCredential::class.java)
-    return mockAuthCredential
+    return mock(AuthCredential::class.java)
 }
 
 

@@ -13,6 +13,7 @@ import androidx.test.espresso.matcher.ViewMatchers.withId
 import androidx.test.ext.junit.rules.ActivityScenarioRule
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import org.hamcrest.Matchers.allOf
+import org.junit.Assert.*
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -113,12 +114,12 @@ class AddPlaylistActivityTest {
         )
 
         val user = UserProfileActivity.loadUser(ctx)
-        assert(user.getPlaylists().any { p -> p.name == "Sardou playlist" })
+        assertTrue(user.getPlaylists().any { p -> p.name == "Sardou playlist" })
         user.getPlaylists().filter { p -> p.name == "Sardou playlist" }.forEach{p ->
             run {
-                assert(p.getSongs().any { s -> s.name == "Rouge" && s.artist == "Sardou" })
-                assert(p.getSongs().any { s -> s.name == "En Chantant" && s.artist == "Sardou" })
-                assert(p.getSongs().any { s -> s.name == "Le France" && s.artist == "Sardou" })
+                assertTrue(p.getSongs().any { s -> s.name == "Rouge" && s.artist == "Sardou" })
+                assertTrue(p.getSongs().any { s -> s.name == "En Chantant" && s.artist == "Sardou" })
+                assertTrue(p.getSongs().any { s -> s.name == "Le France" && s.artist == "Sardou" })
             }
         }
 

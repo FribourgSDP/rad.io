@@ -72,7 +72,6 @@ class GameTest {
     @Test(expected = IllegalArgumentException::class)
     fun errorWhenAddingPointToFakeUser() {
         val game = gameBuilder.build()
-
         game.addPoints(User("fake"), 10)
     }
 
