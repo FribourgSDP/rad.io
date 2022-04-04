@@ -1,6 +1,5 @@
 package com.github.fribourgsdp.radio
 
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.KeyEvent
 import android.view.View
@@ -9,6 +8,7 @@ import android.widget.ArrayAdapter
 import android.widget.EditText
 import android.widget.ListView
 import android.widget.TextView
+import androidx.appcompat.app.AppCompatActivity
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.json.Json
 
@@ -50,9 +50,9 @@ class GameActivity : AppCompatActivity(), GameView {
 
     }
 
-    override fun chooseSong(choices: List<String>): String {
-        // TODO: For later sprint, implement a way to chose between songs
-        return choices[0]
+    override fun chooseSong(choices: List<String>, listener: GameView.OnPickListener) {
+        val songPicker = SongPickerDialog(choices, listener)
+        songPicker.show(supportFragmentManager, "songPicker")
     }
 
     override fun updateSinger(singerName: String) {
