@@ -132,7 +132,7 @@ class PlayerGameHandlerTest {
         `when`(db.setPlayerDone(anyLong(), anyString()))
             .thenReturn(Tasks.forResult(null))
 
-        val handler = PlayerGameHandler(0, view)
+        val handler = PlayerGameHandler(0, view, db)
 
         handler.handleSnapshot(mockSnapshot)
         handler.handleGuess(song, "")
@@ -149,12 +149,46 @@ class PlayerGameHandlerTest {
         `when`(db.setPlayerDone(anyLong(), anyString()))
             .thenReturn(Tasks.forResult(null))
 
-        val handler = PlayerGameHandler(0, view)
+        val handler = PlayerGameHandler(0, view, db)
 
         handler.handleSnapshot(mockSnapshot)
         handler.handleGuess("Not the song", "")
 
         assertEquals("Wrong answer", view.error)
+        assertEquals(View.VISIBLE, view.errorVisibility)
+    }
+
+    @Test
+    fun onPickDisplaySongOnSuccess() {
+        val view = FakeGameView()
+        val db = mock(Database::class.java)
+        `when`(db.updateCurrentSongOfGame(anyLong(), anyString()))
+            .thenReturn(Tasks.forResult(null))
+
+        val handler = PlayerGameHandler(0, view, db)
+
+        handler.onPick(song)
+
+        assertEquals(View.VISIBLE, view.songVisibility)
+        assertEquals(song, view.song)
+        assertEquals(View.GONE, view.guessInputVisibility)
+    }
+
+    @Test
+    fun onPickDisplayErrorOnDBFailure() {
+        val view = FakeGameView()
+        val db = mock(Database::class.java)
+        `when`(db.updateCurrentSongOfGame(anyLong(), anyString()))
+            .thenReturn(Tasks.forException(Exception()))
+
+        val handler = PlayerGameHandler(0, view, db)
+
+        handler.onPick(song)
+
+        // Wait for the task of the database to execute
+        Thread.sleep(1000)
+        
+        assertEquals("An error occurred", view.error)
         assertEquals(View.VISIBLE, view.errorVisibility)
     }
 
