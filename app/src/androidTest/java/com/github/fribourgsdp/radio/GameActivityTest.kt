@@ -85,6 +85,7 @@ class GameActivityTest {
         // Init views
         val songTextView = onView(withId(R.id.songTextView))
         val songGuessEditText = onView(withId(R.id.songGuessEditText))
+        val songGuessSubmitButton = onView(withId(R.id.songGuessSubmitButton))
 
         val testIntent = Intent(ctx, GameActivity::class.java).apply {
             putExtra(GAME_IS_HOST_KEY, true)
@@ -97,6 +98,7 @@ class GameActivityTest {
             }
 
             songGuessEditText.check(matches(not(isDisplayed())))
+            songGuessSubmitButton.check(matches(not(isDisplayed())))
             songTextView.check(matches(isDisplayed()))
             songTextView.check(matches(withText(songName)))
         }
@@ -107,6 +109,7 @@ class GameActivityTest {
         // Init views
         val songTextView = onView(withId(R.id.songTextView))
         val songGuessEditText = onView(withId(R.id.songGuessEditText))
+        val songGuessSubmitButton = onView(withId(R.id.songGuessSubmitButton))
 
         val testIntent = Intent(ctx, GameActivity::class.java)
         ActivityScenario.launch<GameActivity>(testIntent).use { scenario ->
@@ -115,6 +118,7 @@ class GameActivityTest {
             }
 
             songGuessEditText.check(matches(isDisplayed()))
+            songGuessSubmitButton.check(matches(isDisplayed()))
             songTextView.check(matches(not(isDisplayed())))
         }
     }
