@@ -116,8 +116,10 @@ class VoiceOverIPActivity : AppCompatActivity() {
             }
         }
         if (nbTentatives != MAX_SERVER_CONNECT_TENTATIVES){
+            mRtcEngine!!.setAudioProfile(Constants.AUDIO_PROFILE_MUSIC_STANDARD, Constants.AUDIO_SCENARIO_CHATROOM_ENTERTAINMENT);
             mRtcEngine!!.joinChannel(token, CHANNEL, "", uid)
             mRtcEngine!!.enableAudioVolumeIndication(500,3,true)
+
         }
 
     }
