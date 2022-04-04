@@ -47,6 +47,12 @@ interface Database {
     fun getLobbyId() : Task<Long>
 
     /**
+     * Get a unique ID for a user. It is an asynchronous operation, so it is returned in a task.
+     * @return a task loading a unique ID for the user.
+     */
+    fun generateUserId() : Task<Long>
+
+    /**
      * Open a lobby on the database.
      * @return a task void so that we know if the lobby was correctly opened.
      */
