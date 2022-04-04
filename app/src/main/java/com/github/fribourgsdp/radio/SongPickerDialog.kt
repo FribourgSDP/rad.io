@@ -8,7 +8,7 @@ import android.widget.Button
 import androidx.fragment.app.DialogFragment
 
 
-class SongPickerDialog(private val choices: List<String>, private val listener: OnPickListener): DialogFragment() {
+class SongPickerDialog(private val choices: List<String>, private val listener: GameView.OnPickListener): DialogFragment() {
     private val buttons = ArrayList<Button>()
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
@@ -47,9 +47,5 @@ class SongPickerDialog(private val choices: List<String>, private val listener: 
         }
 
         return rootView
-    }
-
-    interface OnPickListener {
-        fun onPick(song: String)
     }
 }

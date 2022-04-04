@@ -3,9 +3,10 @@ package com.github.fribourgsdp.radio
 interface GameView {
     /**
      * Make the user of the view pick a song from the given [choices].
+     * The pick is handler by the [listener].
      * @return the name of the chosen song.
      */
-    fun chooseSong(choices: List<String>): String
+    fun chooseSong(choices: List<String>, listener: OnPickListener)
 
     /**
      * Update the view to display the current singer in the game.
@@ -42,4 +43,14 @@ interface GameView {
      * @return whether the given [id] is the same as the player from the view.
      */
     fun checkPlayer(id: String): Boolean
+
+    /**
+     * An interface creating listeners able to handle songs pick in a [GameView].
+     */
+    interface OnPickListener {
+        /**
+         * Handle the given picked [song].
+         */
+        fun onPick(song: String)
+    }
 }
