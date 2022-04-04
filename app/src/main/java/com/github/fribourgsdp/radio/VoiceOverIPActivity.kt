@@ -12,6 +12,9 @@ import io.agora.rtc.RtcEngine
 import io.agora.rtc.IRtcEngineEventHandler
 import RtcTokenBuilder.RtcTokenBuilder
 import android.util.Log
+import android.widget.*
+import io.agora.rtc.Constants
+
 
 const val MAX_SERVER_CONNECT_TENTATIVES = 5
 
@@ -23,9 +26,18 @@ class VoiceOverIPActivity : AppCompatActivity() {
     private val TOKEN = "006971046257e964b73bafc7f9458fa9996IABHFc2VemmVSekHkloRBGwdRXrfr49nBFNBC2+4szfUboESWpqbjtJtIgB5s8RbnuNFYgQAAQBNvERiAgBNvERiAwBNvERiBABNvERi"
     private val EXPIRATION_TIME = 10800
 
+    private var isMuted = false
+
     private var mRtcEngine: RtcEngine ?= null
     private val mRtcEventHandler = object : IRtcEngineEventHandler() {
     }
+    private lateinit var muteButton : ImageButton
+    private lateinit var radioGroupCharacter : RadioGroup
+    private lateinit var radioButtonHulk : RadioButton
+    private lateinit var radioButtonPingKing : RadioButton
+    private lateinit var radioButtonNone : RadioButton
+
+
 
     private val uid = 2
     private lateinit var token : String
@@ -53,6 +65,29 @@ class VoiceOverIPActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_voice_over_ip)
+        muteButton = findViewById(R.id.muteButton)
+        muteButton.setOnClickListener{
+            mute()
+        }
+
+        radioGroupCharacter = findViewById(R.id.radioGroup_voiceEffect)
+        radioButtonHulk = findViewById(R.id.radioButton_hulk)
+        radioButtonPingKing = findViewById(R.id.radioButton_pingKing)
+        radioButtonNone = findViewById(R.id.radioButton_none)
+        this.radioButtonNone.setChecked(true);
+
+
+
+        // When radio group "Difficulty Level" checked change.
+        // When radio group "Difficulty Level" checked change.
+        radioGroupCharacter.setOnCheckedChangeListener(RadioGroup.OnCheckedChangeListener { group, checkedId ->
+            doOnDifficultyLevelChanged(
+                group,
+                checkedId
+            )
+        })
+
+
         token = getToken(uid)
         if (checkSelfPermission(Manifest.permission.RECORD_AUDIO, PERMISSION_REQ_ID_RECORD_AUDIO)) {
             initializeAndJoinChannel()
@@ -99,5 +134,37 @@ class VoiceOverIPActivity : AppCompatActivity() {
             CHANNEL, uid, RtcTokenBuilder.Role.Role_Publisher, timestamp
         )
         return result
+    }
+
+    private fun mute(): Int{
+        val ret = mRtcEngine!!.muteLocalAudioStream(isMuted xor true)
+        if(ret == 0) {
+            isMuted = isMuted xor true
+            if(isMuted){
+                muteButton.setImageResource(R.drawable.ic_mute)
+            }else{
+                muteButton.setImageResource(R.drawable.ic_unmute)
+            }
+        }
+        return ret
+    }
+
+    // When radio group "Difficulty Level" checked change.
+    private fun doOnDifficultyLevelChanged(group: RadioGroup, checkedId: Int) {
+        val checkedRadioId = group.checkedRadioButtonId
+
+        when(checkedRadioId) {
+            R.id.radioButton_hulk -> {mRtcEngine!!.setAudioEffectPreset(Constants.VOICE_CHANGER_EFFECT_HULK);
+            Toast.makeText(this, "You choose the HULK voice", Toast.LENGTH_SHORT)
+                .show()}
+            R.id.radioButton_pingKing -> {mRtcEngine!!.setAudioEffectPreset(Constants.VOICE_CHANGER_EFFECT_PIGKING);
+                Toast.makeText(this, "You choose the PIGKING voice", Toast.LENGTH_SHORT)
+                    .show()}
+            R.id.radioButton_none -> {mRtcEngine!!.setAudioEffectPreset(Constants.AUDIO_EFFECT_OFF);
+                Toast.makeText(this, "You choose the none voice", Toast.LENGTH_SHORT)
+                    .show()}
+
+        }
+
     }
 }
