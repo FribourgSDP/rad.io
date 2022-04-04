@@ -46,6 +46,9 @@
     <string name="join_button_text">Join</string>
     <string name="join_fail_format">Failed to join lobby %d.</string>
     <string name="lobby_not_found">Lobby %d not found.</string>
+    <string name="create_profile_text">Profile</string>
+    <string name="save_button_text">save</string>
+    <string name="name_text">Name:</string>
     <string name="current_round_format">Current round: %d</string>
     <string name="singing_format">%s is singing!</string>
     <string name="guess_the_song">Guess the song!</string>
@@ -67,5 +70,7 @@
     <string name="import_my_spotify_playlists">Import my Spotify playlists</string>
     <string name="deletePlaylist">Delete</string>
     <string name="editPlaylist">Edit</string>
+    <string name="sign_in_message">Sign in</string>
+    <string name="sign_out_message">Sign out</string>
 </resources>
 

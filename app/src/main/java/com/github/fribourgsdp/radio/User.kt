@@ -2,6 +2,7 @@ package com.github.fribourgsdp.radio
 
 
 import android.content.Context
+import com.google.android.gms.tasks.Task
 import kotlin.random.Random
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.encodeToString
@@ -12,6 +13,7 @@ import java.io.File
 const val USER_DATA_PATH = "user_data_file"
 
 @Serializable
+
 /**
  * A data class for users with playlists
  * Serializable: supports the use of Json.encodeToString(<user>)
@@ -26,7 +28,7 @@ const val USER_DATA_PATH = "user_data_file"
  *
  * @constructor creates a User
  */
-data class User (val name: String, val color: Int) {
+data class User (var name: String, val color: Int) {
     init {
         require(name.isNotEmpty() && name.isNotBlank())
     }
@@ -37,6 +39,8 @@ data class User (val name: String, val color: Int) {
     private val playlistNamesToSpotifyId = mutableMapOf<String, String>()
     var linkedSpotify: Boolean = false
     val initial get(): Char = name.elementAt(0)
+    var id : String = "def"
+
 
     companion object {
         /**
@@ -64,6 +68,7 @@ data class User (val name: String, val color: Int) {
                 (Random.nextInt(100, 200) shl 16) or
                 (Random.nextInt(100, 200) shl 8) or
                 Random.nextInt(100, 200)
+
     }
 
     /**

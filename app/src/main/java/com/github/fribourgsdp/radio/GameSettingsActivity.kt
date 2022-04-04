@@ -116,7 +116,7 @@ class GameSettingsActivity : AppCompatActivity() {
         return host.getPlaylists().find { playlist -> playlist.name == name }!!
     }
 
-    inner class SearchViewOnQueryBehavior: SearchView.OnQueryTextListener {
+    private inner class SearchViewOnQueryBehavior: SearchView.OnQueryTextListener {
         override fun onQueryTextSubmit(query: String?): Boolean {
             // When selected, hide the possibilities
             playlistListView.visibility = View.GONE
