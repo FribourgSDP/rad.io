@@ -22,17 +22,14 @@ import org.junit.runner.RunWith
 
 
 import androidx.test.espresso.Espresso.onView
-import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.matcher.ViewMatchers.withId
-import androidx.test.espresso.matcher.ViewMatchers.withText
 
 
 import androidx.test.core.app.ActivityScenario
-import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.action.ViewActions
 
-import androidx.test.espresso.matcher.ViewMatchers.*
-import java.lang.Thread.sleep
+import org.junit.After
+import org.junit.Before
 
 
 import java.util.concurrent.TimeUnit
@@ -42,6 +39,15 @@ class UserProfileActivityTest : TestCase() {
 
     private val ctx: Context = ApplicationProvider.getApplicationContext()
 
+    @Before
+    fun initIntent() {
+        Intents.init()
+    }
+
+    @After
+    fun releaseIntent() {
+        Intents.release()
+    }
    
     @Test
     fun changingNameAndSavingChangesChangesUser(){
@@ -70,7 +76,7 @@ class UserProfileActivityTest : TestCase() {
     fun changingNameAndNotSavingDoesntChangeUser(){
         val testName = "testNotSave"
 
-        val intent: Intent = Intent(ctx, MainActivity::class.java)
+        val intent = Intent(ctx, MainActivity::class.java)
         ActivityScenario.launch<MainActivity>(intent).use { scenario ->
             onView(withId(R.id.profileButton)).perform(click())
         }
@@ -90,7 +96,6 @@ class UserProfileActivityTest : TestCase() {
 
     @Test
     fun homeButtonTest() {
-        Intents.init()
         val context: Context = ApplicationProvider.getApplicationContext()
 
         val intent = Intent(context, UserProfileActivity::class.java)
@@ -106,14 +111,11 @@ class UserProfileActivityTest : TestCase() {
                 )
             )
         }
-        Intents.release()
 
     }
 
     @Test
     fun clickOnGoogleButtonSendToGoogleSignInActivityTestOrLogoutCorrectly() {
-
-        Intents.init()
         val firebaseAuth = FirebaseAuth.getInstance()
         val task = Tasks.withTimeout(firebaseAuth.signInWithEmailAndPassword("test@test.com", "test123!!!"),10, TimeUnit.SECONDS)
         Tasks.await(task)
@@ -132,8 +134,6 @@ class UserProfileActivityTest : TestCase() {
                 )
             )
         }
-        Intents.release()
-
     }
 
 

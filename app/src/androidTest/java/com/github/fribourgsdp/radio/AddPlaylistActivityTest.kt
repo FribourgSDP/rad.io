@@ -13,16 +13,29 @@ import androidx.test.espresso.matcher.ViewMatchers.withId
 import androidx.test.ext.junit.rules.ActivityScenarioRule
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import org.hamcrest.Matchers.allOf
+import org.junit.After
 import org.junit.Assert.*
+import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
 
 @RunWith(AndroidJUnit4::class)
 class AddPlaylistActivityTest {
+
     @get:Rule
     var assPlaylistActivityRule = ActivityScenarioRule(AddPlaylistActivity::class.java)
     private val ctx: Context = ApplicationProvider.getApplicationContext()
+
+    @Before
+    fun initIntent() {
+        Intents.init()
+    }
+
+    @After
+    fun releaseIntent() {
+        Intents.release()
+    }
 
     @Test
     fun testSongWithNoName(){
@@ -71,7 +84,6 @@ class AddPlaylistActivityTest {
     }
     @Test
     fun testAddPlaylist(){
-        Intents.init()
 
         onView(withId(R.id.newPlaylistName))
             .perform(ViewActions.typeText("Sardou playlist"))
@@ -123,6 +135,5 @@ class AddPlaylistActivityTest {
             }
         }
 
-        Intents.release()
     }
 }

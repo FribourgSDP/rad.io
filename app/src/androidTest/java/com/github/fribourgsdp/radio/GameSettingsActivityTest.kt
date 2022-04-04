@@ -16,6 +16,8 @@ import androidx.test.ext.junit.runners.AndroidJUnit4
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 import org.hamcrest.Matchers.allOf
+import org.junit.After
+import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -36,9 +38,18 @@ class GameSettingsActivityTest {
         allowStructuredMapKeys = true
     }
 
+    @Before
+    fun initIntent() {
+        Intents.init()
+    }
+
+    @After
+    fun releaseIntent() {
+        Intents.release()
+    }
+
     @Test
     fun intentWorksWithCorrectSettings() {
-        Intents.init()
 
         // Test values
         val testName = "Hello World!"
@@ -93,14 +104,11 @@ class GameSettingsActivityTest {
                 hasExtra(GAME_PRIVACY_KEY, private)
             )
         )
-
-        Intents.release()
     }
 
 
     @Test
     fun intentWorksWithDefaultSettings() {
-        Intents.init()
 
         // Test values
         val testPlaylist = Playlist("Rap Playlist")
@@ -130,7 +138,6 @@ class GameSettingsActivityTest {
             )
         )
 
-        Intents.release()
     }
 
     @Test

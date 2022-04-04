@@ -14,6 +14,8 @@ import androidx.test.ext.junit.rules.ActivityScenarioRule
 import com.spotify.sdk.android.auth.AccountsQueryParameters
 import junit.framework.TestCase.assertEquals
 import org.hamcrest.Matchers
+import org.junit.After
+import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 
@@ -21,6 +23,15 @@ import org.junit.Test
 class SpotifyReceiveActivityTest {
     private val ctx: Context = ApplicationProvider.getApplicationContext()
 
+    @Before
+    fun initIntent() {
+        Intents.init()
+    }
+
+    @After
+    fun releaseIntent() {
+        Intents.release()
+    }
     @Test
     fun nullSpotifyResponseReturnsError(){
         val intent: Intent? = null
@@ -61,7 +72,6 @@ class SpotifyReceiveActivityTest {
 
     @Test
     fun clickingButtonSendsToGetPlaylistActivity(){
-        Intents.init()
         val intent = Intent(ctx,SpotifyReceiveActivity::class.java )
 
         ActivityScenario.launch<SpotifyReceiveActivity>(intent).use{ s ->
@@ -76,9 +86,5 @@ class SpotifyReceiveActivityTest {
             )
 
         }
-
-
-
-        Intents.release()
     }
 }

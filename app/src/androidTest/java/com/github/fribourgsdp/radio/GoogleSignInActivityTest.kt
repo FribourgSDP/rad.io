@@ -14,6 +14,8 @@ import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.google.android.gms.tasks.Tasks
 import com.google.firebase.auth.*
 import org.hamcrest.Matchers
+import org.junit.After
+import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.Mockito.*
@@ -27,7 +29,15 @@ import java.util.concurrent.TimeUnit
 @RunWith(AndroidJUnit4::class)
 class GoogleSignInActivityTest {
 
+    @Before
+    fun initIntent() {
+        Intents.init()
+    }
 
+    @After
+    fun releaseIntent() {
+        Intents.release()
+    }
     @Test
     fun correctTextOnTextView() {
         val context: Context = ApplicationProvider.getApplicationContext()
@@ -71,7 +81,6 @@ class GoogleSignInActivityTest {
             val mockFireBaseAuth = makeMockFireBaseAuth(false, mockAuthResult)
             val mockAuthCredential: AuthCredential = makeMockAuthCredential()
 
-            Intents.init()
             scenario.onActivity { a ->
                 a.firebaseAuthWithCredentitial(
                     mockAuthCredential,
@@ -86,7 +95,6 @@ class GoogleSignInActivityTest {
                 )
             )
 
-            Intents.release()
         }
     }
 
@@ -103,8 +111,6 @@ class GoogleSignInActivityTest {
             val mockFireBaseAuth = makeMockFireBaseAuth(false, mockAuthResult)
             val mockAuthCredential: AuthCredential = makeMockAuthCredential()
 
-            Intents.init()
-
             scenario.onActivity { a ->
                 a.firebaseAuthWithCredentitial(
                     mockAuthCredential,
@@ -118,7 +124,6 @@ class GoogleSignInActivityTest {
                     IntentMatchers.toPackage("com.github.fribourgsdp.radio")
                 )
             )
-            Intents.release()
         }
     }
 
@@ -147,7 +152,6 @@ class GoogleSignInActivityTest {
     @Test
     fun startActivityWhenAlreadyLogged() {
 
-        Intents.init()
         val firebaseAuth = FirebaseAuth.getInstance()
         val task = Tasks.withTimeout(firebaseAuth.signInWithEmailAndPassword("test@test.com", "test123!!!"),10, TimeUnit.SECONDS)
         Tasks.await(task)
@@ -165,7 +169,6 @@ class GoogleSignInActivityTest {
                 )
             )
         }
-        Intents.release()
         firebaseAuth.signOut()
     }
 
