@@ -34,7 +34,6 @@ class SpotifyReceiveActivity : AppCompatActivity() {
 
                     return when (response.type) {
                         AuthorizationResponse.Type.TOKEN -> {
-                            println(uri)
                             response.accessToken
                         }
 
