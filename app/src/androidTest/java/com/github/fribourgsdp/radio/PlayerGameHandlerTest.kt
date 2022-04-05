@@ -99,25 +99,6 @@ class PlayerGameHandlerTest {
     }
 
     @Test
-    fun displayErrorOnDatabaseFailure() {
-        val view = FakeGameView(singer)
-        val db = mock(Database::class.java)
-        `when`(db.updateCurrentSongOfGame(anyLong(), anyString()))
-            .thenReturn(Tasks.forException(Exception()))
-
-        val handler = PlayerGameHandler(0, view, db)
-
-        handler.handleSnapshot(mockSnapshot)
-
-        // Wait for the task of the database to execute
-        Thread.sleep(1000)
-
-        assertTrue(view.checkPlayer(singer))
-        assertEquals("An error occurred", view.error)
-        assertEquals(View.VISIBLE, view.errorVisibility)
-    }
-
-    @Test
     fun displayErrorOnNullSnapshot() {
         val view = FakeGameView()
 
