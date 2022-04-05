@@ -1,6 +1,8 @@
 package com.github.fribourgsdp.radio
 
+import android.content.Context
 import android.view.View
+import androidx.test.core.app.ApplicationProvider
 import com.github.fribourgsdp.radio.mockimplementations.FakeGameView
 import com.google.android.gms.tasks.Tasks
 import com.google.firebase.firestore.DocumentSnapshot
@@ -18,6 +20,8 @@ class PlayerGameHandlerTest {
     private val round = 1L
     private val listOfSongs = arrayListOf("Song0", "Song1", "Song2")
 
+    private val ctx: Context = ApplicationProvider.getApplicationContext()
+
     @Before
     fun setup() {
         mockSnapshot = mock(DocumentSnapshot::class.java)
@@ -25,7 +29,7 @@ class PlayerGameHandlerTest {
         `when`(mockSnapshot.exists()).thenReturn(true)
         `when`(mockSnapshot.getLong("current_round")).thenReturn(round)
         `when`(mockSnapshot.get("song_choices")).thenReturn(listOfSongs)
-        `when`(mockSnapshot.getString("current_song")).thenReturn(song)
+        `when`(mockSnapshot.getString("current_song")).thenReturn(null)
     }
 
     @Test
@@ -49,15 +53,29 @@ class PlayerGameHandlerTest {
     }
 
     @Test
-    fun displayGuessWhenOtherPlayer() {
+    fun displayGuessWhenOtherPlayerAndPickNotNull() {
         val view = FakeGameView("Not singer")
         val handler = PlayerGameHandler(0, view)
+        `when`(mockSnapshot.getString("current_song")).thenReturn(song)
 
         handler.handleSnapshot(mockSnapshot)
 
         assertFalse(view.checkPlayer(singer))
         assertEquals(View.GONE, view.songVisibility)
         assertEquals(View.VISIBLE, view.guessInputVisibility)
+    }
+
+    @Test
+    fun displayWaitWhenOtherPlayerAndPickNull() {
+        val view = FakeGameView("Not singer")
+        val handler = PlayerGameHandler(0, view)
+
+        handler.handleSnapshot(mockSnapshot)
+
+        assertFalse(view.checkPlayer(singer))
+        assertEquals(View.VISIBLE, view.songVisibility)
+        assertEquals(ctx.getString(R.string.wait_for_pick_format, singer), view.song)
+        assertEquals(View.GONE, view.guessInputVisibility)
     }
 
     @Test
