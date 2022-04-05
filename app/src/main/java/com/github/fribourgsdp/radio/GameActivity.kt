@@ -13,8 +13,7 @@ import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.json.Json
 
 class GameActivity : AppCompatActivity(), GameView {
-    // TODO: Use 'User.load(this)' when available
-    private var user = User("The second best player")
+    private var user = User.load(this)
     private var isHost: Boolean = false
 
     private lateinit var currentRoundTextView : TextView
@@ -40,7 +39,6 @@ class GameActivity : AppCompatActivity(), GameView {
             val game = json.decodeFromString(intent.getStringExtra(GAME_KEY)!!) as Game
             val hostGameHandler = HostGameHandler(game, this)
             hostGameHandler.linkToDatabase()
-            user = User("The best player")
             playerGameHandler = PlayerGameHandler(game.id, this)
         } else {
             playerGameHandler = PlayerGameHandler(intent.getLongExtra(GAME_UID_KEY, -1L), this)
