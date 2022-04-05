@@ -1,4 +1,4 @@
-package com.github.fribourgsdp.radio
+package com.github.fribourgsdp.radio.mockimplementations
 
 import com.github.fribourgsdp.radio.*
 import com.google.android.gms.tasks.Task
@@ -6,66 +6,54 @@ import com.google.android.gms.tasks.Tasks
 import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.EventListener
 
-class LocalDatabase : Database {
-    private val userMap: MutableMap<String, User> = mutableMapOf()
-    private val songMap: MutableMap<String, Song> = mutableMapOf()
-    private val playlistMap: MutableMap<String, Playlist> = mutableMapOf()
-
-
+class BuggyDatabase : Database {
+    //TODO("use the exception that will be created")
     override fun getUser(userId: String): Task<User> {
-        return Tasks.forResult(userMap[userId])
+        return Tasks.forException(Exception("Error"))
     }
 
     override fun setUser(userId: String, user: User): Task<Void> {
-        userMap[userId] = User(user.name)
-        return Tasks.forResult(null)
+        return Tasks.forException(Exception("Error"))
     }
 
     override fun getSong(songName: String): Task<Song> {
-        return Tasks.forResult(songMap[songName])
+        return Tasks.forException(Exception("Error"))
     }
 
     override fun registerSong(song: Song): Task<Void> {
-        songMap[song.name] = song
-        return Tasks.forResult(null)
+        return Tasks.forException(Exception("Error"))
     }
 
     override fun getPlaylist(playlistName: String): Task<Playlist> {
-        return Tasks.forResult(playlistMap[playlistName])
+        return Tasks.forException(Exception("Error"))
     }
 
     override fun registerPlaylist(playlist: Playlist): Task<Void> {
-        val titleList : MutableList<Song> = mutableListOf()
-        for( song in playlist.getSongs()){
-            titleList.add(Song(song.name,song.artist,""))
-        }
-        playlistMap[playlist.name] = Playlist(playlist.name,titleList.toSet(),playlist.genre)
-
-        return Tasks.forResult(null)
+        return Tasks.forException(Exception("Error"))
     }
 
     override fun getLobbyId(): Task<Long> {
-        return Tasks.forResult(EXPECTED_UID)
+        return Tasks.forException(Exception("Error"))
     }
 
     override fun generateUserId(): Task<Long> {
-        return Tasks.forResult(EXPECTED_USER_UID)
+        return Tasks.forException(Exception("Error"))
     }
 
     override fun openLobby(id: Long, settings: Game.Settings): Task<Void> {
-        return Tasks.forResult(null)
+        return Tasks.forException(Exception("Error"))
     }
 
     override fun listenToLobbyUpdate(id: Long, listener: EventListener<DocumentSnapshot>) {
-        return
+
     }
 
     override fun getGameSettingsFromLobby(id: Long): Task<Game.Settings> {
-        return Tasks.forResult(EXPECTED_SETTINGS)
+        return Tasks.forException(Exception("Error"))
     }
 
     override fun addUserToLobby(id: Long, user: User): Task<Void> {
-        return Tasks.forResult(null)
+        return Tasks.forException(Exception("Error"))
     }
 
     override fun openGame(id: Long): Task<Void> {
@@ -98,12 +86,5 @@ class LocalDatabase : Database {
 
     override fun resetPlayerDoneMap(gameID: Long, singer: String): Task<Void> {
         TODO("Not yet implemented")
-    }
-
-    companion object {
-        const val EXPECTED_USER_UID = 392L
-        const val EXPECTED_UID = 794L
-        val EXPECTED_SETTINGS = Game.Settings(User("Host"), "Hello World!", Playlist("Host's Playlist"), 42, true, true)
-
     }
 }
