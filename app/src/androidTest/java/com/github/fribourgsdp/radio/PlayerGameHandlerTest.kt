@@ -67,7 +67,7 @@ class PlayerGameHandlerTest {
 
     @Test
     fun displayWaitWhenOtherPlayerAndPickNull() {
-        val view = FakeGameView("Not singer")
+        val view = FakeGameView("Not singer", ctx)
         val handler = PlayerGameHandler(0, view)
 
         handler.handleSnapshot(mockSnapshot)
@@ -137,7 +137,7 @@ class PlayerGameHandlerTest {
 
         // Update song to guess
         handler.handleSnapshot(mockSnapshot)
-        
+
         // Check it
         handler.handleGuess(song, "")
 
