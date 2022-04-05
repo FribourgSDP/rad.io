@@ -119,7 +119,6 @@ class VoiceOverIPActivity : AppCompatActivity() {
             mRtcEngine!!.setAudioProfile(Constants.AUDIO_PROFILE_MUSIC_STANDARD, Constants.AUDIO_SCENARIO_CHATROOM_ENTERTAINMENT);
             mRtcEngine!!.enableAudioVolumeIndication(500,5,true)
             mRtcEngine!!.joinChannel(token, CHANNEL, "", uid)
-
         }
 
     }
