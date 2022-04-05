@@ -17,6 +17,7 @@ import org.hamcrest.Matchers
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
+import org.junit.Assert.*
 
 
 
@@ -89,8 +90,7 @@ class UserProfileActivityTest : TestCase() {
         Espresso.closeSoftKeyboard()
 
         val user = User.load(ctx)
-
-        assertEquals(testName,user.name)
+        assertNotEquals(testName,user.name)
 
     }
 
