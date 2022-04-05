@@ -5,12 +5,12 @@ import com.github.fribourgsdp.radio.JoinGameActivity
 
 class WorkingJoinGameActivity : JoinGameActivity() {
     override fun initDatabase(): Database {
-        return LocalDatabase()
+        return com.github.fribourgsdp.radio.LocalDatabase()
     }
 }
 
 class BuggyJoinGameActivity : JoinGameActivity() {
     override fun initDatabase(): Database {
-        return BuggyDatabase()
+        return com.github.fribourgsdp.radio.BuggyDatabase()
     }
 }

@@ -5,12 +5,12 @@ import com.github.fribourgsdp.radio.LobbyActivity
 
 class WorkingLobbyActivity : LobbyActivity() {
     override fun initDatabase(): Database {
-        return LocalDatabase()
+        return com.github.fribourgsdp.radio.LocalDatabase()
     }
 }
 
 class BuggyLobbyActivity : LobbyActivity() {
     override fun initDatabase(): Database {
-        return BuggyDatabase()
+        return com.github.fribourgsdp.radio.BuggyDatabase()
     }
 }

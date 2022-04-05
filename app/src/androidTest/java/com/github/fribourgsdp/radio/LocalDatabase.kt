@@ -1,4 +1,4 @@
-package com.github.fribourgsdp.radio.mockimplementations
+package com.github.fribourgsdp.radio
 
 import com.github.fribourgsdp.radio.*
 import com.google.android.gms.tasks.Task
