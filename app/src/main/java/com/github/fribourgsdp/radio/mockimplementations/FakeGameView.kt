@@ -1,7 +1,10 @@
 package com.github.fribourgsdp.radio.mockimplementations
 
+import android.content.Context
 import android.view.View
+import androidx.test.core.app.ApplicationProvider
 import com.github.fribourgsdp.radio.GameView
+import com.github.fribourgsdp.radio.R
 
 class FakeGameView(private val playerID: String = ""): GameView {
 
@@ -53,7 +56,7 @@ class FakeGameView(private val playerID: String = ""): GameView {
     }
 
     override fun displayWaitOnSinger(singer: String) {
-        displaySong(singer)
+        displaySong(ApplicationProvider.getApplicationContext<Context?>().getString(R.string.wait_for_pick_format, singer))
     }
 
 }
