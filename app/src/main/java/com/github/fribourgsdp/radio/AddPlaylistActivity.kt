@@ -6,6 +6,7 @@ import android.view.View
 import android.widget.EditText
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.get
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import kotlinx.serialization.decodeFromString
@@ -17,11 +18,16 @@ class AddPlaylistActivity : AppCompatActivity() {
     private lateinit var listAdapter: SongAdapter
     private lateinit var recyclerView : RecyclerView
     private lateinit var errorTextView : TextView
+    private lateinit var genreSpinner: Spinner
     lateinit var user : User
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_add_playlist)
+
+        genreSpinner = findViewById(R.id.genreSpinner)
+        genreSpinner.adapter = ArrayAdapter(this, android.R.layout.simple_spinner_item, Genre.values())
+        errorTextView = findViewById(R.id.addPlaylistErrorTextView)
 
         user = UserProfileActivity.loadUser(this)
 
@@ -84,7 +90,8 @@ class AddPlaylistActivity : AppCompatActivity() {
             else -> {
                 val intent = Intent(this@AddPlaylistActivity, UserProfileActivity::class.java)
                 val playlist = Playlist(playlistName, listSongs.toSet(), Genre.NONE)
-                // TODO: Add feature to select genre
+                val genre : Genre = genreSpinner.selectedItem as Genre
+                playlist.genre = genre
                 user.addPlaylist(playlist)
                 user.save(this)
                 startActivity(intent)
