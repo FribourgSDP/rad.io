@@ -52,4 +52,8 @@ class FakeGameView(private val playerID: String = ""): GameView {
         return playerID == id
     }
 
+    override fun displayWaitOnSinger(singer: String) {
+        displaySong(singer)
+    }
+
 }
