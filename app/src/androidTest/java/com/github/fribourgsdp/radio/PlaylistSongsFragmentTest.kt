@@ -56,8 +56,9 @@ class PlaylistSongsFragmentTest {
         playlist.addSong(Song("Le France", "sardou"))
         bundle.putString(PLAYLIST_DATA, Json.encodeToString(playlist))
         val scenario = launchFragmentInContainer<PlaylistSongsFragment>(bundle)
+        Thread.sleep(3000)
         Intents.init()
-        onView(withId(R.id.deleteButton))
+        onView(withId(R.id.editButton))
             .perform(ViewActions.click())
         Intents.intended(allOf(
             hasComponent(AddPlaylistActivity::class.java.name),
