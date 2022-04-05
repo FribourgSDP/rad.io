@@ -36,6 +36,7 @@ class VoiceOverIPActivity : AppCompatActivity() {
         override fun onActiveSpeaker(uid: Int) {
             super.onActiveSpeaker(uid)
             activeSpeakerView = findViewById(R.id.activeSpeaker)
+            activeSpeakerView.invalidate()
             activeSpeakerView.setText("active speaker : $uid")
         }
 
@@ -53,7 +54,6 @@ class VoiceOverIPActivity : AppCompatActivity() {
     private val uid = 1
     private lateinit var token : String
     private val PERMISSION_REQ_ID_RECORD_AUDIO = 22
-    private val PERMISSION_REQ_ID_CAMERA = PERMISSION_REQ_ID_RECORD_AUDIO + 1
     /*
         Check if the permissions necessary for voice calls are granted in the app.
         If they're nt granted, use Android built-in functionality to request them.
@@ -117,8 +117,8 @@ class VoiceOverIPActivity : AppCompatActivity() {
         }
         if (nbTentatives != MAX_SERVER_CONNECT_TENTATIVES){
             mRtcEngine!!.setAudioProfile(Constants.AUDIO_PROFILE_MUSIC_STANDARD, Constants.AUDIO_SCENARIO_CHATROOM_ENTERTAINMENT);
+            mRtcEngine!!.enableAudioVolumeIndication(500,5,true)
             mRtcEngine!!.joinChannel(token, CHANNEL, "", uid)
-            mRtcEngine!!.enableAudioVolumeIndication(500,3,true)
 
         }
 
