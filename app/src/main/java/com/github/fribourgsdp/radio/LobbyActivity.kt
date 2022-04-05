@@ -259,6 +259,7 @@ open class LobbyActivity : AppCompatActivity() {
                 var permission: String = permissions[i]
                 var granted: Int = grantResults[i]
                 if (permission == Manifest.permission.RECORD_AUDIO && granted == PackageManager.PERMISSION_GRANTED) {
+                    hasVoiceIdPermissions = true
                     launchGameButton.isEnabled = true
                     askForPermissionsButton.visibility = View.INVISIBLE
                 }
