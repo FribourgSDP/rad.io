@@ -21,15 +21,17 @@ class PlayerGameHandler(
             view.updateSinger(singerName)
             view.updateRound(snapshot.getLong("current_round")!!)
 
+            // Get the picked song
+            // It's not null when there is one.
+            songToGuess = snapshot.getString("current_song")
+
             if (view.checkPlayer(singerName)) {
-                val choices = snapshot.get("song_choices")!! as ArrayList<String>
-                view.chooseSong(choices, this)
+                if (songToGuess == null) {
+                    val choices = snapshot.get("song_choices")!! as ArrayList<String>
+                    view.chooseSong(choices, this)
+                }
 
             } else {
-                // Get the picked song
-                // It's not null when there is one.
-                songToGuess = snapshot.getString("current_song")
-
                 if (songToGuess != null) {
                     // The singer picked a song so the player can guess
                     view.displayGuessInput()
