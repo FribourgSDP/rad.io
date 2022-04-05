@@ -10,7 +10,7 @@ import org.junit.Test
 import org.mockito.Mockito.*
 
 class HostGameHandlerTest {
-    private val sleepingTime = 1L
+    private val sleepingTime = 50L
     private lateinit var mockSnapshot: DocumentSnapshot
 
     private val doneMap = hashMapOf("Some player" to true, "Another player" to true)

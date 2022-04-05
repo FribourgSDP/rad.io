@@ -13,7 +13,7 @@ import org.mockito.Mockito.*
 class PlayerGameHandlerTest {
     private lateinit var mockSnapshot: DocumentSnapshot
 
-    private val sleepingTime = 1L
+    private val sleepingTime = 50L
     private val singer = "Singer"
     private val song = "A good song"
     private val round = 1L
