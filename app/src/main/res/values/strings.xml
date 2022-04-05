@@ -72,5 +72,7 @@
     <string name="editPlaylist">Edit</string>
     <string name="sign_in_message">Sign in</string>
     <string name="sign_out_message">Sign out</string>
+    <string name="delete_song">Delete song</string>
+    <string name="click_on_a_song_to_delete_it">Click on a song to delete it.</string>
 </resources>
 

@@ -1,25 +1,39 @@
 package com.github.fribourgsdp.radio
 
+import android.app.PendingIntent.getActivity
 import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.get
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 
 class AddPlaylistActivity : AppCompatActivity() {
     private val listSongs = ArrayList<Song>()
     private var listNames = ArrayList<String>()
-    private lateinit var listAdapter: ArrayAdapter<String>
-    private lateinit var listView : ListView
+    private lateinit var listAdapter: SongAdapter
+    private lateinit var recyclerView : RecyclerView
     private lateinit var errorTextView : TextView
     lateinit var user : User
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_add_playlist)
-        listAdapter = ArrayAdapter(this, android.R.layout.simple_list_item_1, listNames)
-        listView = findViewById(android.R.id.list)
-        listView.adapter = listAdapter
+
+//        listAdapter = ArrayAdapter(this, android.R.layout.simple_list_item_1, listNames)
+        recyclerView = findViewById(R.id.list_playlist_creation)
+        listAdapter = SongAdapter(listSongs, object : OnClickListener{
+            override fun onItemClick(position: Int) {
+                listSongs.removeAt(position)
+                listAdapter.notifyItemRemoved(position)
+            }
+        })
+        recyclerView.adapter = listAdapter
+        val layoutManager = LinearLayoutManager(this)
+        layoutManager.stackFromEnd = true
+        recyclerView.layoutManager = layoutManager
         errorTextView = findViewById(R.id.addPlaylistErrorTextView)
 
         user = UserProfileActivity.loadUser(this)
@@ -38,7 +52,7 @@ class AddPlaylistActivity : AppCompatActivity() {
             errorTextView.text = ""
             songNameTextView.setText("")
             artistNameTextView.setText("")
-            listAdapter.notifyDataSetChanged()
+            listAdapter.notifyItemInserted(listSongs.size-1)
         }
     }
     fun createPlaylist(view : View) {
