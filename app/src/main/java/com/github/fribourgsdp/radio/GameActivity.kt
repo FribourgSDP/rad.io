@@ -83,7 +83,10 @@ class GameActivity : AppCompatActivity(), GameView {
         songTextView.visibility = View.GONE
 
         // Show the edit text and the submit button instead
-        songGuessEditText.visibility = View.VISIBLE
+        songGuessEditText.apply {
+            text.clear()
+            visibility = View.VISIBLE
+        }
         songGuessSubmitButton.visibility = View.VISIBLE
     }
 
