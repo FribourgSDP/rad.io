@@ -1,6 +1,5 @@
 package com.github.fribourgsdp.radio
 
-import android.content.Intent
 import junit.framework.TestCase.assertEquals
 import okhttp3.*
 import org.json.JSONArray
@@ -44,7 +43,7 @@ class ImportSpotifyPlaylistsActivityTest {
 
     @Test
     fun malformedJSONResponseTest(){
-        val future = ImportSpotifyPlaylistsActivity.getUserPlaylists(MockPlaylistHTTPClient(), )
+        val future = ImportSpotifyPlaylistsActivity.getUserPlaylists(MockPlaylistHTTPClient())
     }
 
     @Test

@@ -1,13 +1,10 @@
 package com.github.fribourgsdp.radio
 
 import android.content.ContentValues
-import android.content.ContentValues.TAG
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.widget.TextView
-import com.google.firebase.firestore.ktx.firestore
-import com.google.firebase.ktx.Firebase
+import androidx.appcompat.app.AppCompatActivity
 
 class FireBaseTestActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -41,9 +38,7 @@ class FireBaseTestActivity : AppCompatActivity() {
         db.registerSong(song)
 
         db.getSong(song.name).addOnSuccessListener { l ->
-            if( l == null){
-
-            }else{
+            if( l != null){
                 val text = song.name + " by " +  song.artist
                 findViewById<TextView>(R.id.songNameChange).text = text
             }
@@ -58,9 +53,7 @@ class FireBaseTestActivity : AppCompatActivity() {
         db.registerPlaylist(playlist)
 
         db.getPlaylist("testPlaylist").addOnSuccessListener { l ->
-            if(l == null){
-
-            }else {
+            if(l != null){
                 var text = ""
                 for (songi in l.getSongs()) {
                     text += ";" + songi.name

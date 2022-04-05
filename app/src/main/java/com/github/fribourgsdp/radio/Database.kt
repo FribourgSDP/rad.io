@@ -31,7 +31,7 @@ interface Database {
     /**
      * Get the [Playlist], wrapped in a [Task], given its [playlistName]
      * @return [Playlist], wrapped in a [Task], the [Playlist] is null if it doesn't exist
-     * @Note the [Song] in the [Playlist] have empty [artistName] and [lyrics]
+     * @Note the [Song] in the [Playlist] have empty artist and lyrics
      */
    fun getPlaylist(playlistName : String): Task<Playlist>
 
@@ -45,6 +45,12 @@ interface Database {
      * @return a task loading a unique ID for the lobby.
      */
     fun getLobbyId() : Task<Long>
+
+    /**
+     * Get a unique ID for a user. It is an asynchronous operation, so it is returned in a task.
+     * @return a task loading a unique ID for the user.
+     */
+    fun generateUserId() : Task<Long>
 
     /**
      * Open a lobby on the database.
