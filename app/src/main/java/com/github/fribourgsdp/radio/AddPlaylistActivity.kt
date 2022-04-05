@@ -27,8 +27,7 @@ class AddPlaylistActivity : AppCompatActivity() {
 
         if (intent.hasExtra(PLAYLIST_TO_MODIFY)){
             val serializedPlaylist = intent.getStringExtra(PLAYLIST_TO_MODIFY)
-            PlaylistSongsFragment.log(serializedPlaylist!!)
-            val playlist : Playlist = Json.decodeFromString(serializedPlaylist)
+            val playlist : Playlist = Json.decodeFromString(serializedPlaylist!!)
             listSongs.addAll(playlist.getSongs())
             findViewById<EditText>(R.id.newPlaylistName).setText(playlist.name)
         }
@@ -38,8 +37,8 @@ class AddPlaylistActivity : AppCompatActivity() {
                 listSongs.removeAt(position)
                 listAdapter.notifyItemRemoved(position)
             }
-
         })
+
         recyclerView.adapter = listAdapter
         val layoutManager = LinearLayoutManager(this)
         layoutManager.stackFromEnd = true

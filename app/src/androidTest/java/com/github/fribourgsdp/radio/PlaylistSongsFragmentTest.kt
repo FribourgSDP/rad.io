@@ -55,15 +55,31 @@ class PlaylistSongsFragmentTest {
         playlist.addSong(Song("salut", "sardou"))
         playlist.addSong(Song("Le France", "sardou"))
         bundle.putString(PLAYLIST_DATA, Json.encodeToString(playlist))
+
         val scenario = launchFragmentInContainer<PlaylistSongsFragment>(bundle)
-        Thread.sleep(3000)
-        Intents.init()
-        onView(withId(R.id.editButton))
+
+        scenario.use {
+            Intents.init()
+            onView(withId(R.id.editButton))
+                .perform(ViewActions.click())
+            Intents.intended(
+                hasComponent(AddPlaylistActivity::class.java.name)
+            )
+            Intents.release()
+        }
+    }
+    @Test
+    fun deletePlaylistTest(){
+        val bundle = Bundle()
+        val playlistName = "test"
+        val playlist : Playlist = Playlist(playlistName, Genre.NONE)
+        playlist.addSong(Song("rouge", "sardou"))
+        playlist.addSong(Song("salut", "sardou"))
+        playlist.addSong(Song("Le France", "sardou"))
+        bundle.putString(PLAYLIST_DATA, Json.encodeToString(playlist))
+
+        val scenario = launchFragmentInContainer<PlaylistSongsFragment>(bundle)
+        onView(withId(R.id.deleteButton))
             .perform(ViewActions.click())
-        Intents.intended(allOf(
-            hasComponent(AddPlaylistActivity::class.java.name),
-            hasComponent(PLAYLIST_TO_MODIFY)
-        ))
-        Intents.release()
     }
 }

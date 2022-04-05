@@ -42,7 +42,6 @@ class PlaylistSongsFragment : MyFragment(R.layout.fragment_playlist_display), On
 
         editButton = requireView().findViewById(R.id.editButton)
         editButton.setOnClickListener {
-            log("#########")
             val intent  = Intent(context, AddPlaylistActivity::class.java)
             intent.putExtra(PLAYLIST_TO_MODIFY, Json.encodeToString(playlist))
             startActivity(intent)
@@ -53,7 +52,6 @@ class PlaylistSongsFragment : MyFragment(R.layout.fragment_playlist_display), On
             //removes playlist from user playlists
             user.removePlaylist(playlist)
             user.save(requireContext())
-            // TODO: Ask Alex best way to lose fragment
             activity?.onBackPressed()
         }
     }
