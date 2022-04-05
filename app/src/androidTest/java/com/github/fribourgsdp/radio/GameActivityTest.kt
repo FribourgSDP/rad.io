@@ -17,6 +17,11 @@ import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 
+/**
+ * ==================NOTE THAT FOR THE TESTS TO USE A MOCK IMPLEMENTATION OF THE VOICE CHANNEL, THE FOLLOWING MUST BE ADDED TO THE
+ * ==================INTENT WHEN LAUNCHING THIS ACTIVITY: BOOLEAN EXTRA IS_IN_TEST_MODE = TRUE, LONG EXTRA GAME_UID = WHATEVER_LONG_YOU_WANT
+ */
+
 class GameActivityTest {
     @get:Rule
     var testRule = ActivityScenarioRule(GameActivity::class.java)
@@ -91,6 +96,8 @@ class GameActivityTest {
         val testIntent = Intent(ctx, GameActivity::class.java).apply {
             putExtra(GAME_IS_HOST_KEY, true)
             putExtra(GAME_KEY, json.encodeToString(fakeGame))
+            putExtra(GAME_UID, 37L)
+            putExtra(IS_IN_TEST_MODE, true)
         }
 
         ActivityScenario.launch<GameActivity>(testIntent).use { scenario ->
