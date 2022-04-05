@@ -13,7 +13,7 @@ import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 
 const val SONG_DATA = "com.github.fribourgsdp.radio.SONG_INNER_DATA"
-const val PLAYLIST_TO_MODIFY_FLAG = "playlistToModify"
+const val PLAYLIST_TO_MODIFY = "com.github.fribourgsdp.radio.PLAYLIST_TO_MODIFY"
 
 class PlaylistSongsFragment : MyFragment(R.layout.fragment_playlist_display), OnClickListener{
     private lateinit var playlist: Playlist
@@ -43,7 +43,7 @@ class PlaylistSongsFragment : MyFragment(R.layout.fragment_playlist_display), On
         editButton = requireView().findViewById(R.id.editButton)
         editButton.setOnClickListener {
             val intent  = Intent(context, AddPlaylistActivity::class.java)
-            intent.putExtra(PLAYLIST_TO_MODIFY_FLAG, Json.encodeToString(playlist))
+            intent.putExtra(PLAYLIST_TO_MODIFY, Json.encodeToString(playlist))
             startActivity(intent)
         }
         deleteButton = requireView().findViewById(R.id.deleteButton)

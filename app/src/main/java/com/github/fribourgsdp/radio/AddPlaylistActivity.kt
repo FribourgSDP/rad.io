@@ -2,7 +2,6 @@ package com.github.fribourgsdp.radio
 
 import android.content.Intent
 import android.os.Bundle
-import android.text.SpannableStringBuilder
 import android.view.View
 import android.widget.EditText
 import android.widget.TextView
@@ -26,8 +25,8 @@ class AddPlaylistActivity : AppCompatActivity() {
 
         user = UserProfileActivity.loadUser(this)
 
-        if (intent.hasExtra(PLAYLIST_TO_MODIFY_FLAG)){
-            val serializedPlaylist = intent.getStringExtra(PLAYLIST_TO_MODIFY_FLAG)
+        if (intent.hasExtra(PLAYLIST_TO_MODIFY)){
+            val serializedPlaylist = intent.getStringExtra(PLAYLIST_TO_MODIFY)
             PlaylistSongsFragment.log(serializedPlaylist!!)
             val playlist : Playlist = Json.decodeFromString(serializedPlaylist)
             listSongs.addAll(playlist.getSongs())
