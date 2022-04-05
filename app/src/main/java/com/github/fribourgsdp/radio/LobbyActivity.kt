@@ -3,6 +3,7 @@ package com.github.fribourgsdp.radio
 import android.Manifest
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.opengl.Visibility
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
@@ -256,6 +257,7 @@ open class LobbyActivity : AppCompatActivity() {
                 var granted: Int = grantResults[i]
                 if (permission == Manifest.permission.RECORD_AUDIO && granted == PackageManager.PERMISSION_GRANTED) {
                     launchGameButton.isEnabled = true
+                    askForPermissionsButton.visibility = View.INVISIBLE
                 }
             }
         }
