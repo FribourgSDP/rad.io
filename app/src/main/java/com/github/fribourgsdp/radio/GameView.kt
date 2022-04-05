@@ -45,6 +45,11 @@ interface GameView {
     fun checkPlayer(id: String): Boolean
 
     /**
+     * Make the view display that the [singer] is currently picking a song.
+     */
+    fun displayWaitOnSinger(singer: String)
+
+    /**
      * An interface creating listeners able to handle songs pick in a [GameView].
      */
     interface OnPickListener {

@@ -103,6 +103,11 @@ class GameActivity : AppCompatActivity(), GameView {
         return user.name == id
     }
 
+    override fun displayWaitOnSinger(singer: String) {
+        // We can display the wait message where the same box as the song
+        displaySong(getString(R.string.wait_for_pick_format, singer))
+    }
+
     private fun initViews() {
         currentRoundTextView = findViewById(R.id.currentRoundView)
         singerTextView = findViewById(R.id.singerTextView)
