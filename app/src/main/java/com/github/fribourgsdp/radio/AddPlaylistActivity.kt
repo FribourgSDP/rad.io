@@ -32,12 +32,8 @@ class AddPlaylistActivity : AppCompatActivity() {
 
         user = UserProfileActivity.loadUser(this)
 
-        if (intent.hasExtra(PLAYLIST_TO_MODIFY)){
-            val serializedPlaylist = intent.getStringExtra(PLAYLIST_TO_MODIFY)
-            val playlist : Playlist = Json.decodeFromString(serializedPlaylist!!)
-            listSongs.addAll(playlist.getSongs())
-            findViewById<EditText>(R.id.newPlaylistName).setText(playlist.name)
-        }
+        processIntent(intent)
+
         recyclerView = findViewById(R.id.list_playlist_creation)
         listAdapter = SongAdapter(listSongs, object : OnClickListener{
             override fun onItemClick(position: Int) {
@@ -105,5 +101,13 @@ class AddPlaylistActivity : AppCompatActivity() {
      */
     private fun displayError(id : Int){
         errorTextView.text = this.applicationContext.resources.getText(id)
+    }
+    private fun processIntent(intent: Intent){
+        if (intent.hasExtra(PLAYLIST_TO_MODIFY)){
+            val serializedPlaylist = intent.getStringExtra(PLAYLIST_TO_MODIFY)
+            val playlist : Playlist = Json.decodeFromString(serializedPlaylist!!)
+            listSongs.addAll(playlist.getSongs())
+            findViewById<EditText>(R.id.newPlaylistName).setText(playlist.name)
+        }
     }
 }
