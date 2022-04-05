@@ -18,6 +18,11 @@ import org.junit.Before
 import org.junit.Test
 
 
+import org.junit.runner.RunWith
+import androidx.test.ext.junit.runners.AndroidJUnit4
+
+
+@RunWith(AndroidJUnit4::class)
 class GameActivityTest {
     private val ctx: Context = ApplicationProvider.getApplicationContext()
 
@@ -153,94 +158,6 @@ class GameActivityTest {
                 it.hideError()
             }
             errorOrFailureTextView.check(matches(not(isDisplayed())))
-        }
-    }
-
-    @Test
-    fun songPickerWithCorrectSongs() {
-        val listSongs = listOf("Wesh alors", "Mamma Mia!", "La Bohème")
-
-        val testIntent = Intent(ctx, GameActivity::class.java)
-        ActivityScenario.launch<GameActivity>(testIntent).use { scenario ->
-            scenario.onActivity {
-                it.chooseSong(listSongs,
-                    object: GameView.OnPickListener {
-                        override fun onPick(song: String) {
-                            // DO NOTHING
-                        }
-
-                    }
-                )
-            }
-
-            val button0 = onView(withId(R.id.songPick0))
-
-            button0.check(matches(withText(listSongs[0])))
-                .check(matches(isDisplayed()))
-
-            onView(withId(R.id.songPick1))
-                .check(matches(withText(listSongs[1])))
-                .check(matches(isDisplayed()))
-
-            onView(withId(R.id.songPick2))
-                .check(matches(withText(listSongs[2])))
-                .check(matches(isDisplayed()))
-
-            // Click to dismiss dialog
-            button0.perform(ViewActions.click())
-
-        }
-    }
-
-    @Test
-    fun songPickerReturnsCorrectPick() {
-        val listSongs = listOf("Wesh alors", "Mamma Mia!", "La Bohème")
-        var testPick = ""
-
-        val button0 = onView(withId(R.id.songPick0))
-
-        val testIntent = Intent(ctx, GameActivity::class.java)
-        ActivityScenario.launch<GameActivity>(testIntent).use { scenario ->
-            scenario.onActivity {
-                it.chooseSong(listSongs,
-                    object: GameView.OnPickListener {
-                        override fun onPick(song: String) {
-                            testPick = song
-                        }
-
-                    }
-                )
-            }
-
-            button0.perform(ViewActions.click())
-
-            assertEquals(listSongs[0], testPick)
-        }
-    }
-
-    @Test
-    fun hideDialogButtonOnLessSongs() {
-        val listSongs = listOf("Wesh alors", "Mamma Mia!")
-
-        val testIntent = Intent(ctx, GameActivity::class.java)
-        ActivityScenario.launch<GameActivity>(testIntent).use { scenario ->
-            scenario.onActivity {
-                it.chooseSong(listSongs,
-                    object: GameView.OnPickListener {
-                        override fun onPick(song: String) {
-                            // DO NOTHING
-                        }
-
-                    }
-                )
-            }
-
-            onView(withId(R.id.songPick2))
-                .check(matches(not(isDisplayed())))
-
-            // Click to dismiss dialog
-            onView(withId(R.id.songPick0))
-                .perform(ViewActions.click())
         }
     }
 }
