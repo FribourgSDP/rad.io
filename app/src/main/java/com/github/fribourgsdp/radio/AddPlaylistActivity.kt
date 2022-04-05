@@ -46,6 +46,11 @@ class AddPlaylistActivity : AppCompatActivity() {
         errorTextView = findViewById(R.id.addPlaylistErrorTextView)
 
     }
+
+    /**
+     * Function called directly by the XML file activity_add_playlist when the button to add song is pressed.
+     * Adds a new song with the given parameters to the temporary playlist.
+     */
     fun addItems(view : View) {
         val songNameTextView : EditText = findViewById(R.id.addSongToPlaylistSongName)
         val artistNameTextView : EditText = findViewById(R.id.addSongToPlaylistArtistName)
@@ -63,6 +68,10 @@ class AddPlaylistActivity : AppCompatActivity() {
             listAdapter.notifyItemInserted(listSongs.size-1)
         }
     }
+    /**
+     * Function called directly by the XML file activity_add_playlist when the button to create playlist is pressed.
+     * Adds the temporary playlist to the user and returns to activity UserProfileActivity
+     */
     fun createPlaylist(view : View) {
         val playlistName : String = findViewById<EditText>(R.id.newPlaylistName).text.toString()
         when {
@@ -82,6 +91,10 @@ class AddPlaylistActivity : AppCompatActivity() {
             }
         }
     }
+
+    /**
+     * Fills error text view
+     */
     private fun displayError(id : Int){
         errorTextView.text = this.applicationContext.resources.getText(id)
     }

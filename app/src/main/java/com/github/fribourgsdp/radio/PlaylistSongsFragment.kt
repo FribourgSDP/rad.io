@@ -39,7 +39,7 @@ class PlaylistSongsFragment : MyFragment(R.layout.fragment_playlist_display), On
         val playlistTitle : TextView = requireView().findViewById(R.id.PlaylistName)
         playlistTitle.text = playlistName
         initializeRecyclerView()
-
+        //sets listeners to 2 buttons
         editButton = requireView().findViewById(R.id.editButton)
         editButton.setOnClickListener {
             val intent  = Intent(context, AddPlaylistActivity::class.java)
