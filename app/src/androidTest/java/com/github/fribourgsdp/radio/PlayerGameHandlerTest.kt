@@ -1,8 +1,6 @@
 package com.github.fribourgsdp.radio
 
-import android.content.Context
 import android.view.View
-import androidx.test.core.app.ApplicationProvider
 import com.github.fribourgsdp.radio.mockimplementations.FakeGameView
 import com.google.android.gms.tasks.Tasks
 import com.google.firebase.firestore.DocumentSnapshot
@@ -20,8 +18,6 @@ class PlayerGameHandlerTest {
     private val round = 1L
     private val listOfSongs = arrayListOf("Song0", "Song1", "Song2")
 
-    private val ctx: Context = ApplicationProvider.getApplicationContext()
-
     @Before
     fun setup() {
         mockSnapshot = mock(DocumentSnapshot::class.java)
@@ -34,7 +30,7 @@ class PlayerGameHandlerTest {
 
     @Test
     fun correctSingerUpdate() {
-        val view = FakeGameView(ctx = ctx)
+        val view = FakeGameView()
         val handler = PlayerGameHandler(0, view)
 
         handler.handleSnapshot(mockSnapshot)
@@ -44,7 +40,7 @@ class PlayerGameHandlerTest {
 
     @Test
     fun correctRoundUpdate() {
-        val view = FakeGameView(ctx = ctx)
+        val view = FakeGameView()
         val handler = PlayerGameHandler(0, view)
 
         handler.handleSnapshot(mockSnapshot)
@@ -67,14 +63,14 @@ class PlayerGameHandlerTest {
 
     @Test
     fun displayWaitWhenOtherPlayerAndPickNull() {
-        val view = FakeGameView("Not singer", ctx)
+        val view = FakeGameView("Not singer")
         val handler = PlayerGameHandler(0, view)
 
         handler.handleSnapshot(mockSnapshot)
 
         assertFalse(view.checkPlayer(singer))
         assertEquals(View.VISIBLE, view.songVisibility)
-        assertEquals(ctx.getString(R.string.wait_for_pick_format, singer), view.song)
+        assertEquals(singer, view.song)
         assertEquals(View.GONE, view.guessInputVisibility)
     }
 

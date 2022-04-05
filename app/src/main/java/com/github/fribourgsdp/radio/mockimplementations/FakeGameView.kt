@@ -1,12 +1,9 @@
 package com.github.fribourgsdp.radio.mockimplementations
 
-import android.content.Context
 import android.view.View
 import com.github.fribourgsdp.radio.GameView
-import com.github.fribourgsdp.radio.R
-import java.lang.NullPointerException
 
-class FakeGameView(private val playerID: String = "", private val ctx: Context? = null): GameView {
+class FakeGameView(private val playerID: String = ""): GameView {
 
     var singer = ""
     var round = 0L
@@ -56,8 +53,7 @@ class FakeGameView(private val playerID: String = "", private val ctx: Context? 
     }
 
     override fun displayWaitOnSinger(singer: String) {
-        ctx?.let { displaySong(it.getString(R.string.wait_for_pick_format, singer)) }
-            ?: throw NullPointerException("Context is null")
+        displaySong(singer)
     }
 
 }
