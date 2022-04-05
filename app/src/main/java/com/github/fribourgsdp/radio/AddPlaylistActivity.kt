@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.view.View
 import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.get
 
 class AddPlaylistActivity : AppCompatActivity() {
     private val listSongs = ArrayList<Song>()
@@ -12,6 +13,7 @@ class AddPlaylistActivity : AppCompatActivity() {
     private lateinit var listAdapter: ArrayAdapter<String>
     private lateinit var listView : ListView
     private lateinit var errorTextView : TextView
+    private lateinit var genreSpinner: Spinner
     lateinit var user : User
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -20,6 +22,8 @@ class AddPlaylistActivity : AppCompatActivity() {
         listAdapter = ArrayAdapter(this, android.R.layout.simple_list_item_1, listNames)
         listView = findViewById(android.R.id.list)
         listView.adapter = listAdapter
+        genreSpinner = findViewById(R.id.genreSpinner)
+        genreSpinner.adapter = ArrayAdapter(this, android.R.layout.simple_spinner_item, Genre.values())
         errorTextView = findViewById(R.id.addPlaylistErrorTextView)
 
         user = UserProfileActivity.loadUser(this)
@@ -53,7 +57,8 @@ class AddPlaylistActivity : AppCompatActivity() {
             else -> {
                 val intent = Intent(this@AddPlaylistActivity, UserProfileActivity::class.java)
                 val playlist = Playlist(playlistName, listSongs.toSet(), Genre.NONE)
-                // TODO: Add feature to select genre
+                val genre : Genre = genreSpinner.selectedItem as Genre
+                playlist.genre = genre
                 user.addPlaylist(playlist)
                 user.save(this)
                 startActivity(intent)
