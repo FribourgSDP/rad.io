@@ -50,7 +50,10 @@ class PlaylistSongsFragment : MyFragment(R.layout.fragment_playlist_display), On
         deleteButton.setOnClickListener{
             val user = UserProfileActivity.loadUser(requireContext())
             //removes playlist from user playlists
-            user.removePlaylist(playlist)
+            log(user)
+            log(user.getPlaylists().size)
+            log(playlist)
+            log(user.removePlaylistByName(playlistName))
             user.save(requireContext())
             activity?.onBackPressed()
         }

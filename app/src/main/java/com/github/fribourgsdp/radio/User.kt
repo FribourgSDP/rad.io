@@ -113,6 +113,15 @@ data class User (var name: String, val color: Int) {
     }
 
     /**
+     * removes a single playlist given by its name from the user's set of playlists
+     *
+     * @param name the name of the playlist to remove
+     */
+    fun removePlaylistByName(name: String) : Boolean{
+        return playlists.removeIf{p -> p.name == name}
+    }
+
+    /**
      * removes a set of playlists from the user's set of playlists
      *
      * @param removedPlaylist the playlists to remove
