@@ -3,6 +3,7 @@ package com.github.fribourgsdp.radio
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import android.view.KeyEvent
 import android.view.View
 import android.view.inputmethod.EditorInfo
@@ -16,9 +17,9 @@ import kotlin.random.Random
 const val IS_IN_TEST_MODE = "Test mode for voice chat engine"
 
 class GameActivity : AppCompatActivity(), GameView {
-    // TODO: Use 'User.load(this)' when available -> should be ok now
-    //private var user = User("The second best player")
-    private lateinit var user: User
+    //TODO: Use 'User.load(this)' when available -> should be ok now
+    private var user = User("The second best player")
+    //private lateinit var user: User
     private var isHost: Boolean = false
 
     private lateinit var currentRoundTextView : TextView
@@ -39,12 +40,8 @@ class GameActivity : AppCompatActivity(), GameView {
         setContentView(R.layout.activity_game)
         isHost = intent.getBooleanExtra(GAME_IS_HOST_KEY, false)
         initViews()
-        user = try {
-            User.load(this)
-        } catch (e: java.io.FileNotFoundException) {
-            User("The second best player")
-        }
-        initVoiceChat(intent.getBooleanExtra(IS_IN_TEST_MODE, true), intent.getLongExtra(GAME_UID, 0))
+        initVoiceChat(intent.getBooleanExtra(IS_IN_TEST_MODE, true), intent.getLongExtra(
+            GAME_UID_KEY, 0))
         if (isHost) {
             val json = Json {
                 allowStructuredMapKeys = true
@@ -53,11 +50,8 @@ class GameActivity : AppCompatActivity(), GameView {
             val hostGameHandler = HostGameHandler(game, this)
             hostGameHandler.linkToDatabase()
             user = User("The best player")
-            playerGameHandler = PlayerGameHandler(game.id, this)
-        } else {
-            playerGameHandler = PlayerGameHandler(intent.getLongExtra(GAME_UID_KEY, -1L), this)
         }
-
+        playerGameHandler = PlayerGameHandler(intent.getLongExtra(GAME_UID_KEY, -1L), this)
         playerGameHandler.linkToDatabase()
 
     }
@@ -148,9 +142,10 @@ class GameActivity : AppCompatActivity(), GameView {
             VoiceIpEngineDecorator(baseContext)
         }
         val userId = Random.nextInt(100000000)
-        voiceChannel.joinChannel(voiceChannel.getToken(userId, gameUid.toString()), gameUid.toString(), "", userId)
         voiceChannel.setAudioProfile(Constants.AUDIO_PROFILE_MUSIC_STANDARD, Constants.AUDIO_SCENARIO_CHATROOM_ENTERTAINMENT);
         voiceChannel.enableAudioVolumeIndication(500,5,true)
+        voiceChannel.joinChannel(voiceChannel.getToken(userId, gameUid.toString()), gameUid.toString(), "", userId)
+        Log.d("Game uid is: ", gameUid.toString())
     }
 
 }

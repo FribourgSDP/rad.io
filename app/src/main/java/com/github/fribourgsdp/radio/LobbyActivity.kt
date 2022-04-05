@@ -88,7 +88,7 @@ open class LobbyActivity : AppCompatActivity() {
                         db.launchGame(uid).addOnSuccessListener {
 
                             // When launched correctly, go to the game activity
-                            goToGameActivity(true, game)
+                            goToGameActivity(true, game, uid)
 
                         }.addOnFailureListener {
                             uuidTextView.text = getString(R.string.launch_game_error)
@@ -235,17 +235,15 @@ open class LobbyActivity : AppCompatActivity() {
         gameBuilder.setUserList(playersList.map { name -> User(name) })
     }
 
-    private fun goToGameActivity(isHost: Boolean, game: Game? = null, gameID: Long? = null) {
+    private fun goToGameActivity(isHost: Boolean, game: Game? = null, gameID: Long) {
         val intent: Intent = Intent(this, GameActivity::class.java).apply {
             putExtra(GAME_IS_HOST_KEY, isHost)
             putExtra(IS_IN_TEST_MODE, false)
-            putExtra(GAME_UID, gameID)
+            putExtra(GAME_UID_KEY, gameID)
         }
 
         if (isHost && game != null) {
             intent.putExtra(GAME_KEY, json.encodeToString(game))
-        } else if (gameID != null) {
-            intent.putExtra(GAME_UID_KEY, gameID)
         }
 
         startActivity(intent)
