@@ -137,6 +137,9 @@ class PlayerGameHandlerTest {
         handler.handleSnapshot(mockSnapshot)
         handler.handleGuess(song, "")
 
+        // Wait for the task of the database to execute
+        Thread.sleep(1)
+
         assertEquals(View.VISIBLE, view.songVisibility)
         assertEquals(song, view.song)
         assertEquals(View.GONE, view.guessInputVisibility)
@@ -154,6 +157,9 @@ class PlayerGameHandlerTest {
         handler.handleSnapshot(mockSnapshot)
         handler.handleGuess("Not the song", "")
 
+        // Wait for the task of the database to execute
+        Thread.sleep(1)
+
         assertEquals("Wrong answer", view.error)
         assertEquals(View.VISIBLE, view.errorVisibility)
     }
@@ -168,6 +174,9 @@ class PlayerGameHandlerTest {
         val handler = PlayerGameHandler(0, view, db)
 
         handler.onPick(song)
+
+        // Wait for the task of the database to execute
+        Thread.sleep(1)
 
         assertEquals(View.VISIBLE, view.songVisibility)
         assertEquals(song, view.song)
