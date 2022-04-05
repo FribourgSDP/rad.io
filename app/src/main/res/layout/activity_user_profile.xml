@@ -8,8 +8,8 @@
 
     <ImageView
         android:id="@+id/userIcon"
-        android:layout_width="185dp"
-        android:layout_height="175dp"
+        android:layout_width="131dp"
+        android:layout_height="135dp"
         android:layout_marginTop="36dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -27,7 +27,7 @@
         app:layout_constraintStart_toStartOf="@+id/userIcon"
         app:layout_constraintTop_toTopOf="@+id/userIcon" />
 
-    <TextView
+    <EditText
         android:id="@+id/username"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -39,20 +39,18 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/userIcon" />
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/playlist_recycler_view"
+    <androidx.fragment.app.FragmentContainerView
+        android:id="@+id/container"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_marginTop="16dp"
         android:layout_marginBottom="16dp"
-        android:padding="4dp"
         app:layout_constraintBottom_toTopOf="@+id/launchSpotifyButton"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/PlaylistsText"
-        app:layout_constraintVertical_bias="0.0"
-        tools:listitem="@layout/playlist_item" />
+        app:layout_constraintVertical_bias="0.0" />
 
     <TextView
         android:id="@+id/spotifyDescription"
@@ -93,17 +91,38 @@
         android:backgroundTint="#168A25"
         android:text="Connect to Spotify"
         app:iconTint="#9E3434"
-        app:layout_constraintBottom_toTopOf="@+id/logoutButton"
+        app:layout_constraintBottom_toTopOf="@+id/homeButton"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"/>
 
     <Button
-        android:id="@+id/logoutButton"
+        android:id="@+id/homeButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="LogOut"
+        android:text="Home"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.581"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <Button
+        android:id="@+id/googleSignInButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="SignIn"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.919"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <Button
+        android:id="@+id/saveUserButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Save changes"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.107"
         app:layout_constraintStart_toStartOf="parent" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
@@ -118,11 +137,11 @@
         app:fabSize="normal"
         android:src="@drawable/ic_baseline_add_24"
         app:maxImageSize="50dp"
-        app:layout_constraintBottom_toBottomOf="@+id/playlist_recycler_view"
+        app:layout_constraintBottom_toBottomOf="@+id/container"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.953"
-        app:layout_constraintStart_toStartOf="@+id/playlist_recycler_view"
-        app:layout_constraintTop_toTopOf="@+id/playlist_recycler_view"
+        app:layout_constraintStart_toStartOf="@+id/container"
+        app:layout_constraintTop_toTopOf="@+id/container"
         app:layout_constraintVertical_bias="0.965" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -5,7 +5,6 @@ import com.google.android.gms.tasks.Task
 import com.google.android.gms.tasks.Tasks
 import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.EventListener
-import java.lang.IllegalArgumentException
 
 class LocalDatabase : Database {
     private val userMap: MutableMap<String, User> = mutableMapOf()
@@ -49,6 +48,10 @@ class LocalDatabase : Database {
         return Tasks.forResult(EXPECTED_UID)
     }
 
+    override fun generateUserId(): Task<Long> {
+        return Tasks.forResult(EXPECTED_USER_UID)
+    }
+
     override fun openLobby(id: Long, settings: Game.Settings): Task<Void> {
         return Tasks.forResult(null)
     }
@@ -65,7 +68,40 @@ class LocalDatabase : Database {
         return Tasks.forResult(null)
     }
 
+    override fun openGame(id: Long): Task<Void> {
+        TODO("Not yet implemented")
+    }
+
+    override fun openGameMetadata(id: Long, users: List<User>): Task<Void> {
+        TODO("Not yet implemented")
+    }
+
+    override fun launchGame(id: Long): Task<Void> {
+        TODO("Not yet implemented")
+    }
+
+    override fun listenToGameUpdate(id: Long, listener: EventListener<DocumentSnapshot>) {
+        TODO("Not yet implemented")
+    }
+
+    override fun listenToGameMetadataUpdate(id: Long, listener: EventListener<DocumentSnapshot>) {
+        TODO("Not yet implemented")
+    }
+
+    override fun updateGame(id: Long, updatesMap: Map<String, Any>): Task<Void> {
+        TODO("Not yet implemented")
+    }
+
+    override fun setPlayerDone(gameID: Long, playerID: String): Task<Void> {
+        TODO("Not yet implemented")
+    }
+
+    override fun resetPlayerDoneMap(gameID: Long, singer: String): Task<Void> {
+        TODO("Not yet implemented")
+    }
+
     companion object {
+        const val EXPECTED_USER_UID = 392L
         const val EXPECTED_UID = 794L
         val EXPECTED_SETTINGS = Game.Settings(User("Host"), "Hello World!", Playlist("Host's Playlist"), 42, true, true)
 

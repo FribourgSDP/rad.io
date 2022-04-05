@@ -1,5 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<resources>
-    <string name="api_key">a3454edb65483e706c127deaa11df69d</string>
-    <string name="musixmatch_url">http://api.musixmatch.com/ws/1.1/</string>
-</resources>

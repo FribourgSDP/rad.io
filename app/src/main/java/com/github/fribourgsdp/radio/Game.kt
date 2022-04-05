@@ -4,6 +4,8 @@ import java.util.*
 import kotlin.collections.ArrayList
 import kotlin.collections.HashMap
 import kotlin.collections.HashSet
+import kotlinx.serialization.Serializable
+
 /**
  * An instance of a game.
  *
@@ -16,7 +18,8 @@ import kotlin.collections.HashSet
  * @property isPrivate whether the game is private or public.
  * @property currentRound the current round of the game.
  */
-class Game private constructor(val name: String, val host: User, val playlist: Playlist, val nbRounds: Int,
+@Serializable
+class Game private constructor(val id: Long, val name: String, val host: User, val playlist: Playlist, val nbRounds: Int,
                                val withHint: Boolean, val isPrivate: Boolean, private val listUser: List<User>) {
 
     private val scoreMap = HashMap(listUser.associateWith { 0 })
@@ -69,7 +72,7 @@ class Game private constructor(val name: String, val host: User, val playlist: P
      * It returns a smaller subset if the asked number is bigger than the number of songs left.
      * @return a random subset of songs.
      */
-    fun getChoices(nb: Int): Set<Song> {
+    fun getChoices(nb: Int): List<Song> {
         // Check if all the songs have been done and restart if so
         if (songsNotDone.isEmpty()) {
             songsNotDone.addAll(playlist.getSongs())
@@ -77,7 +80,7 @@ class Game private constructor(val name: String, val host: User, val playlist: P
 
         val nbRandom = if (songsNotDone.size < nb) songsNotDone.size else nb
 
-        val chosen = HashSet<Song>()
+        val chosen = ArrayList<Song>()
 
         for (i in 1..nbRandom) {
             val random = songsNotDone.random()
@@ -96,10 +99,15 @@ class Game private constructor(val name: String, val host: User, val playlist: P
         return nbRounds <= currentRound && usersToPlay <= 0
     }
 
+    fun getAllPlayers(): List<User> {
+        return ArrayList(listUser)
+    }
+
     /**
      * A builder for the [Game] class.
      */
     class Builder {
+        private var id = 0L
         private lateinit var host: User
         private var name = "A Fun Party"
         private lateinit var playlist: Playlist
@@ -107,6 +115,15 @@ class Game private constructor(val name: String, val host: User, val playlist: P
         private var withHint  = false
         private var isPrivate = false
         private var list = ArrayList<User>()
+
+        /**
+         * Set the [id] of the game.
+         * @return the [Builder]
+         */
+        fun setID(id: Long): Builder {
+            this.id = id
+            return this
+        }
 
         /**
          * Set the [host] for the game.
@@ -208,7 +225,7 @@ class Game private constructor(val name: String, val host: User, val playlist: P
          * @return the [Game] built with the previously given parameters.
          */
         fun build() : Game {
-            return Game(name, host, playlist, nbRounds, withHint, isPrivate, list)
+            return Game(id, name, host, playlist, nbRounds, withHint, isPrivate, list)
         }
 
     }

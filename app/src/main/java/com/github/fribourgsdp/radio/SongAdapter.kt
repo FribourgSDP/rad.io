@@ -1,21 +1,19 @@
 package com.github.fribourgsdp.radio
 
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 
-class SongAdapter(private val songList: List<Song>) :
-    RecyclerView.Adapter<SongAdapter.SongViewHolder>(){
+class SongAdapter(private val songList: List<Song>, private val listener: OnClickListener) :
+    RecyclerView.Adapter<ViewHolder>(){
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): SongViewHolder {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val itemView = LayoutInflater.from(parent.context).inflate(R.layout.song_item,
             parent, false)
-        return SongViewHolder(itemView)
+        return ViewHolder(itemView, listener, itemView.findViewById(R.id.song_title_view), itemView.findViewById(R.id.song_subtitle_view))
     }
 
-    override fun onBindViewHolder(holder: SongViewHolder, position: Int) {
+    override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val song = songList[position]
 
         holder.titleView.text = song.name
@@ -24,8 +22,4 @@ class SongAdapter(private val songList: List<Song>) :
 
     override fun getItemCount(): Int = songList.size
 
-    inner class SongViewHolder(itemView: View) :    RecyclerView.ViewHolder(itemView){
-        val titleView: TextView = itemView.findViewById(R.id.song_title_view)
-        val subtitleView: TextView = itemView.findViewById(R.id.song_subtitle_view)
-    }
 }

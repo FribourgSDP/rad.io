@@ -100,8 +100,8 @@ class GoogleSignInActivity : AppCompatActivity() {
             //check if user is new or existing
             if (authResult.additionalUserInfo!!.isNewUser) {
                 //user is new - Account Create
-                val mail = saveUserInDatabse(authResult)
-                saveTestUser(this, mail)
+               // val mail = saveUserInDatabse(authResult)
+                //saveTestUser(this, mail)
                 Toast.makeText(this@GoogleSignInActivity, "Account created", Toast.LENGTH_SHORT)
                     .show()
             } else {
@@ -109,7 +109,7 @@ class GoogleSignInActivity : AppCompatActivity() {
                 Toast.makeText(this@GoogleSignInActivity, "LoggedIn", Toast.LENGTH_SHORT).show()
             }
             //start profile activity
-            val intent: Intent = Intent(this, UserProfileActivity::class.java)
+            val intent = Intent(this, UserProfileActivity::class.java)
             startActivity(intent)
             finish()
         }
@@ -123,6 +123,7 @@ class GoogleSignInActivity : AppCompatActivity() {
     }
 }
 
+/*
 private fun saveTestUser(context : Context, mail : String){
     /** this user allows quick demo's as it is data that is written to the app
      * specific storage and can be easily read without intents */
@@ -131,11 +132,11 @@ private fun saveTestUser(context : Context, mail : String){
 }
 
 private fun saveUserInDatabse(authResult : AuthResult) : String{
-    val firebaseUser = authResult!!.user
+    val firebaseUser = authResult.user
     val db = FirestoreDatabase()
     val id = firebaseUser!!.uid
     val mail = firebaseUser.email
     val user = User(mail!!)
     db.setUser(id, user)
     return mail
-}
+}*/

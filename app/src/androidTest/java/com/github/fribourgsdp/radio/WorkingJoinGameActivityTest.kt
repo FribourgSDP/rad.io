@@ -11,6 +11,8 @@ import androidx.test.espresso.matcher.ViewMatchers
 import androidx.test.ext.junit.rules.ActivityScenarioRule
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.github.fribourgsdp.radio.mockimplementations.*
+import kotlinx.serialization.encodeToString
+import kotlinx.serialization.json.Json
 import org.hamcrest.Matchers
 import org.junit.After
 import org.junit.Before
@@ -28,6 +30,10 @@ import org.junit.runner.RunWith
 class WorkingJoinGameActivityTest {
     @get:Rule
     var gameSettingsActivityRule = ActivityScenarioRule(WorkingJoinGameActivity::class.java)
+
+    private val json = Json {
+        allowStructuredMapKeys = true
+    }
 
     private val ctx: Context = ApplicationProvider.getApplicationContext()
 
@@ -71,9 +77,9 @@ class WorkingJoinGameActivityTest {
             Matchers.allOf(
                 IntentMatchers.toPackage("com.github.fribourgsdp.radio"),
                 IntentMatchers.hasComponent(LobbyActivity::class.java.name),
-                IntentMatchers.hasExtra(GAME_HOST_KEY, LocalDatabase.EXPECTED_SETTINGS.host.name),
+                IntentMatchers.hasExtra(GAME_HOST_KEY, json.encodeToString(LocalDatabase.EXPECTED_SETTINGS.host)),
                 IntentMatchers.hasExtra(GAME_NAME_KEY, LocalDatabase.EXPECTED_SETTINGS.name),
-                IntentMatchers.hasExtra(GAME_PLAYLIST_KEY, LocalDatabase.EXPECTED_SETTINGS.playlist.name),
+                IntentMatchers.hasExtra(GAME_PLAYLIST_KEY, json.encodeToString(LocalDatabase.EXPECTED_SETTINGS.playlist)),
                 IntentMatchers.hasExtra(GAME_NB_ROUNDS_KEY, LocalDatabase.EXPECTED_SETTINGS.nbRounds),
                 IntentMatchers.hasExtra(GAME_HINT_KEY, LocalDatabase.EXPECTED_SETTINGS.withHint),
                 IntentMatchers.hasExtra(GAME_PRIVACY_KEY, LocalDatabase.EXPECTED_SETTINGS.isPrivate),

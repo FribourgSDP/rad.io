@@ -4,14 +4,16 @@ import android.content.Context
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import okhttp3.*
+import org.json.JSONException
 import java.io.IOException
 import java.util.concurrent.CompletableFuture
 
 const val SPOTIFY_PLAYLIST_INFO_BASE_URL = "https://api.spotify.com/v1/playlists/"
 const val SPOTIFY_GET_PLAYLIST_IDS_BASE_URL = "https://api.spotify.com/v1/me/playlists"
 const val SPOTIFY_SONG_FILTER_NAME_ARTIST = "/tracks?fields=items(track(name%2C%20artists(name)))"
-const val PLAYLIST_INFO_ERROR = "---An error occured while fetching the playlist information.---"
+const val PLAYLIST_INFO_ERROR = "---An error occurred while fetching the playlist information.---"
 
 var TOKEN: String? = null
 
@@ -35,7 +37,7 @@ class ImportSpotifyPlaylistsActivity : AppCompatActivity() {
 
     companion object {
 
-        fun saveInfoToUser(playlistNameToUId: HashMap<String, String>, playlists: Set<Playlist>, ctx : Context): Unit {
+        fun saveInfoToUser(playlistNameToUId: HashMap<String, String>, playlists: Set<Playlist>, ctx : Context) {
             val user = UserProfileActivity.loadUser(ctx)
             user.addSpotifyPlaylistUids(playlistNameToUId)
             user.addPlaylists(playlists)
@@ -52,7 +54,7 @@ class ImportSpotifyPlaylistsActivity : AppCompatActivity() {
         fun loadSongsToPlaylists(playlistNameToId: Map<String, String>, client: OkHttpClient = OkHttpClient(), parser : JSONParser = JSONStandardParser()): Set<Playlist> {
             val playlists = mutableSetOf<Playlist>()
             for ((name, id) in playlistNameToId) {
-                var newPlaylist = Playlist(name)
+                val newPlaylist = Playlist(name)
                 val futurePlaylist = getPlaylistContent(id, client, parser)
                 val playlistSongs = futurePlaylist.get()
                 if (playlistSongs.isNotEmpty()){
@@ -95,7 +97,7 @@ class ImportSpotifyPlaylistsActivity : AppCompatActivity() {
                 else {
                     val playlists = parsedResponse.getJSONArray("items")
                     for (i in 0 until playlists.length()){
-                        var playlist = playlists.getJSONObject(i)
+                        val playlist = playlists.getJSONObject(i)
                         playlistNameToId[playlist.getString("name")] = playlist.getString("id")
                     }
                 }
@@ -113,17 +115,19 @@ class ImportSpotifyPlaylistsActivity : AppCompatActivity() {
             override fun onResponse(call: Call, response: Response) {
                 val parsedResponseString = response.body()?.string()
                 val parsedResponse = parser.parse(parsedResponseString)
-                var playlistInfo = mutableSetOf<Song>()
-                println(parsedResponse.toString())
-                if (parsedResponse == null || parsedResponse.has("error")){
-
-                }
-                else {
+                val playlistInfo = mutableSetOf<Song>()
+                if (!(parsedResponse == null || parsedResponse.has("error"))) {
                     val songs = parsedResponse.getJSONArray("items")
                     for (i in 0 until songs.length()){
-                        var songObject = songs.getJSONObject(i).getJSONObject("track")
+                        val songObject =
+                        try {
+                            songs.getJSONObject(i).getJSONObject("track")
+                        } catch (e : JSONException){
+                            // TODO: handle error
+                            continue
+                        }
                         var artists = ""
-                        var songArtists = songObject.getJSONArray("artists")
+                        val songArtists = songObject.getJSONArray("artists")
                         for(j in 0 until songArtists.length()){
                             artists += songArtists.getJSONObject(j).getString("name") + ", "
                         }
