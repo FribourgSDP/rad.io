@@ -13,8 +13,9 @@ import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.json.Json
 
 class GameActivity : AppCompatActivity(), GameView {
-    // TODO: Use 'User.load(this)' when available
-    private var user = User("The second best player")
+    // TODO: Use 'User.load(this)' when available -> should be ok now
+    //private var user = User("The second best player")
+    private lateinit var user: User
     private var isHost: Boolean = false
 
     private lateinit var currentRoundTextView : TextView
@@ -33,6 +34,11 @@ class GameActivity : AppCompatActivity(), GameView {
         setContentView(R.layout.activity_game)
         isHost = intent.getBooleanExtra(GAME_IS_HOST_KEY, false)
         initViews()
+        user = try {
+            User.load(this)
+        } catch (e: java.io.FileNotFoundException) {
+            User("The second best player")
+        }
         if (isHost) {
             val json = Json {
                 allowStructuredMapKeys = true
