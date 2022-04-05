@@ -131,9 +131,14 @@ class PlayerGameHandlerTest {
         `when`(db.setPlayerDone(anyLong(), anyString()))
             .thenReturn(Tasks.forResult(null))
 
+        `when`(mockSnapshot.getString("current_song")).thenReturn(song)
+
         val handler = PlayerGameHandler(0, view, db)
 
+        // Update song to guess
         handler.handleSnapshot(mockSnapshot)
+        
+        // Check it
         handler.handleGuess(song, "")
 
         // Wait for the task of the database to execute
@@ -151,9 +156,14 @@ class PlayerGameHandlerTest {
         `when`(db.setPlayerDone(anyLong(), anyString()))
             .thenReturn(Tasks.forResult(null))
 
+        `when`(mockSnapshot.getString("current_song")).thenReturn(song)
+
         val handler = PlayerGameHandler(0, view, db)
 
+        // Update song to guess
         handler.handleSnapshot(mockSnapshot)
+
+        // Check it
         handler.handleGuess("Not the song", "")
 
         // Wait for the task of the database to execute
