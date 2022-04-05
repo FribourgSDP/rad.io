@@ -1,27 +1,16 @@
 package com.github.fribourgsdp.radio
 
-import android.content.Context
-import android.content.Intent
-import android.os.Bundle
 import androidx.fragment.app.testing.FragmentScenario
 import androidx.fragment.app.testing.launchFragment
-import androidx.fragment.app.testing.launchFragmentInContainer
-import androidx.test.core.app.ActivityScenario
-import androidx.test.core.app.ApplicationProvider
 import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.action.ViewActions
 import androidx.test.espresso.assertion.ViewAssertions.matches
-import androidx.test.espresso.intent.Intents
 import androidx.test.espresso.matcher.ViewMatchers.*
-import kotlinx.serialization.encodeToString
-import kotlinx.serialization.json.Json
+import androidx.test.ext.junit.runners.AndroidJUnit4
 import org.hamcrest.Matchers.not
-import org.junit.After
-import org.junit.Assert.*
-import org.junit.Before
+import org.junit.Assert.assertEquals
 import org.junit.Test
 import org.junit.runner.RunWith
-import androidx.test.ext.junit.runners.AndroidJUnit4
 
 
 @RunWith(AndroidJUnit4::class)
