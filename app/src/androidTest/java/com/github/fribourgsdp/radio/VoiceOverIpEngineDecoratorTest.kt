@@ -2,6 +2,7 @@ package com.github.fribourgsdp.radio
 
 import android.content.Context
 import android.content.Intent
+import android.widget.ImageButton
 import androidx.test.core.app.ActivityScenario
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.espresso.Espresso
@@ -40,11 +41,12 @@ class VoiceOverIpEngineDecoratorTest {
         val context: Context = ApplicationProvider.getApplicationContext()
         val testEngineDecorator : VoiceIpEngineDecorator = VoiceIpEngineDecorator(context, true)
         assertTrue(testEngineDecorator.joinChannel(null, null, null, 3) == 0)
-        assertTrue(testEngineDecorator.joinChannel(null, null, null, 3, null) == 0)
         assertTrue(testEngineDecorator.enableAudioVolumeIndication(5, 3, true) == 0)
         assertTrue(testEngineDecorator.setAudioProfile(3, 5) == 0)
         assertTrue(testEngineDecorator.leaveChannel() == 0)
         assertTrue(testEngineDecorator.muteLocalAudioStream(true) == 0)
+        val testImageButton = ImageButton(context)
+        testEngineDecorator.mute(testImageButton)
     }
 
 }
