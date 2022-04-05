@@ -34,7 +34,7 @@ class PlayerGameHandlerTest {
 
     @Test
     fun correctSingerUpdate() {
-        val view = FakeGameView()
+        val view = FakeGameView(ctx = ctx)
         val handler = PlayerGameHandler(0, view)
 
         handler.handleSnapshot(mockSnapshot)
@@ -44,7 +44,7 @@ class PlayerGameHandlerTest {
 
     @Test
     fun correctRoundUpdate() {
-        val view = FakeGameView()
+        val view = FakeGameView(ctx = ctx)
         val handler = PlayerGameHandler(0, view)
 
         handler.handleSnapshot(mockSnapshot)
