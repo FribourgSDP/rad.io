@@ -20,7 +20,7 @@ class GameSettingsActivity : AppCompatActivity() {
     private val json = Json {
         allowStructuredMapKeys = true
     }
-    private val host = getHost()
+    private lateinit var host: User
 
     private lateinit var nameInput : EditText
     private lateinit var nbRoundsInput : EditText
@@ -39,6 +39,8 @@ class GameSettingsActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_game_settings)
+
+        host = getHost()
 
         nameInput = findViewById(R.id.nameInput)
         nbRoundsInput = findViewById(R.id.nbRoundsInput)

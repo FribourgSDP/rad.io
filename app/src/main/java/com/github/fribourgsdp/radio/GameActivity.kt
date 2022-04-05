@@ -13,7 +13,7 @@ import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.json.Json
 
 class GameActivity : AppCompatActivity(), GameView {
-    private var user = User.load(this)
+    private lateinit var user: User
     private var isHost: Boolean = false
 
     private lateinit var currentRoundTextView : TextView
@@ -30,6 +30,7 @@ class GameActivity : AppCompatActivity(), GameView {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_game)
+        user = getUser()
         isHost = intent.getBooleanExtra(GAME_IS_HOST_KEY, false)
         initViews()
         if (isHost) {
@@ -115,6 +116,10 @@ class GameActivity : AppCompatActivity(), GameView {
             }
             false
         }
+    }
+
+    fun getUser(): User {
+        return User.load(this)
     }
 
 }
