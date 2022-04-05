@@ -17,6 +17,7 @@ import kotlinx.serialization.json.Json
 
 const val GAME_KEY = "com.github.fribourgsdp.radio.GAME"
 const val PERMISSION_REQ_ID_RECORD_AUDIO = 22
+const val GAME_UID = "com.github.fribourgsdp.radio.GAMEUID"
 
 
 open class LobbyActivity : AppCompatActivity() {
@@ -237,6 +238,8 @@ open class LobbyActivity : AppCompatActivity() {
     private fun goToGameActivity(isHost: Boolean, game: Game? = null, gameID: Long? = null) {
         val intent: Intent = Intent(this, GameActivity::class.java).apply {
             putExtra(GAME_IS_HOST_KEY, isHost)
+            putExtra(IS_IN_TEST_MODE, false)
+            putExtra(GAME_UID, gameID)
         }
 
         if (isHost && game != null) {

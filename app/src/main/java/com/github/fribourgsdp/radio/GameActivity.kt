@@ -1,16 +1,19 @@
 package com.github.fribourgsdp.radio
 
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.KeyEvent
 import android.view.View
 import android.view.inputmethod.EditorInfo
-import android.widget.ArrayAdapter
-import android.widget.EditText
-import android.widget.ListView
-import android.widget.TextView
+import android.widget.*
+import io.agora.rtc.Constants
+import io.agora.rtc.RtcEngine
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.json.Json
+import kotlin.random.Random
+
+const val IS_IN_TEST_MODE = "Test mode for voice chat engine"
 
 class GameActivity : AppCompatActivity(), GameView {
     // TODO: Use 'User.load(this)' when available -> should be ok now
@@ -23,11 +26,13 @@ class GameActivity : AppCompatActivity(), GameView {
     private lateinit var songTextView : TextView
     private lateinit var errorOrFailureTextView : TextView
     private lateinit var songGuessEditText : EditText
+    private lateinit var muteButton : ImageButton
 
     private lateinit var playersListView : ListView
     private lateinit var namesAdapter : ArrayAdapter<String>
 
     private lateinit var playerGameHandler: PlayerGameHandler
+    private lateinit var voiceChannel: VoiceIpEngineDecorator
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -39,6 +44,7 @@ class GameActivity : AppCompatActivity(), GameView {
         } catch (e: java.io.FileNotFoundException) {
             User("The second best player")
         }
+        initVoiceChat(intent.getBooleanExtra(IS_IN_TEST_MODE, true), intent.getLongExtra(GAME_UID, 0))
         if (isHost) {
             val json = Json {
                 allowStructuredMapKeys = true
@@ -54,6 +60,12 @@ class GameActivity : AppCompatActivity(), GameView {
 
         playerGameHandler.linkToDatabase()
 
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        voiceChannel.leaveChannel()
+        RtcEngine.destroy()
     }
 
     override fun chooseSong(choices: List<String>): String {
@@ -123,6 +135,22 @@ class GameActivity : AppCompatActivity(), GameView {
             }
             false
         }
+        muteButton = findViewById<ImageButton>(R.id.muteChannelButton)
+        muteButton.setOnClickListener {
+            voiceChannel.mute(muteButton)
+        }
+    }
+
+    private fun initVoiceChat(is_test_mode: Boolean, gameUid: Long) {
+        voiceChannel = if (is_test_mode) {
+            VoiceIpEngineDecorator(baseContext, true)
+        } else {
+            VoiceIpEngineDecorator(baseContext)
+        }
+        val userId = Random.nextInt(100000000)
+        voiceChannel.joinChannel(voiceChannel.getToken(userId, gameUid.toString()), gameUid.toString(), "", userId)
+        voiceChannel.setAudioProfile(Constants.AUDIO_PROFILE_MUSIC_STANDARD, Constants.AUDIO_SCENARIO_CHATROOM_ENTERTAINMENT);
+        voiceChannel.enableAudioVolumeIndication(500,5,true)
     }
 
 }

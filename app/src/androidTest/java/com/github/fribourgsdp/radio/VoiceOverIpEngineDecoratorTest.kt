@@ -16,20 +16,11 @@ import org.mockito.Mockito.*
 
 class VoiceOverIpEngineDecoratorTest {
 
-    fun makeMockRtcEngine() : RtcEngine {
-        val mockEngine = mock(RtcEngine::class.java)
-        `when`(mockEngine.joinChannel(any(), any(), any(), any())).thenReturn(0)
-        `when`(mockEngine.joinChannel(any(), any(), any(), any(), any())).thenReturn(0)
-        `when`(mockEngine.enableAudioVolumeIndication(any(), any(), any())).thenReturn(0)
-        `when`(mockEngine.setAudioProfile(any(), any())).thenReturn(0)
-        return mockEngine
-    }
-
     @Test
     fun initMockRtcEngine() {
         val context: Context = ApplicationProvider.getApplicationContext()
 
-        val testEngineDecorator : VoiceIpEngineDecorator = VoiceIpEngineDecorator(context, makeMockRtcEngine())
+        val testEngineDecorator : VoiceIpEngineDecorator = VoiceIpEngineDecorator(context, true)
         val intent: Intent = Intent(context, VoiceOverIPActivity::class.java)
         ActivityScenario.launch<VoiceOverIPActivity>(intent).use { scenario ->
             Espresso.pressBack()
@@ -45,11 +36,13 @@ class VoiceOverIpEngineDecoratorTest {
     @Test
     fun allFunctionsWeNeedToCallReturnSuccess(){
         val context: Context = ApplicationProvider.getApplicationContext()
-        val testEngineDecorator : VoiceIpEngineDecorator = VoiceIpEngineDecorator(context, makeMockRtcEngine())
+        val testEngineDecorator : VoiceIpEngineDecorator = VoiceIpEngineDecorator(context, true)
         assertTrue(testEngineDecorator.joinChannel(null, null, null, 3) == 0)
         assertTrue(testEngineDecorator.joinChannel(null, null, null, 3, null) == 0)
         assertTrue(testEngineDecorator.enableAudioVolumeIndication(5, 3, true) == 0)
         assertTrue(testEngineDecorator.setAudioProfile(3, 5) == 0)
+        assertTrue(testEngineDecorator.leaveChannel() == 0)
+        assertTrue(testEngineDecorator.muteLocalAudioStream(true) == 0)
     }
 
 }

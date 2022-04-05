@@ -29,6 +29,11 @@ import org.junit.runner.RunWith
  * so that the tests don't depend on firebase.
  *
  */
+
+/**
+ * ==================NOTE THAT FOR THE TESTS TO USE A MOCK IMPLEMENTATION OF THE VOICE CHANNEL, THE FOLLOWING MUST BE ADDED TO THE
+ * ==================INTENT WHEN LAUNCHING THIS ACTIVITY: BOOLEAN EXTRA IS_IN_TEST_MODE = TRUE, LONG EXTRA GAME_UID = WHATEVER_LONG_YOU_WANT
+ */
 @RunWith(AndroidJUnit4::class)
 class WorkingLobbyActivityTest {
     @get:Rule
@@ -79,6 +84,8 @@ class WorkingLobbyActivityTest {
             putExtra(GAME_HINT_KEY, withHint)
             putExtra(GAME_PRIVACY_KEY, private)
             putExtra(GAME_IS_HOST_KEY, true)
+            putExtra(GAME_UID, 37L)
+            putExtra(IS_IN_TEST_MODE, true)
         }
 
         ActivityScenario.launch<WorkingLobbyActivity>(testIntent).use {
@@ -124,6 +131,8 @@ class WorkingLobbyActivityTest {
             putExtra(GAME_HINT_KEY, withHint)
             putExtra(GAME_PRIVACY_KEY, private)
             putExtra(GAME_IS_HOST_KEY, false)
+            putExtra(GAME_UID, 37L)
+            putExtra(IS_IN_TEST_MODE, true)
         }
 
         ActivityScenario.launch<WorkingLobbyActivity>(testIntent).use {
@@ -146,6 +155,8 @@ class WorkingLobbyActivityTest {
         val testIntent = Intent(ctx, WorkingLobbyActivity::class.java).apply {
             putExtra(GAME_UID_KEY, -1)
             putExtra(GAME_IS_HOST_KEY, false)
+            putExtra(GAME_UID, 37L)
+            putExtra(IS_IN_TEST_MODE, true)
         }
 
         ActivityScenario.launch<WorkingLobbyActivity>(testIntent).use {
