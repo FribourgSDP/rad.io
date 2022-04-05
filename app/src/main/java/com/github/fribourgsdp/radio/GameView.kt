@@ -10,16 +10,19 @@ interface GameView {
 
     /**
      * Update the view to display the current singer in the game.
+     * @param singerName the name of the new singer
      */
     fun updateSinger(singerName: String)
 
     /**
      * Update the view to display the current round of the game.
+     * @param currentRound the current round
      */
     fun updateRound(currentRound: Long)
 
     /**
      * Make the view display the song that is currently being sung.
+     * @param songName the name of the song to display
      */
     fun displaySong(songName: String)
 
@@ -30,6 +33,7 @@ interface GameView {
 
     /**
      * Display an error on the view.
+     * @param errorMessage the error message to display
      */
     fun displayError(errorMessage: String)
 
