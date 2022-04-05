@@ -48,14 +48,10 @@ class MainActivity : AppCompatActivity() {
 
     }
     private fun createUser(){
-
-        //for now, we set to 1 the user ID, we will then use the database function
-         db.generateUserId().addOnSuccessListener { id->
-            val userName = "Guest"
-            val generatedUser = User(userName)
-            generatedUser.id = id.toString()
-            generatedUser.save(this)
-            db.setUser(id.toString(),generatedUser)
+        User.createDefaultUser().continueWith{ user ->
+            val result = user.result
+            result.save(this)
+            db.setUser(result.id,result)
         }
 
     }

@@ -12,6 +12,7 @@ import androidx.test.espresso.matcher.ViewMatchers
 import androidx.test.espresso.matcher.ViewMatchers.withId
 import androidx.test.ext.junit.rules.ActivityScenarioRule
 import androidx.test.ext.junit.runners.AndroidJUnit4
+import com.google.android.gms.tasks.Tasks
 import org.hamcrest.Matchers.allOf
 import org.junit.After
 import org.junit.Assert.*
@@ -125,7 +126,7 @@ class AddPlaylistActivityTest {
             )
         )
 
-        val user = UserProfileActivity.loadUser(ctx)
+        val user = Tasks.await(User.loadOrDefault(ctx))
         assertTrue(user.getPlaylists().any { p -> p.name == "Sardou playlist" })
         user.getPlaylists().filter { p -> p.name == "Sardou playlist" }.forEach{p ->
             run {

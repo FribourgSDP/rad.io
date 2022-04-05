@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.view.View
 import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
+import com.google.android.gms.tasks.Tasks
 
 class AddPlaylistActivity : AppCompatActivity() {
     private val listSongs = ArrayList<Song>()
@@ -22,7 +23,9 @@ class AddPlaylistActivity : AppCompatActivity() {
         listView.adapter = listAdapter
         errorTextView = findViewById(R.id.addPlaylistErrorTextView)
 
-        user = UserProfileActivity.loadUser(this)
+        User.loadOrDefault(this).addOnSuccessListener { u ->
+            user = u
+        }
     }
     fun addItems(view : View) {
         val songNameTextView : EditText = findViewById(R.id.addSongToPlaylistSongName)
