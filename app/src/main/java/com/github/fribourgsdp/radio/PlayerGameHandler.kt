@@ -26,11 +26,19 @@ class PlayerGameHandler(
                 view.chooseSong(choices, this)
 
             } else {
-                view.displayGuessInput()
-
                 // Get the picked song
                 // It's not null when there is one.
                 songToGuess = snapshot.getString("current_song")
+
+                if (songToGuess != null) {
+                    // The singer picked a song so the player can guess
+                    view.displayGuessInput()
+                } else {
+                    // The singer is till picking, so the player waits
+                    view.displayWaitOnSinger(singerName)
+                }
+
+
             }
 
         } else {
