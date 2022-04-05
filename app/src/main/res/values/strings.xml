@@ -72,5 +72,6 @@
     <string name="import_my_spotify_playlists">Import my Spotify playlists</string>
     <string name="sign_in_message">Sign in</string>
     <string name="sign_out_message">Sign out</string>
+    <string name="wait_for_pick_format">Waiting on %s to pick a song</string>
 </resources>
 
