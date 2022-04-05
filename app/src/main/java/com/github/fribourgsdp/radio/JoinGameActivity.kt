@@ -1,7 +1,6 @@
 package com.github.fribourgsdp.radio
 
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.KeyEvent
 import android.view.View
@@ -9,9 +8,8 @@ import android.view.inputmethod.EditorInfo
 import android.widget.Button
 import android.widget.EditText
 import android.widget.TextView
-import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 import androidx.core.widget.addTextChangedListener
-import com.google.android.gms.tasks.Task
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 

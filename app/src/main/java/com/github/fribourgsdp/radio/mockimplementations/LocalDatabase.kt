@@ -5,7 +5,6 @@ import com.google.android.gms.tasks.Task
 import com.google.android.gms.tasks.Tasks
 import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.EventListener
-import java.lang.IllegalArgumentException
 
 class LocalDatabase : Database {
     private val userMap: MutableMap<String, User> = mutableMapOf()
@@ -47,6 +46,10 @@ class LocalDatabase : Database {
 
     override fun getLobbyId(): Task<Long> {
         return Tasks.forResult(EXPECTED_UID)
+    }
+
+    override fun generateUserId(): Task<Long> {
+        return Tasks.forResult(EXPECTED_USER_UID)
     }
 
     override fun openLobby(id: Long, settings: Game.Settings): Task<Void> {
@@ -98,6 +101,7 @@ class LocalDatabase : Database {
     }
 
     companion object {
+        const val EXPECTED_USER_UID = 392L
         const val EXPECTED_UID = 794L
         val EXPECTED_SETTINGS = Game.Settings(User("Host"), "Hello World!", Playlist("Host's Playlist"), 42, true, true)
 

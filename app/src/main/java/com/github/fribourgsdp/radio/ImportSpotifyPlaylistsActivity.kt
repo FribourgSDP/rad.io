@@ -24,7 +24,6 @@ class ImportSpotifyPlaylistsActivity : AppCompatActivity() {
         setContentView(R.layout.activity_import_spotify_playlists)
         val userToken = intent.getStringExtra("auth_token")
         TOKEN = userToken
-        Log.println(Log.INFO, "***", TOKEN.toString())
 
         val playlistMap: CompletableFuture<HashMap<String, String>> = getUserPlaylists()
         val playlistsNameToUid = playlistMap.get()
@@ -38,7 +37,7 @@ class ImportSpotifyPlaylistsActivity : AppCompatActivity() {
 
     companion object {
 
-        fun saveInfoToUser(playlistNameToUId: HashMap<String, String>, playlists: Set<Playlist>, ctx : Context): Unit {
+        fun saveInfoToUser(playlistNameToUId: HashMap<String, String>, playlists: Set<Playlist>, ctx : Context) {
             val user = UserProfileActivity.loadUser(ctx)
             user.addSpotifyPlaylistUids(playlistNameToUId)
             user.addPlaylists(playlists)
@@ -55,7 +54,7 @@ class ImportSpotifyPlaylistsActivity : AppCompatActivity() {
         fun loadSongsToPlaylists(playlistNameToId: Map<String, String>, client: OkHttpClient = OkHttpClient(), parser : JSONParser = JSONStandardParser()): Set<Playlist> {
             val playlists = mutableSetOf<Playlist>()
             for ((name, id) in playlistNameToId) {
-                var newPlaylist = Playlist(name)
+                val newPlaylist = Playlist(name)
                 val futurePlaylist = getPlaylistContent(id, client, parser)
                 val playlistSongs = futurePlaylist.get()
                 if (playlistSongs.isNotEmpty()){
@@ -98,7 +97,7 @@ class ImportSpotifyPlaylistsActivity : AppCompatActivity() {
                 else {
                     val playlists = parsedResponse.getJSONArray("items")
                     for (i in 0 until playlists.length()){
-                        var playlist = playlists.getJSONObject(i)
+                        val playlist = playlists.getJSONObject(i)
                         playlistNameToId[playlist.getString("name")] = playlist.getString("id")
                     }
                 }

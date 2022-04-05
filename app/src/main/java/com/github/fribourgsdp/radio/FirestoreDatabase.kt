@@ -66,7 +66,6 @@ class FirestoreDatabase : Database {
     }
 
     override fun getPlaylist(playlistName : String): Task<Playlist>{
-3
         return  db.collection("playlists").document(playlistName).get().continueWith { l ->
             val result = l.result
             if(result.exists()){
@@ -108,6 +107,29 @@ class FirestoreDatabase : Database {
         val keyMax = "max_id"
 
         val docRef = db.collection("lobby").document("id")
+
+        return db.runTransaction { transaction ->
+            val snapshot = transaction.get(docRef)
+
+            if (!snapshot.exists()) {
+                throw Exception("Document not found.")
+            }
+
+            val id = snapshot.getLong(keyID)!!
+            val nextId = (id + 1) % snapshot.getLong(keyMax)!!
+
+            transaction.update(docRef, keyID, nextId)
+
+            // Success
+            id
+        }
+    }
+
+    override fun generateUserId() : Task<Long> {
+        val keyID = "current_id"
+        val keyMax = "max_id"
+
+        val docRef = db.collection("metadata").document("UserInfo")
 
         return db.runTransaction { transaction ->
             val snapshot = transaction.get(docRef)
