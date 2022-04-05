@@ -5,6 +5,7 @@ import androidx.fragment.app.testing.launchFragment
 import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.action.ViewActions
 import androidx.test.espresso.assertion.ViewAssertions.matches
+import androidx.test.espresso.matcher.RootMatchers.isDialog
 import androidx.test.espresso.matcher.ViewMatchers.*
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import org.hamcrest.Matchers.not
@@ -38,14 +39,17 @@ class SongPickerDialogTest {
 
         with(launchSongPickerDialog(listSongs, uselessListener)) {
             onView(withId(R.id.songPick0))
+                .inRoot(isDialog())
                 .check(matches(withText(listSongs[0])))
                 .check(matches(isDisplayed()))
 
             onView(withId(R.id.songPick1))
+                .inRoot(isDialog())
                 .check(matches(withText(listSongs[1])))
                 .check(matches(isDisplayed()))
 
             onView(withId(R.id.songPick2))
+                .inRoot(isDialog())
                 .check(matches(withText(listSongs[2])))
                 .check(matches(isDisplayed()))
 
@@ -68,6 +72,7 @@ class SongPickerDialogTest {
 
         with(launchSongPickerDialog(listSongs, testListener)) {
             onView(withId(R.id.songPick0))
+                .inRoot(isDialog())
                 .perform(ViewActions.click())
 
             assertEquals(listSongs[0], testListener.pick)
@@ -84,6 +89,7 @@ class SongPickerDialogTest {
 
         with(launchSongPickerDialog(listSongs.subList(0, listSongs.size - 2), uselessListener)) {
             onView(withId(R.id.songPick2))
+                .inRoot(isDialog())
                 .check(matches(not(isDisplayed())))
 
             onFragment { songPicker ->
