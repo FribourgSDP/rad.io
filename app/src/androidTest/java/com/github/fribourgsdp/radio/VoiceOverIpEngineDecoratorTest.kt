@@ -47,6 +47,7 @@ class VoiceOverIpEngineDecoratorTest {
         assertTrue(testEngineDecorator.muteLocalAudioStream(true) == 0)
         val testImageButton = ImageButton(context)
         testEngineDecorator.mute(testImageButton)
+        testEngineDecorator.mute(testImageButton)
     }
 
 }
