@@ -8,6 +8,7 @@ import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.action.ViewActions
 import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.intent.Intents
+import androidx.test.espresso.matcher.RootMatchers.isDialog
 import androidx.test.espresso.matcher.ViewMatchers.*
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
@@ -158,6 +159,28 @@ class GameActivityTest {
                 it.hideError()
             }
             errorOrFailureTextView.check(matches(not(isDisplayed())))
+        }
+    }
+
+    @Test
+    fun songPickerDisplayedOnChoose() {
+        val listSongs = arrayListOf("Song0", "Song1", "Song2")
+
+        val testIntent = Intent(ctx, GameActivity::class.java)
+        ActivityScenario.launch<GameActivity>(testIntent).use { scenario ->
+            scenario.onActivity {
+                it.chooseSong(listSongs,
+                    object: GameView.OnPickListener {
+                        override fun onPick(song: String) {
+                            // DO NOTHING
+                        }
+                    }
+                )
+            }
+
+            onView(withText(R.string.pick_a_song)) // Look for the dialog => use its title
+                .inRoot(isDialog()) // check that it's indeed in a dialog
+                .check(matches(isDisplayed()));
         }
     }
 }
