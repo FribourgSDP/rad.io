@@ -1,14 +1,16 @@
 package com.github.fribourgsdp.radio
 
-import android.app.PendingIntent.getActivity
 import android.content.Intent
 import android.os.Bundle
+import android.text.SpannableStringBuilder
 import android.view.View
-import android.widget.*
+import android.widget.EditText
+import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.get
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import kotlinx.serialization.decodeFromString
+import kotlinx.serialization.json.Json
 
 class AddPlaylistActivity : AppCompatActivity() {
     private val listSongs = ArrayList<Song>()
@@ -22,13 +24,22 @@ class AddPlaylistActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_add_playlist)
 
-//        listAdapter = ArrayAdapter(this, android.R.layout.simple_list_item_1, listNames)
+        user = UserProfileActivity.loadUser(this)
+
+        if (intent.hasExtra(PLAYLIST_TO_MODIFY_FLAG)){
+            val serializedPlaylist = intent.getStringExtra(PLAYLIST_TO_MODIFY_FLAG)
+            PlaylistSongsFragment.log(serializedPlaylist!!)
+            val playlist : Playlist = Json.decodeFromString(serializedPlaylist)
+            listSongs.addAll(playlist.getSongs())
+            findViewById<EditText>(R.id.newPlaylistName).setText(playlist.name)
+        }
         recyclerView = findViewById(R.id.list_playlist_creation)
         listAdapter = SongAdapter(listSongs, object : OnClickListener{
             override fun onItemClick(position: Int) {
                 listSongs.removeAt(position)
                 listAdapter.notifyItemRemoved(position)
             }
+
         })
         recyclerView.adapter = listAdapter
         val layoutManager = LinearLayoutManager(this)
@@ -36,7 +47,6 @@ class AddPlaylistActivity : AppCompatActivity() {
         recyclerView.layoutManager = layoutManager
         errorTextView = findViewById(R.id.addPlaylistErrorTextView)
 
-        user = UserProfileActivity.loadUser(this)
     }
     fun addItems(view : View) {
         val songNameTextView : EditText = findViewById(R.id.addSongToPlaylistSongName)
