@@ -2,7 +2,6 @@ package com.github.fribourgsdp.radio
 
 import android.content.ContentValues
 import android.util.Log
-import com.github.fribourgsdp.radio.LocalDatabase
 import com.google.android.gms.tasks.Tasks
 import org.junit.Test
 import java.util.concurrent.TimeUnit
