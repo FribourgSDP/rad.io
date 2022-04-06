@@ -14,7 +14,6 @@ import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.json.Json
 import kotlin.random.Random
 
-const val IS_IN_TEST_MODE = "Test mode for voice chat engine"
 
 class GameActivity : AppCompatActivity(), GameView {
     // TODO: Use 'User.load(this)' when available
@@ -44,8 +43,7 @@ class GameActivity : AppCompatActivity(), GameView {
 
         lateinit var playerGameHandler: PlayerGameHandler
 
-        initVoiceChat(intent.getBooleanExtra(IS_IN_TEST_MODE, true), intent.getLongExtra(
-            GAME_UID_KEY, 0))
+        initVoiceChat(intent.getLongExtra(GAME_UID_KEY, 0))
         if (isHost) {
             val json = Json {
                 allowStructuredMapKeys = true
@@ -156,11 +154,8 @@ class GameActivity : AppCompatActivity(), GameView {
         }
     }
 
-    private fun initVoiceChat(is_test_mode: Boolean, gameUid: Long) {
-
-
+    private fun initVoiceChat(gameUid: Long) {
         voiceChannel = VoiceIpEngineDecorator(this)
-
         val userId = Random.nextInt(100000000)
         voiceChannel.setAudioProfile(Constants.AUDIO_PROFILE_MUSIC_STANDARD, Constants.AUDIO_SCENARIO_CHATROOM_ENTERTAINMENT);
         voiceChannel.enableAudioVolumeIndication(500,5,true)

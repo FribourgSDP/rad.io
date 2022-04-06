@@ -99,7 +99,6 @@ class GameActivityTest {
             putExtra(GAME_IS_HOST_KEY, true)
             putExtra(GAME_KEY, json.encodeToString(fakeGame))
             putExtra(GAME_UID, 37L)
-            putExtra(IS_IN_TEST_MODE, true)
         }
 
         ActivityScenario.launch<GameActivity>(testIntent).use { scenario ->
