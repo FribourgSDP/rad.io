@@ -9,6 +9,7 @@ import androidx.test.core.app.ApplicationProvider
 import androidx.test.espresso.Espresso
 import androidx.test.espresso.intent.Intents
 import androidx.test.espresso.intent.matcher.IntentMatchers
+import io.agora.rtc.IRtcEngineEventHandler
 import io.agora.rtc.RtcEngine
 import junit.framework.Assert.assertTrue
 import org.hamcrest.Matchers
@@ -29,7 +30,7 @@ class VoiceOverIpEngineDecoratorTest {
 
         ActivityScenario.launch<VoiceOverIPActivity>(intent).use { scenario ->
             scenario.onActivity { activity ->
-                val testEngineDecorator : VoiceIpEngineDecorator = VoiceIpEngineDecorator(activity, true)
+                val testEngineDecorator : VoiceIpEngineDecorator = VoiceIpEngineDecorator(activity, makeMockRtcEngine(), makeMockIRtcEngineEventHandler())
             }
 
             Espresso.pressBack()
@@ -51,7 +52,7 @@ class VoiceOverIpEngineDecoratorTest {
 
         ActivityScenario.launch<VoiceOverIPActivity>(intent).use { scenario ->
             scenario.onActivity { activity ->
-                val testEngineDecorator = VoiceIpEngineDecorator(activity, true)
+                val testEngineDecorator = VoiceIpEngineDecorator(activity, makeMockRtcEngine(), makeMockIRtcEngineEventHandler())
                 assertTrue(testEngineDecorator.joinChannel(null, null, null, 3) == 0)
                 assertTrue(testEngineDecorator.enableAudioVolumeIndication(5, 3, true) == 0)
                 assertTrue(testEngineDecorator.setAudioProfile(3, 5) == 0)
@@ -68,4 +69,19 @@ class VoiceOverIpEngineDecoratorTest {
 
     }
 
+}
+
+fun makeMockRtcEngine() : RtcEngine {
+    val mockEngine = mock(RtcEngine::class.java)
+    `when`(mockEngine.joinChannel(any(), any(), any(), anyInt())).thenReturn(0)
+    `when`(mockEngine.enableAudioVolumeIndication(anyInt(), anyInt(), anyBoolean())).thenReturn(0)
+    `when`(mockEngine.setAudioProfile(anyInt(), anyInt())).thenReturn(0)
+    `when`(mockEngine.leaveChannel()).thenReturn(0)
+    `when`(mockEngine.muteLocalAudioStream(anyBoolean())).thenReturn(0)
+    return mockEngine
+}
+
+fun makeMockIRtcEngineEventHandler() : IRtcEngineEventHandler {
+    val iRtcEngineEventHandler = mock(IRtcEngineEventHandler::class.java)
+    return iRtcEngineEventHandler
 }

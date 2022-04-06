@@ -16,14 +16,17 @@ const val APP_ID = "971046257e964b73bafc7f9458fa9996"
 const val CERTIFICATE = "5822360c68714dcca1382167d4070673"
 const val EXPIRATION_TIME = 10800
 
-class VoiceIpEngineDecorator (appCompatActivity: AppCompatActivity): java.io.Serializable {
+class VoiceIpEngineDecorator : java.io.Serializable {
     private var voiceChatEngine: RtcEngine
     private val mRtcEventHandler : IRtcEngineEventHandler
     private var isTesting: Boolean = false
     private var isMuted: Boolean = false
     private val context : Context
 
-    init {
+
+
+
+    constructor(appCompatActivity: AppCompatActivity){
         context = appCompatActivity.applicationContext
         mRtcEventHandler = MyIRtcEngineEventHandler(appCompatActivity)
         var mRtcEngine: RtcEngine? = null
@@ -37,8 +40,11 @@ class VoiceIpEngineDecorator (appCompatActivity: AppCompatActivity): java.io.Ser
         voiceChatEngine = mRtcEngine
     }
 
-    constructor(appCompatActivity: AppCompatActivity, isTesting: Boolean) : this(appCompatActivity) {
-        this.isTesting = isTesting
+
+    constructor(appCompatActivity: AppCompatActivity, rtcEngine: RtcEngine, mRtcEventHandler : IRtcEngineEventHandler)  {
+        context = appCompatActivity.applicationContext
+        this.mRtcEventHandler = mRtcEventHandler
+        voiceChatEngine = rtcEngine
     }
 
     fun joinChannel(
@@ -47,38 +53,23 @@ class VoiceIpEngineDecorator (appCompatActivity: AppCompatActivity): java.io.Ser
         optionalInfo: String?,
         optionalUid: Int
     ): Int {
-        if (isTesting){
-            return 0
-        }
         return voiceChatEngine.joinChannel(token, channelName, optionalInfo, optionalUid)
     }
 
 
     fun setAudioProfile(profile: Int, scenario: Int): Int {
-        if (isTesting){
-            return 0
-        }
         return voiceChatEngine.setAudioProfile(profile, scenario)
     }
 
     fun enableAudioVolumeIndication(interval: Int, smooth: Int, report_vad: Boolean): Int {
-        if (isTesting){
-            return 0
-        }
         return voiceChatEngine.enableAudioVolumeIndication(interval, smooth, report_vad)
     }
 
     fun leaveChannel(): Int {
-        if (isTesting){
-            return 0
-        }
         return voiceChatEngine.leaveChannel()
     }
 
     fun muteLocalAudioStream(is_muted: Boolean): Int {
-        if (isTesting){
-            return 0
-        }
         return voiceChatEngine.muteLocalAudioStream(is_muted)
     }
 
