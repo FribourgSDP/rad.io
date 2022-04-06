@@ -60,6 +60,8 @@
     <string name="create_playlist">CREATE PLAYLIST</string>
     <string name="add_song">ADD SONG</string>
     <string name="lyricsPresenter">lyrics :</string>
+    <string name="pick_a_song">Pick a song!</string>
+    <string name="submit">Submit</string>
     <string name="playlist_name">Playlist Name</string>
     <string name="artistLyricsDisplay">Artist :</string>
     <string name="songLyricsDisplay">Song :</string>
@@ -70,5 +72,6 @@
     <string name="import_my_spotify_playlists">Import my Spotify playlists</string>
     <string name="sign_in_message">Sign in</string>
     <string name="sign_out_message">Sign out</string>
+    <string name="wait_for_pick_format">Waiting on %s to pick a song</string>
 </resources>
 
