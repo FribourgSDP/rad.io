@@ -1,36 +1,33 @@
 package com.github.fribourgsdp.radio
 
+
 import android.content.Context
 import android.content.Intent
+import androidx.test.core.app.ActivityScenario
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.espresso.Espresso
+import androidx.test.espresso.Espresso.onView
+import androidx.test.espresso.action.ViewActions
 import androidx.test.espresso.action.ViewActions.click
 import androidx.test.espresso.intent.Intents
 import androidx.test.espresso.intent.matcher.IntentMatchers
-import junit.framework.TestCase
+import androidx.test.espresso.intent.matcher.IntentMatchers.hasComponent
 import androidx.test.espresso.matcher.ViewMatchers
-import androidx.test.ext.junit.rules.ActivityScenarioRule
+import androidx.test.espresso.matcher.ViewMatchers.withId
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.google.android.gms.tasks.Tasks
 import com.google.firebase.auth.FirebaseAuth
+import junit.framework.TestCase
 import org.hamcrest.Matchers
-import org.junit.Rule
+import org.hamcrest.Matchers.allOf
 import org.junit.Test
 import org.junit.runner.RunWith
+
 import org.junit.Assert.*
-
-
-
-
-import androidx.test.espresso.Espresso.onView
-import androidx.test.espresso.matcher.ViewMatchers.withId
-
-
-import androidx.test.core.app.ActivityScenario
-import androidx.test.espresso.action.ViewActions
 
 import org.junit.After
 import org.junit.Before
+
 
 
 import java.util.concurrent.TimeUnit
@@ -143,5 +140,17 @@ class UserProfileActivityTest : TestCase() {
         assertEquals(MY_CLIENT_ID, request.clientId)
         assertEquals(REDIRECT_URI, request.redirectUri)
         assertTrue(request.scopes[0].equals("playlist-read-private,playlist-read-collaborative"))
+    }
+    @Test
+    fun testPressBack(){
+        val intent = Intent(ctx, UserProfileActivity::class.java)
+        ActivityScenario.launch<UserProfileActivity>(intent).use { scenario ->
+            Espresso.pressBack()
+            Intents.intended(
+                allOf(
+                    hasComponent(MainActivity::class.java.name)
+                )
+            )
+        }
     }
 }

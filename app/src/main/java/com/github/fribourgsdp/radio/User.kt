@@ -2,14 +2,16 @@ package com.github.fribourgsdp.radio
 
 
 import android.content.Context
+
 import com.google.android.gms.tasks.Task
 import com.google.android.gms.tasks.Tasks
 import kotlin.random.Random
 import kotlinx.serialization.Serializable
+import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
-import kotlinx.serialization.decodeFromString
 import java.io.File
+
 
 const val USER_DATA_PATH = "user_data_file"
 
@@ -59,7 +61,7 @@ data class User (var name: String, val color: Int) {
          */
         fun load(context: Context, path: String = USER_DATA_PATH) : User {
             val userFile = File(context.filesDir, path)
-            return Json.decodeFromString<User>(userFile.readText())
+            return Json.decodeFromString(userFile.readText())
         }
 
         /**
@@ -141,6 +143,16 @@ data class User (var name: String, val color: Int) {
      */
     fun removePlaylist(playlist: Playlist){
         playlists.remove(playlist)
+    }
+
+    /**
+     * Removes a playlist given by its name from the user's set of playlists
+     * If multiple playlist share the same name, which should never happen, they will all be deleted.
+     *
+     * @param name the name of the playlist to remove
+     */
+    fun removePlaylistByName(name: String) : Boolean{
+        return playlists.removeIf{p -> p.name == name}
     }
 
     /**

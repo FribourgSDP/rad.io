@@ -1,20 +1,27 @@
 package com.github.fribourgsdp.radio
 
+import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.View
+import android.widget.Button
 import android.widget.TextView
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.google.android.gms.tasks.Tasks
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 
 const val SONG_DATA = "com.github.fribourgsdp.radio.SONG_INNER_DATA"
+const val PLAYLIST_TO_MODIFY = "com.github.fribourgsdp.radio.PLAYLIST_TO_MODIFY"
 
 class PlaylistSongsFragment : MyFragment(R.layout.fragment_playlist_display), OnClickListener{
     private lateinit var playlist: Playlist
     private lateinit var songs: List<Song>
     private lateinit var playlistName: String
+    private lateinit var editButton: Button
+    private lateinit var deleteButton: Button
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -33,6 +40,24 @@ class PlaylistSongsFragment : MyFragment(R.layout.fragment_playlist_display), On
         val playlistTitle : TextView = requireView().findViewById(R.id.PlaylistName)
         playlistTitle.text = playlistName
         initializeRecyclerView()
+        //sets listeners to 2 buttons
+        editButton = requireView().findViewById(R.id.editButton)
+        editButton.setOnClickListener {
+            val intent  = Intent(context, AddPlaylistActivity::class.java)
+            intent.putExtra(PLAYLIST_TO_MODIFY, Json.encodeToString(playlist))
+            startActivity(intent)
+        }
+        deleteButton = requireView().findViewById(R.id.deleteButton)
+        deleteButton.setOnClickListener{
+            val user = Tasks.await(User.loadOrDefault(requireContext()))
+            //removes playlist from user playlists
+            log(user)
+            log(user.getPlaylists().size)
+            log(playlist)
+            log(user.removePlaylistByName(playlistName))
+            user.save(requireContext())
+            activity?.onBackPressed()
+        }
     }
 
     private fun initializeRecyclerView() {
@@ -50,5 +75,10 @@ class PlaylistSongsFragment : MyFragment(R.layout.fragment_playlist_display), On
             ?.replace(R.id.container, SongFragment::class.java, bundle)
             ?.addToBackStack("SongFragment")
             ?.commit()
+    }
+    companion object{
+        fun log(s : Any){
+            Log.println(Log.ASSERT, "******* ", s.toString())
+        }
     }
 }

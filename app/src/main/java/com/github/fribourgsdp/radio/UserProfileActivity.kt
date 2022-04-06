@@ -1,13 +1,10 @@
 package com.github.fribourgsdp.radio
 
-import android.annotation.SuppressLint
-import android.content.ContentValues
 import android.content.Context
 import android.content.Intent
 import android.graphics.PorterDuff
 import android.graphics.PorterDuffColorFilter
 import android.os.Bundle
-import android.util.Log
 import android.widget.Button
 import android.widget.EditText
 import android.widget.ImageView
@@ -46,7 +43,6 @@ class UserProfileActivity : AppCompatActivity() {
     //firebase auth
     private lateinit var firebaseAuth: FirebaseAuth
 
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_user_profile)
@@ -58,9 +54,9 @@ class UserProfileActivity : AppCompatActivity() {
             checkUser()
 
             usernameField.setText(user.name)
-            usernameInitialText.setText(user.initial.uppercaseChar().toString())
+            usernameInitialText.text = user.initial.uppercaseChar().toString()
             spotifyStatusText.apply { text = if (user.linkedSpotify) "linked" else "unlinked" }
-            userIcon.setColorFilter(PorterDuffColorFilter(user.color, PorterDuff.Mode.ADD))
+            userIcon.colorFilter = PorterDuffColorFilter(user.color, PorterDuff.Mode.ADD)
             //initialise playlists recycler view fragment
             val bundle = Bundle()
             bundle.putString(USER_DATA, Json.encodeToString(user))
@@ -74,16 +70,16 @@ class UserProfileActivity : AppCompatActivity() {
             }
 
 
+
             saveChangeButton.setOnClickListener {
                 updateUser()
             }
-
-
 
             homeButton.setOnClickListener {
                 startActivity(Intent(this, MainActivity::class.java))
                 finish()
             }
+
 
             googleSignInButton.setOnClickListener {
                 if (signedIn) {
@@ -94,6 +90,7 @@ class UserProfileActivity : AppCompatActivity() {
                 } else {
                     startActivity(Intent(this, GoogleSignInActivity::class.java))
                 }
+
 
 
         }
@@ -124,7 +121,7 @@ class UserProfileActivity : AppCompatActivity() {
         }
 
         user.save(this)
-        usernameInitialText.setText(user.initial.uppercaseChar().toString())
+        usernameInitialText.text = user.initial.uppercaseChar().toString()
     }
 
     private fun authenticateUser() {
@@ -138,7 +135,7 @@ class UserProfileActivity : AppCompatActivity() {
         if(firebaseUser != null){
             //check whether it is a new user of not, if yes, we saved the default user info in the cloud
             //if no we load the data from the cloud.
-            var mockUser = db.getUser(firebaseUser.uid)
+            val mockUser = db.getUser(firebaseUser.uid)
             mockUser.addOnSuccessListener { l ->
                 if(l == null){
                     db.setUser(firebaseUser.uid,user)
@@ -147,11 +144,19 @@ class UserProfileActivity : AppCompatActivity() {
                     user.save(this)
                 }
                 usernameField.setText(user.name)
-                googleSignInButton.setText(getString(R.string.sign_out_message))
+                googleSignInButton.text = getString(R.string.sign_out_message)
 
                 signedIn = true
             }
         }
+    }
+
+    override fun onBackPressed() {
+        super.onBackPressed()
+        val intent = Intent(this, MainActivity::class.java)
+        intent.putExtra(RECREATE_USER, false)
+        startActivity(intent)
+        finish()
     }
     companion object {
         fun buildRequest(): AuthorizationRequest{
