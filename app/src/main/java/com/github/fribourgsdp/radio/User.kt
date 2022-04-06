@@ -112,7 +112,8 @@ data class User (var name: String, val color: Int) {
     }
 
     /**
-     * removes a single playlist given by its name from the user's set of playlists
+     * Removes a playlist given by its name from the user's set of playlists
+     * If multiple playlist share the same name, they will all be deleted.
      *
      * @param name the name of the playlist to remove
      */
