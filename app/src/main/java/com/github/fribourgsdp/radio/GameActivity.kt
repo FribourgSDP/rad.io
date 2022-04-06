@@ -17,9 +17,8 @@ import kotlin.random.Random
 const val IS_IN_TEST_MODE = "Test mode for voice chat engine"
 
 class GameActivity : AppCompatActivity(), GameView {
-    //TODO: Use 'User.load(this)' when available -> should be ok now
+    // TODO: Use 'User.load(this)' when available
     private var user = User("The second best player")
-    //private lateinit var user: User
     private var isHost: Boolean = false
 
     private lateinit var currentRoundTextView : TextView
@@ -28,6 +27,7 @@ class GameActivity : AppCompatActivity(), GameView {
     private lateinit var errorOrFailureTextView : TextView
     private lateinit var songGuessEditText : EditText
     private lateinit var muteButton : ImageButton
+    private lateinit var songGuessSubmitButton: Button
 
     private lateinit var playersListView : ListView
     private lateinit var namesAdapter : ArrayAdapter<String>
@@ -41,6 +41,9 @@ class GameActivity : AppCompatActivity(), GameView {
         setContentView(R.layout.activity_game)
         isHost = intent.getBooleanExtra(GAME_IS_HOST_KEY, false)
         initViews()
+
+        lateinit var playerGameHandler: PlayerGameHandler
+
         initVoiceChat(intent.getBooleanExtra(IS_IN_TEST_MODE, true), intent.getLongExtra(
             GAME_UID_KEY, 0))
         if (isHost) {
@@ -53,6 +56,12 @@ class GameActivity : AppCompatActivity(), GameView {
             user = User("The best player")
         }
         playerGameHandler = PlayerGameHandler(intent.getLongExtra(GAME_UID_KEY, -1L), this)
+
+        // On submit make the player game handler handle the guess
+        songGuessSubmitButton.setOnClickListener {
+            playerGameHandler.handleGuess(songGuessEditText.text.toString(), user.name)
+        }
+
         playerGameHandler.linkToDatabase()
 
     }
@@ -63,9 +72,9 @@ class GameActivity : AppCompatActivity(), GameView {
         RtcEngine.destroy()
     }
 
-    override fun chooseSong(choices: List<String>): String {
-        // TODO: For later sprint, implement a way to chose between songs
-        return choices[0]
+    override fun chooseSong(choices: List<String>, listener: GameView.OnPickListener) {
+        val songPicker = SongPickerDialog(choices, listener)
+        songPicker.show(supportFragmentManager, "songPicker")
     }
 
     override fun updateSinger(singerName: String) {
@@ -77,8 +86,9 @@ class GameActivity : AppCompatActivity(), GameView {
     }
 
     override fun displaySong(songName: String) {
-        // Hide the edit text
+        // Hide the edit text and the submit button
         songGuessEditText.visibility = View.GONE
+        songGuessSubmitButton.visibility = View.GONE
 
         // Show the song instead
         songTextView.apply {
@@ -91,8 +101,12 @@ class GameActivity : AppCompatActivity(), GameView {
         // Hide the song view
         songTextView.visibility = View.GONE
 
-        // Show the edit text instead
-        songGuessEditText.visibility = View.VISIBLE
+        // Show the edit text and the submit button instead
+        songGuessEditText.apply {
+            text.clear()
+            visibility = View.VISIBLE
+        }
+        songGuessSubmitButton.visibility = View.VISIBLE
     }
 
     override fun displayError(errorMessage: String) {
@@ -111,6 +125,11 @@ class GameActivity : AppCompatActivity(), GameView {
         return user.name == id
     }
 
+    override fun displayWaitOnSinger(singer: String) {
+        // We can display the wait message where the same box as the song
+        displaySong(getString(R.string.wait_for_pick_format, singer))
+    }
+
     private fun initViews() {
         currentRoundTextView = findViewById(R.id.currentRoundView)
         singerTextView = findViewById(R.id.singerTextView)
@@ -121,11 +140,12 @@ class GameActivity : AppCompatActivity(), GameView {
         // playersListView.adapter = namesAdapter
 
         songGuessEditText = findViewById(R.id.songGuessEditText)
+        songGuessSubmitButton = findViewById(R.id.songGuessSubmitButton)
 
-        // trigger the button when the user presses "enter" in the text field
+        // trigger the submit button when the user presses "enter" in the text field
         songGuessEditText.setOnEditorActionListener { _: TextView?, actionId: Int, _: KeyEvent? ->
             if (actionId == EditorInfo.IME_ACTION_DONE) {
-                playerGameHandler.handleGuess(songGuessEditText.text.toString(), user.name)
+                songGuessSubmitButton.callOnClick()
                 return@setOnEditorActionListener true
             }
             false

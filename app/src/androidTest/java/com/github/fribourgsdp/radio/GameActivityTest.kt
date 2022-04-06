@@ -1,5 +1,6 @@
 package com.github.fribourgsdp.radio
 
+
 import android.content.Context
 import android.content.Intent
 import androidx.test.core.app.ActivityScenario
@@ -7,25 +8,25 @@ import androidx.test.core.app.ApplicationProvider
 import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.intent.Intents
+import androidx.test.espresso.matcher.RootMatchers.isDialog
 import androidx.test.espresso.matcher.ViewMatchers.*
-import androidx.test.ext.junit.rules.ActivityScenarioRule
+import androidx.test.ext.junit.runners.AndroidJUnit4
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 import org.hamcrest.Matchers.not
 import org.junit.After
 import org.junit.Before
-import org.junit.Rule
 import org.junit.Test
+import org.junit.runner.RunWith
 
 /**
  * ==================NOTE THAT FOR THE TESTS TO USE A MOCK IMPLEMENTATION OF THE VOICE CHANNEL, THE FOLLOWING MUST BE ADDED TO THE
  * ==================INTENT WHEN LAUNCHING THIS ACTIVITY: BOOLEAN EXTRA IS_IN_TEST_MODE = TRUE, LONG EXTRA GAME_UID = WHATEVER_LONG_YOU_WANT
  */
 
-class GameActivityTest {
-    @get:Rule
-    var testRule = ActivityScenarioRule(GameActivity::class.java)
 
+@RunWith(AndroidJUnit4::class)
+class GameActivityTest {
     private val ctx: Context = ApplicationProvider.getApplicationContext()
 
     private val fakeGame = Game.Builder()
@@ -92,6 +93,7 @@ class GameActivityTest {
         // Init views
         val songTextView = onView(withId(R.id.songTextView))
         val songGuessEditText = onView(withId(R.id.songGuessEditText))
+        val songGuessSubmitButton = onView(withId(R.id.songGuessSubmitButton))
 
         val testIntent = Intent(ctx, GameActivity::class.java).apply {
             putExtra(GAME_IS_HOST_KEY, true)
@@ -106,6 +108,7 @@ class GameActivityTest {
             }
 
             songGuessEditText.check(matches(not(isDisplayed())))
+            songGuessSubmitButton.check(matches(not(isDisplayed())))
             songTextView.check(matches(isDisplayed()))
             songTextView.check(matches(withText(songName)))
         }
@@ -116,6 +119,7 @@ class GameActivityTest {
         // Init views
         val songTextView = onView(withId(R.id.songTextView))
         val songGuessEditText = onView(withId(R.id.songGuessEditText))
+        val songGuessSubmitButton = onView(withId(R.id.songGuessSubmitButton))
 
         val testIntent = Intent(ctx, GameActivity::class.java)
         ActivityScenario.launch<GameActivity>(testIntent).use { scenario ->
@@ -124,6 +128,7 @@ class GameActivityTest {
             }
 
             songGuessEditText.check(matches(isDisplayed()))
+            songGuessSubmitButton.check(matches(isDisplayed()))
             songTextView.check(matches(not(isDisplayed())))
         }
     }
@@ -158,6 +163,28 @@ class GameActivityTest {
                 it.hideError()
             }
             errorOrFailureTextView.check(matches(not(isDisplayed())))
+        }
+    }
+
+    @Test
+    fun songPickerDisplayedOnChoose() {
+        val listSongs = arrayListOf("Song0", "Song1", "Song2")
+
+        val testIntent = Intent(ctx, GameActivity::class.java)
+        ActivityScenario.launch<GameActivity>(testIntent).use { scenario ->
+            scenario.onActivity {
+                it.chooseSong(listSongs,
+                    object: GameView.OnPickListener {
+                        override fun onPick(song: String) {
+                            // DO NOTHING
+                        }
+                    }
+                )
+            }
+
+            onView(withText(R.string.pick_a_song)) // Look for the dialog => use its title
+                .inRoot(isDialog()) // check that it's indeed in a dialog
+                .check(matches(isDisplayed()));
         }
     }
 }
