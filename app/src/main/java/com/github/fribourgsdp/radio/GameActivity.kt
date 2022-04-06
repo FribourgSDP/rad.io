@@ -31,7 +31,6 @@ class GameActivity : AppCompatActivity(), GameView {
     private lateinit var playersListView : ListView
     private lateinit var namesAdapter : ArrayAdapter<String>
 
-    private lateinit var playerGameHandler: PlayerGameHandler
     private lateinit var voiceChannel: VoiceIpEngineDecorator
 
 
@@ -41,9 +40,10 @@ class GameActivity : AppCompatActivity(), GameView {
         isHost = intent.getBooleanExtra(GAME_IS_HOST_KEY, false)
         initViews()
 
-        lateinit var playerGameHandler: PlayerGameHandler
 
-        initVoiceChat(intent.getLongExtra(GAME_UID_KEY, 0))
+        val gameUid = intent.getLongExtra(GAME_UID_KEY, -1L)
+        initVoiceChat(gameUid)
+
         if (isHost) {
             val json = Json {
                 allowStructuredMapKeys = true
@@ -53,7 +53,7 @@ class GameActivity : AppCompatActivity(), GameView {
             hostGameHandler.linkToDatabase()
             user = User("The best player")
         }
-        playerGameHandler = PlayerGameHandler(intent.getLongExtra(GAME_UID_KEY, -1L), this)
+        val playerGameHandler = PlayerGameHandler(gameUid, this)
 
         // On submit make the player game handler handle the guess
         songGuessSubmitButton.setOnClickListener {
