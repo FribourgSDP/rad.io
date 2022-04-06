@@ -139,7 +139,7 @@ class GameActivity : AppCompatActivity(), GameView {
     private fun initVoiceChat(is_test_mode: Boolean, gameUid: Long) {
 
 
-        VoiceIpEngineDecorator(this)
+        voiceChannel = VoiceIpEngineDecorator(this)
 
         val userId = Random.nextInt(100000000)
         voiceChannel.setAudioProfile(Constants.AUDIO_PROFILE_MUSIC_STANDARD, Constants.AUDIO_SCENARIO_CHATROOM_ENTERTAINMENT);
