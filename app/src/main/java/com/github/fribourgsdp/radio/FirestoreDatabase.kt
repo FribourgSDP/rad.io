@@ -6,7 +6,6 @@ import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.firestore.EventListener
 import java.lang.Exception
-import java.util.stream.Collectors
 
 /**
  *
@@ -151,12 +150,12 @@ class FirestoreDatabase : Database {
     override fun openLobby(id: Long, settings : Game.Settings) : Task<Void> {
         val gameData = hashMapOf(
             "name" to settings.name,
-            "host" to settings.host.name,
-            "playlist" to settings.playlist.name,
+            "host" to settings.hostName,
+            "playlist" to settings.playlistName,
             "nbRounds" to settings.nbRounds,
             "withHint" to settings.withHint,
             "private" to settings.isPrivate,
-            "players" to listOf(settings.host.name),
+            "players" to arrayListOf<String>(),
             "launched" to false
         )
 
@@ -188,7 +187,7 @@ class FirestoreDatabase : Database {
             val private = snapshot.getBoolean("private")!!
 
             // Success
-            Game.Settings(User(host), name, Playlist(playlist), nbRounds.toInt(), withHint, private)
+            Game.Settings(host, name, playlist, nbRounds.toInt(), withHint, private)
         }
     }
 
@@ -202,14 +201,21 @@ class FirestoreDatabase : Database {
                 throw IllegalArgumentException("Document $id not found.")
             }
 
-            val list = snapshot.get("players")!! as ArrayList<String>
-            list.add(user.name)
+            val list = snapshot.get("players")!! as ArrayList<HashMap<String, String>>
+            list.add(idAndName(user))
 
             transaction.update(docRef, "players", list)
 
             // Success
             null
         }
+    }
+
+    private fun idAndName(user: User): HashMap<String, String> {
+        return hashMapOf(
+            "id" to user.id,
+            "name" to user.name
+        )
     }
 
     override fun openGame(id: Long): Task<Void> {
@@ -224,11 +230,11 @@ class FirestoreDatabase : Database {
             )
     }
 
-    override fun openGameMetadata(id: Long, users: List<User>): Task<Void> {
+    override fun openGameMetadata(id: Long, usersIds: List<String>): Task<Void> {
         return db.collection("games_metadata").document(id.toString())
             .set(
                 hashMapOf(
-                    "player_done_map" to users.stream().collect(Collectors.toMap({ u -> u.name }, { true }))
+                    "player_done_map" to usersIds.associateWith { true }
                 )
             )
     }
