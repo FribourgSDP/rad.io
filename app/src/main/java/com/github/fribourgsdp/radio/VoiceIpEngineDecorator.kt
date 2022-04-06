@@ -53,18 +53,6 @@ class VoiceIpEngineDecorator (appCompatActivity: AppCompatActivity): java.io.Ser
         return voiceChatEngine.joinChannel(token, channelName, optionalInfo, optionalUid)
     }
 
-    fun joinChannel(
-        token: String?,
-        channelName: String?,
-        optionalInfo: String?,
-        optionalUid: Int,
-        options: ChannelMediaOptions?
-    ): Int {
-        if (isTesting){
-            return 0
-        }
-        return voiceChatEngine.joinChannel(token, channelName, optionalInfo, optionalUid, options)
-    }
 
     fun setAudioProfile(profile: Int, scenario: Int): Int {
         if (isTesting){
