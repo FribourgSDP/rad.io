@@ -20,8 +20,8 @@ class FakeGameView(private val playerID: String = ""): GameView {
         return choices[0]
     }
 
-    override fun updateSinger(singerName: String) {
-        singer = singerName
+    override fun updateSinger(singerId: String) {
+        singer = singerId
     }
 
     override fun updateRound(currentRound: Long) {

@@ -20,7 +20,7 @@ class GameTest {
 
     private val name = "Game Test"
     private val host = User("host")
-    private val other = User("other")
+    private val otherId = "other_id"
     private val nbRounds = 3
     private val withHint = true
     private val isPrivate = false
@@ -31,7 +31,7 @@ class GameTest {
         .setWithHint(withHint)
         .setNbRounds(nbRounds)
         .setPrivacy(isPrivate)
-        .addUser(other)
+        .addUserId(otherId)
 
     @Test
     fun builderWorksCorrectlyWithCorrectArgs() {
@@ -73,21 +73,21 @@ class GameTest {
     fun errorWhenAddingPointToFakeUser() {
         val game = gameBuilder.build()
 
-        game.addPoints(User("fake"), 10)
+        game.addPoints("fake", 10)
     }
 
     @Test
     fun pointsUpdateCorrectly() {
         val game = gameBuilder.build()
 
-        assertEquals(0, game.getScore(host))
-        assertEquals(0, game.getScore(other))
+        assertEquals(0, game.getScore(host.id))
+        assertEquals(0, game.getScore(otherId))
 
-        game.addPoints(host, 10)
-        game.addPoints(other, 100)
+        game.addPoints(host.id, 10)
+        game.addPoints(otherId, 100)
 
-        assertEquals(10, game.getScore(host))
-        assertEquals(100, game.getScore(other))
+        assertEquals(10, game.getScore(host.id))
+        assertEquals(100, game.getScore(otherId))
     }
 
     @Test

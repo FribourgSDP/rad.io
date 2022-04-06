@@ -77,9 +77,9 @@ class WorkingJoinGameActivityTest {
             Matchers.allOf(
                 IntentMatchers.toPackage("com.github.fribourgsdp.radio"),
                 IntentMatchers.hasComponent(LobbyActivity::class.java.name),
-                IntentMatchers.hasExtra(GAME_HOST_KEY, json.encodeToString(LocalDatabase.EXPECTED_SETTINGS.host)),
+                IntentMatchers.hasExtra(GAME_HOST_KEY, LocalDatabase.EXPECTED_SETTINGS.hostName),
                 IntentMatchers.hasExtra(GAME_NAME_KEY, LocalDatabase.EXPECTED_SETTINGS.name),
-                IntentMatchers.hasExtra(GAME_PLAYLIST_KEY, json.encodeToString(LocalDatabase.EXPECTED_SETTINGS.playlist)),
+                IntentMatchers.hasExtra(GAME_PLAYLIST_KEY, LocalDatabase.EXPECTED_SETTINGS.playlistName),
                 IntentMatchers.hasExtra(GAME_NB_ROUNDS_KEY, LocalDatabase.EXPECTED_SETTINGS.nbRounds),
                 IntentMatchers.hasExtra(GAME_HINT_KEY, LocalDatabase.EXPECTED_SETTINGS.withHint),
                 IntentMatchers.hasExtra(GAME_PRIVACY_KEY, LocalDatabase.EXPECTED_SETTINGS.isPrivate),
