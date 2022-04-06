@@ -26,11 +26,13 @@ class GameActivity : AppCompatActivity(), GameView {
     private lateinit var namesAdapter : ArrayAdapter<String>
 
     private lateinit var playerGameHandler: PlayerGameHandler
+    private lateinit var mapIdToName: HashMap<String, String>
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_game)
         user = getUser()
+        mapIdToName = intent.getSerializableExtra(MAP_ID_NAME_KEY) as HashMap<String, String>
         isHost = intent.getBooleanExtra(GAME_IS_HOST_KEY, false)
         initViews()
         if (isHost) {
@@ -54,8 +56,8 @@ class GameActivity : AppCompatActivity(), GameView {
         return choices[0]
     }
 
-    override fun updateSinger(singerName: String) {
-        singerTextView.text = getString(R.string.singing_format, singerName)
+    override fun updateSinger(singerId: String) {
+        singerTextView.text = getString(R.string.singing_format, mapIdToName[singerId] ?: "Someone")
     }
 
     override fun updateRound(currentRound: Long) {
