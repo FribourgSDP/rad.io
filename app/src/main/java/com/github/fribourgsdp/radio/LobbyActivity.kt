@@ -238,7 +238,6 @@ open class LobbyActivity : AppCompatActivity() {
     private fun goToGameActivity(isHost: Boolean, game: Game? = null, gameID: Long) {
         val intent: Intent = Intent(this, GameActivity::class.java).apply {
             putExtra(GAME_IS_HOST_KEY, isHost)
-            putExtra(IS_IN_TEST_MODE, false)
             putExtra(GAME_UID_KEY, gameID)
         }
 
