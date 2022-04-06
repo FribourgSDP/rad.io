@@ -13,7 +13,6 @@
     <string name="save_settings_button_text">Save settings</string>
     <string name="volume_text">Volume:</string>
     <string name="spotify_text">Spotify Status:</string>
-    <string name="lyrics_not_found">---No lyrics were found for this song.---</string>
     <string name="hint_option_text">With hints</string>
     <string name="game_name_hint">A Fun Party</string>
     <string name="default_game_name">A fun Party</string>
@@ -46,9 +45,6 @@
     <string name="join_button_text">Join</string>
     <string name="join_fail_format">Failed to join lobby %d.</string>
     <string name="lobby_not_found">Lobby %d not found.</string>
-    <string name="create_profile_text">Profile</string>
-    <string name="save_button_text">save</string>
-    <string name="name_text">Name:</string>
     <string name="current_round_format">Current round: %d</string>
     <string name="singing_format">%s is singing!</string>
     <string name="guess_the_song">Guess the song!</string>
@@ -70,8 +66,11 @@
     <string name="this_could_take_some_time">This could take some time...!</string>
     <string name="you_have_successfully_logged_into_spotify">You have successfully logged into Spotify!</string>
     <string name="import_my_spotify_playlists">Import my Spotify playlists</string>
+    <string name="deletePlaylist">Delete</string>
+    <string name="editPlaylist">Edit</string>
     <string name="sign_in_message">Sign in</string>
     <string name="sign_out_message">Sign out</string>
+    <string name="click_on_a_song_to_delete_it">Click on a song to delete it.</string>
     <string name="wait_for_pick_format">Waiting on %s to pick a song</string>
 </resources>
 
