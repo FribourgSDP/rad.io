@@ -35,6 +35,7 @@ class GameActivity : AppCompatActivity(), GameView {
     private lateinit var playerGameHandler: PlayerGameHandler
     private lateinit var voiceChannel: VoiceIpEngineDecorator
 
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_game)
@@ -136,10 +137,11 @@ class GameActivity : AppCompatActivity(), GameView {
     }
 
     private fun initVoiceChat(is_test_mode: Boolean, gameUid: Long) {
+
         voiceChannel = if (is_test_mode) {
-            VoiceIpEngineDecorator(baseContext, true)
+            VoiceIpEngineDecorator(this, true)
         } else {
-            VoiceIpEngineDecorator(baseContext)
+            VoiceIpEngineDecorator(this)
         }
         val userId = Random.nextInt(100000000)
         voiceChannel.setAudioProfile(Constants.AUDIO_PROFILE_MUSIC_STANDARD, Constants.AUDIO_SCENARIO_CHATROOM_ENTERTAINMENT);

@@ -6,6 +6,7 @@ import android.util.Log
 import android.widget.Button
 import android.widget.ImageButton
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 import io.agora.rtc.IRtcEngineEventHandler
 import io.agora.rtc.RtcEngine
 import io.agora.rtc.models.ChannelMediaOptions
@@ -15,13 +16,16 @@ const val APP_ID = "971046257e964b73bafc7f9458fa9996"
 const val CERTIFICATE = "5822360c68714dcca1382167d4070673"
 const val EXPIRATION_TIME = 10800
 
-class VoiceIpEngineDecorator (context: Context): java.io.Serializable {
+class VoiceIpEngineDecorator (appCompatActivity: AppCompatActivity): java.io.Serializable {
     private var voiceChatEngine: RtcEngine
-    private val mRtcEventHandler = object : IRtcEngineEventHandler() {}
+    private val mRtcEventHandler : IRtcEngineEventHandler
     private var isTesting: Boolean = false
     private var isMuted: Boolean = false
+    private val context : Context
 
     init {
+        context = appCompatActivity.applicationContext
+        mRtcEventHandler = MyIRtcEngineEventHandler(appCompatActivity)
         var mRtcEngine: RtcEngine? = null
         while (mRtcEngine == null){
             try {
@@ -33,7 +37,7 @@ class VoiceIpEngineDecorator (context: Context): java.io.Serializable {
         voiceChatEngine = mRtcEngine
     }
 
-    constructor(context: Context, isTesting: Boolean) : this(context) {
+    constructor(appCompatActivity: AppCompatActivity, isTesting: Boolean) : this(appCompatActivity) {
         this.isTesting = isTesting
     }
 

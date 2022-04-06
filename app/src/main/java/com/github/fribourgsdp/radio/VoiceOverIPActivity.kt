@@ -35,6 +35,7 @@ class VoiceOverIPActivity : AppCompatActivity() {
         @SuppressLint("SetTextI18n")
         override fun onActiveSpeaker(uid: Int) {
             super.onActiveSpeaker(uid)
+
             activeSpeakerView = findViewById(R.id.activeSpeaker)
             activeSpeakerView.invalidate()
             activeSpeakerView.setText("active speaker : $uid")
