@@ -9,8 +9,9 @@ interface GameView {
 
     /**
      * Update the view to display the current singer in the game.
+     * @param singerId the id of the singer
      */
-    fun updateSinger(singerName: String)
+    fun updateSinger(singerId: String)
 
     /**
      * Update the view to display the current round of the game.
