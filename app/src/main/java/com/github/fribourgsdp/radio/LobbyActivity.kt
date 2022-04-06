@@ -10,6 +10,7 @@ import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 
 const val GAME_KEY = "com.github.fribourgsdp.radio.GAME"
+const val MAP_ID_NAME_KEY = "com.github.fribourgsdp.radio.MAP_ID_NAME"
 
 open class LobbyActivity : AppCompatActivity() {
     private val json = Json {
@@ -19,6 +20,7 @@ open class LobbyActivity : AppCompatActivity() {
     private val db = this.initDatabase()
 
     private var host : User? = null
+    private var hostName : String? = null
     private var gameName : String? = null
     private var playlist : Playlist? = null
     private var nbRounds: Int = 0
@@ -38,6 +40,8 @@ open class LobbyActivity : AppCompatActivity() {
 
     private lateinit var playersListView : ListView
     private lateinit var namesAdapter : ArrayAdapter<String>
+
+    private lateinit var mapIdToName: HashMap<String, String>
 
     private val gameBuilder = Game.Builder()
 
@@ -70,7 +74,7 @@ open class LobbyActivity : AppCompatActivity() {
                 db.openGame(uid).addOnSuccessListener {
 
                     // Try to put the game metadata on the database
-                    db.openGameMetadata(uid, game.getAllPlayers()).addOnSuccessListener {
+                    db.openGameMetadata(uid, game.getAllPlayersId()).addOnSuccessListener {
 
                         // If the game is created, try to launch it
                         db.launchGame(uid).addOnSuccessListener {
@@ -111,13 +115,17 @@ open class LobbyActivity : AppCompatActivity() {
     }
 
     private fun initVariables() {
-        val hostIntent = intent.getStringExtra(GAME_HOST_KEY)
-        val playlistIntent = intent.getStringExtra(GAME_PLAYLIST_KEY)
-
-        if (hostIntent != null && playlistIntent != null) {
-            host            = json.decodeFromString(hostIntent) as User
-            playlist        = json.decodeFromString(playlistIntent) as Playlist
+        host = intent.getStringExtra(GAME_HOST_KEY)?.let {
+            json.decodeFromString(it) as User
         }
+
+        playlist = intent.getStringExtra(GAME_PLAYLIST_KEY)?.let {
+            json.decodeFromString(it) as Playlist
+        }
+
+        hostName = host?.name
+                // if host is null, get the name from the intent
+                ?: intent.getStringExtra(GAME_HOST_NAME_KEY)
 
         gameName        = intent.getStringExtra(GAME_NAME_KEY)
         nbRounds        = intent.getIntExtra(GAME_NB_ROUNDS_KEY, getString(R.string.default_game_nb_rounds).toInt())
@@ -147,7 +155,7 @@ open class LobbyActivity : AppCompatActivity() {
     }
 
     private fun updateTextViews() {
-        hostNameTextView.text = getString(R.string.host_name_format, host?.name ?: "")
+        hostNameTextView.text = getString(R.string.host_name_format, hostName ?: "")
         gameNameTextView.text = getString(R.string.game_name_format, gameName)
         playlistTextView.text = getString(R.string.playlist_format, playlist?.name ?: "")
         nbRoundsTextView.text = getString(R.string.number_of_rounds_format, nbRounds)
@@ -167,7 +175,11 @@ open class LobbyActivity : AppCompatActivity() {
                     .setPrivacy(isPrivate)
 
                 db.openLobby(uid, gameBuilder.getSettings()).addOnSuccessListener {
-                    listenToUpdates(uid)
+                    db.addUserToLobby(uid, host!!).addOnSuccessListener {
+                        listenToUpdates(uid)
+                    }.addOnFailureListener {
+                        uuidTextView.text = getString(R.string.uid_error)
+                    }
                 }.addOnFailureListener {
                     uuidTextView.text = getString(R.string.uid_error)
                 }
@@ -187,7 +199,7 @@ open class LobbyActivity : AppCompatActivity() {
             }
 
             if (snapshot != null && snapshot.exists()) {
-                val newList = snapshot.get("players")!! as ArrayList<String>
+                val newList = snapshot.get("players")!! as ArrayList<HashMap<String, String>>
                 updatePlayersList(newList)
 
                 val isGameLaunched = snapshot.getBoolean("launched")
@@ -203,16 +215,20 @@ open class LobbyActivity : AppCompatActivity() {
         }
     }
 
-    private fun updatePlayersList(playersList: List<String>) {
+    private fun updatePlayersList(playersList: List<Map<String, String>>) {
         namesAdapter.clear()
-        namesAdapter.addAll(playersList)
+        namesAdapter.addAll(playersList.map {u -> u["name"] })
         namesAdapter.notifyDataSetChanged()
-        gameBuilder.setUserList(playersList.map { name -> User(name) })
+        gameBuilder.setUserIdList(playersList.map { u -> u["id"]!! })
+        mapIdToName = playersList.associate {
+            it["id"]!! to it["name"]!!
+        } as HashMap<String, String>
     }
 
     private fun goToGameActivity(isHost: Boolean, game: Game? = null, gameID: Long? = null) {
         val intent: Intent = Intent(this, GameActivity::class.java).apply {
             putExtra(GAME_IS_HOST_KEY, isHost)
+            putExtra(MAP_ID_NAME_KEY, mapIdToName)
         }
 
         if (isHost && game != null) {
