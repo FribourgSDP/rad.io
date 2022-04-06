@@ -78,4 +78,12 @@ data class Playlist (var name: String, var genre: Genre) {
     fun getSongs(): Set<Song> {
         return songs.toSet()
     }
+
+    override fun hashCode(): Int {
+        return name.hashCode()
+    }
+
+    override fun equals(other: Any?): Boolean {
+        return name == (other as Playlist).name
+    }
 }
