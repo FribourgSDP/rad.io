@@ -1,13 +1,19 @@
 package com.github.fribourgsdp.radio
 
+import android.content.Intent
+import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import android.view.KeyEvent
 import android.view.View
 import android.view.inputmethod.EditorInfo
 import android.widget.*
-import androidx.appcompat.app.AppCompatActivity
+import io.agora.rtc.Constants
+import io.agora.rtc.RtcEngine
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.json.Json
+import kotlin.random.Random
+
 
 class GameActivity : AppCompatActivity(), GameView {
     // TODO: Use 'User.load(this)' when available
@@ -19,10 +25,14 @@ class GameActivity : AppCompatActivity(), GameView {
     private lateinit var songTextView : TextView
     private lateinit var errorOrFailureTextView : TextView
     private lateinit var songGuessEditText : EditText
+    private lateinit var muteButton : ImageButton
     private lateinit var songGuessSubmitButton: Button
 
     private lateinit var playersListView : ListView
     private lateinit var namesAdapter : ArrayAdapter<String>
+
+    private lateinit var voiceChannel: VoiceIpEngineDecorator
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -30,7 +40,9 @@ class GameActivity : AppCompatActivity(), GameView {
         isHost = intent.getBooleanExtra(GAME_IS_HOST_KEY, false)
         initViews()
 
-        lateinit var playerGameHandler: PlayerGameHandler
+
+        val gameUid = intent.getLongExtra(GAME_UID_KEY, -1L)
+        initVoiceChat(gameUid)
 
         if (isHost) {
             val json = Json {
@@ -40,10 +52,8 @@ class GameActivity : AppCompatActivity(), GameView {
             val hostGameHandler = HostGameHandler(game, this)
             hostGameHandler.linkToDatabase()
             user = User("The best player")
-            playerGameHandler = PlayerGameHandler(game.id, this)
-        } else {
-            playerGameHandler = PlayerGameHandler(intent.getLongExtra(GAME_UID_KEY, -1L), this)
         }
+        val playerGameHandler = PlayerGameHandler(gameUid, this)
 
         // On submit make the player game handler handle the guess
         songGuessSubmitButton.setOnClickListener {
@@ -51,6 +61,13 @@ class GameActivity : AppCompatActivity(), GameView {
         }
 
         playerGameHandler.linkToDatabase()
+
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        voiceChannel.leaveChannel()
+        RtcEngine.destroy()
     }
 
     override fun chooseSong(choices: List<String>, listener: GameView.OnPickListener) {
@@ -131,6 +148,19 @@ class GameActivity : AppCompatActivity(), GameView {
             }
             false
         }
+        muteButton = findViewById<ImageButton>(R.id.muteChannelButton)
+        muteButton.setOnClickListener {
+            voiceChannel.mute(muteButton)
+        }
+    }
+
+    private fun initVoiceChat(gameUid: Long) {
+        voiceChannel = VoiceIpEngineDecorator(this)
+        val userId = Random.nextInt(100000000)
+        voiceChannel.setAudioProfile(Constants.AUDIO_PROFILE_MUSIC_STANDARD, Constants.AUDIO_SCENARIO_CHATROOM_ENTERTAINMENT);
+        voiceChannel.enableAudioVolumeIndication(500,5,true)
+        voiceChannel.joinChannel(voiceChannel.getToken(userId, gameUid.toString()), gameUid.toString(), "", userId)
+        Log.d("Game uid is: ", gameUid.toString())
     }
 
 }
