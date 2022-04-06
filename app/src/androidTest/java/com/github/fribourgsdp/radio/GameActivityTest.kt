@@ -19,10 +19,7 @@ import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
 
-/**
- * ==================NOTE THAT FOR THE TESTS TO USE A MOCK IMPLEMENTATION OF THE VOICE CHANNEL, THE FOLLOWING MUST BE ADDED TO THE
- * ==================INTENT WHEN LAUNCHING THIS ACTIVITY: BOOLEAN EXTRA IS_IN_TEST_MODE = TRUE, LONG EXTRA GAME_UID = WHATEVER_LONG_YOU_WANT
- */
+
 
 
 @RunWith(AndroidJUnit4::class)
@@ -98,7 +95,6 @@ class GameActivityTest {
         val testIntent = Intent(ctx, GameActivity::class.java).apply {
             putExtra(GAME_IS_HOST_KEY, true)
             putExtra(GAME_KEY, json.encodeToString(fakeGame))
-            putExtra(GAME_UID, 37L)
         }
 
         ActivityScenario.launch<GameActivity>(testIntent).use { scenario ->
