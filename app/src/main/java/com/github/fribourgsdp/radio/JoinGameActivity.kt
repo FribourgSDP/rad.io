@@ -14,9 +14,11 @@ import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 
 const val GAME_UID_KEY = "com.github.fribourgsdp.radio.GAME_UID"
+const val GAME_HOST_NAME_KEY = "com.github.fribourgsdp.radio.GAME_HOST_NAME"
+const val GAME_PLAYLIST_NAME_KEY = "com.github.fribourgsdp.radio.GAME_PLAYLIST_NAME"
 
 
-open class JoinGameActivity : AppCompatActivity() {
+open class JoinGameActivity : AppCompatActivity(), User.Loader {
     private val db = this.initDatabase()
 
     private lateinit var idInput: EditText
@@ -57,15 +59,11 @@ open class JoinGameActivity : AppCompatActivity() {
 
     private fun connectToLobby(id: Long) {
         db.getGameSettingsFromLobby(id).addOnSuccessListener { settings ->
-            db.addUserToLobby(id, getUser()).addOnSuccessListener {
-                val json = Json {
-                    allowStructuredMapKeys = true
-                }
-
+            db.addUserToLobby(id, loadUser()).addOnSuccessListener {
                 startActivity(Intent(this, LobbyActivity::class.java).apply {
-                    putExtra(GAME_HOST_KEY, json.encodeToString(settings.host))
+                    putExtra(GAME_HOST_NAME_KEY, settings.hostName)
                     putExtra(GAME_NAME_KEY, settings.name)
-                    putExtra(GAME_PLAYLIST_KEY, json.encodeToString(settings.playlist))
+                    putExtra(GAME_PLAYLIST_NAME_KEY, settings.playlistName)
                     putExtra(GAME_NB_ROUNDS_KEY, settings.nbRounds)
                     putExtra(GAME_HINT_KEY, settings.withHint)
                     putExtra(GAME_PRIVACY_KEY, settings.isPrivate)
@@ -84,8 +82,7 @@ open class JoinGameActivity : AppCompatActivity() {
         }
     }
 
-    private fun getUser() : User {
-        // TODO: Update once we can get the user of the phone
-        return User("The second best player")
+    override fun loadUser(): User {
+        return User.load(this)
     }
 }
