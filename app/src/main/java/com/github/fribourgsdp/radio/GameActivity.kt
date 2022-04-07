@@ -47,10 +47,7 @@ class GameActivity : AppCompatActivity(), GameView, User.Loader {
         initVoiceChat(gameUid)
 
         if (isHost) {
-            val json = Json {
-                allowStructuredMapKeys = true
-            }
-            val game = json.decodeFromString(intent.getStringExtra(GAME_KEY)!!) as Game
+            val game = Json.decodeFromString(intent.getStringExtra(GAME_KEY)!!) as Game
             val hostGameHandler = HostGameHandler(game, this)
             hostGameHandler.linkToDatabase()
             user = User("The best player")

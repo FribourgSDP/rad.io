@@ -33,10 +33,6 @@ class GameSettingsActivityTest {
 
     private val ctx: Context = ApplicationProvider.getApplicationContext()
 
-    private val json = Json {
-        allowStructuredMapKeys = true
-    }
-
     @Test
     fun intentWorksWithCorrectSettings() {
         Intents.init()
@@ -88,7 +84,7 @@ class GameSettingsActivityTest {
                 hasComponent(LobbyActivity::class.java.name),
                 hasExtraWithKey(GAME_HOST_KEY),
                 hasExtra(GAME_NAME_KEY, testName),
-                hasExtra(GAME_PLAYLIST_KEY, json.encodeToString(testPlaylist)),
+                hasExtra(GAME_PLAYLIST_KEY, Json.encodeToString(testPlaylist)),
                 hasExtra(GAME_NB_ROUNDS_KEY, testNbRounds),
                 hasExtra(GAME_HINT_KEY, withHint),
                 hasExtra(GAME_PRIVACY_KEY, private)
@@ -123,7 +119,7 @@ class GameSettingsActivityTest {
                 hasComponent(LobbyActivity::class.java.name),
                 hasExtraWithKey(GAME_HOST_KEY),
                 hasExtra(GAME_NAME_KEY, ctx.getString(R.string.default_game_name)),
-                hasExtra(GAME_PLAYLIST_KEY, json.encodeToString(testPlaylist)),
+                hasExtra(GAME_PLAYLIST_KEY, Json.encodeToString(testPlaylist)),
                 hasExtra(GAME_NB_ROUNDS_KEY, ctx.getString(R.string.default_game_nb_rounds).toInt()),
                 hasExtra(GAME_HINT_KEY, false),
                 hasExtra(GAME_PRIVACY_KEY, false),

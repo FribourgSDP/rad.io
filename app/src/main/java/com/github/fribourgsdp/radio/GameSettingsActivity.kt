@@ -17,9 +17,6 @@ const val GAME_PRIVACY_KEY = "com.github.fribourgsdp.radio.GAME_PRIVACY"
 const val GAME_IS_HOST_KEY = "com.github.fribourgsdp.radio.GAME_IS_HOST"
 
 open class GameSettingsActivity : AppCompatActivity(), User.Loader {
-    private val json = Json {
-        allowStructuredMapKeys = true
-    }
     private lateinit var host: User
 
     private lateinit var nameInput : EditText
@@ -85,9 +82,9 @@ open class GameSettingsActivity : AppCompatActivity(), User.Loader {
     private fun startButtonBehavior() : View.OnClickListener {
         return View.OnClickListener {
             val intent: Intent = Intent(this, LobbyActivity::class.java).apply {
-                putExtra(GAME_HOST_KEY, json.encodeToString(host))
+                putExtra(GAME_HOST_KEY, Json.encodeToString(host))
                 putExtra(GAME_NAME_KEY, nameInput.text.toString().ifEmpty { getString(R.string.default_game_name) })
-                putExtra(GAME_PLAYLIST_KEY, json.encodeToString(selectedPlaylist))
+                putExtra(GAME_PLAYLIST_KEY, Json.encodeToString(selectedPlaylist))
                 putExtra(GAME_NB_ROUNDS_KEY, nbRoundsInput.text.toString().ifEmpty { getString(R.string.default_game_nb_rounds) }.toInt())
                 putExtra(GAME_HINT_KEY, hintCheckBox.isChecked)
                 putExtra(GAME_PRIVACY_KEY, privacyCheckBox.isChecked)

@@ -20,9 +20,6 @@ const val MAP_ID_NAME_KEY = "com.github.fribourgsdp.radio.MAP_ID_NAME"
 const val PERMISSION_REQ_ID_RECORD_AUDIO = 22
 
 open class LobbyActivity : AppCompatActivity() {
-    private val json = Json {
-        allowStructuredMapKeys = true
-    }
 
     private val db = this.initDatabase()
 
@@ -126,11 +123,11 @@ open class LobbyActivity : AppCompatActivity() {
 
     private fun initVariables() {
         host = intent.getStringExtra(GAME_HOST_KEY)?.let {
-            json.decodeFromString(it) as User
+            Json.decodeFromString(it) as User
         }
 
         playlist = intent.getStringExtra(GAME_PLAYLIST_KEY)?.let {
-            json.decodeFromString(it) as Playlist
+            Json.decodeFromString(it) as Playlist
         }
 
         hostName = host?.name
@@ -142,6 +139,7 @@ open class LobbyActivity : AppCompatActivity() {
         withHint        = intent.getBooleanExtra(GAME_HINT_KEY, false)
         isPrivate       = intent.getBooleanExtra(GAME_PRIVACY_KEY, false)
         isHost          = intent.getBooleanExtra(GAME_IS_HOST_KEY, false)
+
         hasVoiceIdPermissions = (ContextCompat.checkSelfPermission(this, Manifest.permission.RECORD_AUDIO) == PackageManager.PERMISSION_GRANTED)
     }
 
@@ -255,7 +253,7 @@ open class LobbyActivity : AppCompatActivity() {
         }
 
         if (isHost && game != null) {
-            intent.putExtra(GAME_KEY, json.encodeToString(game))
+            intent.putExtra(GAME_KEY, Json.encodeToString(game))
         }
 
         startActivity(intent)
