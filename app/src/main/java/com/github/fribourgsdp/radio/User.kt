@@ -183,4 +183,12 @@ data class User (var name: String, val color: Int) {
     fun getSpotifyPlaylistUId(playlistName: String): String? {
         return playlistNamesToSpotifyId[playlistName]
     }
+
+    interface Loader {
+        /**
+         * Load the [User] of the device
+         * @return the [User] of the device
+         */
+        fun loadUser(): User
+    }
 }

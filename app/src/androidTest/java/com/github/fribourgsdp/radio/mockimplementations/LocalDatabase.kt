@@ -72,7 +72,7 @@ class LocalDatabase : Database {
         TODO("Not yet implemented")
     }
 
-    override fun openGameMetadata(id: Long, users: List<User>): Task<Void> {
+    override fun openGameMetadata(id: Long, usersIds: List<String>): Task<Void> {
         TODO("Not yet implemented")
     }
 
@@ -103,7 +103,7 @@ class LocalDatabase : Database {
     companion object {
         const val EXPECTED_USER_UID = 392L
         const val EXPECTED_UID = 794L
-        val EXPECTED_SETTINGS = Game.Settings(User("Host"), "Hello World!", Playlist("Host's Playlist"), 42, true, true)
+        val EXPECTED_SETTINGS = Game.Settings("Host", "Hello World!", "Host's Playlist", 42, true, true)
 
     }
 }

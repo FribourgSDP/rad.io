@@ -28,11 +28,6 @@ class GameActivityTest {
         .setPlaylist(Playlist("playlist"))
         .build()
 
-
-    private val json = Json {
-        allowStructuredMapKeys = true
-    }
-
     @Before
     fun initIntent() {
         Intents.init()
@@ -91,7 +86,7 @@ class GameActivityTest {
 
         val testIntent = Intent(ctx, GameActivity::class.java).apply {
             putExtra(GAME_IS_HOST_KEY, true)
-            putExtra(GAME_KEY, json.encodeToString(fakeGame))
+            putExtra(GAME_KEY, Json.encodeToString(fakeGame))
         }
 
         ActivityScenario.launch<GameActivity>(testIntent).use { scenario ->

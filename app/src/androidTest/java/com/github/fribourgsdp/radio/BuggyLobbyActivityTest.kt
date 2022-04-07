@@ -33,10 +33,6 @@ class BuggyLobbyActivityTest {
 
     private val ctx: Context = ApplicationProvider.getApplicationContext()
 
-    private val json = Json {
-        allowStructuredMapKeys = true
-    }
-
     @Before
     fun initIntent() {
         Intents.init()
@@ -54,8 +50,8 @@ class BuggyLobbyActivityTest {
 
         val testIntent = Intent(ctx, BuggyLobbyActivity::class.java).apply {
             putExtra(GAME_IS_HOST_KEY, true)
-            putExtra(GAME_HOST_KEY, json.encodeToString(User("host")))
-            putExtra(GAME_PLAYLIST_KEY, json.encodeToString(Playlist("playlist")))
+            putExtra(GAME_HOST_KEY, Json.encodeToString(User("host")))
+            putExtra(GAME_PLAYLIST_KEY, Json.encodeToString(Playlist("playlist")))
         }
 
         ActivityScenario.launch<BuggyLobbyActivity>(testIntent).use {

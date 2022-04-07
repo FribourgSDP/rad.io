@@ -60,7 +60,7 @@ class BuggyDatabase : Database {
         TODO("Not yet implemented")
     }
 
-    override fun openGameMetadata(id: Long, users: List<User>): Task<Void> {
+    override fun openGameMetadata(id: Long, usersIds: List<String>): Task<Void> {
         TODO("Not yet implemented")
     }
 

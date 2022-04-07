@@ -33,11 +33,6 @@ class WorkingLobbyActivityTest {
 
     private val ctx: Context = ApplicationProvider.getApplicationContext()
 
-    private val json = Json {
-        allowStructuredMapKeys = true
-        ignoreUnknownKeys = true
-    }
-
     @Before
     fun initIntent() {
         Intents.init()
@@ -69,9 +64,9 @@ class WorkingLobbyActivityTest {
         val launchGameButton = Espresso.onView(withId(R.id.launchGameButton))
 
         val testIntent = Intent(ctx, WorkingLobbyActivity::class.java).apply {
-            putExtra(GAME_HOST_KEY, json.encodeToString(testHost))
+            putExtra(GAME_HOST_KEY, Json.encodeToString(testHost))
             putExtra(GAME_NAME_KEY, testName)
-            putExtra(GAME_PLAYLIST_KEY, json.encodeToString(testPlaylist))
+            putExtra(GAME_PLAYLIST_KEY, Json.encodeToString(testPlaylist))
             putExtra(GAME_NB_ROUNDS_KEY, testNbRounds)
             putExtra(GAME_HINT_KEY, withHint)
             putExtra(GAME_PRIVACY_KEY, private)
@@ -114,9 +109,9 @@ class WorkingLobbyActivityTest {
 
         val testIntent = Intent(ctx, WorkingLobbyActivity::class.java).apply {
             putExtra(GAME_UID_KEY, testUID)
-            putExtra(GAME_HOST_KEY, json.encodeToString(testHost))
+            putExtra(GAME_HOST_KEY, Json.encodeToString(testHost))
             putExtra(GAME_NAME_KEY, testName)
-            putExtra(GAME_PLAYLIST_KEY, json.encodeToString(testPlaylist))
+            putExtra(GAME_PLAYLIST_KEY, Json.encodeToString(testPlaylist))
             putExtra(GAME_NB_ROUNDS_KEY, testNbRounds)
             putExtra(GAME_HINT_KEY, withHint)
             putExtra(GAME_PRIVACY_KEY, private)

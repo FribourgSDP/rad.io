@@ -20,7 +20,7 @@ import kotlinx.serialization.Serializable
  */
 @Serializable
 class Game private constructor(val id: Long, val name: String, val host: User, val playlist: Playlist, val nbRounds: Int,
-                               val withHint: Boolean, val isPrivate: Boolean, private val listUser: List<User>) {
+                               val withHint: Boolean, val isPrivate: Boolean, private val listUser: List<String>) {
 
     private val scoreMap = HashMap(listUser.associateWith { 0 })
     private var usersToPlay = listUser.size
@@ -31,32 +31,33 @@ class Game private constructor(val id: Long, val name: String, val host: User, v
     private val songsNotDone = HashSet(playlist.getSongs())
 
     /**
-     * Return the score of a [user].
-     * @return the score of a [user].
+     * Return the score of a user.
+     * @param userId the id of the user
+     * @return the score of a user.
      */
-    fun getScore(user: User): Int? {
-        return scoreMap[user]
+    fun getScore(userId: String): Int? {
+        return scoreMap[userId]
     }
 
     /**
-     * Add the given number of [points] to the given [user].
+     * Add the given number of [points] to the given user with id: [userId].
      */
-    fun addPoints(user: User, points: Int) {
-        val oldValue = scoreMap[user]
+    fun addPoints(userId: String, points: Int) {
+        val oldValue = scoreMap[userId]
         if (oldValue != null) {
-            scoreMap[user] = oldValue + points
+            scoreMap[userId] = oldValue + points
         } else {
-            throw IllegalArgumentException("Illegal argument: user '${user.name}' doesn't exist.")
+            throw IllegalArgumentException("Illegal argument: user id: '$userId' doesn't exist.")
         }
 
     }
 
     /**
-     * Return the [User] that is playing next.
-     * @return the [User] that is playing next.
+     * Return the id of the user that is playing next.
+     * @return the id of the user that is playing next.
      */
-    fun getUserToPlay(): User {
-        val user = listUser[0]
+    fun getUserToPlay(): String {
+        val userId = listUser[0]
         Collections.rotate(listUser, 1)
         if (usersToPlay == 0) {
             ++currentRound
@@ -64,7 +65,7 @@ class Game private constructor(val id: Long, val name: String, val host: User, v
         }
         --usersToPlay
 
-        return user
+        return userId
     }
 
     /**
@@ -99,7 +100,7 @@ class Game private constructor(val id: Long, val name: String, val host: User, v
         return nbRounds <= currentRound && usersToPlay <= 0
     }
 
-    fun getAllPlayers(): List<User> {
+    fun getAllPlayersId(): List<String> {
         return ArrayList(listUser)
     }
 
@@ -114,7 +115,7 @@ class Game private constructor(val id: Long, val name: String, val host: User, v
         private var nbRounds = 0
         private var withHint  = false
         private var isPrivate = false
-        private var list = ArrayList<User>()
+        private var list = ArrayList<String>()
 
         /**
          * Set the [id] of the game.
@@ -131,7 +132,7 @@ class Game private constructor(val id: Long, val name: String, val host: User, v
          */
         fun setHost(host: User): Builder {
             this.host = host
-            list.add(host)
+            list.add(host.id)
             return this
         }
 
@@ -185,28 +186,28 @@ class Game private constructor(val id: Long, val name: String, val host: User, v
         }
 
         /**
-         * Add a [user] to the game.
+         * Add a [userId] to the game.
          * @return the [Builder]
          */
-        fun addUser(user: User): Builder {
-            list.add(user)
+        fun addUserId(userId: String): Builder {
+            list.add(userId)
             return this
         }
 
         /**
-         * Add a collection of [User] to the game.
+         * Add a collection of id of user to the game.
          * @return the [Builder]
          */
-        fun addAllUser(collection: Collection<User>): Builder {
+        fun addAllUserId(collection: Collection<String>): Builder {
             list.addAll(collection)
             return this
         }
 
         /**
-         * Set the [User] list with the given a collection of [User].
+         * Set the user id list with the given a collection of user ids.
          * @return the [Builder]
          */
-        fun setUserList(collection: Collection<User>): Builder {
+        fun setUserIdList(collection: Collection<String>): Builder {
             list.clear()
             list.addAll(collection)
             return this
@@ -217,7 +218,7 @@ class Game private constructor(val id: Long, val name: String, val host: User, v
         * @return the [Settings] of the game currently building.
         */
         fun getSettings(): Settings {
-            return Settings(host, name, playlist, nbRounds, withHint, isPrivate)
+            return Settings(host.name, name, playlist.name, nbRounds, withHint, isPrivate)
         }
 
         /**
@@ -231,9 +232,9 @@ class Game private constructor(val id: Long, val name: String, val host: User, v
     }
 
     data class Settings(
-        val host: User,
+        val hostName: String,
         val name: String,
-        val playlist: Playlist,
+        val playlistName: String,
         val nbRounds: Int,
         val withHint: Boolean,
         val isPrivate: Boolean
