@@ -22,6 +22,7 @@ class PlaylistSongsFragment : MyFragment(R.layout.fragment_playlist_display), On
     private lateinit var playlistName: String
     private lateinit var editButton: Button
     private lateinit var deleteButton: Button
+    private lateinit var user : User
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -47,9 +48,12 @@ class PlaylistSongsFragment : MyFragment(R.layout.fragment_playlist_display), On
             intent.putExtra(PLAYLIST_TO_MODIFY, Json.encodeToString(playlist))
             startActivity(intent)
         }
+        User.loadOrDefault(requireContext()).addOnSuccessListener { l ->
+            user = l
+        }
         deleteButton = requireView().findViewById(R.id.deleteButton)
         deleteButton.setOnClickListener{
-            val user = Tasks.await(User.loadOrDefault(requireContext()))
+            //val user = Tasks.await()
             //removes playlist from user playlists
             log(user)
             log(user.getPlaylists().size)
