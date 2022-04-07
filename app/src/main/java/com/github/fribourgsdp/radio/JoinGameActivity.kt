@@ -63,7 +63,7 @@ open class JoinGameActivity : AppCompatActivity(), User.Loader {
                 startActivity(Intent(this, LobbyActivity::class.java).apply {
                     putExtra(GAME_HOST_NAME_KEY, settings.hostName)
                     putExtra(GAME_NAME_KEY, settings.name)
-                    putExtra(GAME_PLAYLIST_KEY, settings.playlistName)
+                    putExtra(GAME_PLAYLIST_NAME_KEY, settings.playlistName)
                     putExtra(GAME_NB_ROUNDS_KEY, settings.nbRounds)
                     putExtra(GAME_HINT_KEY, settings.withHint)
                     putExtra(GAME_PRIVACY_KEY, settings.isPrivate)
