@@ -16,7 +16,7 @@ const val GAME_HINT_KEY = "com.github.fribourgsdp.radio.GAME_HINT"
 const val GAME_PRIVACY_KEY = "com.github.fribourgsdp.radio.GAME_PRIVACY"
 const val GAME_IS_HOST_KEY = "com.github.fribourgsdp.radio.GAME_IS_HOST"
 
-class GameSettingsActivity : AppCompatActivity() {
+class GameSettingsActivity : AppCompatActivity(), User.Loader {
     private val json = Json {
         allowStructuredMapKeys = true
     }
@@ -40,7 +40,7 @@ class GameSettingsActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_game_settings)
 
-        host = getHost()
+        host = loadUser()
 
         nameInput = findViewById(R.id.nameInput)
         nbRoundsInput = findViewById(R.id.nbRoundsInput)
@@ -72,7 +72,7 @@ class GameSettingsActivity : AppCompatActivity() {
 
     }
 
-    private fun getHost() : User {
+    override fun loadUser(): User {
         return User.load(this)
     }
 

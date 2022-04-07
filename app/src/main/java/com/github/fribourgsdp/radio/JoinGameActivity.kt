@@ -17,7 +17,7 @@ const val GAME_UID_KEY = "com.github.fribourgsdp.radio.GAME_UID"
 const val GAME_HOST_NAME_KEY = "com.github.fribourgsdp.radio.GAME_HOST_NAME"
 
 
-open class JoinGameActivity : AppCompatActivity() {
+open class JoinGameActivity : AppCompatActivity(), User.Loader {
     private val db = this.initDatabase()
 
     private lateinit var idInput: EditText
@@ -58,7 +58,7 @@ open class JoinGameActivity : AppCompatActivity() {
 
     private fun connectToLobby(id: Long) {
         db.getGameSettingsFromLobby(id).addOnSuccessListener { settings ->
-            db.addUserToLobby(id, getUser()).addOnSuccessListener {
+            db.addUserToLobby(id, loadUser()).addOnSuccessListener {
                 startActivity(Intent(this, LobbyActivity::class.java).apply {
                     putExtra(GAME_HOST_NAME_KEY, settings.hostName)
                     putExtra(GAME_NAME_KEY, settings.name)
@@ -81,7 +81,7 @@ open class JoinGameActivity : AppCompatActivity() {
         }
     }
 
-    private fun getUser() : User {
+    override fun loadUser(): User {
         return User.load(this)
     }
 }

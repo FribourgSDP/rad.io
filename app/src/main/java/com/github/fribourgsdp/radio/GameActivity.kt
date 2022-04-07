@@ -15,7 +15,7 @@ import kotlinx.serialization.json.Json
 import kotlin.random.Random
 
 
-class GameActivity : AppCompatActivity(), GameView {
+class GameActivity : AppCompatActivity(), GameView, User.Loader {
     private lateinit var user: User
     private var isHost: Boolean = false
 
@@ -36,7 +36,7 @@ class GameActivity : AppCompatActivity(), GameView {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_game)
-        user = getUser()
+        user = loadUser()
         mapIdToName = intent.getSerializableExtra(MAP_ID_NAME_KEY)?.let {
             it as HashMap<String, String>
         } ?: HashMap()
@@ -165,7 +165,7 @@ class GameActivity : AppCompatActivity(), GameView {
         Log.d("Game uid is: ", gameUid.toString())
     }
 
-    fun getUser(): User {
+    override fun loadUser(): User {
         return User.load(this)
     }
 
