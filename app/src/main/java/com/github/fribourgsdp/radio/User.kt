@@ -139,7 +139,11 @@ data class User (var name: String, val color: Int) {
     }
 
     /**
-     * TODO
+     * getter for a single playlist, matched according to the name give
+     *
+     * @param name the name of the playlist we are trying to retrieve
+     * @return the requested playlist
+     * @throws NoSuchFileException
      */
     fun getPlaylistWithName(name: String): Playlist {
         val filteredPlaylists = playlists.filter { playlist -> playlist.name == name }
