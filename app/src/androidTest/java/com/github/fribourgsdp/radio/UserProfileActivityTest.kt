@@ -22,6 +22,14 @@ import org.hamcrest.Matchers
 import org.hamcrest.Matchers.allOf
 import org.junit.Test
 import org.junit.runner.RunWith
+
+import org.junit.Assert.*
+
+import org.junit.After
+import org.junit.Before
+
+
+
 import java.util.concurrent.TimeUnit
 
 @RunWith(AndroidJUnit4::class)
@@ -29,6 +37,15 @@ class UserProfileActivityTest : TestCase() {
 
     private val ctx: Context = ApplicationProvider.getApplicationContext()
 
+    @Before
+    fun initIntent() {
+        Intents.init()
+    }
+
+    @After
+    fun releaseIntent() {
+        Intents.release()
+    }
    
     @Test
     fun changingNameAndSavingChangesChangesUser(){
@@ -36,16 +53,12 @@ class UserProfileActivityTest : TestCase() {
 
         val intent = Intent(ctx, MainActivity::class.java)
         ActivityScenario.launch<MainActivity>(intent).use { scenario ->
-
-
             onView(withId(R.id.profileButton)).perform(click())
-
         }
 
         onView(withId(R.id.username)).perform(
             ViewActions.clearText(),
             ViewActions.typeText(testName),
-
             )
 
         Espresso.closeSoftKeyboard()
@@ -53,7 +66,7 @@ class UserProfileActivityTest : TestCase() {
 
         val user = User.load(ctx)
 
-        assert(user.name == testName)
+        assertEquals(testName, user.name)
 
     }
 
@@ -61,30 +74,25 @@ class UserProfileActivityTest : TestCase() {
     fun changingNameAndNotSavingDoesntChangeUser(){
         val testName = "testNotSave"
 
-        val intent: Intent = Intent(ctx, MainActivity::class.java)
+        val intent = Intent(ctx, MainActivity::class.java)
         ActivityScenario.launch<MainActivity>(intent).use { scenario ->
-
-
             onView(withId(R.id.profileButton)).perform(click())
         }
 
         onView(withId(R.id.username)).perform(
             ViewActions.clearText(),
             ViewActions.typeText(testName),
-
             )
 
         Espresso.closeSoftKeyboard()
 
         val user = User.load(ctx)
-
-        assert(user.name != testName)
+        assertNotEquals(testName,user.name)
 
     }
 
     @Test
     fun homeButtonTest() {
-        Intents.init()
         val context: Context = ApplicationProvider.getApplicationContext()
 
         val intent = Intent(context, UserProfileActivity::class.java)
@@ -100,14 +108,11 @@ class UserProfileActivityTest : TestCase() {
                 )
             )
         }
-        Intents.release()
 
     }
 
     @Test
     fun clickOnGoogleButtonSendToGoogleSignInActivityTestOrLogoutCorrectly() {
-
-        Intents.init()
         val firebaseAuth = FirebaseAuth.getInstance()
         val task = Tasks.withTimeout(firebaseAuth.signInWithEmailAndPassword("test@test.com", "test123!!!"),10, TimeUnit.SECONDS)
         Tasks.await(task)
@@ -126,8 +131,6 @@ class UserProfileActivityTest : TestCase() {
                 )
             )
         }
-        Intents.release()
-
     }
 
 
@@ -136,11 +139,10 @@ class UserProfileActivityTest : TestCase() {
         val request = UserProfileActivity.buildRequest()
         assertEquals(MY_CLIENT_ID, request.clientId)
         assertEquals(REDIRECT_URI, request.redirectUri)
-        assert(request.scopes[0].equals("playlist-read-private,playlist-read-collaborative"))
+        assertTrue(request.scopes[0].equals("playlist-read-private,playlist-read-collaborative"))
     }
     @Test
     fun testPressBack(){
-        Intents.init()
         val intent = Intent(ctx, UserProfileActivity::class.java)
         ActivityScenario.launch<UserProfileActivity>(intent).use { scenario ->
             Espresso.pressBack()
@@ -149,7 +151,6 @@ class UserProfileActivityTest : TestCase() {
                     hasComponent(MainActivity::class.java.name)
                 )
             )
-            Intents.release()
         }
     }
 }

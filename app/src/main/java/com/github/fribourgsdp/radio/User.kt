@@ -2,12 +2,16 @@ package com.github.fribourgsdp.radio
 
 
 import android.content.Context
+
+import com.google.android.gms.tasks.Task
+import com.google.android.gms.tasks.Tasks
+import kotlin.random.Random
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 import java.io.File
-import kotlin.random.Random
+
 
 const val USER_DATA_PATH = "user_data_file"
 
@@ -58,6 +62,36 @@ data class User (var name: String, val color: Int) {
         fun load(context: Context, path: String = USER_DATA_PATH) : User {
             val userFile = File(context.filesDir, path)
             return Json.decodeFromString(userFile.readText())
+        }
+
+        /**
+         * Tries to load a user from the app-specific storage on the device.
+         * If it fails, it returns a default [User]
+         *
+         * @param context the context to use for loading from a file (usually this in an activity)         *
+         * @return the user saved on the device if it exists or a default [User] otherwise
+         */
+        fun loadOrDefault(context: Context) : Task<User> {
+            return try {
+                Tasks.forResult(load(context))
+            } catch (e: java.io.FileNotFoundException) {
+                createDefaultUser()
+                //User("No User Found", User.generateColor())
+            }
+        }
+
+        /**
+         * Create a [User] with default settings. Note that this user doesn't have an [id]
+         *
+         * @return a default [User]
+         */
+        fun createDefaultUser(): Task<User> {
+            return FirestoreDatabase().generateUserId().continueWith { id ->
+                val generatedUser = User("Guest", generateColor())
+                generatedUser.id = id.toString()
+                generatedUser
+            }
+
         }
 
         /**

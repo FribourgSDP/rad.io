@@ -14,6 +14,8 @@ import androidx.test.ext.junit.rules.ActivityScenarioRule
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.google.android.gms.tasks.Tasks
 import com.google.firebase.auth.FirebaseAuth
+import org.junit.After
+import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -22,26 +24,33 @@ import java.util.concurrent.TimeUnit
 @RunWith(AndroidJUnit4::class)
 class PlaylistRecyclerViewTest {
 
+    @Before
+    fun initIntent() {
+        Intents.init()
+    }
+
+    @After
+    fun releaseIntent() {
+        Intents.release()
+    }
+
     @Test
     fun recyclerViewDisplayedTest() {
-        Intents.init()
         val firebaseAuth = FirebaseAuth.getInstance()
         val task = Tasks.withTimeout(firebaseAuth.signInWithEmailAndPassword("test@test.com", "test123!!!"),10, TimeUnit.SECONDS)
         Tasks.await(task)
         val context: Context = ApplicationProvider.getApplicationContext()
 
-        val intent: Intent = Intent(context, UserProfileActivity::class.java)
+        val intent = Intent(context, UserProfileActivity::class.java)
 
         ActivityScenario.launch<UserProfileActivity>(intent).use { scenario ->
 
             Espresso.onView(withId(R.id.playlist_recycler_view)).check(matches(isDisplayed()))
         }
-        Intents.release()
     }
 
     @Test
     fun recyclerViewTestPlaylistTitleIsCorrect() {
-        Intents.init()
         val firebaseAuth = FirebaseAuth.getInstance()
         val task = Tasks.withTimeout(firebaseAuth.signInWithEmailAndPassword("test@test.com", "test123!!!"),10, TimeUnit.SECONDS)
         Tasks.await(task)
@@ -53,12 +62,11 @@ class PlaylistRecyclerViewTest {
         user.addPlaylists(setOf(playlist1))
         user.save(context)
 
-        val intent: Intent = Intent(context, UserProfileActivity::class.java)
+        val intent = Intent(context, UserProfileActivity::class.java)
 
         ActivityScenario.launch<UserProfileActivity>(intent).use { scenario ->
             Espresso.onView(withId(R.id.playlist_recycler_view)).perform(RecyclerViewActions.actionOnItemAtPosition<ViewHolder>(0, click()))
             Espresso.onView(withId(R.id.PlaylistName)).check(matches(withText(playlistTitle)))
         }
-        Intents.release()
     }
 }

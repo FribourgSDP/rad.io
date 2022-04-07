@@ -10,6 +10,7 @@ import org.junit.Test
 import org.mockito.Mockito.*
 
 class HostGameHandlerTest {
+    private val sleepingTime = 50L
     private lateinit var mockSnapshot: DocumentSnapshot
 
     private val doneMap = hashMapOf("Some player" to true, "Another player" to true)
@@ -37,7 +38,7 @@ class HostGameHandlerTest {
         handler.handleSnapshot(mockSnapshot)
 
         // Wait for the task of the database to execute
-        Thread.sleep(1000)
+        Thread.sleep(sleepingTime)
 
         assertEquals("An error occurred.", view.error)
         assertEquals(View.VISIBLE, view.errorVisibility)
@@ -57,7 +58,7 @@ class HostGameHandlerTest {
         handler.handleSnapshot(mockSnapshot)
 
         // Wait for the task of the database to execute
-        Thread.sleep(1000)
+        Thread.sleep(sleepingTime)
 
         assertEquals("An error occurred.", view.error)
         assertEquals(View.VISIBLE, view.errorVisibility)

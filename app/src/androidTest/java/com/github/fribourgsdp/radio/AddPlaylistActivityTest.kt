@@ -16,6 +16,12 @@ import androidx.test.espresso.matcher.ViewMatchers
 import androidx.test.espresso.matcher.ViewMatchers.withId
 import androidx.test.ext.junit.rules.ActivityScenarioRule
 import androidx.test.ext.junit.runners.AndroidJUnit4
+
+import com.google.android.gms.tasks.Tasks
+import org.hamcrest.Matchers.allOf
+import org.junit.After
+import org.junit.Assert.*
+import org.junit.Before
 import org.hamcrest.Matcher
 import org.hamcrest.Matchers.allOf
 import org.hamcrest.Matchers.nullValue
@@ -26,9 +32,20 @@ import org.junit.runner.RunWith
 
 @RunWith(AndroidJUnit4::class)
 class AddPlaylistActivityTest {
+
     @get:Rule
     var assPlaylistActivityRule = ActivityScenarioRule(AddPlaylistActivity::class.java)
     private val ctx: Context = ApplicationProvider.getApplicationContext()
+
+    @Before
+    fun initIntent() {
+        Intents.init()
+    }
+
+    @After
+    fun releaseIntent() {
+        Intents.release()
+    }
 
     @Test
     fun testSongWithNoName(){
@@ -77,7 +94,6 @@ class AddPlaylistActivityTest {
     }
     @Test
     fun testAddPlaylist(){
-        Intents.init()
 
         initializeSardouPlaylist()
 
@@ -90,7 +106,7 @@ class AddPlaylistActivityTest {
             )
         )
 
-        val user = UserProfileActivity.loadUser(ctx)
+        val user = Tasks.await(User.loadOrDefault(ctx))
         assert(user.getPlaylists().any { p -> p.name == "Sardou playlist" })
         user.getPlaylists().filter { p -> p.name == "Sardou playlist" }.forEach{p ->
             run {
@@ -99,12 +115,9 @@ class AddPlaylistActivityTest {
                 assert(p.getSongs().any { s -> s.name == "Le France" && s.artist == "Sardou" })
             }
         }
-
-        Intents.release()
     }
     @Test
     fun addAndRemoveSong(){
-        Intents.init()
 
         initializeSardouPlaylist()
 
@@ -114,7 +127,6 @@ class AddPlaylistActivityTest {
         onView(withId(R.id.list_playlist_creation))
             .check(ViewAssertions.matches(ViewMatchers.hasChildCount(2)))
 
-        Intents.release()
     }
 
     private fun initializeSardouPlaylist(){
@@ -148,5 +160,6 @@ class AddPlaylistActivityTest {
         closeSoftKeyboard()
         onView(withId(R.id.addSongToPlaylistBtn))
             .perform(ViewActions.click())
+
     }
 }

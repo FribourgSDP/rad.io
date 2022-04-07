@@ -7,13 +7,14 @@ import org.json.JSONObject
 import org.junit.Test
 import java.io.IOException
 import java.util.concurrent.ExecutionException
+import org.junit.Assert.*
 
 class ImportSpotifyPlaylistsActivityTest {
 
     @Test
     fun buildSpotifyRequestWorks(){
         val tokenTest = "123456"
-        assert(
+        assertTrue(
             Request.Builder().url(SPOTIFY_GET_PLAYLIST_IDS_BASE_URL)
                 .addHeader("Accept", "application/json")
                 .addHeader("Content-Type", "application/json")
@@ -32,13 +33,13 @@ class ImportSpotifyPlaylistsActivityTest {
     @Test
     fun getPlaylistsFailingParser(){
         val future = ImportSpotifyPlaylistsActivity.getUserPlaylists(MockPlaylistHTTPClient(), NullJSONParser())
-        assert(future.get().isEmpty())
+        assertTrue(future.get().isEmpty())
     }
 
     @Test
     fun getPlaylistsWhenResponseHasErrorMessage(){
         val future = ImportSpotifyPlaylistsActivity.getUserPlaylists(MockPlaylistHTTPClient(), ErrorJSONParser2())
-        assert(future.get().isEmpty())
+        assertTrue(future.get().isEmpty())
     }
 
     @Test
@@ -48,23 +49,23 @@ class ImportSpotifyPlaylistsActivityTest {
 
     @Test
     fun getPlaylistsWithMockServerWorks(){
-        val future = ImportSpotifyPlaylistsActivity.getUserPlaylists(MockPlaylistHTTPClient(), mockPlaylistJSONParser())
+        val future = ImportSpotifyPlaylistsActivity.getUserPlaylists(MockPlaylistHTTPClient(), MockPlaylistJSONParser())
         assertEquals("1234", future.get()["80's classics"])
         assertEquals("8976", future.get()["rock music"])
     }
 
     @Test
     fun getPlaylistsContentWorks(){
-        val future = ImportSpotifyPlaylistsActivity.getPlaylistContent("1234", MockPlaylistHTTPClient(), mockPlaylistContentJSONParser())
+        val future = ImportSpotifyPlaylistsActivity.getPlaylistContent("1234", MockPlaylistHTTPClient(), MockPlaylistContentJSONParser())
         val setValue = future.get()
-        assert(setValue.contains(Song("Rouge", "Michel Sardou")))
-        assert(setValue.contains(Song("Narcos", "Migos")))
+        assertTrue(setValue.contains(Song("Rouge", "Michel Sardou")))
+        assertTrue(setValue.contains(Song("Narcos", "Migos")))
     }
 
     @Test
     fun loadSongsToPlaylistsOnEmptyMapWorks(){
         val result = ImportSpotifyPlaylistsActivity.loadSongsToPlaylists(mutableMapOf())
-        assert(result.isEmpty())
+        assertTrue(result.isEmpty())
     }
 
     @Test(expected = ExecutionException::class)
@@ -76,23 +77,23 @@ class ImportSpotifyPlaylistsActivityTest {
     @Test
     fun getPlaylistContentWithNullParsedResponseFails(){
         val future = ImportSpotifyPlaylistsActivity.getPlaylistContent("1234", MockPlaylistHTTPClient(), NullJSONParser())
-        assert(future.get().isEmpty())
+        assertTrue(future.get().isEmpty())
     }
 
     @Test
     fun getPlaylistContentFailsIfJsonContainsError(){
         val future = ImportSpotifyPlaylistsActivity.getPlaylistContent("1224", MockPlaylistHTTPClient(), ErrorJSONParser())
-        assert(future.get().isEmpty())
+        assertTrue(future.get().isEmpty())
     }
 
     @Test
     fun loadSongsToPlaylistWorksProperly(){
         val map = mutableMapOf<String, String>()
         map["bla"] = "bli"
-        val playlists = ImportSpotifyPlaylistsActivity.loadSongsToPlaylists(map, MockPlaylistHTTPClient(), mockPlaylistContentJSONParser())
-        assert(playlists.size == 1)
-        assert(playlists.last().name == "bla")
-        assert(playlists.last().getSongs().contains(Song("Narcos", "Migos", "")))
+        val playlists = ImportSpotifyPlaylistsActivity.loadSongsToPlaylists(map, MockPlaylistHTTPClient(), MockPlaylistContentJSONParser())
+        assertEquals(1, playlists.size)
+        assertEquals("bla",playlists.last().name)
+        assertTrue(playlists.last().getSongs().contains(Song("Narcos", "Migos", "")))
     }
 
 
@@ -189,7 +190,7 @@ class ImportSpotifyPlaylistsActivityTest {
         }
     }
 
-    private class mockPlaylistJSONParser : JSONParser(){
+    private class MockPlaylistJSONParser : JSONParser(){
         override fun parse(s: String?): JSONObject? {
             return JSONObject()
                 .put("items",
@@ -199,7 +200,7 @@ class ImportSpotifyPlaylistsActivityTest {
         }
     }
 
-    private class mockPlaylistContentJSONParser : JSONParser(){
+    private class MockPlaylistContentJSONParser : JSONParser(){
         override fun parse(s: String?): JSONObject? {
             return JSONObject()
                 .put("items",

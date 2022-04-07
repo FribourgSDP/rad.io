@@ -32,7 +32,7 @@
             android:exported="false" />
         <activity
             android:name=".JoinGameActivity"
-            android:exported="true" />
+            android:exported="false" />
         <activity
             android:name=".SpotifyReceiveActivity"
             android:exported="true"
@@ -54,7 +54,7 @@
             android:exported="false" />
         <activity
             android:name=".LobbyActivity"
-            android:exported="true" />
+            android:exported="false" />
         <activity
             android:name=".UserProfileActivity"
             android:exported="false"
@@ -64,13 +64,13 @@
             android:exported="false" />
         <activity
             android:name=".DisplayLyricsActivity"
-            android:exported="true" />
+            android:exported="false" />
         <activity
             android:name=".SettingsActivity"
-            android:exported="true" />
+            android:exported="false" />
         <activity
             android:name=".GameSettingsActivity"
-            android:exported="true" />
+            android:exported="false" />
         <activity
             android:name=".GoogleSignInActivity"
             android:exported="false" />
