@@ -43,8 +43,8 @@ class WorkingJoinGameActivityTest {
 
     @Test
     fun intentWorksWithCorrectSettings() {
-        // Test values
-        val testUID = 567L
+        // Test values => this one cannot exist, so it won't look in the database
+        val testUID = 1001L
 
         val joinButton = Espresso.onView(ViewMatchers.withId(R.id.joinGameButton))
 
