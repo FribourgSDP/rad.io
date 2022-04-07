@@ -115,8 +115,6 @@ class AddPlaylistActivityTest {
                 assert(p.getSongs().any { s -> s.name == "Le France" && s.artist == "Sardou" })
             }
         }
-
-        Intents.release()
     }
     @Test
     fun addAndRemoveSong(){
