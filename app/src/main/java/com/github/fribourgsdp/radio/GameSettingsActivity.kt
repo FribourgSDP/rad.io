@@ -16,7 +16,7 @@ const val GAME_HINT_KEY = "com.github.fribourgsdp.radio.GAME_HINT"
 const val GAME_PRIVACY_KEY = "com.github.fribourgsdp.radio.GAME_PRIVACY"
 const val GAME_IS_HOST_KEY = "com.github.fribourgsdp.radio.GAME_IS_HOST"
 
-class GameSettingsActivity : AppCompatActivity(), User.Loader {
+open class GameSettingsActivity : AppCompatActivity(), User.Loader {
     private val json = Json {
         allowStructuredMapKeys = true
     }
