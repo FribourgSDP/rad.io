@@ -1,5 +1,6 @@
 package com.github.fribourgsdp.radio
 
+import junit.framework.Assert
 import org.junit.Test
 
 import org.junit.Assert.*
@@ -124,5 +125,19 @@ internal class PlaylistTest {
         assertEquals(4, playlistAddedTo.getSongs().size)
         assert(playlistAddedTo.getSongs().contains(song1))
         assert(playlistAddedTo.getSongs().contains(song2))
+    }
+
+    @Test
+    fun getPlaylistWithNameWorks(){
+        val testerSet = mutableSetOf(song1, song2, song3, song4)
+        val playlist = Playlist("First", testerSet, Genre.POP)
+        assertEquals(song1, playlist.getSong(song1.name))
+    }
+
+    @Test(expected = NoSuchElementException::class)
+    fun getNonExistingPlaylistWithNameThrowsException(){
+        val testerSet = mutableSetOf(song1, song2, song3, song4)
+        val playlist = Playlist("First", testerSet, Genre.POP)
+        assertEquals(song1, playlist.getSong("unknown"))
     }
 }
