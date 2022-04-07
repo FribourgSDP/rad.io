@@ -138,6 +138,18 @@ data class User (var name: String, val color: Int) {
         return playlists.toSet()
     }
 
+    /**
+     * TODO
+     */
+    fun getPlaylistWithName(name: String): Playlist {
+        val filteredPlaylists = playlists.filter { playlist -> playlist.name == name }
+        if (filteredPlaylists.isEmpty()) {
+            throw NoSuchElementException()
+        } else {
+            return filteredPlaylists[0]
+        }
+    }
+
     fun addSpotifyPlaylistUId(playlistName: String, spotifyUid: String){
         playlistNamesToSpotifyId[playlistName] = spotifyUid
     }
