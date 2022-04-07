@@ -72,7 +72,7 @@ data class User (var name: String, val color: Int) {
 
     /**
      * saves a user to the app-specific storage on the device.
-     * There can only be a single User stored on the device at the default path
+     * There can only be a single User stored on the device at the default path, so this can overwrite
      * This function can be used from any activity of the app to save data accessible from anywhere
      *
      * @param context the context to use for saving to a file (usually this in an activity)
