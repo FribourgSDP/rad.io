@@ -79,6 +79,22 @@ data class Playlist (var name: String, var genre: Genre) {
         return songs.toSet()
     }
 
+    /**
+     * getter for a single song, matched according to the name give
+     *
+     * @param name the name of the song we are trying to retrieve
+     * @return the requested song
+     * @throws NoSuchFileException
+     */
+    fun getSong(name: String): Song {
+        val filteredSongs = songs.filter { song -> song.name == name }
+        if (filteredSongs.isEmpty()) {
+            throw NoSuchElementException()
+        } else {
+            return filteredSongs[0]
+        }
+    }
+
     override fun hashCode(): Int {
         return name.hashCode()
     }
