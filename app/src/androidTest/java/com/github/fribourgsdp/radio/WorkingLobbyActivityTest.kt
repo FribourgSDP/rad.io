@@ -29,6 +29,7 @@ import org.junit.runner.RunWith
  * so that the tests don't depend on firebase.
  *
  */
+
 @RunWith(AndroidJUnit4::class)
 class WorkingLobbyActivityTest {
     @get:Rule
