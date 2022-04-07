@@ -1,15 +1,24 @@
 package com.github.fribourgsdp.radio
 
+import android.Manifest
 import android.content.Intent
+import android.content.pm.PackageManager
+import android.opengl.Visibility
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.widget.*
+import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 
 const val GAME_KEY = "com.github.fribourgsdp.radio.GAME"
+const val PERMISSION_REQ_ID_RECORD_AUDIO = 22
+const val GAME_UID = "com.github.fribourgsdp.radio.GAMEUID"
+
 
 open class LobbyActivity : AppCompatActivity() {
     private val json = Json {
@@ -25,6 +34,7 @@ open class LobbyActivity : AppCompatActivity() {
     private var withHint: Boolean = false
     private var isPrivate: Boolean = false
     private var isHost: Boolean = false
+    private var hasVoiceIdPermissions : Boolean = false
 
     private lateinit var uuidTextView     : TextView
     private lateinit var hostNameTextView : TextView
@@ -35,6 +45,7 @@ open class LobbyActivity : AppCompatActivity() {
     private lateinit var privateTextView  : TextView
 
     private lateinit var launchGameButton: Button
+    private lateinit var askForPermissionsButton: Button
 
     private lateinit var playersListView : ListView
     private lateinit var namesAdapter : ArrayAdapter<String>
@@ -47,6 +58,7 @@ open class LobbyActivity : AppCompatActivity() {
 
         initVariables()
         initTextViews()
+        initButtons()
         updateTextViews()
 
         if (isHost) {
@@ -76,7 +88,7 @@ open class LobbyActivity : AppCompatActivity() {
                         db.launchGame(uid).addOnSuccessListener {
 
                             // When launched correctly, go to the game activity
-                            goToGameActivity(true, game)
+                            goToGameActivity(true, game, uid)
 
                         }.addOnFailureListener {
                             uuidTextView.text = getString(R.string.launch_game_error)
@@ -114,6 +126,8 @@ open class LobbyActivity : AppCompatActivity() {
         val hostIntent = intent.getStringExtra(GAME_HOST_KEY)
         val playlistIntent = intent.getStringExtra(GAME_PLAYLIST_KEY)
 
+        hasVoiceIdPermissions = (ContextCompat.checkSelfPermission(this, Manifest.permission.RECORD_AUDIO) == PackageManager.PERMISSION_GRANTED)
+
         if (hostIntent != null && playlistIntent != null) {
             host            = json.decodeFromString(hostIntent) as User
             playlist        = json.decodeFromString(playlistIntent) as Playlist
@@ -138,11 +152,22 @@ open class LobbyActivity : AppCompatActivity() {
         playersListView = findViewById(R.id.playersListView)
         namesAdapter = ArrayAdapter(this, android.R.layout.simple_list_item_1)
         playersListView.adapter = namesAdapter
+    }
 
+    private fun initButtons() {
         launchGameButton = findViewById(R.id.launchGameButton)
-
+        askForPermissionsButton = findViewById(R.id.micPermissionsButton)
         if (!isHost) {
             launchGameButton.visibility = View.INVISIBLE
+        }
+        if (hasVoiceIdPermissions) {
+            askForPermissionsButton.visibility = View.INVISIBLE
+        }
+        else {
+            launchGameButton.isEnabled = false
+            askForPermissionsButton.setOnClickListener {
+                ActivityCompat.requestPermissions(this, arrayOf(Manifest.permission.RECORD_AUDIO), PERMISSION_REQ_ID_RECORD_AUDIO)
+            }
         }
     }
 
@@ -192,7 +217,7 @@ open class LobbyActivity : AppCompatActivity() {
 
                 val isGameLaunched = snapshot.getBoolean("launched")
 
-                if (!isHost && isGameLaunched != null && isGameLaunched) {
+                if (!isHost && isGameLaunched != null && isGameLaunched && hasVoiceIdPermissions) {
                     goToGameActivity(false, gameID = uid)
                 }
 
@@ -210,17 +235,32 @@ open class LobbyActivity : AppCompatActivity() {
         gameBuilder.setUserList(playersList.map { name -> User(name) })
     }
 
-    private fun goToGameActivity(isHost: Boolean, game: Game? = null, gameID: Long? = null) {
+    private fun goToGameActivity(isHost: Boolean, game: Game? = null, gameID: Long) {
         val intent: Intent = Intent(this, GameActivity::class.java).apply {
             putExtra(GAME_IS_HOST_KEY, isHost)
+            putExtra(GAME_UID_KEY, gameID)
         }
 
         if (isHost && game != null) {
             intent.putExtra(GAME_KEY, json.encodeToString(game))
-        } else if (gameID != null) {
-            intent.putExtra(GAME_UID_KEY, gameID)
         }
 
         startActivity(intent)
+    }
+
+    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+        // Test if received callback indeed comes from a microphone permission request
+        if (requestCode == PERMISSION_REQ_ID_RECORD_AUDIO) {
+            for (i in permissions.indices) {
+                var permission: String = permissions[i]
+                var granted: Int = grantResults[i]
+                if (permission == Manifest.permission.RECORD_AUDIO && granted == PackageManager.PERMISSION_GRANTED) {
+                    hasVoiceIdPermissions = true
+                    launchGameButton.isEnabled = true
+                    askForPermissionsButton.visibility = View.INVISIBLE
+                }
+            }
+        }
     }
 }

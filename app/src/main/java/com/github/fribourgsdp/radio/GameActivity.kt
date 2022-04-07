@@ -1,16 +1,19 @@
 package com.github.fribourgsdp.radio
 
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import android.view.KeyEvent
 import android.view.View
 import android.view.inputmethod.EditorInfo
-import android.widget.ArrayAdapter
-import android.widget.EditText
-import android.widget.ListView
-import android.widget.TextView
+import android.widget.*
+import io.agora.rtc.Constants
+import io.agora.rtc.RtcEngine
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.json.Json
+import kotlin.random.Random
+
 
 class GameActivity : AppCompatActivity(), GameView {
     // TODO: Use 'User.load(this)' when available
@@ -22,17 +25,25 @@ class GameActivity : AppCompatActivity(), GameView {
     private lateinit var songTextView : TextView
     private lateinit var errorOrFailureTextView : TextView
     private lateinit var songGuessEditText : EditText
+    private lateinit var muteButton : ImageButton
+    private lateinit var songGuessSubmitButton: Button
 
     private lateinit var playersListView : ListView
     private lateinit var namesAdapter : ArrayAdapter<String>
 
-    private lateinit var playerGameHandler: PlayerGameHandler
+    private lateinit var voiceChannel: VoiceIpEngineDecorator
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_game)
         isHost = intent.getBooleanExtra(GAME_IS_HOST_KEY, false)
         initViews()
+
+
+        val gameUid = intent.getLongExtra(GAME_UID_KEY, -1L)
+        initVoiceChat(gameUid)
+
         if (isHost) {
             val json = Json {
                 allowStructuredMapKeys = true
@@ -41,18 +52,27 @@ class GameActivity : AppCompatActivity(), GameView {
             val hostGameHandler = HostGameHandler(game, this)
             hostGameHandler.linkToDatabase()
             user = User("The best player")
-            playerGameHandler = PlayerGameHandler(game.id, this)
-        } else {
-            playerGameHandler = PlayerGameHandler(intent.getLongExtra(GAME_UID_KEY, -1L), this)
+        }
+        val playerGameHandler = PlayerGameHandler(gameUid, this)
+
+        // On submit make the player game handler handle the guess
+        songGuessSubmitButton.setOnClickListener {
+            playerGameHandler.handleGuess(songGuessEditText.text.toString(), user.name)
         }
 
         playerGameHandler.linkToDatabase()
 
     }
 
-    override fun chooseSong(choices: List<String>): String {
-        // TODO: For later sprint, implement a way to chose between songs
-        return choices[0]
+    override fun onDestroy() {
+        super.onDestroy()
+        voiceChannel.leaveChannel()
+        RtcEngine.destroy()
+    }
+
+    override fun chooseSong(choices: List<String>, listener: GameView.OnPickListener) {
+        val songPicker = SongPickerDialog(choices, listener)
+        songPicker.show(supportFragmentManager, "songPicker")
     }
 
     override fun updateSinger(singerName: String) {
@@ -64,8 +84,9 @@ class GameActivity : AppCompatActivity(), GameView {
     }
 
     override fun displaySong(songName: String) {
-        // Hide the edit text
+        // Hide the edit text and the submit button
         songGuessEditText.visibility = View.GONE
+        songGuessSubmitButton.visibility = View.GONE
 
         // Show the song instead
         songTextView.apply {
@@ -78,8 +99,12 @@ class GameActivity : AppCompatActivity(), GameView {
         // Hide the song view
         songTextView.visibility = View.GONE
 
-        // Show the edit text instead
-        songGuessEditText.visibility = View.VISIBLE
+        // Show the edit text and the submit button instead
+        songGuessEditText.apply {
+            text.clear()
+            visibility = View.VISIBLE
+        }
+        songGuessSubmitButton.visibility = View.VISIBLE
     }
 
     override fun displayError(errorMessage: String) {
@@ -98,6 +123,11 @@ class GameActivity : AppCompatActivity(), GameView {
         return user.name == id
     }
 
+    override fun displayWaitOnSinger(singer: String) {
+        // We can display the wait message where the same box as the song
+        displaySong(getString(R.string.wait_for_pick_format, singer))
+    }
+
     private fun initViews() {
         currentRoundTextView = findViewById(R.id.currentRoundView)
         singerTextView = findViewById(R.id.singerTextView)
@@ -108,15 +138,29 @@ class GameActivity : AppCompatActivity(), GameView {
         // playersListView.adapter = namesAdapter
 
         songGuessEditText = findViewById(R.id.songGuessEditText)
+        songGuessSubmitButton = findViewById(R.id.songGuessSubmitButton)
 
-        // trigger the button when the user presses "enter" in the text field
+        // trigger the submit button when the user presses "enter" in the text field
         songGuessEditText.setOnEditorActionListener { _: TextView?, actionId: Int, _: KeyEvent? ->
             if (actionId == EditorInfo.IME_ACTION_DONE) {
-                playerGameHandler.handleGuess(songGuessEditText.text.toString(), user.name)
+                songGuessSubmitButton.callOnClick()
                 return@setOnEditorActionListener true
             }
             false
         }
+        muteButton = findViewById<ImageButton>(R.id.muteChannelButton)
+        muteButton.setOnClickListener {
+            voiceChannel.mute(muteButton)
+        }
+    }
+
+    private fun initVoiceChat(gameUid: Long) {
+        voiceChannel = VoiceIpEngineDecorator(this)
+        val userId = Random.nextInt(100000000)
+        voiceChannel.setAudioProfile(Constants.AUDIO_PROFILE_MUSIC_STANDARD, Constants.AUDIO_SCENARIO_CHATROOM_ENTERTAINMENT);
+        voiceChannel.enableAudioVolumeIndication(500,5,true)
+        voiceChannel.joinChannel(voiceChannel.getToken(userId, gameUid.toString()), gameUid.toString(), "", userId)
+        Log.d("Game uid is: ", gameUid.toString())
     }
 
 }
