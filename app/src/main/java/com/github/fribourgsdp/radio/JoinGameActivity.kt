@@ -15,6 +15,7 @@ import kotlinx.serialization.json.Json
 
 const val GAME_UID_KEY = "com.github.fribourgsdp.radio.GAME_UID"
 const val GAME_HOST_NAME_KEY = "com.github.fribourgsdp.radio.GAME_HOST_NAME"
+const val GAME_PLAYLIST_NAME_KEY = "com.github.fribourgsdp.radio.GAME_PLAYLIST_NAME"
 
 
 open class JoinGameActivity : AppCompatActivity(), User.Loader {

@@ -27,6 +27,7 @@ open class LobbyActivity : AppCompatActivity() {
     private var hostName : String? = null
     private var gameName : String? = null
     private var playlist : Playlist? = null
+    private var playlistName : String? = null
     private var nbRounds: Int = 0
     private var withHint: Boolean = false
     private var isPrivate: Boolean = false
@@ -134,6 +135,10 @@ open class LobbyActivity : AppCompatActivity() {
                 // if host is null, get the name from the intent
                 ?: intent.getStringExtra(GAME_HOST_NAME_KEY)
 
+        playlistName = playlist?.name
+                // if playlist is null, get the name from the intent
+            ?: intent.getStringExtra(GAME_PLAYLIST_NAME_KEY)
+
         gameName        = intent.getStringExtra(GAME_NAME_KEY)
         nbRounds        = intent.getIntExtra(GAME_NB_ROUNDS_KEY, getString(R.string.default_game_nb_rounds).toInt())
         withHint        = intent.getBooleanExtra(GAME_HINT_KEY, false)
@@ -177,7 +182,7 @@ open class LobbyActivity : AppCompatActivity() {
     private fun updateTextViews() {
         hostNameTextView.text = getString(R.string.host_name_format, hostName ?: "")
         gameNameTextView.text = getString(R.string.game_name_format, gameName)
-        playlistTextView.text = getString(R.string.playlist_format, playlist?.name ?: "")
+        playlistTextView.text = getString(R.string.playlist_format, playlistName ?: "")
         nbRoundsTextView.text = getString(R.string.number_of_rounds_format, nbRounds)
         withHintTextView.text = getString(R.string.hints_enabled_format, withHint)
         privateTextView.text  = getString(R.string.private_format, isPrivate)
