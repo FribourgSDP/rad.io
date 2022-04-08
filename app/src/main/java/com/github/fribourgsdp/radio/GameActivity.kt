@@ -123,7 +123,7 @@ class GameActivity : AppCompatActivity(), GameView, User.Loader {
 
     override fun displayWaitOnSinger(singer: String) {
         // We can display the wait message where the same box as the song
-        displaySong(getString(R.string.wait_for_pick_format, singer))
+        displaySong(getString(R.string.wait_for_pick_format, mapIdToName[singer]  ?: singer))
     }
 
     private fun initViews() {
