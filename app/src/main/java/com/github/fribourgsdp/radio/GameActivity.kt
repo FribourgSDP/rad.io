@@ -118,7 +118,7 @@ class GameActivity : AppCompatActivity(), GameView, User.Loader {
     }
 
     override fun checkPlayer(id: String): Boolean {
-        return user.name == id
+        return user.id == id
     }
 
     override fun displayWaitOnSinger(singer: String) {
