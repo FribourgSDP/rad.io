@@ -12,14 +12,18 @@ import androidx.test.espresso.intent.Intents
 import androidx.test.espresso.matcher.ViewMatchers.*
 import androidx.test.ext.junit.rules.ActivityScenarioRule
 import androidx.test.ext.junit.runners.AndroidJUnit4
+import androidx.test.internal.runner.junit4.AndroidJUnit4ClassRunner
 import com.google.android.gms.tasks.Tasks
 import com.google.firebase.auth.FirebaseAuth
+import org.junit.FixMethodOrder
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
+import org.junit.runners.MethodSorters
 import java.util.concurrent.TimeUnit
 
-@RunWith(AndroidJUnit4::class)
+@FixMethodOrder(MethodSorters.NAME_ASCENDING)
+@RunWith(AndroidJUnit4ClassRunner::class)
 class PlaylistRecyclerViewTest {
 
     @Test
@@ -50,7 +54,7 @@ class PlaylistRecyclerViewTest {
         val user = User(string, 0)
         val playlistTitle = "testTitle"
         val playlist1 = Playlist(playlistTitle, Genre.ROCK)
-        user.addPlaylists(setOf(playlist1))
+        user.addPlaylist(playlist1)
         user.save(context)
 
         val intent: Intent = Intent(context, UserProfileActivity::class.java)
