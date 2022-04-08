@@ -55,10 +55,6 @@ class PlaylistSongsFragment : MyFragment(R.layout.fragment_playlist_display), On
         deleteButton.setOnClickListener{
             //val user = Tasks.await()
             //removes playlist from user playlists
-            log(user)
-            log(user.getPlaylists().size)
-            log(playlist)
-            log(user.removePlaylistByName(playlistName))
             user.save(requireContext())
             activity?.onBackPressed()
         }
@@ -79,10 +75,5 @@ class PlaylistSongsFragment : MyFragment(R.layout.fragment_playlist_display), On
             ?.replace(R.id.container, SongFragment::class.java, bundle)
             ?.addToBackStack("SongFragment")
             ?.commit()
-    }
-    companion object{
-        fun log(s : Any){
-            Log.println(Log.ASSERT, "******* ", s.toString())
-        }
     }
 }

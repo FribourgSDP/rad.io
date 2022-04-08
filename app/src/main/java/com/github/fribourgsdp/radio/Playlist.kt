@@ -26,9 +26,11 @@ data class Playlist (var name: String, var genre: Genre) {
 
     /**
      * Adds a single song to the playlist
+     * We do not allow two song with the same name and artist. The given song might replace an already existing one.
      * @param song the song to add
      */
     fun addSong(song: Song){
+        songs.removeIf { s -> s.name == song.name && s.artist == song.artist }
         songs.add(song)
     }
 
@@ -37,7 +39,7 @@ data class Playlist (var name: String, var genre: Genre) {
      * @param addedSongs the Set of songs to add
      */
     fun addSongs(addedSongs: Set<Song>){
-        songs.addAll(addedSongs)
+        addedSongs.forEach { s -> addSong(s) }
     }
 
     /**
@@ -77,13 +79,5 @@ data class Playlist (var name: String, var genre: Genre) {
      */
     fun getSongs(): Set<Song> {
         return songs.toSet()
-    }
-
-    override fun hashCode(): Int {
-        return name.hashCode()
-    }
-
-    override fun equals(other: Any?): Boolean {
-        return name == (other as Playlist).name
     }
 }
