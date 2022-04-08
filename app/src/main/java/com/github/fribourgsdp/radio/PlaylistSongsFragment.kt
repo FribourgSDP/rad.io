@@ -25,10 +25,8 @@ class PlaylistSongsFragment : MyFragment(R.layout.fragment_playlist_display), On
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let { args ->
-            args.getString(PLAYLIST_DATA).let { serializedPlaylist ->
-                playlist = Json.decodeFromString(serializedPlaylist!!)
-                songs = playlist.getSongs().toList()
-                playlistName = playlist.name
+            args.getString(PLAYLIST_DATA).let { playlistName ->
+                this.playlistName = playlistName!!
             }
         }
     }
@@ -36,6 +34,11 @@ class PlaylistSongsFragment : MyFragment(R.layout.fragment_playlist_display), On
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        val user = User.load(requireContext())
+        playlist = user.getPlaylistWithName(playlistName)
+        songs = playlist.getSongs().toList()
+
         val playlistTitle : TextView = requireView().findViewById(R.id.PlaylistName)
         playlistTitle.text = playlistName
         initializeRecyclerView()
