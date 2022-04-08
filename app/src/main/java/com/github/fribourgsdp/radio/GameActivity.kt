@@ -50,7 +50,6 @@ class GameActivity : AppCompatActivity(), GameView, User.Loader {
             val game = Json.decodeFromString(intent.getStringExtra(GAME_KEY)!!) as Game
             val hostGameHandler = HostGameHandler(game, this)
             hostGameHandler.linkToDatabase()
-            user = User("The best player")
         }
         val playerGameHandler = PlayerGameHandler(gameUid, this)
 
