@@ -68,8 +68,8 @@ class PlaylistSongsFragment : MyFragment(R.layout.fragment_playlist_display), On
 
     override fun onItemClick(position: Int) {
         val bundle = Bundle()
-        bundle.putString(PLAYLIST_DATA, Json.encodeToString(playlist))
-        bundle.putString(SONG_DATA, Json.encodeToString(songs[position]))
+        bundle.putString(PLAYLIST_DATA, playlist.name)
+        bundle.putString(SONG_DATA, songs[position].name)
         activity?.supportFragmentManager?.beginTransaction()
             ?.replace(R.id.container, SongFragment::class.java, bundle)
             ?.addToBackStack("SongFragment")
