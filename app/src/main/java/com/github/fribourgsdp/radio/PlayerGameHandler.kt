@@ -48,7 +48,7 @@ class PlayerGameHandler(
         }
     }
 
-    fun handleGuess(guess: String, username: String) {
+    fun handleGuess(guess: String, userId: String) {
         // TODO: In a later update, use a point system
         if (songToGuess != null && songToGuess!!.lowercase() == guess.lowercase()) {
             view.displaySong(guess)
@@ -56,7 +56,7 @@ class PlayerGameHandler(
             // Hide the error if a wrong guess was made
             view.hideError()
 
-            db.setPlayerDone(gameID, username).addOnFailureListener {
+            db.setPlayerDone(gameID, userId).addOnFailureListener {
                 view.displayError("An error occurred")
             }
 
