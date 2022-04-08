@@ -55,7 +55,7 @@ class GameActivity : AppCompatActivity(), GameView, User.Loader {
 
         // On submit make the player game handler handle the guess
         songGuessSubmitButton.setOnClickListener {
-            playerGameHandler.handleGuess(songGuessEditText.text.toString(), user.name)
+            playerGameHandler.handleGuess(songGuessEditText.text.toString(), user.id)
         }
 
         playerGameHandler.linkToDatabase()
