@@ -12,19 +12,19 @@ import kotlinx.serialization.json.Json
 class SongFragment : MyFragment(R.layout.fragment_song) {
     private lateinit var initialLyrics : String
     private lateinit var currentLyrics : String
-    private lateinit var playlist : Playlist
+    private lateinit var playlistName : String
+    private lateinit var songName: String
+    private lateinit var playlist: Playlist
     private lateinit var song: Song
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let { args ->
-            args.getString(PLAYLIST_DATA).let { serializedPlaylist ->
-                playlist = Json.decodeFromString(serializedPlaylist!!)
+            args.getString(PLAYLIST_DATA).let { playlistName ->
+                this.playlistName = playlistName!!
             }
-            args.getString(SONG_DATA).let { serializedSong ->
-                song = Json.decodeFromString(serializedSong!!)
-                initialLyrics = song.lyrics
-                currentLyrics = initialLyrics
+            args.getString(SONG_DATA).let { songName ->
+                this.songName = songName!!
             }
         }
     }
@@ -34,6 +34,12 @@ class SongFragment : MyFragment(R.layout.fragment_song) {
         val songTitle : TextView = requireView().findViewById(R.id.SongName)
         val artistTitle : TextView = requireView().findViewById(R.id.ArtistName)
         val lyrics : EditText = requireView().findViewById(R.id.editTextLyrics)
+
+        val user = User.load(requireContext())
+        playlist = user.getPlaylistWithName(playlistName)
+        song = playlist.getSong(songName)
+        initialLyrics = song.lyrics
+        currentLyrics = initialLyrics
 
         songTitle.text = song.name
         artistTitle.text = song.artist
@@ -56,7 +62,7 @@ class SongFragment : MyFragment(R.layout.fragment_song) {
         super.onDestroyView()
 
         if (currentLyrics != initialLyrics) {
-            val user = User.load(requireView().context)
+            val user = User.load(requireContext())
             user.removePlaylist(playlist)
             playlist.removeSong(song)
             song.lyrics = currentLyrics
