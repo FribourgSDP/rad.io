@@ -1,7 +1,9 @@
 package com.github.fribourgsdp.radio
 
+import android.content.Context
 import android.os.Bundle
 import androidx.fragment.app.testing.launchFragmentInContainer
+import androidx.test.core.app.ApplicationProvider
 import androidx.test.espresso.Espresso
 import androidx.test.espresso.assertion.ViewAssertions
 import androidx.test.espresso.matcher.ViewMatchers
@@ -25,8 +27,12 @@ class SongFragmentTest {
         val playlist = Playlist(playlistName, Genre.NONE)
         val song = Song(songName, songArtist, "")
         playlist.addSong(song)
-        bundle.putString(PLAYLIST_DATA, Json.encodeToString(playlist))
-        bundle.putString(SONG_DATA, Json.encodeToString(song))
+        val user : User = User("Test User")
+        user.addPlaylist(playlist)
+        val context: Context = ApplicationProvider.getApplicationContext()
+        user.save(context)
+        bundle.putString(PLAYLIST_DATA, playlist.name)
+        bundle.putString(SONG_DATA, song.name)
         val scenario = launchFragmentInContainer<SongFragment>(bundle)
         Espresso.onView(ViewMatchers.withId(R.id.SongName))
             .check(ViewAssertions.matches(ViewMatchers.withText(songName)))
@@ -41,8 +47,12 @@ class SongFragmentTest {
         val playlist = Playlist("test", Genre.NONE)
         val song = Song("test", "test", lyrics)
         playlist.addSong(song)
-        bundle.putString(PLAYLIST_DATA, Json.encodeToString(playlist))
-        bundle.putString(SONG_DATA, Json.encodeToString(song))
+        val user : User = User("Test User")
+        user.addPlaylist(playlist)
+        val context: Context = ApplicationProvider.getApplicationContext()
+        user.save(context)
+        bundle.putString(PLAYLIST_DATA, playlist.name)
+        bundle.putString(SONG_DATA, song.name)
         val scenario = launchFragmentInContainer<SongFragment>(bundle)
         Espresso.onView(ViewMatchers.withId(R.id.editTextLyrics))
             .check(ViewAssertions.matches(ViewMatchers.withText(lyrics)))
