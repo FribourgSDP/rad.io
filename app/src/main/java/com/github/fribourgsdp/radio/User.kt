@@ -124,8 +124,7 @@ data class User (var name: String, val color: Int) {
      * @param playlist the playlist to add
      */
     fun addPlaylist(playlist: Playlist){
-        playlists.removeIf { p -> p == playlist }
-        playlists.add(playlist)
+        SetUtility.addToSet(playlists, playlist)
     }
 
     /**
@@ -134,7 +133,7 @@ data class User (var name: String, val color: Int) {
      * @param addedPlaylists the set of playlists to add
      */
     fun addPlaylists(addedPlaylists: Set<Playlist>){
-        addedPlaylists.forEach { p -> addPlaylist(p) }
+        SetUtility.addAllToSet(playlists, addedPlaylists)
     }
 
     /**
