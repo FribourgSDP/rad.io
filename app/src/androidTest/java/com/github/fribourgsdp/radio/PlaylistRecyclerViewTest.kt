@@ -25,6 +25,8 @@ import java.util.concurrent.TimeUnit
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 @RunWith(AndroidJUnit4ClassRunner::class)
 class PlaylistRecyclerViewTest {
+    @get:Rule
+    var mainActivityRule = ActivityScenarioRule(MainActivity::class.java)
 
     @Test
     fun recyclerViewDisplayedTest() {
@@ -54,15 +56,10 @@ class PlaylistRecyclerViewTest {
         val user = User(string, 0)
         val playlistTitle = "testTitle"
         val playlist1 = Playlist(playlistTitle, Genre.ROCK)
-        user.addPlaylist(playlist1)
+        user.addPlaylists(setOf(playlist1))
         user.save(context)
-
-        val intent: Intent = Intent(context, UserProfileActivity::class.java)
-
-        ActivityScenario.launch<UserProfileActivity>(intent).use { scenario ->
-            Espresso.onView(withId(R.id.playlist_recycler_view)).perform(RecyclerViewActions.actionOnItemAtPosition<ViewHolder>(0, click()))
-            Espresso.onView(withId(R.id.PlaylistName)).check(matches(withText(playlistTitle)))
-        }
-        Intents.release()
+        Espresso.onView(withId(R.id.profileButton)).perform(click())
+        Espresso.onView(withId(R.id.playlist_recycler_view)).perform(RecyclerViewActions.actionOnItemAtPosition<ViewHolder>(0, click()))
+        Espresso.onView(withId(R.id.PlaylistName)).check(matches(withText(playlistTitle)))
     }
 }
