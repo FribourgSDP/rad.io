@@ -5,6 +5,7 @@ import org.json.JSONObject
 import org.junit.Assert.*
 import org.junit.Test
 import java.io.IOException
+import java.util.concurrent.CompletableFuture
 import java.util.concurrent.ExecutionException
 
 /**
@@ -21,8 +22,7 @@ class LyricsGetterTest {
     @Test
     fun emptyLyricsTest(){
         val lyricsFuture = LyricsGetter.getLyrics("stream", "dream theater", MockOkHttpClient())
-        val lyrics : String = lyricsFuture.get()
-        assertTrue(lyrics == "---No lyrics were found for this song.---")
+        checkLyricsNotFound(lyricsFuture)
     }
     @Test(expected = Exception::class)
     fun songIDsongNotFoundTest(){
@@ -32,8 +32,7 @@ class LyricsGetterTest {
     @Test
     fun songNotFoundTest(){
         val lyricsFuture = LyricsGetter.getLyrics("fsdgfdgdfgdfgdfg", "weoir hpfasdsfno", MockOkHttpClient())
-        val lyrics = lyricsFuture.get()
-        assertTrue(lyrics.equals("---No lyrics were found for this song.---"))
+        checkLyricsNotFound(lyricsFuture)
     }
     @Test(expected = ExecutionException::class)
     fun getLyricsFailingHTTPClientTest(){
@@ -54,13 +53,13 @@ class LyricsGetterTest {
     }
     @Test
     fun getLyricsMalformedResponse(){
-        val lyrics = LyricsGetter.getLyrics("rouge", "sardou", MockOkHttpClient(), NullJSONParser()).get()
-        assert(lyrics.equals("---No lyrics were found for this song.---"))
+        val lyricsFuture = LyricsGetter.getLyrics("rouge", "sardou", MockOkHttpClient(), NullJSONParser())
+        checkLyricsNotFound(lyricsFuture)
     }
     @Test
     fun emptyLyrics(){
-        val lyrics = LyricsGetter.getLyrics("rouge", "sardou", MockOkHttpClient(), EmptyLyricsJSONParser()).get()
-        assert(lyrics.equals("---No lyrics were found for this song.---"))
+        val lyricsFuture = LyricsGetter.getLyrics("rouge", "sardou", MockOkHttpClient(), EmptyLyricsJSONParser())
+        checkLyricsNotFound(lyricsFuture)
     }
     @Test
     fun lyricsGetterCreationTest(){
@@ -86,7 +85,6 @@ class LyricsGetterTest {
         val lyrics = LyricsGetter.markSongName(LyricsGetter.getLyrics("rouge", "sardou", MockOkHttpClient()).get(), "rouge")
         assertTrue("actual : $lyrics",lyrics.startsWith("<strike>Rouge</strike><br>Comme un soleil couchant de Méditerranée"))
     }
-
     class MockOkHttpClient : OkHttpClient(){
         override fun newCall(request1: Request): Call {
             return MockCall(request1)
@@ -95,7 +93,6 @@ class LyricsGetterTest {
             override fun clone(): Call {
                 throw Exception()
             }
-
             override fun request(): Request {
                 throw Exception()
             }
@@ -149,18 +146,18 @@ class LyricsGetterTest {
             }
 
         }
+
+
     }
 
     class FailingHTTPClient : OkHttpClient() {
         override fun newCall(request: Request): Call {
             return FailingCall()
         }
-
         class FailingCall : Call {
             override fun clone(): Call {
                 throw Exception()
             }
-
             override fun request(): Request {
                 throw Exception()
             }
@@ -184,14 +181,16 @@ class LyricsGetterTest {
             override fun isCanceled(): Boolean {
                 throw Exception()
             }
+
         }
+
     }
+
     class SemiFailingHTTPClient : OkHttpClient() {
         override fun newCall(request: Request): Call {
             return SemiFailingCall(request)
         }
         class SemiFailingCall(private val request : Request) : Call{
-
             override fun clone(): Call {
                 throw Exception()
             }
@@ -238,6 +237,15 @@ class LyricsGetterTest {
     class EmptyLyricsJSONParser : JSONParser(){
         override fun parse(s: String?): JSONObject {
             return JSONObject("{\"message\":{\"header\":{\"status_code\":200,\"execute_time\":0.0089538097381592},\"body\":{\"lyrics\":{\"lyrics_id\":18905350,\"explicit\":1,\"lyrics_body\":\"\"}}}}")
+        }
+    }
+
+    private fun checkLyricsNotFound(lyricsFuture : CompletableFuture<String>){
+        assertTrue(lyricsFuture.isCompletedExceptionally)
+        try {
+            lyricsFuture.get()
+        } catch (e : ExecutionException){
+            assertTrue(e.message == "com.github.fribourgsdp.radio.LyricsGetter\$Companion\$LyricsNotFoundException")
         }
     }
 
