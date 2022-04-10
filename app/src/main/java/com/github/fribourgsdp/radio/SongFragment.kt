@@ -8,6 +8,8 @@ import android.widget.EditText
 import android.widget.TextView
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.json.Json
+import java.util.concurrent.TimeUnit
+import java.util.concurrent.TimeoutException
 
 class SongFragment : MyFragment(R.layout.fragment_song) {
     private lateinit var initialLyrics : String
@@ -22,8 +24,20 @@ class SongFragment : MyFragment(R.layout.fragment_song) {
                 playlist = Json.decodeFromString(serializedPlaylist!!)
             }
             args.getString(SONG_DATA).let { serializedSong ->
+                println("**************** DECODING JSON DATA FOR SONG")
                 song = Json.decodeFromString(serializedSong!!)
-                initialLyrics = song.lyrics
+                initialLyrics =
+                    if(song.lyrics == ""){
+                        println("CALLING LYRICSGETTER")
+                        try {
+                            LyricsGetter.getLyrics(song.name, song.artist)
+                                .get(2000, TimeUnit.MILLISECONDS)
+                        } catch (e : TimeoutException){
+                            ""
+                        }
+                    } else{
+                        song.lyrics
+                    }
                 currentLyrics = initialLyrics
             }
         }
@@ -33,15 +47,15 @@ class SongFragment : MyFragment(R.layout.fragment_song) {
         super.onViewCreated(view, savedInstanceState)
         val songTitle : TextView = requireView().findViewById(R.id.SongName)
         val artistTitle : TextView = requireView().findViewById(R.id.ArtistName)
-        val lyrics : EditText = requireView().findViewById(R.id.editTextLyrics)
+        val lyricsEditText : EditText = requireView().findViewById(R.id.editTextLyrics)
 
         songTitle.text = song.name
         artistTitle.text = song.artist
-        lyrics.setText(song.lyrics)
+        lyricsEditText.setText(initialLyrics)
 
-        lyrics.addTextChangedListener(object : TextWatcher {
+        lyricsEditText.addTextChangedListener(object : TextWatcher {
             override fun afterTextChanged(s: Editable?) {
-                currentLyrics = lyrics.text.toString()
+                currentLyrics = lyricsEditText.text.toString()
             }
 
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
@@ -57,8 +71,6 @@ class SongFragment : MyFragment(R.layout.fragment_song) {
 
         if (currentLyrics != initialLyrics) {
             val user = User.load(requireView().context)
-            user.removePlaylist(playlist)
-            playlist.removeSong(song)
             song.lyrics = currentLyrics
             playlist.addSong(song)
             user.addPlaylist(playlist)
