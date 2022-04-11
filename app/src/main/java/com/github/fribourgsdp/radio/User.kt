@@ -172,6 +172,13 @@ data class User (var name: String, val color: Int) {
         return playlists.toSet()
     }
 
+    /**
+     * Modifies a song in a playlist of the user
+     */
+    fun updateSongInPlaylist(playlist: Playlist, song: Song){
+        playlists.find{p -> p == playlist}?.addSong(song)
+    }
+
     fun addSpotifyPlaylistUId(playlistName: String, spotifyUid: String){
         playlistNamesToSpotifyId[playlistName] = spotifyUid
     }

@@ -16,6 +16,7 @@ class SongFragment : MyFragment(R.layout.fragment_song) {
     private lateinit var currentLyrics : String
     private lateinit var playlist : Playlist
     private lateinit var song: Song
+    private var doSaveLyrics : Boolean = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -24,20 +25,19 @@ class SongFragment : MyFragment(R.layout.fragment_song) {
                 playlist = Json.decodeFromString(serializedPlaylist!!)
             }
             args.getString(SONG_DATA).let { serializedSong ->
-                println("**************** DECODING JSON DATA FOR SONG")
                 song = Json.decodeFromString(serializedSong!!)
-                initialLyrics =
-                    if(song.lyrics == ""){
-                        println("CALLING LYRICSGETTER")
-                        try {
-                            LyricsGetter.getLyrics(song.name, song.artist)
-                                .get(2000, TimeUnit.MILLISECONDS)
-                        } catch (e : TimeoutException){
-                            ""
-                        }
-                    } else{
-                        song.lyrics
+                if(song.lyrics == ""){
+                    try {
+                        println("LYRICS GETTER")
+                        initialLyrics = LyricsGetter.getLyrics(song.name, song.artist).exceptionally { "" }.get(2000, TimeUnit.MILLISECONDS)
+                        song.lyrics = initialLyrics
+                        doSaveLyrics = true
+                    } catch (e : TimeoutException){
+                        initialLyrics = ""
                     }
+                } else{
+                    initialLyrics = song.lyrics
+                }
                 currentLyrics = initialLyrics
             }
         }
@@ -69,11 +69,14 @@ class SongFragment : MyFragment(R.layout.fragment_song) {
     override fun onDestroyView() {
         super.onDestroyView()
 
-        if (currentLyrics != initialLyrics) {
+        if (currentLyrics != initialLyrics || doSaveLyrics) {
+            println("SAVING SONG")
             val user = User.load(requireView().context)
-            song.lyrics = currentLyrics
-            playlist.addSong(song)
-            user.addPlaylist(playlist)
+//            song.lyrics = currentLyrics
+//            user.getPlaylists()
+//            playlist.addSong(song)
+//            user.addPlaylist(playlist)
+            user.updateSongInPlaylist(playlist, song)
             user.save(requireView().context)
         }
     }

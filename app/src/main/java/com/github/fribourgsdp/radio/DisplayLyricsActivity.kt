@@ -21,7 +21,7 @@ class DisplayLyricsActivity : AppCompatActivity() {
                 val songName: String = songTextView.text.toString()
                 val artistName: String = artistTextView.text.toString()
                 val lyricsFuture = LyricsGetter.getLyrics(songName, artistName, OkHttpClient())
-                val lyrics = lyricsFuture.get()
+                val lyrics = lyricsFuture.exceptionally { LyricsGetter.LYRICS_NOT_FOUND }.get()
                 resultsTextView.text = HtmlCompat.fromHtml(LyricsGetter.markSongName(lyrics, songName), HtmlCompat.FROM_HTML_MODE_LEGACY)
             }
         }

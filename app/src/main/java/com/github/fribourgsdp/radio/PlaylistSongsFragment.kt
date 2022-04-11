@@ -38,6 +38,7 @@ class PlaylistSongsFragment : MyFragment(R.layout.fragment_playlist_display), On
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        println("*****RELOADING PLAYLIST")
         val playlistTitle : TextView = requireView().findViewById(R.id.PlaylistName)
         playlistTitle.text = playlistName
         initializeRecyclerView()
