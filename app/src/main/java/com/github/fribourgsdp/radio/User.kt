@@ -88,7 +88,7 @@ data class User (var name: String, val color: Int) {
         fun createDefaultUser(): Task<User> {
             return FirestoreDatabase().generateUserId().continueWith { id ->
                 val generatedUser = User("Guest", generateColor())
-                generatedUser.id = id.toString()
+                generatedUser.id = id.result.toString()
                 generatedUser
             }
 

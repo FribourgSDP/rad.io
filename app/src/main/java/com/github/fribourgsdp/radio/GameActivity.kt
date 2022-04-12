@@ -50,13 +50,12 @@ class GameActivity : AppCompatActivity(), GameView, User.Loader {
             val game = Json.decodeFromString(intent.getStringExtra(GAME_KEY)!!) as Game
             val hostGameHandler = HostGameHandler(game, this)
             hostGameHandler.linkToDatabase()
-            user = User("The best player")
         }
         val playerGameHandler = PlayerGameHandler(gameUid, this)
 
         // On submit make the player game handler handle the guess
         songGuessSubmitButton.setOnClickListener {
-            playerGameHandler.handleGuess(songGuessEditText.text.toString(), user.name)
+            playerGameHandler.handleGuess(songGuessEditText.text.toString(), user.id)
         }
 
         playerGameHandler.linkToDatabase()
@@ -119,12 +118,12 @@ class GameActivity : AppCompatActivity(), GameView, User.Loader {
     }
 
     override fun checkPlayer(id: String): Boolean {
-        return user.name == id
+        return user.id == id
     }
 
     override fun displayWaitOnSinger(singer: String) {
         // We can display the wait message where the same box as the song
-        displaySong(getString(R.string.wait_for_pick_format, singer))
+        displaySong(getString(R.string.wait_for_pick_format, mapIdToName[singer]  ?: singer))
     }
 
     private fun initViews() {
