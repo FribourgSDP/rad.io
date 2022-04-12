@@ -250,7 +250,7 @@ open class LobbyActivity : AppCompatActivity() {
         } as HashMap<String, String>
     }
 
-    private fun goToGameActivity(isHost: Boolean, game: Game? = null, gameID: Long) {
+    open protected fun goToGameActivity(isHost: Boolean, game: Game? = null, gameID: Long) {
         val intent: Intent = Intent(this, GameActivity::class.java).apply {
             putExtra(GAME_IS_HOST_KEY, isHost)
             putExtra(MAP_ID_NAME_KEY, mapIdToName)
