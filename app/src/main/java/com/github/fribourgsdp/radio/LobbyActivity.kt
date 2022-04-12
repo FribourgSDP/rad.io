@@ -48,7 +48,7 @@ open class LobbyActivity : AppCompatActivity() {
     private lateinit var playersListView : ListView
     private lateinit var namesAdapter : ArrayAdapter<String>
 
-    private lateinit var mapIdToName: HashMap<String, String>
+    protected lateinit var mapIdToName: HashMap<String, String>
 
     private val gameBuilder = Game.Builder()
 
