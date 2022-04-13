@@ -269,8 +269,9 @@ open class LobbyActivity : AppCompatActivity() {
         if (host!!.getPlaylists().contains(playlist)){
             for (song in playlist.getSongs()){
                 LyricsGetter.getLyrics(song.name, song.artist).thenAccept{ f ->
-                    val songWithLyrics = Song(song.name, song.artist, song.lyrics)
+                    val songWithLyrics = Song(song.name, song.artist, f)
                     host!!.updateSongInPlaylist(playlist, songWithLyrics)
+                    host!!.save(applicationContext)
                 }
             }
         }
