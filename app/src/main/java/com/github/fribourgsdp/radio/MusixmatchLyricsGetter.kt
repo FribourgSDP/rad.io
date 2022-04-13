@@ -15,13 +15,21 @@ const val TRACK_SEARCH = "track.search"
 const val QUERY_TRACK_FIELD = "q_track"
 const val QUERY_ARTIST_FIELD = "q_artist"
 const val SORT_CONDITION = "s_artist_rating=desc"
+
+interface LyricsGetter{
+    fun getLyrics(
+        songName: String,
+        artistName: String = "",
+        client: OkHttpClient = OkHttpClient(),
+        parser: JSONParser = JSONStandardParser()
+    ): CompletableFuture<String>
+    fun getSongID(songName: String, artistName: String, client: OkHttpClient = OkHttpClient(), parser : JSONParser = JSONStandardParser()) : CompletableFuture<Int>
+}
 /**
  * Tool to get lyrics from a given song name and artist using Musixmatch API.
  * API Call doc : https://stackoverflow.com/questions/45219379/how-to-make-an-api-request-in-kotlin
  */
-
-class LyricsGetter {
-    companion object {
+object MusixmatchLyricsGetter : LyricsGetter {
         const val LYRICS_NOT_FOUND = "---No lyrics were found for this song.---"
 
         class LyricsNotFoundException(val reason : String = LYRICS_NOT_FOUND) : Exception()
@@ -34,11 +42,11 @@ class LyricsGetter {
          * @param client The HTTP Client used for connection
          * @param parser The JSON parser used to parse response
          */
-        fun getLyrics(
+        override fun getLyrics(
             songName: String,
-            artistName: String = "",
-            client: OkHttpClient = OkHttpClient(),
-            parser: JSONParser = JSONStandardParser()
+            artistName: String,
+            client: OkHttpClient,
+            parser: JSONParser
         ): CompletableFuture<String> {
             println("*******LYRICS GETTER CALL : $songName")
             val future = CompletableFuture<String>()
@@ -65,7 +73,7 @@ class LyricsGetter {
          * @param parser The JSON parser used to parse response
          * @return The ID of the searched song
          */
-        fun getSongID(songName: String, artistName: String, client: OkHttpClient = OkHttpClient(), parser : JSONParser = JSONStandardParser()) : CompletableFuture<Int> {
+        override fun getSongID(songName: String, artistName: String, client: OkHttpClient, parser : JSONParser) : CompletableFuture<Int> {
             //API needed : 24
             val future = CompletableFuture<Int>()
             val url = "$BASE_URL$TRACK_SEARCH?$QUERY_TRACK_FIELD=$songName&$QUERY_ARTIST_FIELD=$artistName&$API_KEY_FIELD=$API_KEY&$SORT_CONDITION"
@@ -160,5 +168,4 @@ class LyricsGetter {
                     .replace(name, "<strike>${name[0].uppercase() + name.lowercase().substring(1)}</strike>", ignoreCase = true)
                     .replace("\n", "<br>")
         }
-    }
 }

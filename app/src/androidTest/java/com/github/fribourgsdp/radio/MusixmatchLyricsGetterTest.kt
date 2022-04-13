@@ -12,58 +12,58 @@ import java.util.concurrent.ExecutionException
  * Lyrics Getter Test
  */
 //@RunWith(AndroidJUnit4::class)
-class LyricsGetterTest {
+class MusixmatchLyricsGetterTest {
     @Test
     fun getLyricsFromSongAndArtist(){
-        val f = LyricsGetter.getLyrics("hurricane", "bob dylan", MockOkHttpClient())
+        val f = MusixmatchLyricsGetter.getLyrics("hurricane", "bob dylan", MockOkHttpClient())
         val lyrics = f.get()
         assertTrue("actual : $lyrics",lyrics.startsWith("Pistol shots ring out in the barroom night"))
     }
     @Test
     fun emptyLyricsTest(){
-        val lyricsFuture = LyricsGetter.getLyrics("stream", "dream theater", MockOkHttpClient())
+        val lyricsFuture = MusixmatchLyricsGetter.getLyrics("stream", "dream theater", MockOkHttpClient())
         checkLyricsNotFound(lyricsFuture)
     }
     @Test(expected = Exception::class)
     fun songIDsongNotFoundTest(){
-        val songIDFuture = LyricsGetter.getSongID("fsdgfdgdfgdfgdfg", "weoir hpfasdsfno", MockOkHttpClient())
+        val songIDFuture = MusixmatchLyricsGetter.getSongID("fsdgfdgdfgdfgdfg", "weoir hpfasdsfno", MockOkHttpClient())
         songIDFuture.get()
     }
     @Test
     fun songNotFoundTest(){
-        val lyricsFuture = LyricsGetter.getLyrics("fsdgfdgdfgdfgdfg", "weoir hpfasdsfno", MockOkHttpClient())
+        val lyricsFuture = MusixmatchLyricsGetter.getLyrics("fsdgfdgdfgdfgdfg", "weoir hpfasdsfno", MockOkHttpClient())
         checkLyricsNotFound(lyricsFuture)
     }
     @Test(expected = ExecutionException::class)
     fun getLyricsFailingHTTPClientTest(){
-        val f = LyricsGetter.getLyrics("rouge", "sardou", SemiFailingHTTPClient())
+        val f = MusixmatchLyricsGetter.getLyrics("rouge", "sardou", SemiFailingHTTPClient())
         val lyrics = f.get()
         println(lyrics)
     }
     @Test(expected = Exception::class)
     fun getSongIDFailingHTTPClientTest(){
-        val id = LyricsGetter.getSongID("rouge", "sardou", FailingHTTPClient())
+        val id = MusixmatchLyricsGetter.getSongID("rouge", "sardou", FailingHTTPClient())
         val i = id.get()
         println(i)
     }
     @Test(expected = Exception::class)
     fun getSongIDMalformedResponse(){
-        val id = LyricsGetter.getSongID("rouge", "sardou", MockOkHttpClient(), NullJSONParser())
+        val id = MusixmatchLyricsGetter.getSongID("rouge", "sardou", MockOkHttpClient(), NullJSONParser())
         println(id.get())
     }
     @Test
     fun getLyricsMalformedResponse(){
-        val lyricsFuture = LyricsGetter.getLyrics("rouge", "sardou", MockOkHttpClient(), NullJSONParser())
+        val lyricsFuture = MusixmatchLyricsGetter.getLyrics("rouge", "sardou", MockOkHttpClient(), NullJSONParser())
         checkLyricsNotFound(lyricsFuture)
     }
     @Test
     fun emptyLyrics(){
-        val lyricsFuture = LyricsGetter.getLyrics("rouge", "sardou", MockOkHttpClient(), EmptyLyricsJSONParser())
+        val lyricsFuture = MusixmatchLyricsGetter.getLyrics("rouge", "sardou", MockOkHttpClient(), EmptyLyricsJSONParser())
         checkLyricsNotFound(lyricsFuture)
     }
     @Test
     fun lyricsGetterCreationTest(){
-        LyricsGetter()
+        MusixmatchLyricsGetter()
     }
     @Test
     fun jsonStandardParserDoesntThrowException(){
@@ -72,17 +72,17 @@ class LyricsGetterTest {
     }
     @Test
     fun cleanLyricsTest1(){
-        val lyrics = LyricsGetter.getLyrics("rouge", "sardou", MockOkHttpClient()).get()
+        val lyrics = MusixmatchLyricsGetter.getLyrics("rouge", "sardou", MockOkHttpClient()).get()
         assertFalse(lyrics.contains("commercial"))
     }
     @Test
     fun markSongWithNoName(){
         val lyrics = "Rouge,\nComme un soleil couchant de Méditerrannée\nRouge,\n..."
-        assertEquals(lyrics,LyricsGetter.markSongName(lyrics, ""))
+        assertEquals(lyrics,MusixmatchLyricsGetter.markSongName(lyrics, ""))
     }
     @Test
     fun emphasizeSongNameInLyrics(){
-        val lyrics = LyricsGetter.markSongName(LyricsGetter.getLyrics("rouge", "sardou", MockOkHttpClient()).get(), "rouge")
+        val lyrics = MusixmatchLyricsGetter.markSongName(MusixmatchLyricsGetter.getLyrics("rouge", "sardou", MockOkHttpClient()).get(), "rouge")
         assertTrue("actual : $lyrics",lyrics.startsWith("<strike>Rouge</strike><br>Comme un soleil couchant de Méditerranée"))
     }
     class MockOkHttpClient : OkHttpClient(){

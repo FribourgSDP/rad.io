@@ -20,9 +20,9 @@ class DisplayLyricsActivity : AppCompatActivity() {
             run {
                 val songName: String = songTextView.text.toString()
                 val artistName: String = artistTextView.text.toString()
-                val lyricsFuture = LyricsGetter.getLyrics(songName, artistName, OkHttpClient())
-                val lyrics = lyricsFuture.exceptionally { LyricsGetter.LYRICS_NOT_FOUND }.get()
-                resultsTextView.text = HtmlCompat.fromHtml(LyricsGetter.markSongName(lyrics, songName), HtmlCompat.FROM_HTML_MODE_LEGACY)
+                val lyricsFuture = MusixmatchLyricsGetter.getLyrics(songName, artistName, OkHttpClient())
+                val lyrics = lyricsFuture.exceptionally { MusixmatchLyricsGetter.LYRICS_NOT_FOUND }.get()
+                resultsTextView.text = HtmlCompat.fromHtml(MusixmatchLyricsGetter.markSongName(lyrics, songName), HtmlCompat.FROM_HTML_MODE_LEGACY)
             }
         }
 

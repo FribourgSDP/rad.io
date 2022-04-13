@@ -6,6 +6,7 @@ import android.text.TextWatcher
 import android.view.View
 import android.widget.EditText
 import android.widget.TextView
+import com.github.fribourgsdp.radio.mockimplementations.MockLyricsGetter
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.json.Json
 
@@ -22,13 +23,19 @@ class SongFragment : MyFragment(R.layout.fragment_song) {
             args.getString(PLAYLIST_DATA).let { serializedPlaylist ->
                 playlist = Json.decodeFromString(serializedPlaylist!!)
             }
+            val lyricsGetter = if (args.getString("TESTING_LYRICS_PROVIDER") != null){
+                MockLyricsGetter
+            } else{
+                MusixmatchLyricsGetter
+            }
             args.getString(SONG_DATA).let { serializedSong ->
+
                 song = Json.decodeFromString(serializedSong!!)
                 initialLyrics = song.lyrics
                 currentLyrics = initialLyrics
                 if(song.lyrics == ""){
                     currentLyrics = ""
-                    LyricsGetter.getLyrics(song.name, song.artist)
+                    lyricsGetter.getLyrics(song.name, song.artist)
                         .exceptionally { "" }
                         .thenAccept{f ->
 //                            println("RECEIVED LYRICS : ${f.substring(0,10)}...")

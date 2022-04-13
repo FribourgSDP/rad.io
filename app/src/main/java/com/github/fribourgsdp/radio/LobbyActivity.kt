@@ -3,10 +3,8 @@ package com.github.fribourgsdp.radio
 import android.Manifest
 import android.content.Intent
 import android.content.pm.PackageManager
-import android.opengl.Visibility
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import android.widget.*
 import androidx.core.app.ActivityCompat
@@ -268,10 +266,12 @@ open class LobbyActivity : AppCompatActivity() {
     private fun loadLyrics(playlist : Playlist){
         if (host!!.getPlaylists().contains(playlist)){
             for (song in playlist.getSongs()){
-                LyricsGetter.getLyrics(song.name, song.artist).thenAccept{ f ->
-                    val songWithLyrics = Song(song.name, song.artist, f)
-                    host!!.updateSongInPlaylist(playlist, songWithLyrics)
-                    host!!.save(applicationContext)
+                if(song.lyrics == "") {
+                    MusixmatchLyricsGetter.getLyrics(song.name, song.artist).thenAccept { f ->
+                        val songWithLyrics = Song(song.name, song.artist, f)
+                        host!!.updateSongInPlaylist(playlist, songWithLyrics)
+                        host!!.save(applicationContext)
+                    }
                 }
             }
         }

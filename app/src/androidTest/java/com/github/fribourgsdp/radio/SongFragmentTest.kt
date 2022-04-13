@@ -3,6 +3,7 @@ package com.github.fribourgsdp.radio
 import android.os.Bundle
 import androidx.fragment.app.testing.launchFragmentInContainer
 import androidx.test.espresso.Espresso
+import androidx.test.espresso.ViewAssertion
 import androidx.test.espresso.assertion.ViewAssertions
 import androidx.test.espresso.matcher.ViewMatchers
 import androidx.test.internal.runner.junit4.AndroidJUnit4ClassRunner
@@ -46,5 +47,23 @@ class SongFragmentTest {
         val scenario = launchFragmentInContainer<SongFragment>(bundle)
         Espresso.onView(ViewMatchers.withId(R.id.editTextLyrics))
             .check(ViewAssertions.matches(ViewMatchers.withText(lyrics)))
+    }
+    @Test
+    fun getLyricsInSongFragment() {
+        val bundle = Bundle()
+        val songName = "Africa"
+        val songArtist = "Toto"
+        val playlistName = "test"
+        val playlist = Playlist(playlistName, Genre.NONE)
+        val song = Song(songName, songArtist, "")
+        playlist.addSong(song)
+        bundle.putString(PLAYLIST_DATA, Json.encodeToString(playlist))
+        bundle.putString(SONG_DATA, Json.encodeToString(song))
+        bundle.putString("TESTING_LYRICS_PROVIDER", "")
+        val scenario = launchFragmentInContainer<SongFragment>(bundle)
+        Thread.sleep(2000)
+        Espresso.onView(ViewMatchers.withId(R.id.lyricsPresenter))
+            .check(ViewAssertions.matches(
+                ViewMatchers.withText("I hear the drums...")))
     }
 }
