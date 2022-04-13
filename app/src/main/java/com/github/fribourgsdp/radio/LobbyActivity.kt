@@ -19,7 +19,7 @@ const val GAME_KEY = "com.github.fribourgsdp.radio.GAME"
 const val MAP_ID_NAME_KEY = "com.github.fribourgsdp.radio.MAP_ID_NAME"
 const val PERMISSION_REQ_ID_RECORD_AUDIO = 22
 
-open class LobbyActivity : AppCompatActivity() {
+open class LobbyActivity : AppCompatActivity(), User.Loader {
 
     private val db = this.initDatabase()
 
@@ -123,9 +123,9 @@ open class LobbyActivity : AppCompatActivity() {
     }
 
     private fun initVariables() {
-        host = intent.getStringExtra(GAME_HOST_KEY)?.let {
-            Json.decodeFromString(it) as User
-        }
+        isHost = intent.getBooleanExtra(GAME_IS_HOST_KEY, false)
+
+        host = if (isHost) loadUser() else null
 
         playlist = intent.getStringExtra(GAME_PLAYLIST_KEY)?.let {
             Json.decodeFromString(it) as Playlist
@@ -143,7 +143,6 @@ open class LobbyActivity : AppCompatActivity() {
         nbRounds        = intent.getIntExtra(GAME_NB_ROUNDS_KEY, getString(R.string.default_game_nb_rounds).toInt())
         withHint        = intent.getBooleanExtra(GAME_HINT_KEY, false)
         isPrivate       = intent.getBooleanExtra(GAME_PRIVACY_KEY, false)
-        isHost          = intent.getBooleanExtra(GAME_IS_HOST_KEY, false)
 
         hasVoiceIdPermissions = (ContextCompat.checkSelfPermission(this, Manifest.permission.RECORD_AUDIO) == PackageManager.PERMISSION_GRANTED)
         gameLobbyId = intent.getLongExtra(GAME_UID_KEY, -1L)
@@ -284,5 +283,9 @@ open class LobbyActivity : AppCompatActivity() {
                 }
             }
         }
+    }
+
+    override fun loadUser(): User {
+        return User.load(this)
     }
 }
