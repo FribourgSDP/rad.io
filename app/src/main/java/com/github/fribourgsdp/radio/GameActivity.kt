@@ -155,15 +155,12 @@ open class GameActivity : AppCompatActivity(), GameView, User.Loader {
 
     open protected fun initVoiceChat(gameUid: Long) {
 
-        val map = mapIdToName.mapKeys { it.hashCode().absoluteValue } + Pair(3, "Jean-Marie Le Pen")+Pair(4, "Tom Dumoulin")
-        voiceChannel = VoiceIpEngineDecorator(this, MyIRtcEngineEventHandler(this, map))
+        val map = mapIdToName.mapKeys { it.hashCode().absoluteValue }
+        if (!this::voiceChannel.isInitialized) voiceChannel = VoiceIpEngineDecorator(this, MyIRtcEngineEventHandler(this, map))
         val userId = user.name.hashCode().absoluteValue
-        Log.d("TEST VOICE","user id is : ${userId}")
         voiceChannel.setAudioProfile(Constants.AUDIO_PROFILE_MUSIC_STANDARD, Constants.AUDIO_SCENARIO_CHATROOM_ENTERTAINMENT);
         voiceChannel.enableAudioVolumeIndication(200,3,true)
-        val a = voiceChannel.joinChannel(voiceChannel.getToken(userId, gameUid.toString()), gameUid.toString(), "", userId)
-        Log.d("Game uid is: ", gameUid.toString())
-        Log.d("TEST VOICE","result voice join : ${a}")
+        voiceChannel.joinChannel(voiceChannel.getToken(userId, gameUid.toString()), gameUid.toString(), "", userId)
     }
 
     override fun loadUser(): User {
