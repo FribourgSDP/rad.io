@@ -120,20 +120,20 @@ data class User (var name: String, val color: Int) {
 
     /**
      * Adds a single playlist to the user's set of playlists
-     *
+     * If the set already contains a playlist with the same name, it is replaced.
      * @param playlist the playlist to add
      */
     fun addPlaylist(playlist: Playlist){
-        playlists.add(playlist)
+        SetUtility.addToSet(playlists, playlist)
     }
 
     /**
      * Adds multiple playlists to the user's set of playlists
-     *
+     * If the user playlists already contains a playlist with the same name as one in the given set, it is replaced.
      * @param addedPlaylists the set of playlists to add
      */
     fun addPlaylists(addedPlaylists: Set<Playlist>){
-        playlists.addAll(addedPlaylists)
+        SetUtility.addAllToSet(playlists, addedPlaylists)
     }
 
     /**
