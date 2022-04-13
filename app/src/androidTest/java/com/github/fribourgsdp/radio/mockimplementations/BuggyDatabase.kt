@@ -87,4 +87,12 @@ class BuggyDatabase : Database {
     override fun resetGameMetadata(gameID: Long, singer: String): Task<Void> {
         TODO("Not yet implemented")
     }
+
+    override fun addPointsToPlayer(gameID: Long, playerID: String, points: Int): Task<Void> {
+        TODO("Not yet implemented")
+    }
+
+    override fun getPositionInGame(gameID: Long, userId: String): Task<Int> {
+        TODO("Not yet implemented")
+    }
 }
