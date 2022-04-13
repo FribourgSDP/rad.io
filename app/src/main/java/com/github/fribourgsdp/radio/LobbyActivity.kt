@@ -33,6 +33,7 @@ open class LobbyActivity : AppCompatActivity() {
     private var isPrivate: Boolean = false
     private var isHost: Boolean = false
     private var hasVoiceIdPermissions : Boolean = false
+    private var gameLobbyId: Long = -1L
 
     private lateinit var uuidTextView     : TextView
     private lateinit var hostNameTextView : TextView
@@ -109,10 +110,9 @@ open class LobbyActivity : AppCompatActivity() {
     }
 
     private fun initLobbyAsPlayer() {
-        val uid = intent.getLongExtra(GAME_UID_KEY, -1)
-        if (uid >= 0) {
-            uuidTextView.text = getString(R.string.uid_text_format, uid)
-            linkToDatabase(uid)
+        if (gameLobbyId >= 0) {
+            uuidTextView.text = getString(R.string.uid_text_format, gameLobbyId)
+            linkToDatabase(gameLobbyId)
         } else {
             uuidTextView.text = getString(R.string.uid_error_join)
         }
@@ -146,6 +146,7 @@ open class LobbyActivity : AppCompatActivity() {
         isHost          = intent.getBooleanExtra(GAME_IS_HOST_KEY, false)
 
         hasVoiceIdPermissions = (ContextCompat.checkSelfPermission(this, Manifest.permission.RECORD_AUDIO) == PackageManager.PERMISSION_GRANTED)
+        gameLobbyId = intent.getLongExtra(GAME_UID_KEY, -1L)
     }
 
     private fun initTextViews() {
@@ -200,7 +201,7 @@ open class LobbyActivity : AppCompatActivity() {
                     .setPrivacy(isPrivate)
 
                 db.openLobby(uid, gameBuilder.getSettings()).addOnSuccessListener {
-                    db.addUserToLobby(uid, host!!).addOnSuccessListener {
+                    db.addUserToLobby(uid, host!!, (ContextCompat.checkSelfPermission(this, Manifest.permission.RECORD_AUDIO) == PackageManager.PERMISSION_GRANTED)).addOnSuccessListener {
                         listenToUpdates(uid)
                     }.addOnFailureListener {
                         uuidTextView.text = getString(R.string.uid_error)
@@ -229,7 +230,11 @@ open class LobbyActivity : AppCompatActivity() {
 
                 val isGameLaunched = snapshot.getBoolean("launched")
 
-                if (!isHost && isGameLaunched != null && isGameLaunched && hasVoiceIdPermissions) {
+                val mapIdToPermissions = snapshot.get("permissions")!! as HashMap<String, Boolean>
+                val atLeastOnePermissionMissing = mapIdToPermissions.containsValue(false)
+                launchGameButton.isEnabled = !atLeastOnePermissionMissing
+
+                if (!isHost && isGameLaunched != null && isGameLaunched) {
                     goToGameActivity(false, gameID = uid)
                 }
 
@@ -275,6 +280,7 @@ open class LobbyActivity : AppCompatActivity() {
                     hasVoiceIdPermissions = true
                     launchGameButton.isEnabled = true
                     askForPermissionsButton.visibility = View.INVISIBLE
+                    db.modifyUserMicPermissions(gameLobbyId, host!!, true)
                 }
             }
         }
