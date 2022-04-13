@@ -250,7 +250,7 @@ open class LobbyActivity : AppCompatActivity() {
         } as HashMap<String, String>
     }
 
-    open protected fun goToGameActivity(isHost: Boolean, game: Game? = null, gameID: Long) {
+    protected open fun goToGameActivity(isHost: Boolean, game: Game? = null, gameID: Long) {
         val intent: Intent = Intent(this, GameActivity::class.java).apply {
             putExtra(GAME_IS_HOST_KEY, isHost)
             putExtra(MAP_ID_NAME_KEY, mapIdToName)
@@ -259,9 +259,21 @@ open class LobbyActivity : AppCompatActivity() {
 
         if (isHost && game != null) {
             intent.putExtra(GAME_KEY, Json.encodeToString(game))
+            loadLyrics(game.playlist)
         }
 
         startActivity(intent)
+    }
+
+    private fun loadLyrics(playlist : Playlist){
+        if (host!!.getPlaylists().contains(playlist)){
+            for (song in playlist.getSongs()){
+                LyricsGetter.getLyrics(song.name, song.artist).thenAccept{ f ->
+                    val songWithLyrics = Song(song.name, song.artist, song.lyrics)
+                    host!!.updateSongInPlaylist(playlist, songWithLyrics)
+                }
+            }
+        }
     }
 
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
