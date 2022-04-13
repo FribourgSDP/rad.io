@@ -129,7 +129,7 @@ class PlayerGameHandlerTest {
     fun displaySongOnGoodGuess() {
         val view = FakeGameView("Not Singer")
         val db = mock(Database::class.java)
-        `when`(db.setPlayerDone(anyLong(), anyString()))
+        `when`(db.setPlayerDone(anyLong(), anyString(), anyBoolean()))
             .thenReturn(Tasks.forResult(null))
 
         `when`(mockSnapshot.getString("current_song")).thenReturn(song)
@@ -154,7 +154,7 @@ class PlayerGameHandlerTest {
     fun displayErrorOnBadGuess() {
         val view = FakeGameView("Not Singer")
         val db = mock(Database::class.java)
-        `when`(db.setPlayerDone(anyLong(), anyString()))
+        `when`(db.setPlayerDone(anyLong(), anyString(), anyBoolean()))
             .thenReturn(Tasks.forResult(null))
 
         `when`(mockSnapshot.getString("current_song")).thenReturn(song)
