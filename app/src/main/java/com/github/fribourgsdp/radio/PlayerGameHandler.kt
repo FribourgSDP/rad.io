@@ -49,19 +49,39 @@ class PlayerGameHandler(
     }
 
     fun handleGuess(guess: String, userId: String) {
-        // TODO: In a later update, use a point system
-        if (songToGuess != null && songToGuess!!.lowercase() == guess.lowercase()) {
-            view.displaySong(guess)
+        if (songToGuess == null) {
+            return
+        }
+
+        val nbErrors = StringComparisons.compare(songToGuess!!, guess)
+
+        if (nbErrors == NOT_THE_SAME) {
+            view.displayError("Wrong answer")
+        } else if (nbErrors != 0) {
+            view.displayError("You're close!")
+        } else {
+            view.displaySong("You guessed $guess")
 
             // Hide the error if a wrong guess was made
             view.hideError()
 
-            db.setPlayerDone(gameID, userId).addOnFailureListener {
-                view.displayError("An error occurred")
-            }
+            db.setPlayerDone(gameID, userId)
+                .addOnSuccessListener {
 
-        } else if (songToGuess != null) {
-            view.displayError("Wrong answer")
+                    db.getPositionInGame(gameID, userId)
+                        .addOnSuccessListener { position ->
+
+                            db.addPointsToPlayer(gameID, userId, Game.computeScore(position)).addOnFailureListener {
+                                view.displayError("An error occurred")
+                            }
+
+                        }.addOnFailureListener {
+                            view.displayError("An error occurred")
+                        }
+
+                }.addOnFailureListener {
+                    view.displayError("An error occurred")
+                }
         }
     }
 
