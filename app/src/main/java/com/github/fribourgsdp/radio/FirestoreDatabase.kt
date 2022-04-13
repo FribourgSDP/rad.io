@@ -234,7 +234,8 @@ class FirestoreDatabase : Database {
             .set(
                 hashMapOf(
                     "player_done_map" to usersIds.associateWith { true },
-                    "player_found_map" to usersIds.associateWith { false }
+                    "player_found_map" to usersIds.associateWith { false },
+                    "scores_of_round" to usersIds.associateWith { 0 }
                 )
             )
     }
@@ -291,7 +292,7 @@ class FirestoreDatabase : Database {
     }
 
     override fun addPointsToPlayer(gameID: Long, playerID: String, points: Int): Task<Void> {
-        val docRef = db.collection("games").document(gameID.toString())
+        val docRef = db.collection("games_metadata").document(gameID.toString())
 
         return db.runTransaction { transaction ->
             val snapshot = transaction.get(docRef)
@@ -300,17 +301,10 @@ class FirestoreDatabase : Database {
                 throw IllegalArgumentException("Document $gameID in games not found.")
             }
 
-            val updatedMap = snapshot.get("scores")!! as HashMap<String, Int>
-            updatedMap.compute(playerID) { _, oldValue ->
-                if (oldValue == null) {
-                    // player not already in map
-                    points
-                } else {
-                    oldValue + points
-                }
-            }
+            val updatedMap = snapshot.get("scores_of_round")!! as HashMap<String, Int>
+            updatedMap[playerID] = points
 
-            transaction.update(docRef, "scores", updatedMap)
+            transaction.update(docRef, "scores_of_round", updatedMap)
 
             // Success
             null
@@ -352,6 +346,10 @@ class FirestoreDatabase : Database {
             // reset found map
             val updatedFoundMap = snapshot.get("player_found_map")!! as HashMap<String, Boolean>
             updatedFoundMap.replaceAll { _, _ -> false}
+
+            // reset scores of round
+            val scoresOfRound = snapshot.get("scores_of_round")!! as HashMap<String, Int>
+            scoresOfRound.replaceAll { _, _ -> 0}
 
             // Update on database
             transaction.update(
