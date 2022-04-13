@@ -75,6 +75,7 @@ open class LobbyActivity : AppCompatActivity(), User.Loader {
 
     private fun initLobbyAsHost() {
         db.getLobbyId().addOnSuccessListener { uid ->
+            gameLobbyId = uid
             uuidTextView.text = getString(R.string.uid_text_format, uid)
             linkToDatabase(uid)
 
@@ -168,6 +169,7 @@ open class LobbyActivity : AppCompatActivity(), User.Loader {
             layoutAdapter?.setUsers(arrayOf(user.name))
             val hostMicPermissionsImg = if (hasVoiceIdPermissions) MIC_PERMISSIONS_ENABLED_DRAWABLE else NO_MIC_PERMISSIONS_DRAWABLE
             layoutAdapter?.setImages(intArrayOf(hostMicPermissionsImg))
+            layoutAdapter?.notifyDataSetChanged()
         }
     }
 
@@ -269,6 +271,7 @@ open class LobbyActivity : AppCompatActivity(), User.Loader {
         }
         layoutAdapter?.setUsers(users.toTypedArray())
         layoutAdapter?.setImages(micPermissions.toIntArray())
+        layoutAdapter?.notifyDataSetChanged()
         gameBuilder.setUserIdList(playersList.map { u -> u["id"]!! })
         mapIdToName = playersList.associate {
             it["id"]!! to it["name"]!!
@@ -301,7 +304,9 @@ open class LobbyActivity : AppCompatActivity(), User.Loader {
                     hasVoiceIdPermissions = true
                     launchGameButton.isEnabled = true
                     askForPermissionsButton.visibility = View.INVISIBLE
-                    db.modifyUserMicPermissions(gameLobbyId, user, true)
+                    db.modifyUserMicPermissions(gameLobbyId, user, true).addOnFailureListener {
+                        Log.e("FROMAGE", it.message!!)
+                    }
                 }
             }
         }
