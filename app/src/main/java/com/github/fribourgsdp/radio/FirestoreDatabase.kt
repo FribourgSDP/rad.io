@@ -324,7 +324,7 @@ class FirestoreDatabase : Database {
         }
     }
 
-    override fun resetPlayerDoneMap(gameID: Long, singer: String): Task<Void> {
+    override fun resetGameMetadata(gameID: Long, singer: String): Task<Void> {
         val docRef = db.collection("games_metadata").document(gameID.toString())
 
         return db.runTransaction { transaction ->

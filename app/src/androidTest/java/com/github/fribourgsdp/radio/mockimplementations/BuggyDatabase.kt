@@ -84,7 +84,7 @@ class BuggyDatabase : Database {
         TODO("Not yet implemented")
     }
 
-    override fun resetPlayerDoneMap(gameID: Long, singer: String): Task<Void> {
+    override fun resetGameMetadata(gameID: Long, singer: String): Task<Void> {
         TODO("Not yet implemented")
     }
 }

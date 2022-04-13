@@ -50,7 +50,7 @@ class HostGameHandlerTest {
         val db = mock(Database::class.java)
         `when`(db.updateGame(anyLong(), anyMap()))
             .thenReturn(Tasks.forResult(null))
-        `when`(db.resetPlayerDoneMap(anyLong(), anyString()))
+        `when`(db.resetGameMetadata(anyLong(), anyString()))
             .thenReturn(Tasks.forException(Exception()))
 
         val handler = HostGameHandler(fakeGame, view, db)

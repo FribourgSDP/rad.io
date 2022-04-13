@@ -127,10 +127,10 @@ interface Database {
     fun setPlayerDone(gameID: Long, playerID: String): Task<Void>
 
     /**
-     * Reset the map where players are done or not to false for everyone but the singer.
-     * @return a task void so that we know if the map was correctly reset.
+     * Reset the game metadata on the [Database].
+     * @return a task void so that we know if the game metadata was correctly reset on the [Database].
      */
-    fun resetPlayerDoneMap(gameID: Long, singer: String): Task<Void>
+    fun resetGameMetadata(gameID: Long, singer: String): Task<Void>
 
     /**
      * Add [points] to the user [playerID] in the game [gameID].
