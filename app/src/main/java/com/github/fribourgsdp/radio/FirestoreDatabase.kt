@@ -155,7 +155,7 @@ class FirestoreDatabase : Database {
             "nbRounds" to settings.nbRounds,
             "withHint" to settings.withHint,
             "private" to settings.isPrivate,
-            "players" to arrayListOf<String>(),
+            "players" to hashMapOf<String, String>(),
             "launched" to false
         )
 
@@ -201,21 +201,19 @@ class FirestoreDatabase : Database {
                 throw IllegalArgumentException("Document $id not found.")
             }
 
-            val list = snapshot.get("players")!! as ArrayList<HashMap<String, String>>
-            list.add(idAndName(user))
+            val mapIdToName = snapshot.get("players")!! as HashMap<String, String>
+            if (mapIdToName.containsKey(user.id)) {
+                // A user with the same id was already added
+                throw IllegalArgumentException("id: ${user.id} is already in the database")
+            }
 
-            transaction.update(docRef, "players", list)
+            mapIdToName[user.id] = user.name
+
+            transaction.update(docRef, "players", mapIdToName)
 
             // Success
             null
         }
-    }
-
-    private fun idAndName(user: User): HashMap<String, String> {
-        return hashMapOf(
-            "id" to user.id,
-            "name" to user.name
-        )
     }
 
     override fun openGame(id: Long): Task<Void> {

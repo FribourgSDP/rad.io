@@ -3,10 +3,8 @@ package com.github.fribourgsdp.radio
 import android.Manifest
 import android.content.Intent
 import android.content.pm.PackageManager
-import android.opengl.Visibility
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import android.widget.*
 import androidx.core.app.ActivityCompat
@@ -224,8 +222,8 @@ open class LobbyActivity : AppCompatActivity() {
             }
 
             if (snapshot != null && snapshot.exists()) {
-                val newList = snapshot.get("players")!! as ArrayList<HashMap<String, String>>
-                updatePlayersList(newList)
+                val newMap = snapshot.get("players")!! as HashMap<String, String>
+                updateLobbyWithPlayers(newMap)
 
                 val isGameLaunched = snapshot.getBoolean("launched")
 
@@ -240,14 +238,12 @@ open class LobbyActivity : AppCompatActivity() {
         }
     }
 
-    private fun updatePlayersList(playersList: List<Map<String, String>>) {
+    private fun updateLobbyWithPlayers(playersMap: Map<String, String>) {
         namesAdapter.clear()
-        namesAdapter.addAll(playersList.map {u -> u["name"] })
+        namesAdapter.addAll(playersMap.values)
         namesAdapter.notifyDataSetChanged()
-        gameBuilder.setUserIdList(playersList.map { u -> u["id"]!! })
-        mapIdToName = playersList.associate {
-            it["id"]!! to it["name"]!!
-        } as HashMap<String, String>
+        gameBuilder.setUserIdList(playersMap.keys)
+        mapIdToName = HashMap(playersMap)
     }
 
     private fun goToGameActivity(isHost: Boolean, game: Game? = null, gameID: Long) {
