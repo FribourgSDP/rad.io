@@ -62,6 +62,13 @@ class Game private constructor(val id: Long, val name: String, val host: User, v
     }
 
     /**
+     * Add the given number of points to each user in [pointsMap].
+     */
+    fun addPoints(pointsMap: Map<String, Int>) {
+        pointsMap.forEach(this::addPoints)
+    }
+
+    /**
      * Return the id of the user that is playing next.
      * @return the id of the user that is playing next.
      */

@@ -90,13 +90,17 @@ class GameTest {
     }
 
     @Test
-    fun getAllScoreWorksCorrectly() {
+    fun pointsUpdateCorrectlyWithMapFunctions() {
         val game = gameBuilder.build()
 
         assertTrue(game.getAllScores().all { (_, value) -> value == 0 })
 
-        game.addPoints(host.id, 10)
-        game.addPoints(otherId, 100)
+        game.addPoints(
+            hashMapOf(
+                host.id to 10,
+                otherId to 100
+            )
+        )
 
         val scores = game.getAllScores()
 
