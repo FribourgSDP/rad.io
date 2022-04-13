@@ -137,4 +137,10 @@ interface Database {
      * @return a task void so that we know if the [points] were correctly added.
      */
     fun addPointsToPlayer(gameID: Long, playerID: String, points: Int): Task<Void>
+
+    /**
+     * Get the [position][Int] of the user with id [userId] in the game with id [gameID].
+     * @return a task getting the [position][Int] of the user.
+     */
+    fun getPositionInGame(gameID: Long, userId: String): Task<Int>
 }

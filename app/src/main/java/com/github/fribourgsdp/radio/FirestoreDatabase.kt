@@ -233,7 +233,8 @@ class FirestoreDatabase : Database {
         return db.collection("games_metadata").document(id.toString())
             .set(
                 hashMapOf(
-                    "player_done_map" to usersIds.associateWith { true }
+                    "player_done_map" to usersIds.associateWith { true },
+                    "player_found_map" to usersIds.associateWith { false }
                 )
             )
     }
@@ -302,6 +303,24 @@ class FirestoreDatabase : Database {
 
             // Success
             null
+        }
+    }
+
+    override fun getPositionInGame(gameID: Long, userId: String): Task<Int> {
+        val docRef = db.collection("games_metadata").document(gameID.toString())
+
+        return db.runTransaction { transaction ->
+            val snapshot = transaction.get(docRef)
+
+            if (!snapshot.exists()) {
+                throw IllegalArgumentException("Document $gameID in games_metadata not found.")
+            }
+
+            val playerFoundMap = snapshot.get("player_done_map")!! as HashMap<String, Boolean>
+
+            // Count the number of players that found the answer
+            // We then add one since positions starts at one
+            playerFoundMap.count { (_, hasFound) -> hasFound } + 1
         }
     }
 
