@@ -5,6 +5,7 @@ import kotlin.collections.ArrayList
 import kotlin.collections.HashMap
 import kotlin.collections.HashSet
 import kotlinx.serialization.Serializable
+import kotlin.math.min
 
 /**
  * An instance of a game.
@@ -239,4 +240,29 @@ class Game private constructor(val id: Long, val name: String, val host: User, v
         val withHint: Boolean,
         val isPrivate: Boolean
     )
+
+    companion object {
+
+        /**
+         * Compute the score of a player based on his [position].
+         *
+         * The computation goes as follows:
+         *
+         * The first player gets 100 points, the second one gets 85, the third one gets 70 and then 5 points are subtracted per place.
+         * The minimum amount you can get when you guessed right is 10 points.
+         *
+         * @return the score of the player
+         */
+        fun computeScore(position: Int): Int {
+            return when (position) {
+                1 -> 100
+                2 -> 85
+                3 -> 70
+                else -> {
+                    min(70 - 5 * (position - 3), 10)
+                }
+            }
+        }
+
+    }
 }
