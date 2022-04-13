@@ -13,9 +13,12 @@ class HostGameHandler(private val game: Game, private val view: GameView, db: Da
             val allDone = !doneMap.containsValue(false)
 
             if (allDone) {
-                val updatesMap = createUpdatesMap()
+                // when everybody is done, add the points
+                val scoresOfRound = snapshot.get("scores_of_round")!! as HashMap<String, Int>
+                game.addPoints(scoresOfRound)
 
-                // When everybody is done, change update the game
+                // update the game
+                val updatesMap = createUpdatesMap()
                 db.updateGame(game.id, updatesMap).addOnSuccessListener {
                     db.resetGameMetadata(
                         game.id,
