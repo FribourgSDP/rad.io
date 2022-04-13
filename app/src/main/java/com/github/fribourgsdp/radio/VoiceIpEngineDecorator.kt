@@ -3,13 +3,9 @@ package com.github.fribourgsdp.radio
 import RtcTokenBuilder.RtcTokenBuilder
 import android.content.Context
 import android.util.Log
-import android.widget.Button
 import android.widget.ImageButton
-import android.widget.Toast
-import androidx.appcompat.app.AppCompatActivity
 import io.agora.rtc.IRtcEngineEventHandler
 import io.agora.rtc.RtcEngine
-import io.agora.rtc.models.ChannelMediaOptions
 import java.lang.Exception
 
 const val APP_ID = "971046257e964b73bafc7f9458fa9996"
@@ -19,16 +15,15 @@ const val EXPIRATION_TIME = 10800
 class VoiceIpEngineDecorator : java.io.Serializable {
     private var voiceChatEngine: RtcEngine
     private val mRtcEventHandler : IRtcEngineEventHandler
-    private var isTesting: Boolean = false
     private var isMuted: Boolean = false
     private val context : Context
 
 
 
 
-    constructor(appCompatActivity: AppCompatActivity){
-        context = appCompatActivity.applicationContext
-        mRtcEventHandler = MyIRtcEngineEventHandler(appCompatActivity)
+    constructor(context: Context, mRtcEventHandler : IRtcEngineEventHandler){
+        this.context = context
+        this.mRtcEventHandler = mRtcEventHandler
         var mRtcEngine: RtcEngine? = null
         while (mRtcEngine == null){
             try {
@@ -41,8 +36,8 @@ class VoiceIpEngineDecorator : java.io.Serializable {
     }
 
 
-    constructor(appCompatActivity: AppCompatActivity, rtcEngine: RtcEngine, mRtcEventHandler : IRtcEngineEventHandler)  {
-        context = appCompatActivity.applicationContext
+    constructor(context: Context, mRtcEventHandler : IRtcEngineEventHandler, rtcEngine: RtcEngine)  {
+        this.context = context
         this.mRtcEventHandler = mRtcEventHandler
         voiceChatEngine = rtcEngine
     }
