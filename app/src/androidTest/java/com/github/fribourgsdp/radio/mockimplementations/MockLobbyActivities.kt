@@ -27,6 +27,10 @@ class WorkingLobbyActivity : LobbyActivity() {
 
         startActivity(intent)
     }
+
+    override fun loadUser(): User {
+        return User("the best player")
+    }
 }
 
 class BuggyLobbyActivity : LobbyActivity() {
@@ -46,5 +50,9 @@ class BuggyLobbyActivity : LobbyActivity() {
         }
 
         startActivity(intent)
+    }
+
+    override fun loadUser(): User {
+        return User("the buggy player")
     }
 }
