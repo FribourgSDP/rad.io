@@ -173,6 +173,13 @@ data class User (var name: String, val color: Int) {
     }
 
     /**
+     * Finds a playlist in the user playlists
+     */
+    fun getPlaylistByName(name : String) : Playlist?{
+        return playlists.find { p -> p.name == name }
+    }
+
+    /**
      * Modifies a song in a playlist of the user
      */
     fun updateSongInPlaylist(playlist: Playlist, song: Song){

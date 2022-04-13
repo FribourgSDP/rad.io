@@ -80,6 +80,13 @@ data class Playlist (var name: String, var genre: Genre) {
         return songs.toSet()
     }
 
+    /**
+     * Finds a song in a playlist
+     */
+    fun getSongByName(name : String) : Song?{
+        return songs.find { s -> s.name == name }
+    }
+
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
         if (javaClass != other?.javaClass) return false

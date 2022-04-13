@@ -35,13 +35,11 @@ class PlaylistSongsFragment : MyFragment(R.layout.fragment_playlist_display), On
         }
     }
 
-
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        println("*****RELOADING PLAYLIST")
         val playlistTitle : TextView = requireView().findViewById(R.id.PlaylistName)
         playlistTitle.text = playlistName
-        initializeRecyclerView()
+
         //sets listeners to 2 buttons
         editButton = requireView().findViewById(R.id.editButton)
         editButton.setOnClickListener {
@@ -49,9 +47,9 @@ class PlaylistSongsFragment : MyFragment(R.layout.fragment_playlist_display), On
             intent.putExtra(PLAYLIST_TO_MODIFY, Json.encodeToString(playlist))
             startActivity(intent)
         }
-        User.loadOrDefault(requireContext()).addOnSuccessListener { l ->
-            user = l
-        }
+
+        loadPlaylist()
+
         deleteButton = requireView().findViewById(R.id.deleteButton)
         deleteButton.setOnClickListener{
             //val user = Tasks.await()
@@ -59,6 +57,17 @@ class PlaylistSongsFragment : MyFragment(R.layout.fragment_playlist_display), On
             user.removePlaylist(playlist)
             user.save(requireContext())
             activity?.onBackPressed()
+        }
+    }
+
+
+    fun loadPlaylist(){
+        User.loadOrDefault(requireContext()).addOnSuccessListener { l ->
+            println("Successful loading of user")
+            user = l
+            playlist = user.getPlaylistByName(playlistName)!!
+            songs = playlist.getSongs().toList()
+            initializeRecyclerView()
         }
     }
 
