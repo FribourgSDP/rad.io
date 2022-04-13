@@ -2,13 +2,11 @@ package com.github.fribourgsdp.radio
 
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import android.widget.Button
 import android.widget.TextView
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.google.android.gms.tasks.Tasks
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
@@ -63,7 +61,7 @@ class PlaylistSongsFragment : MyFragment(R.layout.fragment_playlist_display), On
 
     fun loadPlaylist(){
         User.loadOrDefault(requireContext()).addOnSuccessListener { l ->
-            println("Successful loading of user")
+//            println("Successful loading of user")
             user = l
             playlist = user.getPlaylistByName(playlistName)!!
             songs = playlist.getSongs().toList()

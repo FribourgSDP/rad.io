@@ -40,6 +40,7 @@ class LyricsGetter {
             client: OkHttpClient = OkHttpClient(),
             parser: JSONParser = JSONStandardParser()
         ): CompletableFuture<String> {
+            println("*******LYRICS GETTER CALL : $songName")
             val future = CompletableFuture<String>()
             val trackIDFuture = getSongID(songName, artistName, client)
             val trackID: Int
