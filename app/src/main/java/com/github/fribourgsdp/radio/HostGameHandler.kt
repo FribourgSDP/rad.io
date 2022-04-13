@@ -42,11 +42,14 @@ class HostGameHandler(private val game: Game, private val view: GameView, db: Da
             .map { song -> song.name }
             .toList()
 
+        val nextUser = game.getUserToPlay()
+
         return hashMapOf(
             "current_round" to game.currentRound,
             "current_song" to FieldValue.delete(),
-            "singer" to game.getUserToPlay(),
-            "song_choices" to nextChoices
+            "singer" to nextUser,
+            "song_choices" to nextChoices,
+            "scores" to game.getAllScores()
         )
     }
 
