@@ -10,7 +10,6 @@ import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.json.Json
 import java.util.concurrent.TimeUnit
 import java.util.concurrent.TimeoutException
-import kotlin.concurrent.fixedRateTimer
 
 class SongFragment : MyFragment(R.layout.fragment_song) {
     private lateinit var initialLyrics : String
@@ -70,7 +69,7 @@ class SongFragment : MyFragment(R.layout.fragment_song) {
         super.onDestroyView()
         if (currentLyrics != initialLyrics || doSaveLyrics) {
             val user = User.load(requireView().context)
-
+            song.lyrics = currentLyrics
             user.updateSongInPlaylist(playlist, song)
             user.save(requireView().context)
             val parentFragment = parentFragmentManager.fragments[0] as PlaylistSongsFragment
