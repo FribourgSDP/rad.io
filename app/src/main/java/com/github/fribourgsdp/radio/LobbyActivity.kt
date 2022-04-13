@@ -3,10 +3,8 @@ package com.github.fribourgsdp.radio
 import android.Manifest
 import android.content.Intent
 import android.content.pm.PackageManager
-import android.opengl.Visibility
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import android.widget.*
 import androidx.core.app.ActivityCompat
@@ -23,7 +21,7 @@ open class LobbyActivity : AppCompatActivity(), User.Loader {
 
     private val db = this.initDatabase()
 
-    private var host : User? = null
+    private lateinit var user : User
     private var hostName : String? = null
     private var gameName : String? = null
     private var playlist : Playlist? = null
@@ -123,17 +121,16 @@ open class LobbyActivity : AppCompatActivity(), User.Loader {
     }
 
     private fun initVariables() {
-        isHost = intent.getBooleanExtra(GAME_IS_HOST_KEY, false)
-
-        host = if (isHost) loadUser() else null
+        user = loadUser()
 
         playlist = intent.getStringExtra(GAME_PLAYLIST_KEY)?.let {
             Json.decodeFromString(it) as Playlist
         }
 
-        hostName = host?.name
-                // if host is null, get the name from the intent
-                ?: intent.getStringExtra(GAME_HOST_NAME_KEY)
+        isHost = intent.getBooleanExtra(GAME_IS_HOST_KEY, false)
+
+        // if user is not the host, get the name from the intent
+        hostName = if (isHost) user.name else intent.getStringExtra(GAME_HOST_NAME_KEY)
 
         playlistName = playlist?.name
                 // if playlist is null, get the name from the intent
@@ -190,8 +187,8 @@ open class LobbyActivity : AppCompatActivity(), User.Loader {
 
     private fun linkToDatabase(uid: Long) {
         if (isHost && uid >= 0) {
-            if (gameName != null && host != null && playlist != null) {
-                gameBuilder.setHost(host!!)
+            if (gameName != null && playlist != null) {
+                gameBuilder.setHost(user)
                     .setID(uid)
                     .setName(gameName!!)
                     .setPlaylist(playlist!!)
@@ -200,7 +197,7 @@ open class LobbyActivity : AppCompatActivity(), User.Loader {
                     .setPrivacy(isPrivate)
 
                 db.openLobby(uid, gameBuilder.getSettings()).addOnSuccessListener {
-                    db.addUserToLobby(uid, host!!, (ContextCompat.checkSelfPermission(this, Manifest.permission.RECORD_AUDIO) == PackageManager.PERMISSION_GRANTED)).addOnSuccessListener {
+                    db.addUserToLobby(uid, user, (ContextCompat.checkSelfPermission(this, Manifest.permission.RECORD_AUDIO) == PackageManager.PERMISSION_GRANTED)).addOnSuccessListener {
                         listenToUpdates(uid)
                     }.addOnFailureListener {
                         uuidTextView.text = getString(R.string.uid_error)
@@ -279,7 +276,7 @@ open class LobbyActivity : AppCompatActivity(), User.Loader {
                     hasVoiceIdPermissions = true
                     launchGameButton.isEnabled = true
                     askForPermissionsButton.visibility = View.INVISIBLE
-                    db.modifyUserMicPermissions(gameLobbyId, host!!, true)
+                    db.modifyUserMicPermissions(gameLobbyId, user, true)
                 }
             }
         }
