@@ -122,9 +122,10 @@ interface Database {
 
     /**
      * Set the player with id [playerID] to done in the metadata of game [gameID]
+     * It also set whether the player found the answer of not.
      * @return a task void so that we know if the player with id [playerID] was correctly set to done in the metadata of game [gameID].
      */
-    fun setPlayerDone(gameID: Long, playerID: String): Task<Void>
+    fun setPlayerDone(gameID: Long, playerID: String, hasFound: Boolean = false): Task<Void>
 
     /**
      * Reset the game metadata on the [Database].

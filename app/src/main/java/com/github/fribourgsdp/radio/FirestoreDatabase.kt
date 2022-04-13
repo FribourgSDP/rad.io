@@ -259,7 +259,7 @@ class FirestoreDatabase : Database {
             .update(updatesMap)
     }
 
-    override fun setPlayerDone(gameID: Long, playerID: String): Task<Void> {
+    override fun setPlayerDone(gameID: Long, playerID: String, hasFound: Boolean): Task<Void> {
         val docRef = db.collection("games_metadata").document(gameID.toString())
 
         return db.runTransaction { transaction ->
@@ -269,10 +269,21 @@ class FirestoreDatabase : Database {
                 throw IllegalArgumentException("Document $gameID in games not found.")
             }
 
-            val updatedMap = snapshot.get("player_done_map")!! as HashMap<String, Boolean>
-            updatedMap[playerID] = true
+            // Set the player to done
+            val updatedDoneMap = snapshot.get("player_done_map")!! as HashMap<String, Boolean>
+            updatedDoneMap[playerID] = true
 
-            transaction.update(docRef, "player_done_map", updatedMap)
+            // Set if the player has found or not
+            val updatedFoundMap = snapshot.get("player_found_map")!! as HashMap<String, Boolean>
+            updatedFoundMap[playerID] = hasFound
+
+            // Update on database
+            transaction.update(
+                docRef,
+                "player_done_map", updatedDoneMap,
+                "player_found_map", updatedFoundMap
+            )
+
 
             // Success
             null
@@ -334,10 +345,20 @@ class FirestoreDatabase : Database {
                 throw IllegalArgumentException("Document $gameID in games not found.")
             }
 
-            val updatedMap = snapshot.get("player_done_map")!! as HashMap<String, Boolean>
-            updatedMap.replaceAll {k, _ -> k == singer}
+            // reset done map
+            val updatedDoneMap = snapshot.get("player_done_map")!! as HashMap<String, Boolean>
+            updatedDoneMap.replaceAll { k, _ -> k == singer}
 
-            transaction.update(docRef, "player_done_map", updatedMap)
+            // reset found map
+            val updatedFoundMap = snapshot.get("player_found_map")!! as HashMap<String, Boolean>
+            updatedFoundMap.replaceAll { _, _ -> false}
+
+            // Update on database
+            transaction.update(
+                docRef,
+                "player_done_map", updatedDoneMap,
+                "player_found_map", updatedFoundMap
+            )
 
             // Success
             null

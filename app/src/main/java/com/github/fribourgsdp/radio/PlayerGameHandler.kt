@@ -60,12 +60,12 @@ class PlayerGameHandler(
         } else if (nbErrors != 0) {
             view.displayError("You're close!")
         } else {
-            view.displaySong("You guessed $guess")
+            view.displaySong("You correctly guessed $guess")
 
             // Hide the error if a wrong guess was made
             view.hideError()
 
-            db.setPlayerDone(gameID, userId)
+            db.setPlayerDone(gameID, userId, true)
                 .addOnSuccessListener {
 
                     db.getPositionInGame(gameID, userId)
