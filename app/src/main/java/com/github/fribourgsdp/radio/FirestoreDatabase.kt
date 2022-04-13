@@ -1,5 +1,6 @@
 package com.github.fribourgsdp.radio
 
+import android.util.Log
 import com.google.android.gms.tasks.Task
 import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.ktx.firestore
@@ -208,7 +209,7 @@ class FirestoreDatabase : Database {
             transaction.update(docRef, "players", list)
 
             val playerPermissions = snapshot.get("permissions")!! as HashMap<String, Boolean>
-            playerPermissions.put(user.id, hasMicPermissions)
+            playerPermissions[user.name] = hasMicPermissions
 
             transaction.update(docRef, "permissions", playerPermissions)
 
@@ -228,7 +229,7 @@ class FirestoreDatabase : Database {
             }
 
             val playerPermissions = snapshot.get("permissions")!! as HashMap<String, Boolean>
-            playerPermissions.put(user.id, newPermissions)
+            playerPermissions[user.name] = newPermissions
 
             transaction.update(docRef, "permissions", playerPermissions)
 

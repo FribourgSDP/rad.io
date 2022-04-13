@@ -3,12 +3,16 @@ package com.github.fribourgsdp.radio
 import android.Manifest
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.graphics.drawable.Drawable
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.widget.*
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
@@ -16,6 +20,8 @@ import kotlinx.serialization.json.Json
 const val GAME_KEY = "com.github.fribourgsdp.radio.GAME"
 const val MAP_ID_NAME_KEY = "com.github.fribourgsdp.radio.MAP_ID_NAME"
 const val PERMISSION_REQ_ID_RECORD_AUDIO = 22
+const val NO_MIC_PERMISSIONS_DRAWABLE = R.drawable.ic_action_name
+const val MIC_PERMISSIONS_ENABLED_DRAWABLE = R.drawable.ic_unmute
 
 open class LobbyActivity : AppCompatActivity(), User.Loader {
 
@@ -44,8 +50,8 @@ open class LobbyActivity : AppCompatActivity(), User.Loader {
     private lateinit var launchGameButton: Button
     private lateinit var askForPermissionsButton: Button
 
-    private lateinit var playersListView : ListView
-    private lateinit var namesAdapter : ArrayAdapter<String>
+    private var layoutManager:RecyclerView.LayoutManager? = null
+    private var layoutAdapter:RecyclerLobbyAdapter? = null
 
     protected lateinit var mapIdToName: HashMap<String, String>
 
@@ -65,7 +71,6 @@ open class LobbyActivity : AppCompatActivity(), User.Loader {
         } else {
             initLobbyAsPlayer()
         }
-
     }
 
     private fun initLobbyAsHost() {
@@ -154,9 +159,16 @@ open class LobbyActivity : AppCompatActivity(), User.Loader {
         withHintTextView = findViewById(R.id.withHintText)
         privateTextView  = findViewById(R.id.privateText)
         privateTextView  = findViewById(R.id.privateText)
-        playersListView = findViewById(R.id.playersListView)
-        namesAdapter = ArrayAdapter(this, android.R.layout.simple_list_item_1)
-        playersListView.adapter = namesAdapter
+        layoutManager = LinearLayoutManager(this)
+        val recyclerView = findViewById<RecyclerView>(R.id.lobbyRecyclerView)
+        recyclerView.layoutManager = layoutManager
+        layoutAdapter = RecyclerLobbyAdapter()
+        recyclerView.adapter = layoutAdapter
+        if (isHost) {
+            layoutAdapter?.setUsers(arrayOf(user.name))
+            val hostMicPermissionsImg = if (hasVoiceIdPermissions) MIC_PERMISSIONS_ENABLED_DRAWABLE else NO_MIC_PERMISSIONS_DRAWABLE
+            layoutAdapter?.setImages(intArrayOf(hostMicPermissionsImg))
+        }
     }
 
     private fun initButtons() {
@@ -222,13 +234,15 @@ open class LobbyActivity : AppCompatActivity(), User.Loader {
 
             if (snapshot != null && snapshot.exists()) {
                 val newList = snapshot.get("players")!! as ArrayList<HashMap<String, String>>
-                updatePlayersList(newList)
 
                 val isGameLaunched = snapshot.getBoolean("launched")
 
-                val mapIdToPermissions = snapshot.get("permissions")!! as HashMap<String, Boolean>
-                val atLeastOnePermissionMissing = mapIdToPermissions.containsValue(false)
+                val mapNameToPermissions = snapshot.get("permissions")!! as HashMap<String, Boolean>
+                val atLeastOnePermissionMissing = mapNameToPermissions.containsValue(false)
                 launchGameButton.isEnabled = !atLeastOnePermissionMissing
+
+                updatePlayersList(mapNameToPermissions, newList)
+
 
                 if (!isHost && isGameLaunched != null && isGameLaunched) {
                     goToGameActivity(false, gameID = uid)
@@ -241,15 +255,26 @@ open class LobbyActivity : AppCompatActivity(), User.Loader {
         }
     }
 
-    private fun updatePlayersList(playersList: List<Map<String, String>>) {
-        namesAdapter.clear()
-        namesAdapter.addAll(playersList.map {u -> u["name"] })
-        namesAdapter.notifyDataSetChanged()
+    private fun updatePlayersList(nameToPermissions: Map<String, Boolean>, playersList: List<Map<String, String>>) {
+        val users = playersList.map { u -> u["name"]!! }
+        Log.d("USERS", users.toString())
+        val micPermissions = arrayListOf<Int>()
+        for (user in users) {
+            if (nameToPermissions[user]!!) {
+                micPermissions.add(MIC_PERMISSIONS_ENABLED_DRAWABLE)
+            }
+            else {
+                micPermissions.add(NO_MIC_PERMISSIONS_DRAWABLE)
+            }
+        }
+        layoutAdapter?.setUsers(users.toTypedArray())
+        layoutAdapter?.setImages(micPermissions.toIntArray())
         gameBuilder.setUserIdList(playersList.map { u -> u["id"]!! })
         mapIdToName = playersList.associate {
             it["id"]!! to it["name"]!!
         } as HashMap<String, String>
     }
+
 
     open protected fun goToGameActivity(isHost: Boolean, game: Game? = null, gameID: Long) {
         val intent: Intent = Intent(this, GameActivity::class.java).apply {
