@@ -132,4 +132,9 @@ interface Database {
      */
     fun resetPlayerDoneMap(gameID: Long, singer: String): Task<Void>
 
+    /**
+     * Add [points] to the user [playerID] in the game [gameID].
+     * @return a task void so that we know if the [points] were correctly added.
+     */
+    fun addPointsToPlayer(gameID: Long, playerID: String, points: Int): Task<Void>
 }

@@ -223,7 +223,8 @@ class FirestoreDatabase : Database {
                     "current_round" to 0L,
                     "current_song" to "",
                     "singer" to "",
-                    "song_choices" to ArrayList<String>()
+                    "song_choices" to ArrayList<String>(),
+                    "scores" to HashMap<String, Int>()
                 )
             )
     }
@@ -271,6 +272,33 @@ class FirestoreDatabase : Database {
             updatedMap[playerID] = true
 
             transaction.update(docRef, "player_done_map", updatedMap)
+
+            // Success
+            null
+        }
+    }
+
+    override fun addPointsToPlayer(gameID: Long, playerID: String, points: Int): Task<Void> {
+        val docRef = db.collection("games").document(gameID.toString())
+
+        return db.runTransaction { transaction ->
+            val snapshot = transaction.get(docRef)
+
+            if (!snapshot.exists()) {
+                throw IllegalArgumentException("Document $gameID in games not found.")
+            }
+
+            val updatedMap = snapshot.get("scores")!! as HashMap<String, Int>
+            updatedMap.compute(playerID) { _, oldValue ->
+                if (oldValue == null) {
+                    // player not already in map
+                    points
+                } else {
+                    oldValue + points
+                }
+            }
+
+            transaction.update(docRef, "scores", updatedMap)
 
             // Success
             null
