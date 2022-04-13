@@ -90,6 +90,21 @@ class GameTest {
     }
 
     @Test
+    fun getAllScoreWorksCorrectly() {
+        val game = gameBuilder.build()
+
+        assertTrue(game.getAllScores().all { (_, value) -> value == 0 })
+
+        game.addPoints(host.id, 10)
+        game.addPoints(otherId, 100)
+
+        val scores = game.getAllScores()
+
+        assertEquals(10, scores[host.id])
+        assertEquals(100, scores[otherId])
+    }
+
+    @Test
     fun playerRotationWorks() {
         val game = gameBuilder.build()
 

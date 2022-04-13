@@ -41,6 +41,14 @@ class Game private constructor(val id: Long, val name: String, val host: User, v
     }
 
     /**
+     * Return the scores of all users.
+     * @return the scores of all users.
+     */
+    fun getAllScores(): Map<String, Int> {
+        return HashMap(scoreMap)
+    }
+
+    /**
      * Add the given number of [points] to the given user with id: [userId].
      */
     fun addPoints(userId: String, points: Int) {
