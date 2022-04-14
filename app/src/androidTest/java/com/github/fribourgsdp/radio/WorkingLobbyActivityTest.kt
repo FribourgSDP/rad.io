@@ -1,8 +1,10 @@
 package com.github.fribourgsdp.radio
 
+import android.Manifest
 import android.content.Context
 import android.content.Intent
 import android.os.Build
+import androidx.test.InstrumentationRegistry.getTargetContext
 import androidx.test.core.app.ActivityScenario
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.espresso.Espresso
@@ -161,6 +163,9 @@ class WorkingLobbyActivityTest {
             putExtra(GAME_PRIVACY_KEY, private)
             putExtra(GAME_IS_HOST_KEY, false)
         }
+
+        revokePermissions()
+
         ActivityScenario.launch<LobbyActivity>(testIntent)
         val micButton = Espresso.onView(withId(R.id.micPermissionsButton))
         micButton.perform(ViewActions.click())
@@ -179,6 +184,16 @@ class WorkingLobbyActivityTest {
             if (allowPermission.exists()) {
                 allowPermission.click()
             }
+        }
+    }
+
+    private fun revokePermissions() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            val permission = Manifest.permission.RECORD_AUDIO
+                getInstrumentation().uiAutomation.executeShellCommand(
+                    "pm revoke " + ApplicationProvider.getApplicationContext<Context?>().packageName
+                        .toString() + " " + permission
+                )
         }
     }
 }
