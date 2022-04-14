@@ -12,6 +12,7 @@ import io.agora.rtc.Constants
 import io.agora.rtc.RtcEngine
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.json.Json
+import kotlin.math.absoluteValue
 import kotlin.random.Random
 
 
@@ -153,12 +154,13 @@ open class GameActivity : AppCompatActivity(), GameView, User.Loader {
     }
 
     open protected fun initVoiceChat(gameUid: Long) {
-        voiceChannel = VoiceIpEngineDecorator(this, MyIRtcEngineEventHandler(this))
-        val userId = Random.nextInt(100000000)
+
+        val map = mapIdToName.mapKeys { it.hashCode().absoluteValue }
+        if (!this::voiceChannel.isInitialized) voiceChannel = VoiceIpEngineDecorator(this, MyIRtcEngineEventHandler(this, map))
+        val userId = user.name.hashCode().absoluteValue
         voiceChannel.setAudioProfile(Constants.AUDIO_PROFILE_MUSIC_STANDARD, Constants.AUDIO_SCENARIO_CHATROOM_ENTERTAINMENT);
-        voiceChannel.enableAudioVolumeIndication(500,3,true)
+        voiceChannel.enableAudioVolumeIndication(200,3,true)
         voiceChannel.joinChannel(voiceChannel.getToken(userId, gameUid.toString()), gameUid.toString(), "", userId)
-        Log.d("Game uid is: ", gameUid.toString())
     }
 
     override fun loadUser(): User {
