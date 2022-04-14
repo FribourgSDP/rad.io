@@ -1,9 +1,7 @@
 package com.github.fribourgsdp.radio
 
-import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Log
 import android.view.KeyEvent
 import android.view.View
 import android.view.inputmethod.EditorInfo
@@ -158,7 +156,6 @@ open class GameActivity : AppCompatActivity(), GameView, User.Loader {
         voiceChannel.setAudioProfile(Constants.AUDIO_PROFILE_MUSIC_STANDARD, Constants.AUDIO_SCENARIO_CHATROOM_ENTERTAINMENT);
         voiceChannel.enableAudioVolumeIndication(500,3,true)
         voiceChannel.joinChannel(voiceChannel.getToken(userId, gameUid.toString()), gameUid.toString(), "", userId)
-        Log.d("Game uid is: ", gameUid.toString())
     }
 
     override fun loadUser(): User {

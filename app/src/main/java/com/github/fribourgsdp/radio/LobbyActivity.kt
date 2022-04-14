@@ -259,7 +259,6 @@ open class LobbyActivity : AppCompatActivity(), User.Loader {
 
     private fun updatePlayersList(nameToPermissions: Map<String, Boolean>, playersList: List<Map<String, String>>) {
         val users = playersList.map { u -> u["name"]!! }
-        Log.d("USERS", users.toString())
         val micPermissions = arrayListOf<Int>()
         for (user in users) {
             if (nameToPermissions[user]!!) {
@@ -304,9 +303,7 @@ open class LobbyActivity : AppCompatActivity(), User.Loader {
                     hasVoiceIdPermissions = true
                     launchGameButton.isEnabled = true
                     askForPermissionsButton.visibility = View.INVISIBLE
-                    db.modifyUserMicPermissions(gameLobbyId, user, true).addOnFailureListener {
-                        Log.e("FROMAGE", it.message!!)
-                    }
+                    db.modifyUserMicPermissions(gameLobbyId, user, true)
                 }
             }
         }
