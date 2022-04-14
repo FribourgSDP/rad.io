@@ -46,7 +46,6 @@ class WorkingLobbyActivityTest {
     @Test
     fun lobbyDisplayCorrectInfosWhenHost() {
         // Test values
-        val testHost = User("The Boss")
         val testName = "Hello World!"
         val testPlaylist = Playlist("Rap Playlist")
         val testNbRounds = 20
@@ -55,7 +54,6 @@ class WorkingLobbyActivityTest {
 
         // Init views
         val uuidTextView = Espresso.onView(withId(R.id.uuidText))
-        val hostNameTextView = Espresso.onView(withId(R.id.hostNameText))
         val gameNameTextView = Espresso.onView(withId(R.id.gameNameText))
         val playlistTextView = Espresso.onView(withId(R.id.playlistText))
         val nbRoundsTextView = Espresso.onView(withId(R.id.nbRoundsText))
@@ -64,7 +62,6 @@ class WorkingLobbyActivityTest {
         val launchGameButton = Espresso.onView(withId(R.id.launchGameButton))
 
         val testIntent = Intent(ctx, WorkingLobbyActivity::class.java).apply {
-            putExtra(GAME_HOST_KEY, Json.encodeToString(testHost))
             putExtra(GAME_NAME_KEY, testName)
             putExtra(GAME_PLAYLIST_KEY, Json.encodeToString(testPlaylist))
             putExtra(GAME_NB_ROUNDS_KEY, testNbRounds)
@@ -75,7 +72,6 @@ class WorkingLobbyActivityTest {
 
         ActivityScenario.launch<WorkingLobbyActivity>(testIntent).use {
             uuidTextView.check(matches(withText(ctx.getString(R.string.uid_text_format, LocalDatabase.EXPECTED_UID))))
-            hostNameTextView.check(matches(withText(ctx.getString(R.string.host_name_format, testHost.name))))
             gameNameTextView.check(matches(withText(ctx.getString(R.string.game_name_format, testName))))
             playlistTextView.check(matches(withText(ctx.getString(R.string.playlist_format, testPlaylist.name))))
             nbRoundsTextView.check(matches(withText(ctx.getString(R.string.number_of_rounds_format, testNbRounds))))
@@ -90,7 +86,6 @@ class WorkingLobbyActivityTest {
     fun lobbyDisplayCorrectInfosWhenInvited() {
         // Test values
         val testUID = 42L
-        val testHost = User("The Boss")
         val testName = "Hello World!"
         val testPlaylist = Playlist("Rap Playlist")
         val testNbRounds = 20
@@ -99,7 +94,6 @@ class WorkingLobbyActivityTest {
 
         // Init views
         val uuidTextView = Espresso.onView(withId(R.id.uuidText))
-        val hostNameTextView = Espresso.onView(withId(R.id.hostNameText))
         val gameNameTextView = Espresso.onView(withId(R.id.gameNameText))
         val playlistTextView = Espresso.onView(withId(R.id.playlistText))
         val nbRoundsTextView = Espresso.onView(withId(R.id.nbRoundsText))
@@ -109,7 +103,6 @@ class WorkingLobbyActivityTest {
 
         val testIntent = Intent(ctx, WorkingLobbyActivity::class.java).apply {
             putExtra(GAME_UID_KEY, testUID)
-            putExtra(GAME_HOST_KEY, Json.encodeToString(testHost))
             putExtra(GAME_NAME_KEY, testName)
             putExtra(GAME_PLAYLIST_KEY, Json.encodeToString(testPlaylist))
             putExtra(GAME_NB_ROUNDS_KEY, testNbRounds)
@@ -120,7 +113,7 @@ class WorkingLobbyActivityTest {
 
         ActivityScenario.launch<WorkingLobbyActivity>(testIntent).use {
             uuidTextView.check(matches(withText(ctx.getString(R.string.uid_text_format, testUID))))
-            hostNameTextView.check(matches(withText(ctx.getString(R.string.host_name_format, testHost.name))))
+            //hostNameTextView.check(matches(withText(ctx.getString(R.string.host_name_format, testHost.name))))
             gameNameTextView.check(matches(withText(ctx.getString(R.string.game_name_format, testName))))
             playlistTextView.check(matches(withText(ctx.getString(R.string.playlist_format, testPlaylist.name))))
             nbRoundsTextView.check(matches(withText(ctx.getString(R.string.number_of_rounds_format, testNbRounds))))
