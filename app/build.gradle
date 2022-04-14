@@ -119,6 +119,7 @@ dependencies {
     androidTestImplementation 'androidx.test:runner:1.4.0'
     androidTestImplementation 'androidx.test:rules:1.4.0'
     androidTestImplementation 'androidx.test.espresso:espresso-intents:3.4.0'
+    androidTestImplementation 'com.android.support.test.uiautomator:uiautomator-v18:2.1.2'
 
     //androidTestImplementation 'androidx.test:runner:1.1.0'
     //androidTestUtil 'androidx.test:orchestrator:1.4.1'
