@@ -6,20 +6,20 @@ import okhttp3.OkHttpClient
 import java.util.concurrent.CompletableFuture
 
 object MockLyricsGetter : LyricsGetter{
+    val truckfightersLyrics = "If you feel, little chance, make a stance\n" +
+            "Looking for, better days, let me say\n" +
+            "Something's wrong, when you can't, let me go\n" +
+            "For to long, long, long...\n" +
+            "\n" +
+            "Momentum owns you\n" +
+            "Controlling her too"
     override fun getLyrics(
         songName: String,
         artistName: String,
         client: OkHttpClient,
         parser: JSONParser
     ): CompletableFuture<String> {
-        return CompletableFuture.completedFuture(
-            "If you feel, little chance, make a stance\n" +
-                "Looking for, better days, let me say\n" +
-                    "Something's wrong, when you can't, let me go\n" +
-                    "For to long, long, long...\n" +
-                    "\n" +
-                    "Momentum owns you\n" +
-                    "Controlling her too")
+        return CompletableFuture.completedFuture(truckfightersLyrics)
     }
 
     override fun getSongID(

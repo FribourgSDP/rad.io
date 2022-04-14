@@ -7,6 +7,7 @@ import androidx.test.espresso.ViewAssertion
 import androidx.test.espresso.assertion.ViewAssertions
 import androidx.test.espresso.matcher.ViewMatchers
 import androidx.test.internal.runner.junit4.AndroidJUnit4ClassRunner
+import com.github.fribourgsdp.radio.mockimplementations.MockLyricsGetter
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 import org.junit.FixMethodOrder
@@ -55,22 +56,15 @@ class SongFragmentTest {
         val songArtist = "Truckfighters"
         val playlistName = "test"
         val playlist = Playlist(playlistName, Genre.NONE)
-        val song = Song(songName, songArtist,
-            "If you feel, little chance, make a stance\n" +
-                    "Looking for, better days, let me say\n" +
-                    "Something's wrong, when you can't, let me go\n" +
-                    "For to long, long, long...\n" +
-                    "\n" +
-                    "Momentum owns you\n" +
-                    "Controlling her too")
+        val song = Song(songName, songArtist)
         playlist.addSong(song)
         bundle.putString(PLAYLIST_DATA, Json.encodeToString(playlist))
         bundle.putString(SONG_DATA, Json.encodeToString(song))
-        bundle.putBoolean("TESTING_LYRICS_PROVIDER", true)
+        bundle.putString("com.github.fribourgsdp.radio.TEST", "TEST")
         val scenario = launchFragmentInContainer<SongFragment>(bundle)
         Thread.sleep(2000)
-        Espresso.onView(ViewMatchers.withId(R.id.lyricsPresenter))
+        Espresso.onView(ViewMatchers.withId(R.id.editTextLyrics))
             .check(ViewAssertions.matches(
-                ViewMatchers.withText("I hear the drums...")))
+                ViewMatchers.withText(MockLyricsGetter.truckfightersLyrics)))
     }
 }

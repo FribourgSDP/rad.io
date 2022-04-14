@@ -9,6 +9,7 @@ import android.widget.TextView
 import com.github.fribourgsdp.radio.mockimplementations.MockLyricsGetter
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.json.Json
+import java.lang.ClassCastException
 
 class SongFragment : MyFragment(R.layout.fragment_song) {
     private lateinit var initialLyrics : String
@@ -23,7 +24,7 @@ class SongFragment : MyFragment(R.layout.fragment_song) {
             args.getString(PLAYLIST_DATA).let { serializedPlaylist ->
                 playlist = Json.decodeFromString(serializedPlaylist!!)
             }
-            val lyricsGetter = if (args.getString("TESTING_LYRICS_PROVIDER") != null){
+            val lyricsGetter = if (args.getString("com.github.fribourgsdp.radio.TEST") != null){
                 MockLyricsGetter
             } else{
                 MusixmatchLyricsGetter
@@ -83,10 +84,12 @@ class SongFragment : MyFragment(R.layout.fragment_song) {
             song.lyrics = currentLyrics
             user.updateSongInPlaylist(playlist, song)
             user.save(requireView().context)
-            val parentFragment = parentFragmentManager.fragments[0] as PlaylistSongsFragment
-            //trigger reloading of playlist
-//            println("SAVING SONG")
-            parentFragment.loadPlaylist()
+
+            val parentFragment = parentFragmentManager.fragments[0]
+            if (parentFragment is PlaylistSongsFragment){
+                //trigger reloading of playlist
+                parentFragment.loadPlaylist()
+            }
         }
     }
 }
