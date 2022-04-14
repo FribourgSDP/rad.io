@@ -12,7 +12,14 @@ object MockLyricsGetter : LyricsGetter{
         client: OkHttpClient,
         parser: JSONParser
     ): CompletableFuture<String> {
-        TODO("Not yet implemented")
+        return CompletableFuture.completedFuture(
+            "If you feel, little chance, make a stance\n" +
+                "Looking for, better days, let me say\n" +
+                    "Something's wrong, when you can't, let me go\n" +
+                    "For to long, long, long...\n" +
+                    "\n" +
+                    "Momentum owns you\n" +
+                    "Controlling her too")
     }
 
     override fun getSongID(
@@ -21,6 +28,6 @@ object MockLyricsGetter : LyricsGetter{
         client: OkHttpClient,
         parser: JSONParser
     ): CompletableFuture<Int> {
-        TODO("Not yet implemented")
+        throw NotImplementedError()
     }
 }

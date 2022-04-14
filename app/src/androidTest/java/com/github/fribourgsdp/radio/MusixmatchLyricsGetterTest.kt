@@ -61,10 +61,7 @@ class MusixmatchLyricsGetterTest {
         val lyricsFuture = MusixmatchLyricsGetter.getLyrics("rouge", "sardou", MockOkHttpClient(), EmptyLyricsJSONParser())
         checkLyricsNotFound(lyricsFuture)
     }
-    @Test
-    fun lyricsGetterCreationTest(){
-        MusixmatchLyricsGetter()
-    }
+
     @Test
     fun jsonStandardParserDoesntThrowException(){
         val s = JSONStandardParser().parse("32q87rfha98 73298r7h08qwoehr703o490{{{{{")
