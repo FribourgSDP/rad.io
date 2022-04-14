@@ -16,7 +16,6 @@ import org.junit.Test
 
 class VoiceOverIPActivityTest {
 
-    @get:Rule var permissionRule = GrantPermissionRule.grant(android.Manifest.permission.RECORD_AUDIO)
 
     @Before
     fun initIntent() {

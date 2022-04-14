@@ -69,7 +69,7 @@ class LocalDatabase : Database {
     }
 
     override fun modifyUserMicPermissions(id: Long, user: User, newPermissions: Boolean): Task<Void> {
-        TODO("Not yet implemented")
+        return Tasks.forResult(null)
     }
 
     override fun openGame(id: Long): Task<Void> {

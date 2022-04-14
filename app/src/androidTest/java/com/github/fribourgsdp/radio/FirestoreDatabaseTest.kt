@@ -27,4 +27,14 @@ class FirestoreDatabaseTest {
         assertEquals( null,Tasks.await(user))
     }
 
+    @Test
+    fun modifyingPermissionsWorks(){
+        val db = FirestoreDatabase()
+        val user = User("nathan")
+        user.id = "215"
+        val lobbyId = 848L
+        val result = Tasks.withTimeout(db.modifyUserMicPermissions(lobbyId, user, true), 10, TimeUnit.SECONDS)
+        assertEquals(null, Tasks.await(result))
+    }
+
 }
