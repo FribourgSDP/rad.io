@@ -63,7 +63,7 @@ class PlaylistSongsFragment : MyFragment(R.layout.fragment_playlist_display), On
         User.loadOrDefault(requireContext()).addOnSuccessListener { l ->
 //            println("Successful loading of user")
             user = l
-            playlist = user.getPlaylistByName(playlistName)!!
+            playlist = user.getPlaylistByName(playlistName) ?: Playlist("")
             songs = playlist.getSongs().toList()
             initializeRecyclerView()
         }

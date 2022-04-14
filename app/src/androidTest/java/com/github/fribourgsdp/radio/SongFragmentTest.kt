@@ -51,15 +51,22 @@ class SongFragmentTest {
     @Test
     fun getLyricsInSongFragment() {
         val bundle = Bundle()
-        val songName = "Africa"
-        val songArtist = "Toto"
+        val songName = "Momentum"
+        val songArtist = "Truckfighters"
         val playlistName = "test"
         val playlist = Playlist(playlistName, Genre.NONE)
-        val song = Song(songName, songArtist, "")
+        val song = Song(songName, songArtist,
+            "If you feel, little chance, make a stance\n" +
+                    "Looking for, better days, let me say\n" +
+                    "Something's wrong, when you can't, let me go\n" +
+                    "For to long, long, long...\n" +
+                    "\n" +
+                    "Momentum owns you\n" +
+                    "Controlling her too")
         playlist.addSong(song)
         bundle.putString(PLAYLIST_DATA, Json.encodeToString(playlist))
         bundle.putString(SONG_DATA, Json.encodeToString(song))
-        bundle.putString("TESTING_LYRICS_PROVIDER", "")
+        bundle.putBoolean("TESTING_LYRICS_PROVIDER", true)
         val scenario = launchFragmentInContainer<SongFragment>(bundle)
         Thread.sleep(2000)
         Espresso.onView(ViewMatchers.withId(R.id.lyricsPresenter))
