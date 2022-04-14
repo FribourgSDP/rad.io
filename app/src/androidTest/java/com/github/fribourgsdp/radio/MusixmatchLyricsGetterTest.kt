@@ -242,7 +242,7 @@ class MusixmatchLyricsGetterTest {
         try {
             lyricsFuture.get()
         } catch (e : ExecutionException){
-            assertTrue(e.message == "com.github.fribourgsdp.radio.LyricsGetter\$Companion\$LyricsNotFoundException")
+            assertTrue("FAILED : message was ${e.message} \n instead of com.github.fribourgsdp.radio.MusixmatchLyricsGetter\$LyricsNotFoundException", e.message == "com.github.fribourgsdp.radio.MusixmatchLyricsGetter\$LyricsNotFoundException")
         }
     }
 
