@@ -143,45 +143,4 @@ class WorkingLobbyActivityTest {
             uuidTextView.check(matches(withText(ctx.getString(R.string.uid_error_join))))
         }
     }
-
-    @Test
-    fun pressingOnEnablePermissionsRequestsThem() {
-        // Test values
-        val testUID = 42L
-        val testName = "Hello World!"
-        val testPlaylist = Playlist("Rap Playlist")
-        val testNbRounds = 20
-        val withHint = true
-        val private = true
-
-        val testIntent = Intent(ctx, WorkingLobbyActivity::class.java).apply {
-            putExtra(GAME_UID_KEY, testUID)
-            putExtra(GAME_NAME_KEY, testName)
-            putExtra(GAME_PLAYLIST_KEY, Json.encodeToString(testPlaylist))
-            putExtra(GAME_NB_ROUNDS_KEY, testNbRounds)
-            putExtra(GAME_HINT_KEY, withHint)
-            putExtra(GAME_PRIVACY_KEY, private)
-            putExtra(GAME_IS_HOST_KEY, false)
-        }
-
-        ActivityScenario.launch<LobbyActivity>(testIntent)
-        val micButton = Espresso.onView(withId(R.id.micPermissionsButton))
-        micButton.perform(ViewActions.click())
-        val instrumentation = getInstrumentation()
-        if (Build.VERSION.SDK_INT >= 23) {
-            val allowPermission = UiDevice.getInstance(instrumentation).findObject(
-                UiSelector().text(
-                    when {
-                        Build.VERSION.SDK_INT == 23 -> "Allow"
-                        Build.VERSION.SDK_INT <= 28 -> "ALLOW"
-                        Build.VERSION.SDK_INT == 29 -> "Allow only while using the app"
-                        else -> "While using the app"
-                    }
-                )
-            )
-            if (allowPermission.exists()) {
-                allowPermission.click()
-            }
-        }
-    }
 }
