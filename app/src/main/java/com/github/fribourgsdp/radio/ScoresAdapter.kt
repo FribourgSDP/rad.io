@@ -26,7 +26,8 @@ class ScoresAdapter: RecyclerView.Adapter<ScoresAdapter.ViewHolder>() {
     }
 
     fun updateScore(scores: Map<String, Long>) {
-        scoresList = scores.toList().sortedBy { (_, score) -> score}
+        // Sort in decreasing order
+        scoresList = scores.toList().sortedBy { (_, score) -> -score}
 
         // Update the whole list
         this.notifyDataSetChanged()
