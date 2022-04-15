@@ -5,6 +5,8 @@ import com.google.firebase.firestore.FieldValue
 import kotlin.streams.toList
 
 class HostGameHandler(private val game: Game, private val view: GameView, db: Database = FirestoreDatabase()): GameHandler(view, db) {
+    private var latestSingerId = ""
+
     override fun handleSnapshot(snapshot: DocumentSnapshot?) {
         if (snapshot != null && snapshot.exists()) {
             val doneMap = snapshot.get("player_done_map")!! as HashMap<String, Boolean>
@@ -17,12 +19,22 @@ class HostGameHandler(private val game: Game, private val view: GameView, db: Da
                 val scoresOfRound = snapshot.get("scores_of_round")!! as HashMap<String, Long>
                 game.addPoints(scoresOfRound)
 
+                // then update the points of the singer
+                val playerFoundMap = snapshot.get("player_found_map")!! as HashMap<String, Boolean>
+
+                // Count the number of players that found the answer
+                // We then multiply by the number of points the singer gets
+                val singerPoints = playerFoundMap.count { (_, hasFound) -> hasFound } * NB_POINTS_PER_PLAYER_FOUND
+                game.addPoints(latestSingerId, singerPoints)
+
                 // update the game
                 val updatesMap = createUpdatesMap()
                 db.updateGame(game.id, updatesMap).addOnSuccessListener {
+                    // update the latest singer
+                    latestSingerId = updatesMap["singer"] as String
                     db.resetGameMetadata(
                         game.id,
-                        updatesMap["singer"] as String
+                        latestSingerId
                     ).addOnFailureListener {
                         view.displayError("An error occurred.")
                     }
@@ -54,6 +66,10 @@ class HostGameHandler(private val game: Game, private val view: GameView, db: Da
             "song_choices" to nextChoices,
             "scores" to game.getAllScores()
         )
+    }
+
+    companion object {
+        private const val NB_POINTS_PER_PLAYER_FOUND = 50L
     }
 
 }
