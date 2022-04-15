@@ -136,6 +136,10 @@ class PlayerGameHandlerTest {
         val db = mock(Database::class.java)
         `when`(db.setPlayerDone(anyLong(), anyString(), anyBoolean()))
             .thenReturn(Tasks.forResult(null))
+        `when`(db.getPositionInGame(anyLong(), anyString()))
+            .thenReturn(Tasks.forResult(1))
+        `when`(db.addPointsToPlayer(anyLong(), anyString(), anyInt()))
+            .thenReturn(Tasks.forResult(null))
 
         `when`(mockSnapshot.getString("current_song")).thenReturn(song)
 
@@ -151,7 +155,7 @@ class PlayerGameHandlerTest {
         Thread.sleep(1)
 
         assertEquals(View.VISIBLE, view.songVisibility)
-        assertEquals(song, view.song)
+        assertEquals("You correctly guessed $song", view.song)
         assertEquals(View.GONE, view.guessInputVisibility)
     }
 
@@ -160,6 +164,10 @@ class PlayerGameHandlerTest {
         val view = FakeGameView("Not Singer")
         val db = mock(Database::class.java)
         `when`(db.setPlayerDone(anyLong(), anyString(), anyBoolean()))
+            .thenReturn(Tasks.forResult(null))
+        `when`(db.getPositionInGame(anyLong(), anyString()))
+            .thenReturn(Tasks.forResult(1))
+        `when`(db.addPointsToPlayer(anyLong(), anyString(), anyInt()))
             .thenReturn(Tasks.forResult(null))
 
         `when`(mockSnapshot.getString("current_song")).thenReturn(song)
