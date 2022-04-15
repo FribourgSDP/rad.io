@@ -54,12 +54,9 @@ class PlayerGameHandler(
     }
 
     fun handleGuess(guess: String, userId: String) {
-        if (songToGuess == null) {
-            return
-        }
+        if (songToGuess == null) { return }
 
         val nbErrors = StringComparisons.compare(songToGuess!!, guess)
-
         if (nbErrors == NOT_THE_SAME) {
             view.displayError("Wrong answer")
         } else if (nbErrors != 0) {
