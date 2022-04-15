@@ -128,7 +128,10 @@ class GameActivity : AppCompatActivity(), GameView, User.Loader {
     }
 
     override fun displayPlayerScores(playerScores: Map<String, Long>) {
-        scoresAdapter.updateScore(playerScores)
+        scoresAdapter.updateScore(
+            // Replace ids by names
+            playerScores.mapKeys { (id, _) -> mapIdToName[id] ?: id}
+        )
     }
 
     private fun initViews() {
