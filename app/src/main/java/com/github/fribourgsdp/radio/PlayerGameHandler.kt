@@ -21,6 +21,11 @@ class PlayerGameHandler(
             view.updateSinger(singerName)
             view.updateRound(snapshot.getLong("current_round")!!)
 
+            // update the score
+            view.displayPlayerScores(
+                snapshot.get("scores") as HashMap<String, Int>
+            )
+
             // Get the picked song
             // It's not null when there is one.
             songToGuess = snapshot.getString("current_song")
