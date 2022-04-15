@@ -321,7 +321,7 @@ class FirestoreDatabase : Database {
                 throw IllegalArgumentException("Document $gameID in games_metadata not found.")
             }
 
-            val playerFoundMap = snapshot.get("player_done_map")!! as HashMap<String, Boolean>
+            val playerFoundMap = snapshot.get("player_found_map")!! as HashMap<String, Boolean>
 
             // Count the number of players that found the answer
             // We then add one since positions starts at one
