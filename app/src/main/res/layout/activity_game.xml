@@ -94,7 +94,7 @@
         app:layout_constraintHorizontal_bias="0.498"
         app:layout_constraintStart_toStartOf="parent" />
 
-    <ListView
+    <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/scoresRecyclerView"
         android:layout_width="0dp"
         android:layout_height="0dp"
