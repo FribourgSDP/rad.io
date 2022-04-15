@@ -54,6 +54,11 @@ interface GameView {
     fun displayWaitOnSinger(singer: String)
 
     /**
+     * Display on the view the scores in the map [playerScores].
+     */
+    fun displayPlayerScores(playerScores: Map<String, Int>)
+
+    /**
      * An interface creating listeners able to handle songs pick in a [GameView].
      */
     interface OnPickListener {
