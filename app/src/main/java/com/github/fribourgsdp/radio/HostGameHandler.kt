@@ -5,7 +5,7 @@ import com.google.firebase.firestore.FieldValue
 import kotlin.streams.toList
 
 class HostGameHandler(private val game: Game, private val view: GameView, db: Database = FirestoreDatabase()): GameHandler(view, db) {
-    private var latestSingerId = ""
+    private var latestSingerId: String? = null
 
     override fun handleSnapshot(snapshot: DocumentSnapshot?) {
         if (snapshot != null && snapshot.exists()) {
@@ -25,7 +25,9 @@ class HostGameHandler(private val game: Game, private val view: GameView, db: Da
                 // Count the number of players that found the answer
                 // We then multiply by the number of points the singer gets
                 val singerPoints = playerFoundMap.count { (_, hasFound) -> hasFound } * NB_POINTS_PER_PLAYER_FOUND
-                game.addPoints(latestSingerId, singerPoints)
+
+                // On the first run, the singer id will be null, so we don't update the map
+                latestSingerId?.let { game.addPoints(it, singerPoints) }
 
                 // update the game
                 val updatesMap = createUpdatesMap()
@@ -34,7 +36,7 @@ class HostGameHandler(private val game: Game, private val view: GameView, db: Da
                     latestSingerId = updatesMap["singer"] as String
                     db.resetGameMetadata(
                         game.id,
-                        latestSingerId
+                        latestSingerId!!
                     ).addOnFailureListener {
                         view.displayError("An error occurred.")
                     }
