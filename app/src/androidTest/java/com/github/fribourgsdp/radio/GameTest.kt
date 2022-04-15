@@ -79,33 +79,33 @@ class GameTest {
     fun pointsUpdateCorrectly() {
         val game = gameBuilder.build()
 
-        assertEquals(0, game.getScore(host.id))
-        assertEquals(0, game.getScore(otherId))
+        assertEquals(0L, game.getScore(host.id))
+        assertEquals(0L, game.getScore(otherId))
 
-        game.addPoints(host.id, 10)
-        game.addPoints(otherId, 100)
+        game.addPoints(host.id, 10L)
+        game.addPoints(otherId, 100L)
 
-        assertEquals(10, game.getScore(host.id))
-        assertEquals(100, game.getScore(otherId))
+        assertEquals(10L, game.getScore(host.id))
+        assertEquals(100L, game.getScore(otherId))
     }
 
     @Test
     fun pointsUpdateCorrectlyWithMapFunctions() {
         val game = gameBuilder.build()
 
-        assertTrue(game.getAllScores().all { (_, value) -> value == 0 })
+        assertTrue(game.getAllScores().all { (_, value) -> value == 0L })
 
         game.addPoints(
             hashMapOf(
-                host.id to 10,
-                otherId to 100
+                host.id to 10L,
+                otherId to 100L
             )
         )
 
         val scores = game.getAllScores()
 
-        assertEquals(10, scores[host.id])
-        assertEquals(100, scores[otherId])
+        assertEquals(10L, scores[host.id])
+        assertEquals(100L, scores[otherId])
     }
 
     @Test
