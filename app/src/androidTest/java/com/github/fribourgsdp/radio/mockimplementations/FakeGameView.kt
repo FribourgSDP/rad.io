@@ -16,6 +16,8 @@ class FakeGameView(private val playerID: String = ""): GameView {
 
     var guessInputVisibility = View.VISIBLE
 
+    var scores: Map<String, Long> = HashMap()
+
     override fun chooseSong(choices: List<String>, listener: GameView.OnPickListener) {
         listener.onPick(choices[0])
     }
@@ -54,6 +56,10 @@ class FakeGameView(private val playerID: String = ""): GameView {
 
     override fun displayWaitOnSinger(singer: String) {
         displaySong(singer)
+    }
+
+    override fun displayPlayerScores(playerScores: Map<String, Long>) {
+        scores = HashMap(playerScores)
     }
 
 }

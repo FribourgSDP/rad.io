@@ -18,6 +18,10 @@ class PlayerGameHandlerTest {
     private val song = "A good song"
     private val round = 1L
     private val listOfSongs = arrayListOf("Song0", "Song1", "Song2")
+    private val scores = hashMapOf(
+        "singer0" to 100L,
+        "singer1" to 85L
+    )
 
     @Before
     fun setup() {
@@ -27,6 +31,7 @@ class PlayerGameHandlerTest {
         `when`(mockSnapshot.getLong("current_round")).thenReturn(round)
         `when`(mockSnapshot.get("song_choices")).thenReturn(listOfSongs)
         `when`(mockSnapshot.getString("current_song")).thenReturn(null)
+        `when`(mockSnapshot.get("scores")).thenReturn(scores)
     }
 
     @Test
@@ -209,6 +214,22 @@ class PlayerGameHandlerTest {
         
         assertEquals("An error occurred", view.error)
         assertEquals(View.VISIBLE, view.errorVisibility)
+    }
+
+    @Test
+    fun displayScoresWorks() {
+        val view = FakeGameView()
+        val handler = PlayerGameHandler(0, view)
+
+        handler.handleSnapshot(mockSnapshot)
+
+        assertTrue(mapEquals(scores, view.scores))
+    }
+
+    private  fun mapEquals(first: Map<String, Long>, second: Map<String, Long>): Boolean {
+        return if (first.size != second.size)  false
+        else first.entries.stream()
+            .allMatch { (k, v) -> v == second[k] }
     }
 
 }
