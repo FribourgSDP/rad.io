@@ -13,15 +13,26 @@ import io.agora.rtc.IRtcEngineEventHandler
 import io.agora.rtc.RtcEngine
 import junit.framework.Assert.assertTrue
 import org.hamcrest.Matchers
+import org.junit.After
+import org.junit.Before
 import org.junit.Test
 import org.mockito.Mockito.*
 
 
 class VoiceOverIpEngineDecoratorTest {
 
+    @Before
+    fun initIntent() {
+        Intents.init()
+    }
+
+    @After
+    fun releaseIntent() {
+        Intents.release()
+    }
+
     @Test
     fun initMockRtcEngine() {
-        Intents.init()
         val context: Context = ApplicationProvider.getApplicationContext()
         val intent: Intent = Intent(context, VoiceOverIPActivity::class.java)
 
@@ -37,7 +48,6 @@ class VoiceOverIpEngineDecoratorTest {
                 )
             )
         }
-        Intents.release()
     }
 
     @Test
