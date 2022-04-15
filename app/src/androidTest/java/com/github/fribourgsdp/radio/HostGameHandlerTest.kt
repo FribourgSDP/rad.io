@@ -13,16 +13,24 @@ class HostGameHandlerTest {
     private val sleepingTime = 50L
     private lateinit var mockSnapshot: DocumentSnapshot
 
-    private val doneMap = hashMapOf("Some player" to true, "Another player" to true)
+    private val host = User("Some player").apply {
+        id = "some_player_id"
+    }
+    private val otherPlayer = User("Another Player").apply {
+        id = "another_player_id"
+    }
     private val fakeGame = Game.Builder()
-        .setHost(User("host"))
+        .setHost(host)
+        .addUserId(otherPlayer.id)
         .setPlaylist(Playlist("playlist"))
         .build()
 
     @Before
     fun setup() {
         mockSnapshot = mock(DocumentSnapshot::class.java)
-        `when`(mockSnapshot.get("player_done_map")).thenReturn(doneMap)
+        `when`(mockSnapshot.get("player_done_map")).thenReturn(fakeGame.getAllPlayersId().associateWith { true })
+        `when`(mockSnapshot.get("scores_of_round")).thenReturn(fakeGame.getAllPlayersId().associateWith { 0L })
+        `when`(mockSnapshot.get("player_found_map")).thenReturn(fakeGame.getAllPlayersId().associateWith { true })
         `when`(mockSnapshot.exists()).thenReturn(true)
     }
 
