@@ -7,6 +7,7 @@ import android.view.KeyEvent
 import android.view.View
 import android.view.inputmethod.EditorInfo
 import android.widget.*
+import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import io.agora.rtc.Constants
 import io.agora.rtc.RtcEngine
@@ -137,6 +138,7 @@ class GameActivity : AppCompatActivity(), GameView, User.Loader {
         errorOrFailureTextView = findViewById(R.id.errorOrFailureTextView)
 
         scoresRecyclerView = findViewById(R.id.scoresRecyclerView)
+        scoresRecyclerView.layoutManager = LinearLayoutManager(this)
         scoresRecyclerView.adapter = scoresAdapter
 
         songGuessEditText = findViewById(R.id.songGuessEditText)
