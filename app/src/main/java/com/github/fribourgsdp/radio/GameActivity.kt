@@ -1,6 +1,5 @@
 package com.github.fribourgsdp.radio
 
-import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
@@ -8,6 +7,7 @@ import android.view.KeyEvent
 import android.view.View
 import android.view.inputmethod.EditorInfo
 import android.widget.*
+import androidx.recyclerview.widget.RecyclerView
 import io.agora.rtc.Constants
 import io.agora.rtc.RtcEngine
 import kotlinx.serialization.decodeFromString
@@ -27,8 +27,8 @@ class GameActivity : AppCompatActivity(), GameView, User.Loader {
     private lateinit var muteButton : ImageButton
     private lateinit var songGuessSubmitButton: Button
 
-    private lateinit var playersListView : ListView
-    private lateinit var namesAdapter : ArrayAdapter<String>
+    private lateinit var scoresRecyclerView: RecyclerView
+    private val scoresAdapter = ScoresAdapter()
 
     private lateinit var mapIdToName: HashMap<String, String>
     private lateinit var voiceChannel: VoiceIpEngineDecorator
@@ -126,14 +126,18 @@ class GameActivity : AppCompatActivity(), GameView, User.Loader {
         displaySong(getString(R.string.wait_for_pick_format, mapIdToName[singer]  ?: singer))
     }
 
+    override fun displayPlayerScores(playerScores: Map<String, Int>) {
+        scoresAdapter.updateScore(playerScores)
+    }
+
     private fun initViews() {
         currentRoundTextView = findViewById(R.id.currentRoundView)
         singerTextView = findViewById(R.id.singerTextView)
         songTextView = findViewById(R.id.songTextView)
         errorOrFailureTextView = findViewById(R.id.errorOrFailureTextView)
-        // TODO: Initialise in later sprint
-        // namesAdapter = ArrayAdapter(this, android.R.layout.simple_list_item_1)
-        // playersListView.adapter = namesAdapter
+
+        scoresRecyclerView = findViewById(R.id.scoresRecyclerView)
+        scoresRecyclerView.adapter = scoresAdapter
 
         songGuessEditText = findViewById(R.id.songGuessEditText)
         songGuessSubmitButton = findViewById(R.id.songGuessSubmitButton)
