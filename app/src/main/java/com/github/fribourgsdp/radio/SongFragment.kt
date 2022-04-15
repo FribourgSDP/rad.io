@@ -36,17 +36,22 @@ class SongFragment : MyFragment(R.layout.fragment_song) {
                 currentLyrics = initialLyrics
                 if(song.lyrics == ""){
                     currentLyrics = ""
-                    lyricsGetter.getLyrics(song.name, song.artist)
-                        .exceptionally { "" }
-                        .thenAccept{f ->
-//                            println("RECEIVED LYRICS : ${f.substring(0,10)}...")
-                            currentLyrics = f
-                            doSaveLyrics = true
-                            updateLyrics(requireView().findViewById(R.id.editTextLyrics))
-                        }
+                    fetchLyrics(lyricsGetter)
+
                 }
             }
         }
+    }
+
+    private fun fetchLyrics(lyricsGetter: LyricsGetter) {
+        lyricsGetter.getLyrics(song.name, song.artist)
+            .exceptionally { "" }
+            .thenAccept{f ->
+//                            println("RECEIVED LYRICS : ${f.substring(0,10)}...")
+                currentLyrics = f
+                doSaveLyrics = true
+                updateLyrics(requireView().findViewById(R.id.editTextLyrics))
+            }
     }
 
     private fun updateLyrics(lyricsEditText : EditText){
