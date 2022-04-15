@@ -23,7 +23,7 @@ class PlayerGameHandler(
 
             // update the score
             view.displayPlayerScores(
-                snapshot.get("scores") as HashMap<String, Int>
+                snapshot.get("scores") as HashMap<String, Long>
             )
 
             // Get the picked song

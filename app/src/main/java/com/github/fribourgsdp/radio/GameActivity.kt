@@ -126,7 +126,7 @@ class GameActivity : AppCompatActivity(), GameView, User.Loader {
         displaySong(getString(R.string.wait_for_pick_format, mapIdToName[singer]  ?: singer))
     }
 
-    override fun displayPlayerScores(playerScores: Map<String, Int>) {
+    override fun displayPlayerScores(playerScores: Map<String, Long>) {
         scoresAdapter.updateScore(playerScores)
     }
 

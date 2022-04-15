@@ -23,7 +23,7 @@ import kotlin.math.min
 class Game private constructor(val id: Long, val name: String, val host: User, val playlist: Playlist, val nbRounds: Int,
                                val withHint: Boolean, val isPrivate: Boolean, private val listUser: List<String>) {
 
-    private val scoreMap = HashMap(listUser.associateWith { 0 })
+    private val scoreMap = HashMap(listUser.associateWith { 0L })
     private var usersToPlay = listUser.size
 
     var currentRound = 1
@@ -36,7 +36,7 @@ class Game private constructor(val id: Long, val name: String, val host: User, v
      * @param userId the id of the user
      * @return the score of a user.
      */
-    fun getScore(userId: String): Int? {
+    fun getScore(userId: String): Long? {
         return scoreMap[userId]
     }
 
@@ -44,14 +44,14 @@ class Game private constructor(val id: Long, val name: String, val host: User, v
      * Return the scores of all users.
      * @return the scores of all users.
      */
-    fun getAllScores(): Map<String, Int> {
+    fun getAllScores(): Map<String, Long> {
         return HashMap(scoreMap)
     }
 
     /**
      * Add the given number of [points] to the given user with id: [userId].
      */
-    fun addPoints(userId: String, points: Int) {
+    fun addPoints(userId: String, points: Long) {
         val oldValue = scoreMap[userId]
         if (oldValue != null) {
             scoreMap[userId] = oldValue + points
@@ -64,7 +64,7 @@ class Game private constructor(val id: Long, val name: String, val host: User, v
     /**
      * Add the given number of points to each user in [pointsMap].
      */
-    fun addPoints(pointsMap: Map<String, Int>) {
+    fun addPoints(pointsMap: Map<String, Long>) {
         pointsMap.forEach(this::addPoints)
     }
 

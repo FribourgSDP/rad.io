@@ -14,7 +14,7 @@ class HostGameHandler(private val game: Game, private val view: GameView, db: Da
 
             if (allDone) {
                 // when everybody is done, add the points
-                val scoresOfRound = snapshot.get("scores_of_round")!! as HashMap<String, Int>
+                val scoresOfRound = snapshot.get("scores_of_round")!! as HashMap<String, Long>
                 game.addPoints(scoresOfRound)
 
                 // update the game
