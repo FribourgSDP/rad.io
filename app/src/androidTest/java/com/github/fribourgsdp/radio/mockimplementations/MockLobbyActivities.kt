@@ -29,7 +29,9 @@ class WorkingLobbyActivity : LobbyActivity() {
     }
 
     override fun loadUser(): User {
-        return User("the best player")
+        val testUser = User("the best player")
+        testUser.id = "123456789"
+        return testUser
     }
 }
 
@@ -53,6 +55,8 @@ class BuggyLobbyActivity : LobbyActivity() {
     }
 
     override fun loadUser(): User {
-        return User("the buggy player")
+        val testUser = User("the buggy player")
+        testUser.id = "9999999"
+        return testUser
     }
 }

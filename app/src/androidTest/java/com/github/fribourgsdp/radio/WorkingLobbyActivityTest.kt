@@ -61,6 +61,7 @@ class WorkingLobbyActivityTest {
         // Init views
         val uuidTextView = Espresso.onView(withId(R.id.uuidText))
         val gameNameTextView = Espresso.onView(withId(R.id.gameNameText))
+        val hostNameTextView = Espresso.onView(withId(R.id.hostNameText))
         val playlistTextView = Espresso.onView(withId(R.id.playlistText))
         val nbRoundsTextView = Espresso.onView(withId(R.id.nbRoundsText))
         val withHintTextView = Espresso.onView(withId(R.id.withHintText))
@@ -78,6 +79,7 @@ class WorkingLobbyActivityTest {
 
         ActivityScenario.launch<WorkingLobbyActivity>(testIntent).use {
             uuidTextView.check(matches(withText(ctx.getString(R.string.uid_text_format, LocalDatabase.EXPECTED_UID))))
+            hostNameTextView.check(matches(withText(ctx.getString(R.string.host_name_format, "the best player"))))
             gameNameTextView.check(matches(withText(ctx.getString(R.string.game_name_format, testName))))
             playlistTextView.check(matches(withText(ctx.getString(R.string.playlist_format, testPlaylist.name))))
             nbRoundsTextView.check(matches(withText(ctx.getString(R.string.number_of_rounds_format, testNbRounds))))
@@ -103,6 +105,7 @@ class WorkingLobbyActivityTest {
         val gameNameTextView = Espresso.onView(withId(R.id.gameNameText))
         val playlistTextView = Espresso.onView(withId(R.id.playlistText))
         val nbRoundsTextView = Espresso.onView(withId(R.id.nbRoundsText))
+        val hostNameTextView = Espresso.onView(withId(R.id.hostNameText))
         val withHintTextView = Espresso.onView(withId(R.id.withHintText))
         val privateTextView  = Espresso.onView(withId(R.id.privateText))
         val launchGameButton = Espresso.onView(withId(R.id.launchGameButton))
@@ -119,7 +122,7 @@ class WorkingLobbyActivityTest {
 
         ActivityScenario.launch<WorkingLobbyActivity>(testIntent).use {
             uuidTextView.check(matches(withText(ctx.getString(R.string.uid_text_format, testUID))))
-            //hostNameTextView.check(matches(withText(ctx.getString(R.string.host_name_format, testHost.name))))
+            hostNameTextView.check(matches(withText(ctx.getString(R.string.host_name_format, ""))))
             gameNameTextView.check(matches(withText(ctx.getString(R.string.game_name_format, testName))))
             playlistTextView.check(matches(withText(ctx.getString(R.string.playlist_format, testPlaylist.name))))
             nbRoundsTextView.check(matches(withText(ctx.getString(R.string.number_of_rounds_format, testNbRounds))))
