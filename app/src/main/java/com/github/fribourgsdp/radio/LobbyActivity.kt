@@ -166,9 +166,8 @@ open class LobbyActivity : AppCompatActivity(), User.Loader {
         layoutAdapter = RecyclerLobbyAdapter()
         recyclerView.adapter = layoutAdapter
         if (isHost) {
-            layoutAdapter?.setUsers(arrayOf(user.name))
             val hostMicPermissionsImg = if (hasVoiceIdPermissions) MIC_PERMISSIONS_ENABLED_DRAWABLE else NO_MIC_PERMISSIONS_DRAWABLE
-            layoutAdapter?.setImages(intArrayOf(hostMicPermissionsImg))
+            layoutAdapter?.setContent(arrayOf(user.name), intArrayOf(hostMicPermissionsImg))
             layoutAdapter?.notifyDataSetChanged()
         }
     }
@@ -268,8 +267,7 @@ open class LobbyActivity : AppCompatActivity(), User.Loader {
                 micPermissions.add(NO_MIC_PERMISSIONS_DRAWABLE)
             }
         }
-        layoutAdapter?.setUsers(users.toTypedArray())
-        layoutAdapter?.setImages(micPermissions.toIntArray())
+        layoutAdapter?.setContent(users.toTypedArray(), micPermissions.toIntArray())
         layoutAdapter?.notifyDataSetChanged()
         gameBuilder.setUserIdList(playersList.map { u -> u["id"]!! })
         mapIdToName = playersList.associate {

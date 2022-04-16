@@ -26,14 +26,10 @@ class RecyclerLobbyAdapter: RecyclerView.Adapter<RecyclerLobbyAdapter.LobbyListV
         return userNames.size
     }
 
-    fun setUsers(newUsers: Array<String>) {
+    fun setContent(newUsers: Array<String>, newImages: IntArray) {
         userNames = newUsers
-    }
-
-    fun setImages(newImages: IntArray) {
         micImages = newImages
     }
-
     class LobbyListViewEntry(itemView: View): RecyclerView.ViewHolder(itemView) {
         var micImage: ImageView = itemView.findViewById(R.id.lobbyItemImage)
         var userName: TextView = itemView.findViewById(R.id.lobbyUserName)
