@@ -21,6 +21,7 @@ import java.util.concurrent.CompletableFuture
 class Song (private val rawName: String, private val rawArtist: String, var lyrics: String) {
     val name: String = reformatName(rawName)
     val artist: String = reformatName(rawArtist)
+    var id: String = ""
 
     constructor(name: String, artist: String): this(name, artist,"")
     constructor(name: String, artist: String, lyrics: CompletableFuture<String>): this(name, artist, lyrics.get())
