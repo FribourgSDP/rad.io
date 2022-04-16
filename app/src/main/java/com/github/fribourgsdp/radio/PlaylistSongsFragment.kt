@@ -61,7 +61,6 @@ class PlaylistSongsFragment : MyFragment(R.layout.fragment_playlist_display), On
 
     fun loadPlaylist(){
         User.loadOrDefault(requireContext()).addOnSuccessListener { l ->
-//            println("Successful loading of user")
             user = l
             playlist = user.getPlaylistByName(playlistName) ?: Playlist("")
             songs = playlist.getSongs().toList()

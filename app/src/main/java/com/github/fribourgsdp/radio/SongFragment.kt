@@ -47,7 +47,6 @@ class SongFragment : MyFragment(R.layout.fragment_song) {
         lyricsGetter.getLyrics(song.name, song.artist)
             .exceptionally { "" }
             .thenAccept{f ->
-//                            println("RECEIVED LYRICS : ${f.substring(0,10)}...")
                 currentLyrics = f
                 doSaveLyrics = true
                 updateLyrics(requireView().findViewById(R.id.editTextLyrics))
@@ -66,7 +65,6 @@ class SongFragment : MyFragment(R.layout.fragment_song) {
 
         songTitle.text = song.name
         artistTitle.text = song.artist
-//        println("VIEW CREATED")
         updateLyrics(lyricsEditText)
 
         lyricsEditText.addTextChangedListener(object : TextWatcher {
