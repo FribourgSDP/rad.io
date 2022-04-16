@@ -37,7 +37,7 @@ class PlaylistSongsFragment : MyFragment(R.layout.fragment_playlist_display), On
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val user = User.load(requireContext())
+        user = User.load(requireContext())
         playlist = user.getPlaylistWithName(playlistName)
         songs = playlist.getSongs().toList()
 
@@ -51,8 +51,8 @@ class PlaylistSongsFragment : MyFragment(R.layout.fragment_playlist_display), On
             intent.putExtra(PLAYLIST_TO_MODIFY, Json.encodeToString(playlist))
             startActivity(intent)
         }
-        User.loadOrDefault(requireContext()).addOnSuccessListener { l ->
-            user = l
+        User.loadOrDefault(requireContext()).addOnSuccessListener { loadedUser ->
+            user = loadedUser
         }
         deleteButton = requireView().findViewById(R.id.deleteButton)
         deleteButton.setOnClickListener{
