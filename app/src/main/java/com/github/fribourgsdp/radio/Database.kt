@@ -51,7 +51,9 @@ interface Database {
      * @return a task loading a unique ID for the user.
      */
     fun generateUserId() : Task<Long>
+    fun generatePlaylistId() : Task<Long>
 
+    fun generateSongId() : Task<Long>
     /**
      * Open a lobby on the database.
      * @return a task void so that we know if the lobby was correctly opened.
