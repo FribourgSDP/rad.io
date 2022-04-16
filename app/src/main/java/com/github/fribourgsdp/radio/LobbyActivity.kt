@@ -199,15 +199,7 @@ open class LobbyActivity : AppCompatActivity() {
                     .setWithHint(withHint)
                     .setPrivacy(isPrivate)
 
-                db.openLobby(uid, gameBuilder.getSettings()).addOnSuccessListener {
-                    db.addUserToLobby(uid, host!!).addOnSuccessListener {
-                        listenToUpdates(uid)
-                    }.addOnFailureListener {
-                        uuidTextView.text = getString(R.string.uid_error)
-                    }
-                }.addOnFailureListener {
-                    uuidTextView.text = getString(R.string.uid_error)
-                }
+                openLobby(uid)
             } else {
                 uuidTextView.text = getString(R.string.uid_error)
             }
@@ -215,6 +207,19 @@ open class LobbyActivity : AppCompatActivity() {
             listenToUpdates(uid)
         }
 
+    }
+
+
+    private fun openLobby(uid: Long){
+        db.openLobby(uid, gameBuilder.getSettings()).addOnSuccessListener {
+            db.addUserToLobby(uid, host!!).addOnSuccessListener {
+                listenToUpdates(uid)
+            }.addOnFailureListener {
+                uuidTextView.text = getString(R.string.uid_error)
+            }
+        }.addOnFailureListener {
+            uuidTextView.text = getString(R.string.uid_error)
+        }
     }
 
     private fun listenToUpdates(uid: Long) {
