@@ -1,7 +1,5 @@
 package com.github.fribourgsdp.radio
 
-import com.github.fribourgsdp.radio.mockimplementations.*
-
 import android.content.Context
 import android.content.Intent
 import androidx.test.core.app.ActivityScenario
@@ -9,15 +7,17 @@ import androidx.test.core.app.ApplicationProvider
 import androidx.test.espresso.Espresso
 import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.intent.Intents
-import androidx.test.espresso.matcher.ViewMatchers.withId
-import androidx.test.espresso.matcher.ViewMatchers.withText
-import androidx.test.espresso.matcher.ViewMatchers.isDisplayed
+import androidx.test.espresso.matcher.ViewMatchers.*
 import androidx.test.ext.junit.runners.AndroidJUnit4
+import com.github.fribourgsdp.radio.mockimplementations.LocalDatabase
+import com.github.fribourgsdp.radio.mockimplementations.LyricsGettingWorkingLobbyActivity
+import com.github.fribourgsdp.radio.mockimplementations.WorkingLobbyActivity
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 import org.hamcrest.Matchers.not
-import org.junit.Before
 import org.junit.After
+import org.junit.Assert.assertTrue
+import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
 
@@ -142,6 +142,33 @@ class WorkingLobbyActivityTest {
 
         ActivityScenario.launch<WorkingLobbyActivity>(testIntent).use {
             uuidTextView.check(matches(withText(ctx.getString(R.string.uid_error_join))))
+        }
+    }
+
+    @Test
+    fun lobbyFetchesLyricsTest() {
+        val lyrics = "If you feel, little chance, make a stance\n" +
+            "Looking for, better days, let me say\n" +
+            "Something's wrong, when you can't, let me go\n" +
+            "For to long, long, long...\n" +
+            "\n" +
+            "Momentum owns you\n" +
+            "Controlling her too"
+        // Test values
+        var testHost = User("Test User")
+
+        val testPlaylist = Playlist("Stoner Playlist")
+        testPlaylist.addSong(Song("Momentum", "Truckfighters"))
+        testHost.addPlaylist(testPlaylist)
+
+        val context: Context = ApplicationProvider.getApplicationContext()
+        testHost.save(context)
+
+        val testIntent = Intent(ctx, LyricsGettingWorkingLobbyActivity::class.java)
+
+        ActivityScenario.launch<LyricsGettingWorkingLobbyActivity>(testIntent).use {
+            testHost = User.load(context)
+            assertTrue(testHost.getPlaylists().any { p -> p.getSongs().any { s -> s.lyrics == lyrics } })
         }
     }
 

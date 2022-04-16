@@ -1,10 +1,12 @@
 package com.github.fribourgsdp.radio
 
 import android.Manifest
+import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.widget.*
 import androidx.core.app.ActivityCompat
@@ -257,20 +259,20 @@ open class LobbyActivity : AppCompatActivity() {
 
         if (isHost && game != null) {
             intent.putExtra(GAME_KEY, Json.encodeToString(game))
-            loadLyrics(game.playlist)
+            loadLyrics(game.playlist, MusixmatchLyricsGetter, host!!)
         }
 
         startActivity(intent)
     }
-
-    private fun loadLyrics(playlist : Playlist){
-        if (host!!.getPlaylists().contains(playlist)){
+    protected fun loadLyrics(playlist : Playlist, lyricsGetter: LyricsGetter, host : User){
+        if (host.getPlaylists().contains(playlist)){
             for (song in playlist.getSongs()){
                 if(song.lyrics == "") {
-                    MusixmatchLyricsGetter.getLyrics(song.name, song.artist).thenAccept { f ->
+                    Log.println(Log.ASSERT, "*", "999999999999")
+                    lyricsGetter.getLyrics(song.name, song.artist).thenAccept { f ->
                         val songWithLyrics = Song(song.name, song.artist, f)
-                        host!!.updateSongInPlaylist(playlist, songWithLyrics)
-                        host!!.save(applicationContext)
+                        host.updateSongInPlaylist(playlist, songWithLyrics)
+                        host.save(applicationContext)
                     }
                 }
             }
