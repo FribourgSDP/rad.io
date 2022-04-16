@@ -1,6 +1,10 @@
 package com.github.fribourgsdp.radio
 
+import android.content.ContentValues
+import android.util.Log
 import com.google.android.gms.tasks.Task
+import com.google.android.gms.tasks.Tasks
+import com.google.firebase.firestore.DocumentReference
 import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
@@ -8,18 +12,29 @@ import com.google.firebase.firestore.EventListener
 import java.lang.Exception
 
 /**
+ * This class serves to make possible the dependency injection with mockito. We mock the
+ * reference and serve documents snapshot that are also mocked.
+ *
+ */
+open class FirestoreRef {
+    val db = Firebase.firestore
+    open fun getUserRef(userId : String) : DocumentReference{
+        return db.collection("user").document(userId)
+    }
+}
+/**
  *
  *This class represents a database. It communicates with the database(Firestore)
  * and translates the result in classes
  *
  * @constructor Creates a database linked to Firestore
  */
-class FirestoreDatabase : Database {
+class FirestoreDatabase(var refMake: FirestoreRef) : Database {
     private val db = Firebase.firestore
-
+    constructor():this(FirestoreRef())
 
     override fun getUser(userId : String): Task<User> {
-        return  db.collection("user").document(userId).get().continueWith { l ->
+        return  refMake.getUserRef(userId).get().continueWith { l ->
             val result = l.result
             if(result.exists()){
                 User(result["first"].toString())
@@ -37,12 +52,17 @@ class FirestoreDatabase : Database {
         val userHash = hashMapOf(
             "first" to user.name
         )
-        return db.collection("user").document(userId).set(userHash)
+        val docRef = refMake.getUserRef(userId)
+        Log.d(ContentValues.TAG, "DocumentSnapshot added with ID put: " + docRef.toString())
+        return docRef.set(userHash)
     }
 
 
-    override fun getSong(songName : String): Task<Song>{
-        return  db.collection("songs").document(songName).get().continueWith { l ->
+    override fun getSong(songId : String): Task<Song>{
+        if(songId == ""){
+            return Tasks.forException(IllegalArgumentException("Not null id is expected"))
+        }
+        return  db.collection("songs").document(songId).get().continueWith { l ->
             val result = l.result
             if(result.exists()){
                 val songName = result["songName"].toString()
@@ -55,32 +75,35 @@ class FirestoreDatabase : Database {
     }
 
     override fun registerSong(song : Song): Task<Void>{
-        val songHash = hashMapOf(
-            "songName" to song.name,
-            "artistName" to song.artist
-            //todo: add lyrics when it won't be a future anymore
-        )
-        return db.collection("songs").document(song.name).set(songHash)
+            if(song.id == ""){
+                return Tasks.forException(IllegalArgumentException("Not null id is expected"))
+            }
+            val songHash = hashMapOf(
+                "songId" to song.id,
+                "songName" to song.name,
+                "artistName" to song.artist,
+                "lyrics" to song.lyrics
+            )
+            return db.collection("songs").document(song.id).set(songHash)
 
     }
 
-    override fun getPlaylist(playlistName : String): Task<Playlist>{
-        return  db.collection("playlists").document(playlistName).get().continueWith { l ->
+    override fun getPlaylist(playlistId : String): Task<Playlist>{
+        if(playlistId == ""){
+            return Tasks.forException(IllegalArgumentException("Not null id is expected"))
+        }
+        return  db.collection("playlists").document(playlistId).get().continueWith { l ->
             val result = l.result
             if(result.exists()){
-
                 val playlistTitle = result["playlistName"].toString()
                 val genre =result["genre"].toString()
-                val songs = result["songs"].toString()
-
-                //parse the list result to create a set
+                val songs = result["songs"] !! as ArrayList<HashMap<String,String>>
                 val songSet : MutableSet<Song> = mutableSetOf()
-                for(song in songs.substring(1,songs.length-1).split(",")){
-                    songSet.add((Song(song,"","")))
+                for(song in songs){
+                    songSet.add((Song(song.get("second")!!,song.get("third")!!,"")))
                 }
 
                 Playlist(playlistTitle, songSet, Genre.valueOf(genre))
-
             }else{
                 null
             }
@@ -89,16 +112,23 @@ class FirestoreDatabase : Database {
 
     override fun registerPlaylist( playlist : Playlist): Task<Void>{
         //We will only store the songName, because you don't want to fetch all the lyrics of all songs when you retrieve the playlist
-        val titleList : MutableList<String> = mutableListOf()
+        if(playlist.id == ""){
+            return Tasks.forException(IllegalArgumentException("Not null id is expected"))
+        }
+        val titleList : MutableList<Triple<String,String,String>> = mutableListOf()
         for( song in playlist.getSongs()){
-            titleList.add(song.name)
+            if(song.id == ""){
+                return Tasks.forException(IllegalArgumentException("Not null id is expected"))
+            }
+            titleList.add(Triple(song.id,song.name,song.artist))
         }
         val playlistHash = hashMapOf(
+            "playlistId" to playlist.id,
             "playlistName" to playlist.name,
             "genre" to playlist.genre,
             "songs" to titleList
         )
-        return db.collection("playlists").document(playlist.name).set(playlistHash)
+        return db.collection("playlists").document(playlist.id).set(playlistHash)
     }
 
     override fun getLobbyId() : Task<Long> {
@@ -129,6 +159,52 @@ class FirestoreDatabase : Database {
         val keyMax = "max_id"
 
         val docRef = db.collection("metadata").document("UserInfo")
+
+        return db.runTransaction { transaction ->
+            val snapshot = transaction.get(docRef)
+
+            if (!snapshot.exists()) {
+                throw Exception("Document not found.")
+            }
+
+            val id = snapshot.getLong(keyID)!!
+            val nextId = (id + 1) % snapshot.getLong(keyMax)!!
+
+            transaction.update(docRef, keyID, nextId)
+
+            // Success
+            id
+        }
+    }
+
+    override fun generateSongId() : Task<Long> {
+        val keyID = "current_id"
+        val keyMax = "max_id"
+
+        val docRef = db.collection("metadata").document("SongInfo")
+
+        return db.runTransaction { transaction ->
+            val snapshot = transaction.get(docRef)
+
+            if (!snapshot.exists()) {
+                throw Exception("Document not found.")
+            }
+
+            val id = snapshot.getLong(keyID)!!
+            val nextId = (id + 1) % snapshot.getLong(keyMax)!!
+
+            transaction.update(docRef, keyID, nextId)
+
+            // Success
+            id
+        }
+    }
+
+    override fun generatePlaylistId() : Task<Long> {
+        val keyID = "current_id"
+        val keyMax = "max_id"
+
+        val docRef = db.collection("metadata").document("PlaylistInfo")
 
         return db.runTransaction { transaction ->
             val snapshot = transaction.get(docRef)
