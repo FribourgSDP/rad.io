@@ -13,10 +13,7 @@ import kotlinx.serialization.json.Json
 import java.io.File
 
 
-const val USER_DATA_PATH = "user_data_file"
-
 @Serializable
-
 /**
  * A data class for users with playlists
  * Serializable: supports the use of Json.encodeToString(<user>)
@@ -46,10 +43,12 @@ data class User (var name: String, val color: Int) {
 
 
     companion object {
+        const val USER_DATA_PATH = "user_data_file"
+
         /**
          * loads a user from the app-specific storage on the device.
          * There can only be a single User stored on the device at the default path
-         * which is written with <user>.save().
+         * which is written with [User].save().
          * This function can be used from any activity of the app and retrieves the same data
          *
          * @param context the context to use for loading from a file (usually this in an activity)
@@ -101,7 +100,6 @@ data class User (var name: String, val color: Int) {
                 (Random.nextInt(100, 200) shl 16) or
                 (Random.nextInt(100, 200) shl 8) or
                 Random.nextInt(100, 200)
-
     }
 
     /**
