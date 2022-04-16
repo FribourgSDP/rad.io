@@ -12,12 +12,12 @@ import io.agora.rtc.Constants
 import io.agora.rtc.RtcEngine
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.json.Json
+import kotlin.math.absoluteValue
 import kotlin.random.Random
 
 
-class GameActivity : AppCompatActivity(), GameView {
-    // TODO: Use 'User.load(this)' when available
-    private var user = User("The second best player")
+open class GameActivity : AppCompatActivity(), GameView, User.Loader {
+    private lateinit var user: User
     private var isHost: Boolean = false
 
     private lateinit var currentRoundTextView : TextView
@@ -31,33 +31,32 @@ class GameActivity : AppCompatActivity(), GameView {
     private lateinit var playersListView : ListView
     private lateinit var namesAdapter : ArrayAdapter<String>
 
-    private lateinit var voiceChannel: VoiceIpEngineDecorator
-
+    private lateinit var mapIdToName: HashMap<String, String>
+    protected lateinit var voiceChannel: VoiceIpEngineDecorator
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_game)
+        user = loadUser()
+        mapIdToName = intent.getSerializableExtra(MAP_ID_NAME_KEY)?.let {
+            it as HashMap<String, String>
+        } ?: HashMap()
         isHost = intent.getBooleanExtra(GAME_IS_HOST_KEY, false)
         initViews()
-
 
         val gameUid = intent.getLongExtra(GAME_UID_KEY, -1L)
         initVoiceChat(gameUid)
 
         if (isHost) {
-            val json = Json {
-                allowStructuredMapKeys = true
-            }
-            val game = json.decodeFromString(intent.getStringExtra(GAME_KEY)!!) as Game
+            val game = Json.decodeFromString(intent.getStringExtra(GAME_KEY)!!) as Game
             val hostGameHandler = HostGameHandler(game, this)
             hostGameHandler.linkToDatabase()
-            user = User("The best player")
         }
         val playerGameHandler = PlayerGameHandler(gameUid, this)
 
         // On submit make the player game handler handle the guess
         songGuessSubmitButton.setOnClickListener {
-            playerGameHandler.handleGuess(songGuessEditText.text.toString(), user.name)
+            playerGameHandler.handleGuess(songGuessEditText.text.toString(), user.id)
         }
 
         playerGameHandler.linkToDatabase()
@@ -75,8 +74,8 @@ class GameActivity : AppCompatActivity(), GameView {
         songPicker.show(supportFragmentManager, "songPicker")
     }
 
-    override fun updateSinger(singerName: String) {
-        singerTextView.text = getString(R.string.singing_format, singerName)
+    override fun updateSinger(singerId: String) {
+        singerTextView.text = getString(R.string.singing_format, mapIdToName[singerId] ?: singerId)
     }
 
     override fun updateRound(currentRound: Long) {
@@ -120,12 +119,12 @@ class GameActivity : AppCompatActivity(), GameView {
     }
 
     override fun checkPlayer(id: String): Boolean {
-        return user.name == id
+        return user.id == id
     }
 
     override fun displayWaitOnSinger(singer: String) {
         // We can display the wait message where the same box as the song
-        displaySong(getString(R.string.wait_for_pick_format, singer))
+        displaySong(getString(R.string.wait_for_pick_format, mapIdToName[singer]  ?: singer))
     }
 
     private fun initViews() {
@@ -154,13 +153,18 @@ class GameActivity : AppCompatActivity(), GameView {
         }
     }
 
-    private fun initVoiceChat(gameUid: Long) {
-        voiceChannel = VoiceIpEngineDecorator(this)
-        val userId = Random.nextInt(100000000)
+    open protected fun initVoiceChat(gameUid: Long) {
+
+        val map = mapIdToName.mapKeys { it.hashCode().absoluteValue }
+        if (!this::voiceChannel.isInitialized) voiceChannel = VoiceIpEngineDecorator(this, MyIRtcEngineEventHandler(this, map))
+        val userId = user.name.hashCode().absoluteValue
         voiceChannel.setAudioProfile(Constants.AUDIO_PROFILE_MUSIC_STANDARD, Constants.AUDIO_SCENARIO_CHATROOM_ENTERTAINMENT);
-        voiceChannel.enableAudioVolumeIndication(500,5,true)
+        voiceChannel.enableAudioVolumeIndication(200,3,true)
         voiceChannel.joinChannel(voiceChannel.getToken(userId, gameUid.toString()), gameUid.toString(), "", userId)
-        Log.d("Game uid is: ", gameUid.toString())
+    }
+
+    override fun loadUser(): User {
+        return User.load(this)
     }
 
 }

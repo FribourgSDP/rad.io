@@ -33,7 +33,7 @@ internal class PlaylistTest {
         assertEquals(0, playlist1.getSongs().size)
         playlist1.addSong(Song("song song", "artist", "bla"))
         assertEquals(1, playlist1.getSongs().size)
-        assertEquals(true, playlist1.getSongs().contains(Song("song song", "artist", "bla")))
+        assertTrue(playlist1.getSongs().contains(Song("song song", "artist", "bla")))
     }
 
     @Test
@@ -50,8 +50,8 @@ internal class PlaylistTest {
         val testerSet = mutableSetOf(song1, song2, song3, song4)
         val playlist1 = Playlist("First", testerSet, Genre.POP)
         val songSet = playlist1.getSongs()
-        assertEquals(false,  testerSet === songSet)
-        assertEquals(true, playlist1.getSongs().contains(Song("colorado", "Milky Chance")))
+        assertFalse(testerSet === songSet)
+        assertTrue(playlist1.getSongs().contains(Song("colorado", "Milky Chance")))
     }
 
     @Test
@@ -60,7 +60,7 @@ internal class PlaylistTest {
         val playlist1 = Playlist("First", testerSet, Genre.POP)
         playlist1.addSong(Song("new song", "new artist", "bla"))
         val newSong = Song("new Song", "New artist")
-        assertEquals(true, playlist1.getSongs().contains(newSong))
+        assertTrue(playlist1.getSongs().contains(newSong))
         assertEquals(5, playlist1.getSongs().size)
     }
 
@@ -71,9 +71,8 @@ internal class PlaylistTest {
         val addedSet: Set<Song> = mutableSetOf(Song("a", "b"), Song("woodlawn", "amine"))
         playlist1.addSongs(addedSet)
         assertEquals(6, playlist1.getSongs().size)
-        assertEquals(true, playlist1.getSongs().contains(Song("Woodlawn", "amine")) && playlist1.getSongs().contains(
-            Song("A", "b")
-        ))
+        assertTrue(playlist1.getSongs().contains(Song("Woodlawn", "amine")))
+        assertTrue(playlist1.getSongs().contains(Song("A", "b")))
     }
 
     @Test
@@ -82,7 +81,7 @@ internal class PlaylistTest {
         val playlist1 = Playlist("First", testerSet, Genre.POP)
         playlist1.removeSong(Song("back in black", "ACDC"))
         assertEquals(3, playlist1.getSongs().size)
-        assertEquals(false, playlist1.getSongs().contains(Song("back in black", "ACDC")))
+        assertFalse(playlist1.getSongs().contains(Song("back in black", "ACDC")))
     }
 
     @Test
@@ -92,9 +91,8 @@ internal class PlaylistTest {
         val removeSet = mutableSetOf(song1, song2)
         playlist1.removeSongs(removeSet)
         assertEquals(2, playlist1.getSongs().size)
-        assertEquals(false, playlist1.getSongs().contains(Song("back in black", "ACDC")) && !playlist1.getSongs().contains(
-            Song("colorado", "Milky Chance")
-        ))
+        assertFalse(playlist1.getSongs().contains(Song("back in black", "ACDC")))
+        assertFalse(playlist1.getSongs().contains(Song("colorado", "Milky Chance")))
     }
 
     @Test
@@ -107,8 +105,8 @@ internal class PlaylistTest {
         assertEquals(Genre.HIPHOP, playlistAddedTo.genre)
         assertEquals("New Playlist", playlistAddedTo.name)
         assertEquals(4, playlistAddedTo.getSongs().size)
-        assertEquals(true, playlistAddedTo.getSongs().contains(song1))
-        assertEquals(true, playlistAddedTo.getSongs().contains(song2))
+        assertTrue(playlistAddedTo.getSongs().contains(song1))
+        assertTrue(playlistAddedTo.getSongs().contains(song2))
     }
 
 
@@ -122,8 +120,8 @@ internal class PlaylistTest {
         assertEquals(Genre.NONE, playlistAddedTo.genre)
         assertEquals("new", playlistAddedTo.name)
         assertEquals(4, playlistAddedTo.getSongs().size)
-        assertEquals(true, playlistAddedTo.getSongs().contains(song1))
-        assertEquals(true, playlistAddedTo.getSongs().contains(song2))
+        assertTrue(playlistAddedTo.getSongs().contains(song1))
+        assertTrue(playlistAddedTo.getSongs().contains(song2))
     }
 
     @Test

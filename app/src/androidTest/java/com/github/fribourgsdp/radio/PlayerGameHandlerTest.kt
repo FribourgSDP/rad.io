@@ -13,6 +13,7 @@ import org.mockito.Mockito.*
 class PlayerGameHandlerTest {
     private lateinit var mockSnapshot: DocumentSnapshot
 
+    private val sleepingTime = 50L
     private val singer = "Singer"
     private val song = "A good song"
     private val round = 1L
@@ -68,7 +69,11 @@ class PlayerGameHandlerTest {
 
         handler.handleSnapshot(mockSnapshot)
 
+
+        // Wait for the task of the database to execute
+
         assertFalse(view.checkPlayer(singer))
+
         assertEquals(View.VISIBLE, view.songVisibility)
         assertEquals(singer, view.song)
         assertEquals(View.GONE, view.guessInputVisibility)
@@ -86,7 +91,7 @@ class PlayerGameHandlerTest {
         handler.handleSnapshot(mockSnapshot)
 
         // Wait for the task of the database to execute
-        Thread.sleep(1000)
+        Thread.sleep(sleepingTime)
 
         assertTrue(view.checkPlayer(singer))
         assertEquals(View.VISIBLE, view.songVisibility)

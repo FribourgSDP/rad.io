@@ -5,6 +5,7 @@ import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
+import com.google.android.gms.tasks.Tasks
 import okhttp3.*
 import org.json.JSONException
 import java.io.IOException
@@ -38,10 +39,12 @@ class ImportSpotifyPlaylistsActivity : AppCompatActivity() {
     companion object {
 
         fun saveInfoToUser(playlistNameToUId: HashMap<String, String>, playlists: Set<Playlist>, ctx : Context) {
-            val user = UserProfileActivity.loadUser(ctx)
-            user.addSpotifyPlaylistUids(playlistNameToUId)
-            user.addPlaylists(playlists)
-            user.save(ctx)
+            User.loadOrDefault(ctx).addOnSuccessListener { u ->
+                u.addSpotifyPlaylistUids(playlistNameToUId)
+                u.addPlaylists(playlists)
+                u.save(ctx)
+            }
+
         }
 
         fun getPlaylistContent(playlistId: String, client: OkHttpClient = OkHttpClient(), parser : JSONParser = JSONStandardParser()) : CompletableFuture<Set<Song>> {

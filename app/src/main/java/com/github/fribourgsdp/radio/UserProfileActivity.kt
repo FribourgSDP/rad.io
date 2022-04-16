@@ -10,6 +10,8 @@ import android.widget.EditText
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
+import androidx.fragment.app.Fragment
+import com.google.android.gms.tasks.Tasks
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.firebase.auth.FirebaseAuth
 import com.spotify.sdk.android.auth.AuthorizationClient
@@ -45,58 +47,56 @@ class UserProfileActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_user_profile)
-
-        try {
-            user = User.load(this)
-        } catch (e: java.io.FileNotFoundException) {
-            //this should never happen as a user is created and saved in the first activity
-            createDefaultUser()
-        }
-
         instantiateViews()
 
+        User.loadOrDefault(this).addOnSuccessListener { u ->
+            user = u
+
+            checkUser()
+
+            usernameField.setText(user.name)
+            usernameInitialText.text = user.initial.uppercaseChar().toString()
+            spotifyStatusText.apply { text = if (user.linkedSpotify) "linked" else "unlinked" }
+            userIcon.colorFilter = PorterDuffColorFilter(user.color, PorterDuff.Mode.ADD)
+            //initialise playlists recycler view fragment
+            val bundle = Bundle()
+            bundle.putString(USER_DATA, Json.encodeToString(user))
+            MyFragment.beginTransaction<UserPlaylistsFragment>(supportFragmentManager, bundle)
 
 
-        checkUser()
-
-        launchSpotifyButton.setOnClickListener {
-            authenticateUser()
         }
 
-
-        saveChangeButton.setOnClickListener{
-            updateUser()
-        }
-
-        usernameField.setText(user.name)
-        usernameInitialText.text = user.initial.uppercaseChar().toString()
-        spotifyStatusText.apply {text = if (user.linkedSpotify) "linked" else "unlinked"}
-
-
-        homeButton.setOnClickListener{
-            startActivity(Intent(this, MainActivity::class.java))
-            finish()
-        }
-
-        googleSignInButton.setOnClickListener{
-            if(signedIn){
-                firebaseAuth.signOut()
-                googleSignInButton.text = getString(R.string.sign_in_message)
-                signedIn = false
-
-            }else{
-                startActivity(Intent(this,GoogleSignInActivity::class.java))
+            launchSpotifyButton.setOnClickListener {
+                authenticateUser()
             }
+
+
+
+            saveChangeButton.setOnClickListener {
+                updateUser()
+            }
+
+            homeButton.setOnClickListener {
+                startActivity(Intent(this, MainActivity::class.java))
+                finish()
+            }
+
+
+            googleSignInButton.setOnClickListener {
+                if (signedIn) {
+                    firebaseAuth.signOut()
+                    googleSignInButton.setText(getString(R.string.sign_in_message))
+                    signedIn = false
+
+                } else {
+                    startActivity(Intent(this, GoogleSignInActivity::class.java))
+                }
+
+
+
         }
-
-        userIcon.colorFilter = PorterDuffColorFilter(user.color, PorterDuff.Mode.ADD)
-
         findViewById<FloatingActionButton>(R.id.addPlaylistButton).setOnClickListener{startActivity(Intent(this, AddPlaylistActivity::class.java))}
 
-        //initialise playlists recycler view fragment
-        val bundle = Bundle()
-        bundle.putString(USER_DATA, Json.encodeToString(user))
-        MyFragment.beginTransaction<UserPlaylistsFragment>(supportFragmentManager, bundle)
     }
 
     private fun instantiateViews(){
@@ -111,13 +111,6 @@ class UserProfileActivity : AppCompatActivity() {
         userIcon = findViewById(R.id.userIcon)
     }
 
-    //this is theoritecally never called
-    private fun createDefaultUser(){
-        user = User("Default")
-        db.setUser("defUserProfileActivity",user)
-        user.save(this)
-
-    }
 
     private fun updateUser(){
         user.name = usernameField.text.toString()
@@ -166,19 +159,13 @@ class UserProfileActivity : AppCompatActivity() {
         startActivity(intent)
         finish()
     }
+
     companion object {
         fun buildRequest(): AuthorizationRequest{
             return AuthorizationRequest.Builder(MY_CLIENT_ID, AuthorizationResponse.Type.TOKEN, REDIRECT_URI)
                 .setScopes(arrayOf(SCOPES))
                 .setShowDialog(true)
                 .build()
-        }
-        fun loadUser(ctx : Context) : User{
-            return try { /* TODO replace with proper error handling of asking user enter his info */
-                User.load(ctx)
-            } catch (e: java.io.FileNotFoundException) {
-                User("No User Found", User.generateColor())
-            }
         }
     }
 }

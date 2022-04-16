@@ -9,6 +9,8 @@ import androidx.test.espresso.intent.Intents
 import androidx.test.espresso.intent.matcher.IntentMatchers
 import androidx.test.rule.GrantPermissionRule
 import org.hamcrest.Matchers
+import org.junit.After
+import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 
@@ -16,12 +18,20 @@ class VoiceOverIPActivityTest {
 
     @get:Rule var permissionRule = GrantPermissionRule.grant(android.Manifest.permission.RECORD_AUDIO)
 
+    @Before
+    fun initIntent() {
+        Intents.init()
+    }
+
+    @After
+    fun releaseIntent() {
+        Intents.release()
+    }
     @Test
     fun pressBackWorks(){
-        Intents.init()
         val context: Context = ApplicationProvider.getApplicationContext()
 
-        val intent: Intent = Intent(context, VoiceOverIPActivity::class.java)
+        val intent = Intent(context, VoiceOverIPActivity::class.java)
         ActivityScenario.launch<VoiceOverIPActivity>(intent).use { scenario ->
             Espresso.pressBack()
             Intents.intended(
@@ -31,7 +41,6 @@ class VoiceOverIPActivityTest {
                 )
             )
         }
-        Intents.release()
     }
 
 
