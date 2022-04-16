@@ -90,6 +90,9 @@
             android:name=".mockimplementations.BuggyLobbyActivity"
             android:exported="false" />
         <activity
+            android:name=".mockimplementations.LyricsGettingWorkingLobbyActivity"
+            android:exported="false" />
+        <activity
             android:name=".mockimplementations.WorkingJoinGameActivity"
             android:exported="false" />
         <activity
