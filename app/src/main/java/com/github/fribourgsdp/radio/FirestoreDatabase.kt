@@ -37,10 +37,22 @@ class FirestoreDatabase(var refMake: FirestoreRef) : Database {
         return  refMake.getUserRef(userId).get().continueWith { l ->
             val result = l.result
             if(result.exists()){
-                User(result["first"].toString())
+                val userId = result["userID"].toString()
+                val playlists = result["results"] !! as ArrayList<HashMap<String,String>>
+                val playlistSet : MutableSet<Playlist> = mutableSetOf()
+                for(playlist in playlists){
+                    val pl = Playlist(playlist["playlistName"]!!,Genre.valueOf(playlist["genre"]!!))
+                    pl.id = playlist["playlistId"]!!
+                    playlistSet.add(pl)
+                }
+
+                val name = result["username"].toString()
+                val user = User(name)
+                user.addPlaylists(playlistSet)
+                user.id = userId
+                user
             }else{
                 null
-
                 //TODO("CREATE EXCEPTION CLASS AND THROW APPROPRIATE EXCEPTION")
 
             }
@@ -49,8 +61,15 @@ class FirestoreDatabase(var refMake: FirestoreRef) : Database {
 
 
     override fun setUser(userId : String, user : User): Task<Void>{
+
+        val playlistInfo : MutableList<HashMap<String,String>> = mutableListOf()
+        for ( playlist in user.getPlaylists()){
+            playlistInfo.add((hashMapOf("playlistName" to playlist.name,"playlistId" to playlist.id, "genre" to playlist.genre.toString())))
+        }
         val userHash = hashMapOf(
-            "first" to user.name
+            "username" to user.name,
+            "userID" to user.id,
+            "playlists" to playlistInfo
         )
         val docRef = refMake.getUserRef(userId)
         Log.d(ContentValues.TAG, "DocumentSnapshot added with ID put: " + docRef.toString())
@@ -100,7 +119,9 @@ class FirestoreDatabase(var refMake: FirestoreRef) : Database {
                 val songs = result["songs"] !! as ArrayList<HashMap<String,String>>
                 val songSet : MutableSet<Song> = mutableSetOf()
                 for(song in songs){
-                    songSet.add((Song(song.get("second")!!,song.get("third")!!,"")))
+                    val songEntry = (Song(song["songName"]!!,song["songArtist"]!!,""))
+                    songEntry.id = song["songId"]!!
+                    songSet.add(songEntry)
                 }
 
                 Playlist(playlistTitle, songSet, Genre.valueOf(genre))
@@ -115,12 +136,12 @@ class FirestoreDatabase(var refMake: FirestoreRef) : Database {
         if(playlist.id == ""){
             return Tasks.forException(IllegalArgumentException("Not null id is expected"))
         }
-        val titleList : MutableList<Triple<String,String,String>> = mutableListOf()
+        val titleList : MutableList<HashMap<String,String>> = mutableListOf()
         for( song in playlist.getSongs()){
             if(song.id == ""){
                 return Tasks.forException(IllegalArgumentException("Not null id is expected"))
             }
-            titleList.add(Triple(song.id,song.name,song.artist))
+            titleList.add(hashMapOf("songId" to song.id,"songName" to song.name,"songArtist" to song.artist))
         }
         val playlistHash = hashMapOf(
             "playlistId" to playlist.id,
