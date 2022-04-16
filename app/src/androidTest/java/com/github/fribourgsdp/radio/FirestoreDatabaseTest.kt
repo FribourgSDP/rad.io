@@ -32,7 +32,7 @@ class FirestoreDatabaseTest {
         val db = FirestoreDatabase()
         val user = User("nathan")
         user.id = "215"
-        val lobbyId = 848L
+        val lobbyId = 123456789L
         val result = Tasks.withTimeout(db.modifyUserMicPermissions(lobbyId, user, true), 10, TimeUnit.SECONDS)
         assertEquals(null, Tasks.await(result))
     }
