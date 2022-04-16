@@ -63,9 +63,6 @@
             android:name=".FireBaseTestActivity"
             android:exported="false" />
         <activity
-            android:name=".DisplayLyricsActivity"
-            android:exported="false" />
-        <activity
             android:name=".SettingsActivity"
             android:exported="false" />
         <activity
