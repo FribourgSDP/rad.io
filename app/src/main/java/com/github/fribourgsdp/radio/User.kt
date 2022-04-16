@@ -67,7 +67,7 @@ data class User (var name: String, val color: Int) {
          * Tries to load a user from the app-specific storage on the device.
          * If it fails, it returns a default [User]
          *
-         * @param context the context to use for loading from a file (usually this in an activity)         *
+         * @param context the context to use for loading from a file (usually this in an activity)
          * @return the user saved on the device if it exists or a default [User] otherwise
          */
         fun loadOrDefault(context: Context) : Task<User> {
@@ -196,13 +196,5 @@ data class User (var name: String, val color: Int) {
 
     fun getSpotifyPlaylistUId(playlistName: String): String? {
         return playlistNamesToSpotifyId[playlistName]
-    }
-
-    interface Loader {
-        /**
-         * Load the [User] of the device
-         * @return the [User] of the device
-         */
-        fun loadUser(): User
     }
 }
