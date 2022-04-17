@@ -82,7 +82,6 @@ open class GameSettingsActivity : AppCompatActivity(), User.Loader {
     private fun startButtonBehavior() : View.OnClickListener {
         return View.OnClickListener {
             val intent: Intent = Intent(this, LobbyActivity::class.java).apply {
-                putExtra(GAME_HOST_KEY, Json.encodeToString(host))
                 putExtra(GAME_NAME_KEY, nameInput.text.toString().ifEmpty { getString(R.string.default_game_name) })
                 putExtra(GAME_PLAYLIST_KEY, Json.encodeToString(selectedPlaylist))
                 putExtra(GAME_NB_ROUNDS_KEY, nbRoundsInput.text.toString().ifEmpty { getString(R.string.default_game_nb_rounds) }.toInt())

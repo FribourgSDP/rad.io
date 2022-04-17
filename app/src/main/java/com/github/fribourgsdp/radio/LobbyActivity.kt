@@ -3,7 +3,7 @@ package com.github.fribourgsdp.radio
 import android.Manifest
 import android.content.Intent
 import android.content.pm.PackageManager
-import android.opengl.Visibility
+import android.graphics.drawable.Drawable
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
@@ -11,6 +11,8 @@ import android.view.View
 import android.widget.*
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
@@ -18,12 +20,14 @@ import kotlinx.serialization.json.Json
 const val GAME_KEY = "com.github.fribourgsdp.radio.GAME"
 const val MAP_ID_NAME_KEY = "com.github.fribourgsdp.radio.MAP_ID_NAME"
 const val PERMISSION_REQ_ID_RECORD_AUDIO = 22
+const val NO_MIC_PERMISSIONS_DRAWABLE = R.drawable.ic_action_name
+const val MIC_PERMISSIONS_ENABLED_DRAWABLE = R.drawable.ic_unmute
 
-open class LobbyActivity : AppCompatActivity() {
+open class LobbyActivity : AppCompatActivity(), User.Loader {
 
     private val db = this.initDatabase()
 
-    private var host : User? = null
+    private lateinit var user : User
     private var hostName : String? = null
     private var gameName : String? = null
     private var playlist : Playlist? = null
@@ -33,6 +37,7 @@ open class LobbyActivity : AppCompatActivity() {
     private var isPrivate: Boolean = false
     private var isHost: Boolean = false
     private var hasVoiceIdPermissions : Boolean = false
+    private var gameLobbyId: Long = -1L
 
     private lateinit var uuidTextView     : TextView
     private lateinit var hostNameTextView : TextView
@@ -45,8 +50,8 @@ open class LobbyActivity : AppCompatActivity() {
     private lateinit var launchGameButton: Button
     private lateinit var askForPermissionsButton: Button
 
-    private lateinit var playersListView : ListView
-    private lateinit var namesAdapter : ArrayAdapter<String>
+    private var layoutManager:RecyclerView.LayoutManager? = null
+    private var layoutAdapter:RecyclerLobbyAdapter? = null
 
     protected lateinit var mapIdToName: HashMap<String, String>
 
@@ -66,11 +71,11 @@ open class LobbyActivity : AppCompatActivity() {
         } else {
             initLobbyAsPlayer()
         }
-
     }
 
     private fun initLobbyAsHost() {
         db.getLobbyId().addOnSuccessListener { uid ->
+            gameLobbyId = uid
             uuidTextView.text = getString(R.string.uid_text_format, uid)
             linkToDatabase(uid)
 
@@ -109,10 +114,9 @@ open class LobbyActivity : AppCompatActivity() {
     }
 
     private fun initLobbyAsPlayer() {
-        val uid = intent.getLongExtra(GAME_UID_KEY, -1)
-        if (uid >= 0) {
-            uuidTextView.text = getString(R.string.uid_text_format, uid)
-            linkToDatabase(uid)
+        if (gameLobbyId >= 0) {
+            uuidTextView.text = getString(R.string.uid_text_format, gameLobbyId)
+            linkToDatabase(gameLobbyId)
         } else {
             uuidTextView.text = getString(R.string.uid_error_join)
         }
@@ -123,17 +127,16 @@ open class LobbyActivity : AppCompatActivity() {
     }
 
     private fun initVariables() {
-        host = intent.getStringExtra(GAME_HOST_KEY)?.let {
-            Json.decodeFromString(it) as User
-        }
+        user = loadUser()
 
         playlist = intent.getStringExtra(GAME_PLAYLIST_KEY)?.let {
             Json.decodeFromString(it) as Playlist
         }
 
-        hostName = host?.name
-                // if host is null, get the name from the intent
-                ?: intent.getStringExtra(GAME_HOST_NAME_KEY)
+        isHost = intent.getBooleanExtra(GAME_IS_HOST_KEY, false)
+
+        // if user is not the host, get the name from the intent
+        hostName = if (isHost) user.name else intent.getStringExtra(GAME_HOST_NAME_KEY)
 
         playlistName = playlist?.name
                 // if playlist is null, get the name from the intent
@@ -143,9 +146,9 @@ open class LobbyActivity : AppCompatActivity() {
         nbRounds        = intent.getIntExtra(GAME_NB_ROUNDS_KEY, getString(R.string.default_game_nb_rounds).toInt())
         withHint        = intent.getBooleanExtra(GAME_HINT_KEY, false)
         isPrivate       = intent.getBooleanExtra(GAME_PRIVACY_KEY, false)
-        isHost          = intent.getBooleanExtra(GAME_IS_HOST_KEY, false)
 
         hasVoiceIdPermissions = (ContextCompat.checkSelfPermission(this, Manifest.permission.RECORD_AUDIO) == PackageManager.PERMISSION_GRANTED)
+        gameLobbyId = intent.getLongExtra(GAME_UID_KEY, -1L)
     }
 
     private fun initTextViews() {
@@ -157,9 +160,16 @@ open class LobbyActivity : AppCompatActivity() {
         withHintTextView = findViewById(R.id.withHintText)
         privateTextView  = findViewById(R.id.privateText)
         privateTextView  = findViewById(R.id.privateText)
-        playersListView = findViewById(R.id.playersListView)
-        namesAdapter = ArrayAdapter(this, android.R.layout.simple_list_item_1)
-        playersListView.adapter = namesAdapter
+        layoutManager = LinearLayoutManager(this)
+        val recyclerView = findViewById<RecyclerView>(R.id.lobbyRecyclerView)
+        recyclerView.layoutManager = layoutManager
+        layoutAdapter = RecyclerLobbyAdapter()
+        recyclerView.adapter = layoutAdapter
+        if (isHost) {
+            val hostMicPermissionsImg = if (hasVoiceIdPermissions) MIC_PERMISSIONS_ENABLED_DRAWABLE else NO_MIC_PERMISSIONS_DRAWABLE
+            layoutAdapter?.setContent(arrayOf(user.name), intArrayOf(hostMicPermissionsImg))
+            layoutAdapter?.notifyDataSetChanged()
+        }
     }
 
     private fun initButtons() {
@@ -190,14 +200,15 @@ open class LobbyActivity : AppCompatActivity() {
 
     private fun linkToDatabase(uid: Long) {
         if (isHost && uid >= 0) {
-            if (gameName != null && host != null && playlist != null) {
-                gameBuilder.setHost(host!!)
+            if (gameName != null && playlist != null) {
+                gameBuilder.setHost(user)
                     .setID(uid)
                     .setName(gameName!!)
                     .setPlaylist(playlist!!)
                     .setNbRounds(nbRounds)
                     .setWithHint(withHint)
                     .setPrivacy(isPrivate)
+
 
                 openLobby(uid)
             } else {
@@ -212,14 +223,14 @@ open class LobbyActivity : AppCompatActivity() {
 
     private fun openLobby(uid: Long){
         db.openLobby(uid, gameBuilder.getSettings()).addOnSuccessListener {
-            db.addUserToLobby(uid, host!!).addOnSuccessListener {
-                listenToUpdates(uid)
-            }.addOnFailureListener {
-                uuidTextView.text = getString(R.string.uid_error)
-            }
-        }.addOnFailureListener {
-            uuidTextView.text = getString(R.string.uid_error)
-        }
+                    db.addUserToLobby(uid, user, (ContextCompat.checkSelfPermission(this, Manifest.permission.RECORD_AUDIO) == PackageManager.PERMISSION_GRANTED)).addOnSuccessListener {
+                        listenToUpdates(uid)
+                    }.addOnFailureListener {
+                        uuidTextView.text = getString(R.string.uid_error)
+                    }
+                }.addOnFailureListener {
+                    uuidTextView.text = getString(R.string.uid_error)
+                }
     }
 
     private fun listenToUpdates(uid: Long) {
@@ -230,11 +241,17 @@ open class LobbyActivity : AppCompatActivity() {
 
             if (snapshot != null && snapshot.exists()) {
                 val newList = snapshot.get("players")!! as ArrayList<HashMap<String, String>>
-                updatePlayersList(newList)
 
                 val isGameLaunched = snapshot.getBoolean("launched")
 
-                if (!isHost && isGameLaunched != null && isGameLaunched && hasVoiceIdPermissions) {
+                val mapNameToPermissions = snapshot.get("permissions")!! as HashMap<String, Boolean>
+                val atLeastOnePermissionMissing = mapNameToPermissions.containsValue(false)
+                launchGameButton.isEnabled = !atLeastOnePermissionMissing
+
+                updatePlayersList(mapNameToPermissions, newList)
+
+
+                if (!isHost && isGameLaunched != null && isGameLaunched) {
                     goToGameActivity(false, gameID = uid)
                 }
 
@@ -245,15 +262,25 @@ open class LobbyActivity : AppCompatActivity() {
         }
     }
 
-    private fun updatePlayersList(playersList: List<Map<String, String>>) {
-        namesAdapter.clear()
-        namesAdapter.addAll(playersList.map {u -> u["name"] })
-        namesAdapter.notifyDataSetChanged()
+    private fun updatePlayersList(nameToPermissions: Map<String, Boolean>, playersList: List<Map<String, String>>) {
+        val users = playersList.map { u -> u["name"]!! }
+        val micPermissions = arrayListOf<Int>()
+        for (user in users) {
+            if (nameToPermissions[user]!!) {
+                micPermissions.add(MIC_PERMISSIONS_ENABLED_DRAWABLE)
+            }
+            else {
+                micPermissions.add(NO_MIC_PERMISSIONS_DRAWABLE)
+            }
+        }
+        layoutAdapter?.setContent(users.toTypedArray(), micPermissions.toIntArray())
+        layoutAdapter?.notifyDataSetChanged()
         gameBuilder.setUserIdList(playersList.map { u -> u["id"]!! })
         mapIdToName = playersList.associate {
             it["id"]!! to it["name"]!!
         } as HashMap<String, String>
     }
+
 
     open protected fun goToGameActivity(isHost: Boolean, game: Game? = null, gameID: Long) {
         val intent: Intent = Intent(this, GameActivity::class.java).apply {
@@ -280,8 +307,13 @@ open class LobbyActivity : AppCompatActivity() {
                     hasVoiceIdPermissions = true
                     launchGameButton.isEnabled = true
                     askForPermissionsButton.visibility = View.INVISIBLE
+                    db.modifyUserMicPermissions(gameLobbyId, user, true)
                 }
             }
         }
+    }
+
+    override fun loadUser(): User {
+        return User.load(this)
     }
 }

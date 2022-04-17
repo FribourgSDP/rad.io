@@ -1,5 +1,6 @@
 package com.github.fribourgsdp.radio
 
+import android.util.Log
 import com.google.android.gms.tasks.Task
 import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.ktx.firestore
@@ -142,6 +143,7 @@ class FirestoreDatabase : Database {
             "withHint" to settings.withHint,
             "private" to settings.isPrivate,
             "players" to arrayListOf<String>(),
+            "permissions" to hashMapOf<String, Boolean>(),
             "launched" to false
         )
 
@@ -176,7 +178,7 @@ class FirestoreDatabase : Database {
         }
     }
 
-    override fun addUserToLobby(id: Long, user: User) : Task<Void> {
+    override fun addUserToLobby(id: Long, user: User, hasMicPermissions: Boolean) : Task<Void> {
         val docRef = db.collection("lobby").document(id.toString())
 
         return db.runTransaction { transaction ->
@@ -190,6 +192,31 @@ class FirestoreDatabase : Database {
             list.add(idAndName(user))
 
             transaction.update(docRef, "players", list)
+
+            val playerPermissions = snapshot.get("permissions")!! as HashMap<String, Boolean>
+            playerPermissions[user.name] = hasMicPermissions
+
+            transaction.update(docRef, "permissions", playerPermissions)
+
+            // Success
+            null
+        }
+    }
+
+    override fun modifyUserMicPermissions(id: Long, user: User, newPermissions: Boolean): Task<Void> {
+        val docRef = db.collection("lobby").document(id.toString())
+
+        return db.runTransaction { transaction ->
+            val snapshot = transaction.get(docRef)
+
+            if (!snapshot.exists()) {
+                throw IllegalArgumentException("Document $id not found.")
+            }
+
+            val playerPermissions = snapshot.get("permissions")!! as HashMap<String, Boolean>
+            playerPermissions[user.name] = newPermissions
+
+            transaction.update(docRef, "permissions", playerPermissions)
 
             // Success
             null
