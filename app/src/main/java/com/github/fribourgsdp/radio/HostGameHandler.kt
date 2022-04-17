@@ -55,6 +55,7 @@ class HostGameHandler(private val game: Game, private val view: GameView, db: Da
     }
 
     private fun createUpdatesMap(): Map<String, Any> {
+        val done = game.isDone()
         val nextChoices = game.getChoices(3).stream()
             .map { song -> song.name }
             .toList()
@@ -62,7 +63,7 @@ class HostGameHandler(private val game: Game, private val view: GameView, db: Da
         val nextUser = game.getUserToPlay()
 
         return hashMapOf(
-            "finished" to game.isDone(),
+            "finished" to done,
             "current_round" to game.currentRound,
             "current_song" to FieldValue.delete(),
             "singer" to nextUser,
