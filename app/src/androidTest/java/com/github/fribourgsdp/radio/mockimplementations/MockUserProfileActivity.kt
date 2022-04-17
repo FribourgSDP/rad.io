@@ -8,7 +8,6 @@ import org.mockito.Mockito
 class MockUserProfileActivity : UserProfileActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         val context = Mockito.mock(Context::class.java)
-        MockFileSystem.wipeData()
         User.setFSGetter(MockFileSystem.MockFSGetter)
         val string = "test"
         val user = User(string, 0)
