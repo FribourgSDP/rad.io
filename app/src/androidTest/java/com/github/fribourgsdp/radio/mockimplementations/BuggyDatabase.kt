@@ -80,7 +80,7 @@ class BuggyDatabase : Database {
         TODO("Not yet implemented")
     }
 
-    override fun playerEndTurn(gameID: Long, playerID: String, hasFound: Boolean): Task<Int> {
+    override fun playerEndTurn(gameID: Long, playerID: String, hasFound: Boolean): Task<Void> {
         TODO("Not yet implemented")
     }
 

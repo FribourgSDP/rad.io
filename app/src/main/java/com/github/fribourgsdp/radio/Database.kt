@@ -126,7 +126,7 @@ interface Database {
      * It also updates its score on the database.
      * @return a task void so that we know if the player's turn was ended correctly on the database.
      */
-    fun playerEndTurn(gameID: Long, playerID: String, hasFound: Boolean = false): Task<Int>
+    fun playerEndTurn(gameID: Long, playerID: String, hasFound: Boolean = false): Task<Void>
 
     /**
      * Reset the game metadata on the [Database].

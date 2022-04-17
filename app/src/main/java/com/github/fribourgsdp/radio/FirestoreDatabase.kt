@@ -260,7 +260,7 @@ class FirestoreDatabase : Database {
             .update(updatesMap)
     }
 
-    override fun playerEndTurn(gameID: Long, playerID: String, hasFound: Boolean): Task<Int> {
+    override fun playerEndTurn(gameID: Long, playerID: String, hasFound: Boolean): Task<Void> {
         val docRef = db.collection("games_metadata").document(gameID.toString())
 
         return db.runTransaction { transaction ->
