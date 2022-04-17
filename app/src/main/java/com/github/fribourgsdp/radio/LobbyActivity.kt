@@ -46,7 +46,7 @@ open class LobbyActivity : AppCompatActivity() {
     private lateinit var playersListView : ListView
     private lateinit var namesAdapter : ArrayAdapter<String>
 
-    private lateinit var mapIdToName: HashMap<String, String>
+    protected lateinit var mapIdToName: HashMap<String, String>
 
     private val gameBuilder = Game.Builder()
 
@@ -246,7 +246,7 @@ open class LobbyActivity : AppCompatActivity() {
         mapIdToName = HashMap(playersMap)
     }
 
-    private fun goToGameActivity(isHost: Boolean, game: Game? = null, gameID: Long) {
+    open protected fun goToGameActivity(isHost: Boolean, game: Game? = null, gameID: Long) {
         val intent: Intent = Intent(this, GameActivity::class.java).apply {
             putExtra(GAME_IS_HOST_KEY, isHost)
             putExtra(MAP_ID_NAME_KEY, mapIdToName)

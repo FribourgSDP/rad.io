@@ -91,9 +91,7 @@
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-        </activity>
-
-        <!-- Test implementations of activities -->
+        </activity> <!-- Test implementations of activities -->
         <activity
             android:name=".mockimplementations.MockGameSettingsActivity"
             android:exported="false" />
@@ -108,6 +106,9 @@
             android:exported="false" />
         <activity
             android:name=".mockimplementations.BuggyJoinGameActivity"
+            android:exported="false" />
+        <activity
+            android:name=".mockimplementations.MockGameActivity"
             android:exported="false" />
     </application>
 

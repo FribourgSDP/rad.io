@@ -14,11 +14,12 @@ import io.agora.rtc.Constants
 import io.agora.rtc.RtcEngine
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.json.Json
+import kotlin.math.absoluteValue
 import kotlin.random.Random
 
 const val SCORES_KEY = "com.github.fribourgsdp.radio.SCORES"
 
-class GameActivity : AppCompatActivity(), GameView, User.Loader {
+open class GameActivity : AppCompatActivity(), GameView, User.Loader {
     private lateinit var user: User
     private var isHost: Boolean = false
 
@@ -34,7 +35,7 @@ class GameActivity : AppCompatActivity(), GameView, User.Loader {
     private val scoresAdapter = ScoresAdapter()
 
     private lateinit var mapIdToName: HashMap<String, String>
-    private lateinit var voiceChannel: VoiceIpEngineDecorator
+    protected lateinit var voiceChannel: VoiceIpEngineDecorator
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -173,13 +174,14 @@ class GameActivity : AppCompatActivity(), GameView, User.Loader {
         }
     }
 
-    private fun initVoiceChat(gameUid: Long) {
-        voiceChannel = VoiceIpEngineDecorator(this)
-        val userId = Random.nextInt(100000000)
+    open protected fun initVoiceChat(gameUid: Long) {
+
+        val map = mapIdToName.mapKeys { it.hashCode().absoluteValue }
+        if (!this::voiceChannel.isInitialized) voiceChannel = VoiceIpEngineDecorator(this, MyIRtcEngineEventHandler(this, map))
+        val userId = user.name.hashCode().absoluteValue
         voiceChannel.setAudioProfile(Constants.AUDIO_PROFILE_MUSIC_STANDARD, Constants.AUDIO_SCENARIO_CHATROOM_ENTERTAINMENT);
-        voiceChannel.enableAudioVolumeIndication(500,5,true)
+        voiceChannel.enableAudioVolumeIndication(200,3,true)
         voiceChannel.joinChannel(voiceChannel.getToken(userId, gameUid.toString()), gameUid.toString(), "", userId)
-        Log.d("Game uid is: ", gameUid.toString())
     }
 
     override fun loadUser(): User {
