@@ -278,37 +278,27 @@ class FirestoreDatabase : Database {
             val updatedFoundMap = snapshot.get("player_found_map")!! as HashMap<String, Boolean>
             updatedFoundMap[playerID] = hasFound
 
+
+            // Count the number of players that found the answer and compute the points
+            val points = Game.computeScore(
+                // The position of the player:
+                updatedFoundMap.count { (_, hasFound) -> hasFound }
+            )
+
+            val updatedScoreMap = snapshot.get("scores_of_round")!! as HashMap<String, Int>
+            updatedScoreMap[playerID] = points
+
             // Update on database
             transaction.update(
                 docRef,
                 "player_done_map", updatedDoneMap,
-                "player_found_map", updatedFoundMap
+                "player_found_map", updatedFoundMap,
+                "scores_of_round", updatedScoreMap
             )
 
             // Success
-            // Count the number of players that found the answer
-            updatedFoundMap.count { (_, hasFound) -> hasFound }
-
-        }
-    }
-
-    override fun addPointsToPlayer(gameID: Long, playerID: String, points: Int): Task<Void> {
-        val docRef = db.collection("games_metadata").document(gameID.toString())
-
-        return db.runTransaction { transaction ->
-            val snapshot = transaction.get(docRef)
-
-            if (!snapshot.exists()) {
-                throw IllegalArgumentException("Document $gameID in games not found.")
-            }
-
-            val updatedMap = snapshot.get("scores_of_round")!! as HashMap<String, Int>
-            updatedMap[playerID] = points
-
-            transaction.update(docRef, "scores_of_round", updatedMap)
-
-            // Success
             null
+
         }
     }
 

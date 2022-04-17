@@ -67,14 +67,7 @@ class PlayerGameHandler(
             // Hide the error if a wrong guess was made
             view.hideError()
 
-            db.playerEndTurn(gameID, userId, true)
-                .addOnSuccessListener { position ->
-
-                    db.addPointsToPlayer(gameID, userId, Game.computeScore(position)).addOnFailureListener {
-                        view.displayError("An error occurred")
-                    }
-
-                }.addOnFailureListener {
+            db.playerEndTurn(gameID, userId, true).addOnFailureListener {
                     view.displayError("An error occurred")
                 }
         }

@@ -88,7 +88,4 @@ class BuggyDatabase : Database {
         TODO("Not yet implemented")
     }
 
-    override fun addPointsToPlayer(gameID: Long, playerID: String, points: Int): Task<Void> {
-        TODO("Not yet implemented")
-    }
 }

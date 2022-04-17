@@ -121,11 +121,10 @@ interface Database {
     }
 
     /**
-     * Set the player with id [playerID] to done in the metadata of game [gameID]
-     * Also set whether the player found the answer of not.
-     *
-     * Return the [rank][Int] of the user in the game.
-     * @return a task getting the [rank][Int] of the user.
+     * End the turn of the player with id [playerID] in the metadata of game [gameID]
+     * It sets that the player's turn was done and also whether the player [found][hasFound] the answer of not.
+     * It also updates its score on the database.
+     * @return a task void so that we know if the player's turn was ended correctly on the database.
      */
     fun playerEndTurn(gameID: Long, playerID: String, hasFound: Boolean = false): Task<Int>
 
@@ -135,9 +134,4 @@ interface Database {
      */
     fun resetGameMetadata(gameID: Long, singer: String): Task<Void>
 
-    /**
-     * Add [points] to the user [playerID] in the game [gameID].
-     * @return a task void so that we know if the [points] were correctly added.
-     */
-    fun addPointsToPlayer(gameID: Long, playerID: String, points: Int): Task<Void>
 }

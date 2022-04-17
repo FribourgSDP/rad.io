@@ -100,10 +100,6 @@ class LocalDatabase : Database {
         TODO("Not yet implemented")
     }
 
-    override fun addPointsToPlayer(gameID: Long, playerID: String, points: Int): Task<Void> {
-        TODO("Not yet implemented")
-    }
-
     companion object {
         const val EXPECTED_USER_UID = 392L
         const val EXPECTED_UID = 794L
