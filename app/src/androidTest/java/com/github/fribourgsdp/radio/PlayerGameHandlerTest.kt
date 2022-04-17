@@ -32,6 +32,7 @@ class PlayerGameHandlerTest {
         `when`(mockSnapshot.get("song_choices")).thenReturn(listOfSongs)
         `when`(mockSnapshot.getString("current_song")).thenReturn(null)
         `when`(mockSnapshot.get("scores")).thenReturn(scores)
+        `when`(mockSnapshot.getBoolean("finished")).thenReturn(false)
     }
 
     @Test
@@ -230,6 +231,18 @@ class PlayerGameHandlerTest {
         return if (first.size != second.size)  false
         else first.entries.stream()
             .allMatch { (k, v) -> v == second[k] }
+    }
+
+    @Test
+    fun gameFinishedCorrectlyHandled() {
+        val view = FakeGameView()
+        val handler = PlayerGameHandler(0, view)
+
+        `when`(mockSnapshot.getBoolean("finished")).thenReturn(true)
+
+        handler.handleSnapshot(mockSnapshot)
+
+        assertTrue(view.gameOver)
     }
 
 }
