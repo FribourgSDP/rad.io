@@ -64,7 +64,11 @@ class LocalDatabase : Database {
         return Tasks.forResult(EXPECTED_SETTINGS)
     }
 
-    override fun addUserToLobby(id: Long, user: User): Task<Void> {
+    override fun addUserToLobby(id: Long, user: User, hasMicPermissions: Boolean): Task<Void> {
+        return Tasks.forResult(null)
+    }
+
+    override fun modifyUserMicPermissions(id: Long, user: User, newPermissions: Boolean): Task<Void> {
         return Tasks.forResult(null)
     }
 

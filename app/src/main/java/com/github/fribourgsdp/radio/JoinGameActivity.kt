@@ -1,6 +1,8 @@
 package com.github.fribourgsdp.radio
 
+import android.Manifest
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.os.Bundle
 import android.view.KeyEvent
 import android.view.View
@@ -9,6 +11,7 @@ import android.widget.Button
 import android.widget.EditText
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
 import androidx.core.widget.addTextChangedListener
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
@@ -59,7 +62,7 @@ open class JoinGameActivity : AppCompatActivity(), User.Loader {
 
     private fun connectToLobby(id: Long) {
         db.getGameSettingsFromLobby(id).addOnSuccessListener { settings ->
-            db.addUserToLobby(id, loadUser()).addOnSuccessListener {
+            db.addUserToLobby(id, loadUser(), (ContextCompat.checkSelfPermission(this, Manifest.permission.RECORD_AUDIO) == PackageManager.PERMISSION_GRANTED)).addOnSuccessListener {
                 startActivity(Intent(this, LobbyActivity::class.java).apply {
                     putExtra(GAME_HOST_NAME_KEY, settings.hostName)
                     putExtra(GAME_NAME_KEY, settings.name)
