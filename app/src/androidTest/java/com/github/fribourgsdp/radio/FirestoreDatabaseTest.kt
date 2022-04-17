@@ -22,6 +22,7 @@ class FirestoreDatabaseTest {
     private val song1 = Song("song1","artist1","lyricsTest1","idTest1")
     private val song2 = Song("song2","artist2","lyricsTest2","idTest2")
     private val song3 = Song("song3","artist3","lyricsTest3","idTest3")
+    private val invalidSong = Song("invalidSong","invalidArtist","invalidLyrics","")
 
     private val playlist1 = Playlist("playlist1", setOf(song1,song2),Genre.FRENCH)
     private val playlist2 = Playlist("playlist2", setOf(song1,song3),Genre.NONE)
@@ -75,4 +76,26 @@ class FirestoreDatabaseTest {
         assertEquals( null,Tasks.await(user))
     }
 
+    @Test
+    fun  registerSongAndFetchingItWorks(){
+        db.registerSong(song1)
+        `when`(mockSnapshot.exists()).thenReturn(true)
+
+        `when`(mockSnapshot.get("songName")).thenReturn("song1")
+        `when`(mockSnapshot.get("artistsName")).thenReturn("artist1")
+        `when`(mockSnapshot.get("lyrics")).thenReturn("lyricsTest1")
+        `when`(mockSnapshot.get("songId")).thenReturn("idTest1")
+
+        val song = db.getSong("idTest1")
+        assertEquals(song1,Tasks.await(song))
+
+    }
+   /* @Test(expected = IllegalArgumentException::class)
+    fun registerSongWithNoIdThrowsException(){
+        Tasks.await( db.registerSong(invalidSong))
+        /*val t1 = db.registerSong(invalidSong)
+        assertEquals(IllegalArgumentException("Not null id is expected"),
+        Tasks.await(t1)
+        )*/
+    }*/
 }
