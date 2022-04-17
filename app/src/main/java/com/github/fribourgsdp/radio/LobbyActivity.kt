@@ -210,7 +210,20 @@ open class LobbyActivity : AppCompatActivity(), User.Loader {
                     .setWithHint(withHint)
                     .setPrivacy(isPrivate)
 
-                db.openLobby(uid, gameBuilder.getSettings()).addOnSuccessListener {
+
+                openLobby(uid)
+            } else {
+                uuidTextView.text = getString(R.string.uid_error)
+            }
+        } else if (!isHost && uid >= 0) {
+            listenToUpdates(uid)
+        }
+
+    }
+
+
+    private fun openLobby(uid: Long){
+        db.openLobby(uid, gameBuilder.getSettings()).addOnSuccessListener {
                     db.addUserToLobby(uid, user, (ContextCompat.checkSelfPermission(this, Manifest.permission.RECORD_AUDIO) == PackageManager.PERMISSION_GRANTED)).addOnSuccessListener {
                         listenToUpdates(uid)
                     }.addOnFailureListener {
@@ -219,13 +232,6 @@ open class LobbyActivity : AppCompatActivity(), User.Loader {
                 }.addOnFailureListener {
                     uuidTextView.text = getString(R.string.uid_error)
                 }
-            } else {
-                uuidTextView.text = getString(R.string.uid_error)
-            }
-        } else if (!isHost && uid >= 0) {
-            listenToUpdates(uid)
-        }
-
     }
 
     private fun listenToUpdates(uid: Long) {
