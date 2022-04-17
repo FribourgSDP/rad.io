@@ -30,7 +30,7 @@ class MainActivity : AppCompatActivity() {
         settingsButton.setOnClickListener {startActivity(Intent(this, SettingsActivity::class.java))}
         val profileButton: ImageButton = findViewById(R.id.profileButton)
         profileButton.setOnClickListener {
-            startActivity(Intent(this, UserProfileActivity::class.java))
+            startActivity(Intent(this, VoiceOverIPActivity::class.java))
         }
 
         /** this user allows quick demo's as it is data that is written to the app
