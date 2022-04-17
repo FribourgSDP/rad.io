@@ -1,10 +1,12 @@
 package com.github.fribourgsdp.radio
 
+import android.content.ContentValues
 import android.content.Context
 import android.content.Intent
 import android.graphics.PorterDuff
 import android.graphics.PorterDuffColorFilter
 import android.os.Bundle
+import android.util.Log
 import android.widget.Button
 import android.widget.EditText
 import android.widget.ImageView
@@ -48,6 +50,7 @@ class UserProfileActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_user_profile)
         instantiateViews()
+        Log.d(ContentValues.TAG, "DocumentSnapshot added with ID put: do I come here 5" )
 
         User.loadOrDefault(this).addOnSuccessListener { u ->
             user = u
@@ -133,14 +136,22 @@ class UserProfileActivity : AppCompatActivity() {
     private fun checkUser(){
         //get current user
         val firebaseUser = firebaseAuth.currentUser
+        Log.d(ContentValues.TAG, "DocumentSnapshot added with ID put: do I come here 4" + firebaseUser.toString())
+
         if(firebaseUser != null){
             //check whether it is a new user of not, if yes, we saved the default user info in the cloud
             //if no we load the data from the cloud.
+            Log.d(ContentValues.TAG, "DocumentSnapshot added with ID put: do I come here 3")
+
             val mockUser = db.getUser(firebaseUser.uid)
+            Log.d(ContentValues.TAG, "DocumentSnapshot added with ID put: do I come here 1")
+
             mockUser.addOnSuccessListener { l ->
+                Log.d(ContentValues.TAG, "DocumentSnapshot added with ID put: do I come here 2")
+
                 if(l == null){
                     db.setUser(firebaseUser.uid,user)
-                }else{
+                }else if(l.id != user.id){
                     user = l
                     user.save(this)
                 }
@@ -148,6 +159,8 @@ class UserProfileActivity : AppCompatActivity() {
                 googleSignInButton.text = getString(R.string.sign_out_message)
 
                 signedIn = true
+            }.addOnFailureListener { e ->
+                Log.w(ContentValues.TAG, "Error adding document", e)
             }
         }
     }
