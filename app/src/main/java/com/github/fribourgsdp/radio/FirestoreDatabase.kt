@@ -38,9 +38,10 @@ class FirestoreDatabase(var refMake: FirestoreRef) : Database {
             val result = l.result
             if(result.exists()){
                 val userId = result["userID"].toString()
-                val playlists = result["results"] !! as ArrayList<HashMap<String,String>>
+                val playlists = result["playlists"] !! as ArrayList<HashMap<String,String>>
                 val playlistSet : MutableSet<Playlist> = mutableSetOf()
                 for(playlist in playlists){
+
                     val pl = Playlist(playlist["playlistName"]!!,Genre.valueOf(playlist["genre"]!!))
                     pl.id = playlist["playlistId"]!!
                     playlistSet.add(pl)
