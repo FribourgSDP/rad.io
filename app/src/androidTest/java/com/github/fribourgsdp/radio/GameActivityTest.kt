@@ -8,6 +8,7 @@ import androidx.test.core.app.ApplicationProvider
 import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.intent.Intents
+import androidx.test.espresso.intent.matcher.IntentMatchers
 import androidx.test.espresso.matcher.RootMatchers.isDialog
 import androidx.test.espresso.matcher.ViewMatchers.*
 import androidx.test.ext.junit.runners.AndroidJUnit4
@@ -202,6 +203,30 @@ class GameActivityTest {
                     atPosition(2, R.id.nameScoreTextView, withText("singer1")),
                     atPosition(2, R.id.scoreTextView, withText("70"))
                 )))
+        }
+    }
+
+    @Test
+    fun goToEndGameActivityOnGameOver() {
+        val scores = hashMapOf(
+            "singer0" to 85L,
+            "singer1" to 70L,
+            "singer2" to 100L
+        )
+
+        val testIntent = Intent(ctx, GameActivity::class.java)
+        ActivityScenario.launch<GameActivity>(testIntent).use { scenario ->
+            scenario.onActivity {
+                it.gameOver(scores)
+            }
+
+            Intents.intended(
+                allOf(
+                    IntentMatchers.hasComponent(EndGameActivity::class.java.name),
+                    IntentMatchers.hasExtra(SCORES_KEY, ArrayList(scores.toList())),
+                    IntentMatchers.toPackage("com.github.fribourgsdp.radio")
+                )
+            )
         }
     }
 }
