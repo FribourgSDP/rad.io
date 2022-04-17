@@ -12,15 +12,32 @@ import org.junit.Assert.*
 import org.junit.Before
 import org.mockito.ArgumentMatchers.anyString
 import org.mockito.Mockito.*
+import java.util.*
+import kotlin.collections.HashMap
 
 class FirestoreDatabaseTest {
-    private val userAuthUID = "tnestUserUser"
+    private val userNameTest = "BakerTest"
+    private val userIdTest = "ID124Test"
+
+    private val song1 = Song("song1","artist1","lyricsTest1","idTest1")
+    private val song2 = Song("song2","artist2","lyricsTest2","idTest2")
+    private val song3 = Song("song3","artist3","lyricsTest3","idTest3")
+
+    private val playlist1 = Playlist("playlist1", setOf(song1,song2),Genre.FRENCH)
+    private val playlist2 = Playlist("playlist2", setOf(song1,song3),Genre.NONE)
+
+    private val playlistListTest = arrayListOf(
+        hashMapOf("playlistName" to playlist1.name,"playlistId" to playlist1.id, "genre" to playlist1.genre.toString()),
+        hashMapOf("playlistName" to playlist2.name,"playlistId" to playlist2.id, "genre" to playlist2.genre.toString()))
+
     private lateinit var mockFirestoreRef: FirestoreRef
     private lateinit var mockSnapshot: DocumentSnapshot
     private lateinit var mockDocumentReference : DocumentReference
     private lateinit var db : FirestoreDatabase
     @Before
     fun setup(){
+
+
         mockFirestoreRef = mock(FirestoreRef::class.java)
         mockSnapshot = mock(DocumentSnapshot::class.java)
         mockDocumentReference = mock(DocumentReference::class.java)
@@ -30,28 +47,31 @@ class FirestoreDatabaseTest {
         `when`(mockDocumentReference.get()).thenReturn(Tasks.forResult(mockSnapshot))
         `when`(mockDocumentReference.set(anyMap<String,String>())).thenReturn( Tasks.whenAll(listOf(Tasks.forResult(3))))
 
-        `when`(mockFirestoreRef.getUserRef(userAuthUID)).thenReturn(mockDocumentReference)
+        `when`(mockFirestoreRef.getUserRef(userIdTest)).thenReturn(mockDocumentReference)
 
     }
     @Test
     fun registeringUserAndFetchingItWorks(){
-        val name = "nathanael"
-        val userTest = User(name)
+
+        val userTest = User(userNameTest)
 
         `when`(mockSnapshot.exists()).thenReturn(true)
-        `when`(mockSnapshot.get("first")).thenReturn("nathanael")
+        `when`(mockSnapshot.get("username")).thenReturn(userNameTest)
+        `when`(mockSnapshot.get("userID")).thenReturn(userIdTest)
+        `when`(mockSnapshot.get("playlists")).thenReturn(playlistListTest)
+        `when`(mockSnapshot.get("username")).thenReturn(userNameTest)
 
-        db.setUser(userAuthUID,userTest)
-        val t1 = db.getUser(userAuthUID)
+        db.setUser(userIdTest,userTest)
+        val t1 = db.getUser(userIdTest)
 
-        assertEquals(name,Tasks.await(t1).name)
+        assertEquals(userNameTest,Tasks.await(t1).name)
     }
 
     @Test
     fun fetchingUnregisteredUserReturnsNull(){
-        val db = FirestoreDatabase()
-        val user = Tasks.withTimeout(db.getUser("rubbish"),10,TimeUnit.SECONDS)
-        Log.d(ContentValues.TAG, "DocumentSnapshot added with ID put: " + Tasks.await(user))
+        `when`(mockSnapshot.exists()).thenReturn(false)
+
+        val user = Tasks.withTimeout(db.getUser(userIdTest),10,TimeUnit.SECONDS)
         assertEquals( null,Tasks.await(user))
     }
 
