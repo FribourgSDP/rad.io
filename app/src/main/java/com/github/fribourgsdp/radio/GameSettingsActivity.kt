@@ -16,7 +16,7 @@ const val GAME_HINT_KEY = "com.github.fribourgsdp.radio.GAME_HINT"
 const val GAME_PRIVACY_KEY = "com.github.fribourgsdp.radio.GAME_PRIVACY"
 const val GAME_IS_HOST_KEY = "com.github.fribourgsdp.radio.GAME_IS_HOST"
 
-open class GameSettingsActivity : AppCompatActivity(), User.Loader {
+open class GameSettingsActivity : AppCompatActivity() {
     private lateinit var host: User
 
     private lateinit var nameInput : EditText
@@ -37,7 +37,7 @@ open class GameSettingsActivity : AppCompatActivity(), User.Loader {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_game_settings)
 
-        host = loadUser()
+        host = User.load(this)
 
         nameInput = findViewById(R.id.nameInput)
         nbRoundsInput = findViewById(R.id.nbRoundsInput)
@@ -67,10 +67,6 @@ open class GameSettingsActivity : AppCompatActivity(), User.Loader {
 
         startButton.setOnClickListener(startButtonBehavior())
 
-    }
-
-    override fun loadUser(): User {
-        return User.load(this)
     }
 
     private fun getUserPlaylistNames(user: User) : Array<String> {
