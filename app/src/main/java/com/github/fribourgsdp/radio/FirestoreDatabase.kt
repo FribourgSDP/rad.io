@@ -355,7 +355,8 @@ class FirestoreDatabase : Database {
             transaction.update(
                 docRef,
                 "player_done_map", updatedDoneMap,
-                "player_found_map", updatedFoundMap
+                "player_found_map", updatedFoundMap,
+                "scores_of_round", scoresOfRound
             )
 
             // Success
