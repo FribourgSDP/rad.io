@@ -21,6 +21,12 @@ open class FirestoreRef {
     open fun getUserRef(userId : String) : DocumentReference{
         return db.collection("user").document(userId)
     }
+    open fun getSongRef(songId : String) : DocumentReference{
+        return db.collection("songs").document(songId)
+    }
+    open fun getPlaylistRef(playlistId : String) : DocumentReference{
+        return db.collection("playlists").document(playlistId)
+    }
 }
 /**
  *
@@ -82,7 +88,7 @@ class FirestoreDatabase(var refMake: FirestoreRef) : Database {
         if(songId == ""){
             return Tasks.forException(IllegalArgumentException("Not null id is expected"))
         }
-        return  db.collection("songs").document(songId).get().continueWith { l ->
+        return  refMake.getSongRef(songId).get().continueWith { l ->
             val result = l.result
             if(result.exists()){
                 val songName = result["songName"].toString()
@@ -106,7 +112,7 @@ class FirestoreDatabase(var refMake: FirestoreRef) : Database {
                 "artistName" to song.artist,
                 "lyrics" to song.lyrics
             )
-            return db.collection("songs").document(song.id).set(songHash)
+            return refMake.getSongRef(song.id).set(songHash)
 
     }
 
@@ -114,7 +120,7 @@ class FirestoreDatabase(var refMake: FirestoreRef) : Database {
         if(playlistId == ""){
             return Tasks.forException(IllegalArgumentException("Not null id is expected"))
         }
-        return  db.collection("playlists").document(playlistId).get().continueWith { l ->
+        return  refMake.getPlaylistRef(playlistId).get().continueWith { l ->
             val result = l.result
             if(result.exists()){
                 val playlistTitle = result["playlistName"].toString()
@@ -152,7 +158,7 @@ class FirestoreDatabase(var refMake: FirestoreRef) : Database {
             "genre" to playlist.genre,
             "songs" to titleList
         )
-        return db.collection("playlists").document(playlist.id).set(playlistHash)
+        return refMake.getPlaylistRef(playlist.id).set(playlistHash)
     }
 
     override fun getLobbyId() : Task<Long> {
