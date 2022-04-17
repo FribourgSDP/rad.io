@@ -60,9 +60,8 @@ class SongFragmentTest {
         playlist.addSong(song)
         bundle.putString(PLAYLIST_DATA, Json.encodeToString(playlist))
         bundle.putString(SONG_DATA, Json.encodeToString(song))
-        bundle.putString("com.github.fribourgsdp.radio.TEST", "TEST")
+        bundle.putInt(USE_MOCK_LYRICS_GETTER, 1)
         val scenario = launchFragmentInContainer<SongFragment>(bundle)
-        Thread.sleep(2000)
         Espresso.onView(ViewMatchers.withId(R.id.editTextLyrics))
             .check(ViewAssertions.matches(
                 ViewMatchers.withText(MockLyricsGetter.truckfightersLyrics)))

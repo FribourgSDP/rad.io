@@ -11,6 +11,8 @@ import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.json.Json
 import java.lang.ClassCastException
 
+const val USE_MOCK_LYRICS_GETTER = "com.github.fribourgsdp.radio.USE_MOCK_LYRICS_GETTER"
+
 class SongFragment : MyFragment(R.layout.fragment_song) {
     private lateinit var initialLyrics : String
     private lateinit var currentLyrics : String
@@ -24,7 +26,8 @@ class SongFragment : MyFragment(R.layout.fragment_song) {
             args.getString(PLAYLIST_DATA).let { serializedPlaylist ->
                 playlist = Json.decodeFromString(serializedPlaylist!!)
             }
-            val lyricsGetter = if (args.getString("com.github.fribourgsdp.radio.TEST") != null){
+            //if the value USE_MOCK_LYRICS_GETTER is 1, then it will not call Musixmatch.
+            val lyricsGetter = if (args.getInt(USE_MOCK_LYRICS_GETTER) == 1){
                 MockLyricsGetter
             } else{
                 MusixmatchLyricsGetter
@@ -35,9 +38,7 @@ class SongFragment : MyFragment(R.layout.fragment_song) {
                 initialLyrics = song.lyrics
                 currentLyrics = initialLyrics
                 if(song.lyrics == ""){
-                    currentLyrics = ""
                     fetchLyrics(lyricsGetter)
-
                 }
             }
         }
