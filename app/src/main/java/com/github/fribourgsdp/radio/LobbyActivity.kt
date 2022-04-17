@@ -23,7 +23,7 @@ const val PERMISSION_REQ_ID_RECORD_AUDIO = 22
 const val NO_MIC_PERMISSIONS_DRAWABLE = R.drawable.ic_action_name
 const val MIC_PERMISSIONS_ENABLED_DRAWABLE = R.drawable.ic_unmute
 
-open class LobbyActivity : AppCompatActivity(), User.Loader {
+open class LobbyActivity : AppCompatActivity(){
 
     private val db = this.initDatabase()
 
@@ -127,7 +127,7 @@ open class LobbyActivity : AppCompatActivity(), User.Loader {
     }
 
     private fun initVariables() {
-        user = loadUser()
+        user = User.load(this)
 
         playlist = intent.getStringExtra(GAME_PLAYLIST_KEY)?.let {
             Json.decodeFromString(it) as Playlist
@@ -311,9 +311,5 @@ open class LobbyActivity : AppCompatActivity(), User.Loader {
                 }
             }
         }
-    }
-
-    override fun loadUser(): User {
-        return User.load(this)
     }
 }
