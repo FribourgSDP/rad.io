@@ -12,6 +12,8 @@ import org.junit.Assert.*
 import org.junit.Before
 import org.mockito.ArgumentMatchers.anyString
 import org.mockito.Mockito.*
+//import java.lang.Exception
+
 import java.util.*
 import kotlin.collections.HashMap
 
@@ -91,17 +93,8 @@ class FirestoreDatabaseTest {
         val song = Tasks.await(db.getSong("idTest1"))
         assertEquals(song1,song)
 
-
-
     }
-   /* @Test(expected = IllegalArgumentException::class)
-    fun registerSongWithNoIdThrowsException(){
-        Tasks.await( db.registerSong(invalidSong))
-        /*val t1 = db.registerSong(invalidSong)
-        assertEquals(IllegalArgumentException("Not null id is expected"),
-        Tasks.await(t1)
-        )*/
-    }*/
+   
 
     @Test
     fun registerPlaylistAndFetchingItWorks(){
