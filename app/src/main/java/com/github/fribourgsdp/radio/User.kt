@@ -44,6 +44,7 @@ data class User (var name: String, val color: Int) {
 
     companion object {
         const val USER_DATA_PATH = "user_data_file"
+        lateinit var fileSystemGetter: FileSystem.FileSystemGetter
 
         /**
          * loads a user from the app-specific storage on the device.

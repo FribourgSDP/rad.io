@@ -1,5 +1,8 @@
 package com.github.fribourgsdp.radio
 
+import android.content.Context
+import kotlinx.serialization.Serializable
+
 interface FileSystem {
     /**
      * Writes or overwrites a string into a File at the specified path, creating the file
@@ -19,4 +22,8 @@ interface FileSystem {
      * @throws java.io.FileNotFoundException
      */
     fun read(path: String): String
+
+    interface FileSystemGetter {
+        fun getFileSystem(context: Context): FileSystem
+    }
 }
