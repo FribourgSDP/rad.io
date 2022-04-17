@@ -52,7 +52,7 @@ open class UserProfileActivity : AppCompatActivity() {
         User.loadOrDefault(this).addOnSuccessListener { u ->
             user = u
 
-//            checkUser()
+            checkUser()
 
             usernameField.setText(user.name)
             usernameInitialText.text = user.initial.uppercaseChar().toString()
