@@ -101,6 +101,9 @@
         <activity
             android:name=".mockimplementations.MockGameActivity"
             android:exported="false" />
+        <activity
+            android:name=".mockimplementations.MockUserProfileActivity"
+            android:exported="false" />
     </application>
 
 </manifest>
