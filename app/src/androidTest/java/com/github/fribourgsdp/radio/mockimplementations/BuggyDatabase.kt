@@ -52,7 +52,15 @@ class BuggyDatabase : Database {
         return Tasks.forException(Exception("Error"))
     }
 
-    override fun addUserToLobby(id: Long, user: User): Task<Void> {
+    override fun modifyUserMicPermissions(
+        id: Long,
+        user: User,
+        newPermissions: Boolean
+    ): Task<Void> {
+        TODO("Not yet implemented")
+    }
+
+    override fun addUserToLobby(id: Long, user: User, hasMicPermissions: Boolean): Task<Void> {
         return Tasks.forException(Exception("Error"))
     }
 

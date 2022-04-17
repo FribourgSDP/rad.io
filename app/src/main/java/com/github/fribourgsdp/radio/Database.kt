@@ -71,10 +71,16 @@ interface Database {
     fun getGameSettingsFromLobby(id: Long) :Task<Game.Settings>
 
     /**
-     * Add [user] to the lobby [id].
+     * Add [user] to the lobby [id] with [hasMicPermissions] microphone permissions.
      * @return a task void  so that we know if the [user] was correctly added to the lobby [id].
      */
-    fun addUserToLobby(id: Long, user: User) : Task<Void>
+    fun addUserToLobby(id: Long, user: User, hasMicPermissions: Boolean) : Task<Void>
+
+    /**
+     * Modify [user]'s permission in [id]'th lobby with [newPermissions] microphone permissions.
+     * @return a task void  so that we know if the [user] was correctly added to the lobby [id].
+     */
+    fun modifyUserMicPermissions(id: Long, user: User, newPermissions: Boolean) : Task<Void>
 
     /**
      * Open a game on the database.
