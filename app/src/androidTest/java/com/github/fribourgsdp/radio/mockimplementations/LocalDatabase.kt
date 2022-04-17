@@ -52,6 +52,14 @@ class LocalDatabase : Database {
         return Tasks.forResult(EXPECTED_USER_UID)
     }
 
+    override fun generatePlaylistId(): Task<Long> {
+        TODO("Not yet implemented")
+    }
+
+    override fun generateSongId(): Task<Long> {
+        TODO("Not yet implemented")
+    }
+
     override fun openLobby(id: Long, settings: Game.Settings): Task<Void> {
         return Tasks.forResult(null)
     }

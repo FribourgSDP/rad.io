@@ -72,12 +72,6 @@ class MainActivityTest {
     }
 
     @Test
-    fun correctTransitionToDisplayLyricsActivity(){
-        Espresso.onView(withId(R.id.button)).perform(ViewActions.click())
-        Intents.intended(IntentMatchers.hasComponent(DisplayLyricsActivity::class.java.name))
-    }
-
-    @Test
     fun correctTransitionToUserProfile(){
         Espresso.onView(withId(R.id.profileButton)).perform(ViewActions.click())
         Intents.intended(IntentMatchers.hasComponent(UserProfileActivity::class.java.name))

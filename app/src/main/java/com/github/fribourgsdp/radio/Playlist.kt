@@ -17,7 +17,7 @@ import kotlinx.serialization.Serializable
 data class Playlist (var name: String, var genre: Genre) {
 
     private val songs: MutableSet<Song> = mutableSetOf()
-
+    var id : String = ""
     constructor(name: String, set: Set<Song>, genre: Genre) : this(name, genre) {
         this.addSongs(set)
     }
@@ -79,6 +79,7 @@ data class Playlist (var name: String, var genre: Genre) {
     fun getSongs(): Set<Song> {
         return songs.toSet()
     }
+
 
     override fun equals(other: Any?): Boolean {
         if (this === other) return true

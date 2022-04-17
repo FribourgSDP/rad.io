@@ -40,6 +40,14 @@ class BuggyDatabase : Database {
         return Tasks.forException(Exception("Error"))
     }
 
+    override fun generatePlaylistId(): Task<Long> {
+        TODO("Not yet implemented")
+    }
+
+    override fun generateSongId(): Task<Long> {
+        TODO("Not yet implemented")
+    }
+
     override fun openLobby(id: Long, settings: Game.Settings): Task<Void> {
         return Tasks.forException(Exception("Error"))
     }
