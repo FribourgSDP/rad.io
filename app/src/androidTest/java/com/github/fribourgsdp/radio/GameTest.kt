@@ -157,4 +157,17 @@ class GameTest {
             game.getChoices(playlistTest.getSongs().size + 15).size
         )
     }
+
+    @Test
+    fun computeScoreWorksAsIntended() {
+        assertEquals(100, Game.computeScore(1))
+        assertEquals(85, Game.computeScore(2))
+        assertEquals(70, Game.computeScore(3))
+        assertEquals(65, Game.computeScore(4))
+        assertEquals(60, Game.computeScore(5))
+        assertEquals(15, Game.computeScore(14))
+        assertEquals(10, Game.computeScore(15))
+        assertEquals(10, Game.computeScore(16))
+        assertEquals(10, Game.computeScore(160))
+    }
 }
