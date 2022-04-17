@@ -5,7 +5,7 @@ import kotlin.collections.ArrayList
 import kotlin.collections.HashMap
 import kotlin.collections.HashSet
 import kotlinx.serialization.Serializable
-import kotlin.math.min
+import kotlin.math.max
 
 /**
  * An instance of a game.
@@ -274,7 +274,7 @@ class Game private constructor(val id: Long, val name: String, val host: User, v
                 2 -> 85
                 3 -> 70
                 else -> {
-                    min(70 - 5 * (position - 3), 10)
+                    max(70 - 5 * (position - 3), 10)
                 }
             }
         }
