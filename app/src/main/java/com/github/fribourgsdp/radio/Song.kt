@@ -25,7 +25,9 @@ class Song (private val rawName: String, private val rawArtist: String, var lyri
 
     constructor(name: String, artist: String): this(name, artist,"")
     constructor(name: String, artist: String, lyrics: CompletableFuture<String>): this(name, artist, lyrics.get())
-
+    constructor(name: String, artist: String,lyrics: String, id: String): this(name,artist,lyrics){
+        this.id = id
+    }
     private fun reformatName(unformattedName: String): String {
         val noSpacesRegex = Regex(" +")
         val words = unformattedName.trim().split(noSpacesRegex)
