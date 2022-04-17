@@ -10,6 +10,7 @@ class MockGameSettingsActivity: GameSettingsActivity() {
         super.onCreate(savedInstanceState)
         val context = mock(Context::class.java)
         val user = User("The best player")
+        MockFileSystem.wipeData()
         User.setFSGetter(MockFileSystem.MockFSGetter)
         user.addPlaylists(
             setOf(
