@@ -137,7 +137,7 @@ class GameActivity : AppCompatActivity(), GameView, User.Loader {
     }
 
     override fun gameOver(finalScores: Map<String, Long>) {
-        val intent = Intent(this, MainActivity::class.java).apply {
+        val intent = Intent(this, EndGameActivity::class.java).apply {
             putExtra(SCORES_KEY,
                 // Replace ids by names and put in an ArrayList to make it Serializable
                 ArrayList(finalScores.map { (id, score) -> Pair(mapIdToName[id] ?: id, score)})
