@@ -6,10 +6,6 @@ import android.text.TextWatcher
 import android.view.View
 import android.widget.EditText
 import android.widget.TextView
-import com.github.fribourgsdp.radio.mockimplementations.MockLyricsGetter
-import kotlinx.serialization.decodeFromString
-import kotlinx.serialization.json.Json
-import java.lang.ClassCastException
 
 open class SongFragment : MyFragment(R.layout.fragment_song) {
     private lateinit var initialLyrics : String

@@ -199,7 +199,7 @@ data class User (var name: String, val color: Int) {
      * @param song the name of the song we are trying to modify or add
      */
     fun updateSongInPlaylist(playlist: Playlist, song: Song){
-        getPlaylistWithName(playlist).addSong(song)
+        getPlaylistWithName(playlist.name).addSong(song)
     }
 
     fun addSpotifyPlaylistUId(playlistName: String, spotifyUid: String){
