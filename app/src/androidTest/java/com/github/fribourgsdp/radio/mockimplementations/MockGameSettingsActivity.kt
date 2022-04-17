@@ -1,10 +1,16 @@
 package com.github.fribourgsdp.radio.mockimplementations
 
+import android.content.Context
+import android.os.Bundle
 import com.github.fribourgsdp.radio.*
+import org.mockito.Mockito.*
 
 class MockGameSettingsActivity: GameSettingsActivity() {
-    override fun loadUser(): User {
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        val context = mock(Context::class.java)
         val user = User("The best player")
+        User.setFSGetter(MockFileSystem.MockFSGetter)
         user.addPlaylists(
             setOf(
                 Playlist("Rap Playlist"),
@@ -21,6 +27,6 @@ class MockGameSettingsActivity: GameSettingsActivity() {
                 Playlist("Country Playlist")
             )
         )
-        return user
+        user.save(context)
     }
 }
