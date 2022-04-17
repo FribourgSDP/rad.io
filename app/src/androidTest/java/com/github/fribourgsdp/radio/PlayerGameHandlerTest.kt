@@ -181,6 +181,54 @@ class PlayerGameHandlerTest {
     }
 
     @Test
+    fun displayOtherErrorWhenClose() {
+        val view = FakeGameView("Not Singer")
+        val db = mock(Database::class.java)
+        `when`(db.playerEndTurn(anyLong(), anyString(), anyBoolean()))
+            .thenReturn(Tasks.forResult(null))
+
+        `when`(mockSnapshot.getString("current_song")).thenReturn(song)
+
+        val handler = PlayerGameHandler(0, view, db)
+
+        // Update song to guess
+        handler.handleSnapshot(mockSnapshot)
+
+        // Check it
+        handler.handleGuess(song + "a", "")
+
+        // Wait for the task of the database to execute
+        Thread.sleep(1)
+
+        assertEquals("You're close!", view.error)
+        assertEquals(View.VISIBLE, view.errorVisibility)
+    }
+
+    @Test
+    fun displayErrorOnDatabaseFailureToEndTurn() {
+        val view = FakeGameView("Not Singer")
+        val db = mock(Database::class.java)
+        `when`(db.playerEndTurn(anyLong(), anyString(), anyBoolean()))
+            .thenReturn(Tasks.forException(Exception()))
+
+        `when`(mockSnapshot.getString("current_song")).thenReturn(song)
+
+        val handler = PlayerGameHandler(0, view, db)
+
+        // Update song to guess
+        handler.handleSnapshot(mockSnapshot)
+
+        // Check it
+        handler.handleGuess("Not the song", "")
+
+        // Wait for the task of the database to execute
+        Thread.sleep(1)
+
+        assertEquals("Wrong answer", view.error)
+        assertEquals(View.VISIBLE, view.errorVisibility)
+    }
+
+    @Test
     fun onPickDisplaySongOnSuccess() {
         val view = FakeGameView()
         val db = mock(Database::class.java)
