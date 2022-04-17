@@ -98,7 +98,6 @@ class GameSettingsActivityTest {
             allOf(
                 toPackage("com.github.fribourgsdp.radio"),
                 hasComponent(LobbyActivity::class.java.name),
-                hasExtraWithKey(GAME_HOST_KEY),
                 hasExtra(GAME_NAME_KEY, testName),
                 hasExtra(GAME_PLAYLIST_KEY, Json.encodeToString(testPlaylist)),
                 hasExtra(GAME_NB_ROUNDS_KEY, testNbRounds),
@@ -130,12 +129,12 @@ class GameSettingsActivityTest {
         Intents.intended(
             allOf(
                 hasComponent(LobbyActivity::class.java.name),
-                hasExtraWithKey(GAME_HOST_KEY),
                 hasExtra(GAME_NAME_KEY, ctx.getString(R.string.default_game_name)),
                 hasExtra(GAME_PLAYLIST_KEY, Json.encodeToString(testPlaylist)),
                 hasExtra(GAME_NB_ROUNDS_KEY, ctx.getString(R.string.default_game_nb_rounds).toInt()),
                 hasExtra(GAME_HINT_KEY, false),
                 hasExtra(GAME_PRIVACY_KEY, false),
+                hasExtra(GAME_IS_HOST_KEY, true),
                 toPackage("com.github.fribourgsdp.radio")
             )
         )

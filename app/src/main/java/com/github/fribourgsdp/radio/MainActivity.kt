@@ -20,7 +20,7 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
 
         val voiceOverIpButton = findViewById<Button>(R.id.VoiceOverIpButton)
-        voiceOverIpButton.setOnClickListener{startActivity(Intent(this,VoiceOverIPActivity::class.java))}
+        voiceOverIpButton.setOnClickListener{startActivity(Intent(this,FireBaseTestActivity::class.java))}
 
         val playButton = findViewById<Button>(R.id.playButton)
         playButton.setOnClickListener {startActivity(Intent(this, GameSettingsActivity::class.java))}

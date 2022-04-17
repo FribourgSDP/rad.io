@@ -16,7 +16,8 @@ import org.junit.Test
 
 class VoiceOverIPActivityTest {
 
-    @get:Rule var permissionRule = GrantPermissionRule.grant(android.Manifest.permission.RECORD_AUDIO)
+    @get:Rule var permissionRule: GrantPermissionRule = GrantPermissionRule.grant(android.Manifest.permission.RECORD_AUDIO)
+
 
     @Before
     fun initIntent() {
@@ -32,7 +33,7 @@ class VoiceOverIPActivityTest {
         val context: Context = ApplicationProvider.getApplicationContext()
 
         val intent = Intent(context, VoiceOverIPActivity::class.java)
-        ActivityScenario.launch<VoiceOverIPActivity>(intent).use { scenario ->
+        ActivityScenario.launch<VoiceOverIPActivity>(intent).use { _ ->
             Espresso.pressBack()
             Intents.intended(
                 Matchers.allOf(

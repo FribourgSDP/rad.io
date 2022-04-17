@@ -162,79 +162,27 @@ class FirestoreDatabase(var refMake: FirestoreRef) : Database {
     }
 
     override fun getLobbyId() : Task<Long> {
-        val keyID = "current_id"
-        val keyMax = "max_id"
-
-        val docRef = db.collection("lobby").document("id")
-
-        return db.runTransaction { transaction ->
-            val snapshot = transaction.get(docRef)
-
-            if (!snapshot.exists()) {
-                throw Exception("Document not found.")
-            }
-
-            val id = snapshot.getLong(keyID)!!
-            val nextId = (id + 1) % snapshot.getLong(keyMax)!!
-
-            transaction.update(docRef, keyID, nextId)
-
-            // Success
-            id
-        }
+        return getId("lobby","id")
     }
 
     override fun generateUserId() : Task<Long> {
-        val keyID = "current_id"
-        val keyMax = "max_id"
-
-        val docRef = db.collection("metadata").document("UserInfo")
-
-        return db.runTransaction { transaction ->
-            val snapshot = transaction.get(docRef)
-
-            if (!snapshot.exists()) {
-                throw Exception("Document not found.")
-            }
-
-            val id = snapshot.getLong(keyID)!!
-            val nextId = (id + 1) % snapshot.getLong(keyMax)!!
-
-            transaction.update(docRef, keyID, nextId)
-
-            // Success
-            id
-        }
+        return getId("metadata","UserInfo")
     }
 
     override fun generateSongId() : Task<Long> {
-        val keyID = "current_id"
-        val keyMax = "max_id"
-
-        val docRef = db.collection("metadata").document("SongInfo")
-
-        return db.runTransaction { transaction ->
-            val snapshot = transaction.get(docRef)
-
-            if (!snapshot.exists()) {
-                throw Exception("Document not found.")
-            }
-
-            val id = snapshot.getLong(keyID)!!
-            val nextId = (id + 1) % snapshot.getLong(keyMax)!!
-
-            transaction.update(docRef, keyID, nextId)
-
-            // Success
-            id
-        }
+        return getId("metadata","SongInfo")
     }
 
     override fun generatePlaylistId() : Task<Long> {
+        return getId("metadata", "PlaylistInfo")
+    }
+
+
+    private fun getId(collectionPath : String, documentPath : String ) : Task<Long>{
         val keyID = "current_id"
         val keyMax = "max_id"
 
-        val docRef = db.collection("metadata").document("PlaylistInfo")
+        val docRef = db.collection(collectionPath).document(documentPath)
 
         return db.runTransaction { transaction ->
             val snapshot = transaction.get(docRef)
@@ -252,6 +200,9 @@ class FirestoreDatabase(var refMake: FirestoreRef) : Database {
             id
         }
     }
+
+
+
 
     override fun openLobby(id: Long, settings : Game.Settings) : Task<Void> {
         val gameData = hashMapOf(
@@ -262,6 +213,7 @@ class FirestoreDatabase(var refMake: FirestoreRef) : Database {
             "withHint" to settings.withHint,
             "private" to settings.isPrivate,
             "players" to arrayListOf<String>(),
+            "permissions" to hashMapOf<String, Boolean>(),
             "launched" to false
         )
 
@@ -271,8 +223,7 @@ class FirestoreDatabase(var refMake: FirestoreRef) : Database {
     }
 
     override fun listenToLobbyUpdate(id: Long, listener: EventListener<DocumentSnapshot>) {
-        db.collection("lobby").document(id.toString())
-            .addSnapshotListener(listener)
+        listenUpdate("lobby", id, listener)
     }
 
     override fun getGameSettingsFromLobby(id: Long) :Task<Game.Settings> {
@@ -297,7 +248,7 @@ class FirestoreDatabase(var refMake: FirestoreRef) : Database {
         }
     }
 
-    override fun addUserToLobby(id: Long, user: User) : Task<Void> {
+    override fun addUserToLobby(id: Long, user: User, hasMicPermissions: Boolean) : Task<Void> {
         val docRef = db.collection("lobby").document(id.toString())
 
         return db.runTransaction { transaction ->
@@ -311,6 +262,31 @@ class FirestoreDatabase(var refMake: FirestoreRef) : Database {
             list.add(idAndName(user))
 
             transaction.update(docRef, "players", list)
+
+            val playerPermissions = snapshot.get("permissions")!! as HashMap<String, Boolean>
+            playerPermissions[user.name] = hasMicPermissions
+
+            transaction.update(docRef, "permissions", playerPermissions)
+
+            // Success
+            null
+        }
+    }
+
+    override fun modifyUserMicPermissions(id: Long, user: User, newPermissions: Boolean): Task<Void> {
+        val docRef = db.collection("lobby").document(id.toString())
+
+        return db.runTransaction { transaction ->
+            val snapshot = transaction.get(docRef)
+
+            if (!snapshot.exists()) {
+                throw IllegalArgumentException("Document $id not found.")
+            }
+
+            val playerPermissions = snapshot.get("permissions")!! as HashMap<String, Boolean>
+            playerPermissions[user.name] = newPermissions
+
+            transaction.update(docRef, "permissions", playerPermissions)
 
             // Success
             null
@@ -351,13 +327,11 @@ class FirestoreDatabase(var refMake: FirestoreRef) : Database {
     }
 
     override fun listenToGameUpdate(id: Long, listener: EventListener<DocumentSnapshot>) {
-        db.collection("games").document(id.toString())
-            .addSnapshotListener(listener)
+        listenUpdate("games", id, listener)
     }
 
     override fun listenToGameMetadataUpdate(id: Long, listener: EventListener<DocumentSnapshot>) {
-        db.collection("games_metadata").document(id.toString())
-            .addSnapshotListener(listener)
+        listenUpdate("games_metadata", id, listener)
     }
 
     override fun updateGame(id: Long, updatesMap: Map<String, Any>): Task<Void> {
@@ -404,5 +378,11 @@ class FirestoreDatabase(var refMake: FirestoreRef) : Database {
             null
         }
     }
+
+    private fun listenUpdate(collectionPath : String, id: Long, listener: EventListener<DocumentSnapshot>){
+        db.collection(collectionPath).document(id.toString())
+            .addSnapshotListener(listener)
+    }
+
 
 }
