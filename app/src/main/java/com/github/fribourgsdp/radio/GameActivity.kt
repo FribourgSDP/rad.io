@@ -16,7 +16,7 @@ import kotlin.math.absoluteValue
 import kotlin.random.Random
 
 
-open class GameActivity : AppCompatActivity(), GameView, User.Loader {
+open class GameActivity : AppCompatActivity(), GameView {
     private lateinit var user: User
     private var isHost: Boolean = false
 
@@ -37,7 +37,7 @@ open class GameActivity : AppCompatActivity(), GameView, User.Loader {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_game)
-        user = loadUser()
+        user = User.load(this)
         mapIdToName = intent.getSerializableExtra(MAP_ID_NAME_KEY)?.let {
             it as HashMap<String, String>
         } ?: HashMap()
