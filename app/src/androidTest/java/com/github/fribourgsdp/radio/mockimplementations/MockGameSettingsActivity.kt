@@ -7,7 +7,6 @@ import org.mockito.Mockito.*
 
 class MockGameSettingsActivity: GameSettingsActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
         val context = mock(Context::class.java)
         val user = User("The best player")
         MockFileSystem.wipeData()
@@ -29,5 +28,6 @@ class MockGameSettingsActivity: GameSettingsActivity() {
             )
         )
         user.save(context)
+        super.onCreate(savedInstanceState)
     }
 }
