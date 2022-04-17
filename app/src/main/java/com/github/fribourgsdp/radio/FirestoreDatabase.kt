@@ -87,7 +87,9 @@ class FirestoreDatabase(var refMake: FirestoreRef) : Database {
             if(result.exists()){
                 val songName = result["songName"].toString()
                 val artistName = result["artistName"].toString()
-                Song(songName,artistName,"")
+                val lyrics = result["lyrics"].toString()
+                val id = result["songId"].toString()
+                Song(songName,artistName,lyrics,id)
             }else{
                 null
             }
