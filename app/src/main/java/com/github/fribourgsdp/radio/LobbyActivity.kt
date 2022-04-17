@@ -256,7 +256,7 @@ open class LobbyActivity : AppCompatActivity(), User.Loader {
     }
 
     private fun updateLobbyWithPlayers(playersMap: Map<String, String>, nameToPermissions: Map<String, Boolean>) {
-        val users = playersMap.keys
+        val users = playersMap.values
         val micPermissions = arrayListOf<Int>()
         for (user in users) {
             if (nameToPermissions[user]!!) {
