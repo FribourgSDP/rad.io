@@ -1,5 +1,6 @@
 package com.github.fribourgsdp.radio
 
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
@@ -15,6 +16,7 @@ import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.json.Json
 import kotlin.random.Random
 
+const val SCORES_KEY = "com.github.fribourgsdp.radio.SCORES"
 
 class GameActivity : AppCompatActivity(), GameView, User.Loader {
     private lateinit var user: User
@@ -132,6 +134,16 @@ class GameActivity : AppCompatActivity(), GameView, User.Loader {
             // Replace ids by names
             playerScores.map { (id, score) -> Pair(mapIdToName[id] ?: id, score)}
         )
+    }
+
+    override fun gameOver(finalScores: Map<String, Long>) {
+        val intent = Intent(this, MainActivity::class.java).apply {
+            putExtra(SCORES_KEY,
+                // Replace ids by names and put in an ArrayList to make it Serializable
+                ArrayList(finalScores.map { (id, score) -> Pair(mapIdToName[id] ?: id, score)})
+            )
+        }
+        startActivity(intent)
     }
 
     private fun initViews() {

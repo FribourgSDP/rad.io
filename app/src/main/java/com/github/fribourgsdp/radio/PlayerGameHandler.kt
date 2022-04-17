@@ -16,15 +16,19 @@ class PlayerGameHandler(
 
     override fun handleSnapshot(snapshot: DocumentSnapshot?) {
         if (snapshot != null && snapshot.exists()) {
+            val scores = snapshot.get("scores") as HashMap<String, Long>
+            if (snapshot.getBoolean("finished")!!) {
+                view.gameOver(scores)
+                return
+            }
+
             val singerName = snapshot.getString("singer")!!
 
             view.updateSinger(singerName)
             view.updateRound(snapshot.getLong("current_round")!!)
 
             // update the score
-            view.displayPlayerScores(
-                snapshot.get("scores") as HashMap<String, Long>
-            )
+            view.displayPlayerScores(scores)
 
             // Get the picked song
             // It's not null when there is one.

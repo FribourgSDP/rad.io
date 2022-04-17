@@ -59,6 +59,11 @@ interface GameView {
     fun displayPlayerScores(playerScores: Map<String, Long>)
 
     /**
+     * Handle the end of the game.
+     */
+    fun gameOver(finalScores: Map<String, Long>)
+
+    /**
      * An interface creating listeners able to handle songs pick in a [GameView].
      */
     interface OnPickListener {

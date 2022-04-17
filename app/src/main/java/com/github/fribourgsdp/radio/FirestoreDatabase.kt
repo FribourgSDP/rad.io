@@ -220,6 +220,7 @@ class FirestoreDatabase : Database {
         return db.collection("games").document(id.toString())
             .set(
                 hashMapOf(
+                    "finished" to false,
                     "current_round" to 0L,
                     "current_song" to "",
                     "singer" to "",
