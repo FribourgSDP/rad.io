@@ -8,12 +8,14 @@ import androidx.test.espresso.assertion.ViewAssertions
 import androidx.test.espresso.matcher.ViewMatchers
 import androidx.test.internal.runner.junit4.AndroidJUnit4ClassRunner
 import com.github.fribourgsdp.radio.mockimplementations.MockLyricsGetter
+import com.github.fribourgsdp.radio.mockimplementations.MockSongFragment
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 import org.junit.FixMethodOrder
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.junit.runners.MethodSorters
+import org.mockito.Mock
 
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 @RunWith(AndroidJUnit4ClassRunner::class)
@@ -60,8 +62,7 @@ class SongFragmentTest {
         playlist.addSong(song)
         bundle.putString(PLAYLIST_DATA, Json.encodeToString(playlist))
         bundle.putString(SONG_DATA, Json.encodeToString(song))
-        bundle.putInt(USE_MOCK_LYRICS_GETTER, 1)
-        val scenario = launchFragmentInContainer<SongFragment>(bundle)
+        val scenario = launchFragmentInContainer<MockSongFragment>(bundle)
         Espresso.onView(ViewMatchers.withId(R.id.editTextLyrics))
             .check(ViewAssertions.matches(
                 ViewMatchers.withText(MockLyricsGetter.truckfightersLyrics)))

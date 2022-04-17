@@ -48,6 +48,7 @@ object MusixmatchLyricsGetter : LyricsGetter {
             client: OkHttpClient,
             parser: JSONParser
         ): CompletableFuture<String> {
+            Log.println(Log.ASSERT, "*", "LYRICS GETTER CALL !!!!")
             val future = CompletableFuture<String>()
             val trackIDFuture = getSongID(songName, artistName, client)
             val trackID: Int
