@@ -20,7 +20,7 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
 
         val voiceOverIpButton = findViewById<Button>(R.id.VoiceOverIpButton)
-        voiceOverIpButton.setOnClickListener{startActivity(Intent(this,FireBaseTestActivity::class.java))}
+        voiceOverIpButton.setOnClickListener{startActivity(Intent(this,VoiceOverIPActivity::class.java))}
 
         val playButton = findViewById<Button>(R.id.playButton)
         playButton.setOnClickListener {startActivity(Intent(this, GameSettingsActivity::class.java))}
@@ -30,7 +30,7 @@ class MainActivity : AppCompatActivity() {
         settingsButton.setOnClickListener {startActivity(Intent(this, SettingsActivity::class.java))}
         val profileButton: ImageButton = findViewById(R.id.profileButton)
         profileButton.setOnClickListener {
-            startActivity(Intent(this, VoiceOverIPActivity::class.java))
+            startActivity(Intent(this, UserProfileActivity::class.java))
         }
 
         /** this user allows quick demo's as it is data that is written to the app
