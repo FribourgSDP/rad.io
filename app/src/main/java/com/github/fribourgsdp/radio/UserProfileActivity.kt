@@ -62,8 +62,6 @@ open class UserProfileActivity : AppCompatActivity() {
             val bundle = Bundle()
             bundle.putString(USER_DATA, Json.encodeToString(user))
             MyFragment.beginTransaction<UserPlaylistsFragment>(supportFragmentManager, bundle)
-
-
         }
 
             launchSpotifyButton.setOnClickListener {
@@ -130,7 +128,7 @@ open class UserProfileActivity : AppCompatActivity() {
     }
 
 
-    private fun checkUser(){
+    open fun checkUser(){
         //get current user
         val firebaseUser = firebaseAuth.currentUser
         if(firebaseUser != null){

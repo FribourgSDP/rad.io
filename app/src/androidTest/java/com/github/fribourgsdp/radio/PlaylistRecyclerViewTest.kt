@@ -15,9 +15,12 @@ import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.github.fribourgsdp.radio.mockimplementations.MockUserProfileActivity
 import com.google.android.gms.tasks.Tasks
 import com.google.firebase.auth.FirebaseAuth
+import kotlinx.serialization.encodeToString
+import kotlinx.serialization.json.Json
 import org.junit.After
 import org.junit.Before
 import org.junit.Rule
+import org.junit.Assert.*
 import org.junit.Test
 import org.junit.runner.RunWith
 import java.util.concurrent.TimeUnit
