@@ -25,9 +25,13 @@ class ScoresAdapter: RecyclerView.Adapter<ScoresAdapter.ViewHolder>() {
         return scoresList.size
     }
 
-    fun updateScore(scores: Map<String, Long>) {
+    /**
+     * Updates the [list of scores][scores].
+     * @param scores A list of [pairs][Pair] of [name][String] and its corresponding [score][Long]
+     */
+    fun updateScore(scores: List<Pair<String, Long>>) {
         // Sort in decreasing order
-        scoresList = scores.toList().sortedBy { (_, score) -> -score}
+        scoresList = scores.sortedBy { (_, score) -> -score}
 
         // Update the whole list
         this.notifyDataSetChanged()
