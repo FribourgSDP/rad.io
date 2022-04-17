@@ -192,6 +192,16 @@ data class User (var name: String, val color: Int) {
         return SetUtility.getNamedFromSet(playlists, name)
     }
 
+    /**
+     * Modifies a song in a playlist of the user
+     *
+     * @param playlist the name of the playlist we are trying to modify
+     * @param song the name of the song we are trying to modify or add
+     */
+    fun updateSongInPlaylist(playlist: Playlist, song: Song){
+        getPlaylistWithName(playlist).addSong(song)
+    }
+
     fun addSpotifyPlaylistUId(playlistName: String, spotifyUid: String){
         playlistNamesToSpotifyId[playlistName] = spotifyUid
     }

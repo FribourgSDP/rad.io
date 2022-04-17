@@ -40,6 +40,14 @@ class BuggyDatabase : Database {
         return Tasks.forException(Exception("Error"))
     }
 
+    override fun generatePlaylistId(): Task<Long> {
+        TODO("Not yet implemented")
+    }
+
+    override fun generateSongId(): Task<Long> {
+        TODO("Not yet implemented")
+    }
+
     override fun openLobby(id: Long, settings: Game.Settings): Task<Void> {
         return Tasks.forException(Exception("Error"))
     }
@@ -88,11 +96,12 @@ class BuggyDatabase : Database {
         TODO("Not yet implemented")
     }
 
-    override fun setPlayerDone(gameID: Long, playerID: String): Task<Void> {
+    override fun playerEndTurn(gameID: Long, playerID: String, hasFound: Boolean): Task<Void> {
         TODO("Not yet implemented")
     }
 
-    override fun resetPlayerDoneMap(gameID: Long, singer: String): Task<Void> {
+    override fun resetGameMetadata(gameID: Long, singer: String): Task<Void> {
         TODO("Not yet implemented")
     }
+
 }

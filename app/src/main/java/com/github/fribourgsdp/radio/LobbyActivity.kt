@@ -1,12 +1,12 @@
 package com.github.fribourgsdp.radio
 
 import android.Manifest
+import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.drawable.Drawable
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import android.widget.*
 import androidx.core.app.ActivityCompat
@@ -240,7 +240,7 @@ open class LobbyActivity : AppCompatActivity(){
             }
 
             if (snapshot != null && snapshot.exists()) {
-                val newList = snapshot.get("players")!! as ArrayList<HashMap<String, String>>
+                val newMap = snapshot.get("players")!! as HashMap<String, String>
 
                 val isGameLaunched = snapshot.getBoolean("launched")
 
@@ -248,7 +248,7 @@ open class LobbyActivity : AppCompatActivity(){
                 val atLeastOnePermissionMissing = mapNameToPermissions.containsValue(false)
                 launchGameButton.isEnabled = !atLeastOnePermissionMissing
 
-                updatePlayersList(mapNameToPermissions, newList)
+                updateLobbyWithPlayers(newMap, mapNameToPermissions)
 
 
                 if (!isHost && isGameLaunched != null && isGameLaunched) {
@@ -262,8 +262,8 @@ open class LobbyActivity : AppCompatActivity(){
         }
     }
 
-    private fun updatePlayersList(nameToPermissions: Map<String, Boolean>, playersList: List<Map<String, String>>) {
-        val users = playersList.map { u -> u["name"]!! }
+    private fun updateLobbyWithPlayers(playersMap: Map<String, String>, nameToPermissions: Map<String, Boolean>) {
+        val users = playersMap.values
         val micPermissions = arrayListOf<Int>()
         for (user in users) {
             if (nameToPermissions[user]!!) {
@@ -275,14 +275,12 @@ open class LobbyActivity : AppCompatActivity(){
         }
         layoutAdapter?.setContent(users.toTypedArray(), micPermissions.toIntArray())
         layoutAdapter?.notifyDataSetChanged()
-        gameBuilder.setUserIdList(playersList.map { u -> u["id"]!! })
-        mapIdToName = playersList.associate {
-            it["id"]!! to it["name"]!!
-        } as HashMap<String, String>
+
+        gameBuilder.setUserIdList(playersMap.keys)
+        mapIdToName = HashMap(playersMap)
     }
 
-
-    open protected fun goToGameActivity(isHost: Boolean, game: Game? = null, gameID: Long) {
+    protected open fun goToGameActivity(isHost: Boolean, game: Game? = null, gameID: Long) {
         val intent: Intent = Intent(this, GameActivity::class.java).apply {
             putExtra(GAME_IS_HOST_KEY, isHost)
             putExtra(MAP_ID_NAME_KEY, mapIdToName)
@@ -291,9 +289,23 @@ open class LobbyActivity : AppCompatActivity(){
 
         if (isHost && game != null) {
             intent.putExtra(GAME_KEY, Json.encodeToString(game))
+            loadLyrics(game.playlist, MusixmatchLyricsGetter, user)
         }
 
         startActivity(intent)
+    }
+    protected fun loadLyrics(playlist : Playlist, lyricsGetter: LyricsGetter, host : User){
+        if (host.getPlaylists().contains(playlist)){
+            for (song in playlist.getSongs()){
+                if(song.lyrics == "") {
+                    lyricsGetter.getLyrics(song.name, song.artist).thenAccept { f ->
+                        val songWithLyrics = Song(song.name, song.artist, f)
+                        host.updateSongInPlaylist(playlist, songWithLyrics)
+                        host.save(applicationContext)
+                    }
+                }
+            }
+        }
     }
 
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {

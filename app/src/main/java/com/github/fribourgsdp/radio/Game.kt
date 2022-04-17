@@ -5,6 +5,7 @@ import kotlin.collections.ArrayList
 import kotlin.collections.HashMap
 import kotlin.collections.HashSet
 import kotlinx.serialization.Serializable
+import kotlin.math.max
 
 /**
  * An instance of a game.
@@ -22,7 +23,7 @@ import kotlinx.serialization.Serializable
 class Game private constructor(val id: Long, val name: String, val host: User, val playlist: Playlist, val nbRounds: Int,
                                val withHint: Boolean, val isPrivate: Boolean, private val listUser: List<String>) {
 
-    private val scoreMap = HashMap(listUser.associateWith { 0 })
+    private val scoreMap = HashMap(listUser.associateWith { 0L })
     private var usersToPlay = listUser.size
 
     var currentRound = 1
@@ -35,14 +36,22 @@ class Game private constructor(val id: Long, val name: String, val host: User, v
      * @param userId the id of the user
      * @return the score of a user.
      */
-    fun getScore(userId: String): Int? {
+    fun getScore(userId: String): Long? {
         return scoreMap[userId]
+    }
+
+    /**
+     * Return the scores of all users.
+     * @return the scores of all users.
+     */
+    fun getAllScores(): Map<String, Long> {
+        return HashMap(scoreMap)
     }
 
     /**
      * Add the given number of [points] to the given user with id: [userId].
      */
-    fun addPoints(userId: String, points: Int) {
+    fun addPoints(userId: String, points: Long) {
         val oldValue = scoreMap[userId]
         if (oldValue != null) {
             scoreMap[userId] = oldValue + points
@@ -50,6 +59,13 @@ class Game private constructor(val id: Long, val name: String, val host: User, v
             throw IllegalArgumentException("Illegal argument: user id: '$userId' doesn't exist.")
         }
 
+    }
+
+    /**
+     * Add the given number of points to each user in [pointsMap].
+     */
+    fun addPoints(pointsMap: Map<String, Long>) {
+        pointsMap.forEach(this::addPoints)
     }
 
     /**
@@ -239,4 +255,29 @@ class Game private constructor(val id: Long, val name: String, val host: User, v
         val withHint: Boolean,
         val isPrivate: Boolean
     )
+
+    companion object {
+
+        /**
+         * Compute the score of a player based on his [position].
+         *
+         * The computation goes as follows:
+         *
+         * The first player gets 100 points, the second one gets 85, the third one gets 70 and then 5 points are subtracted per place.
+         * The minimum amount you can get when you guessed right is 10 points.
+         *
+         * @return the score of the player
+         */
+        fun computeScore(position: Int): Int {
+            return when (position) {
+                1 -> 100
+                2 -> 85
+                3 -> 70
+                else -> {
+                    max(70 - 5 * (position - 3), 10)
+                }
+            }
+        }
+
+    }
 }

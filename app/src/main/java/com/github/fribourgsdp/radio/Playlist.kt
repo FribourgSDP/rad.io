@@ -17,7 +17,7 @@ import kotlinx.serialization.Serializable
 data class Playlist (override var name: String, var genre: Genre) : Nameable {
 
     private val songs: MutableSet<Song> = mutableSetOf()
-
+    var id : String = ""
     constructor(name: String, set: Set<Song>, genre: Genre) : this(name, genre) {
         this.addSongs(set)
     }

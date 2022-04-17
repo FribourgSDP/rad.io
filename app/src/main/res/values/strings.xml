@@ -72,6 +72,7 @@
     <string name="sign_out_message">Sign out</string>
     <string name="click_on_a_song_to_delete_it">Click on a song to delete it.</string>
     <string name="wait_for_pick_format">Waiting on %s to pick a song</string>
+    <string name="congrats">Congratulations!</string>
     <string name="micPermissionError">The microphone permissions could not be updated.</string>
 </resources>
 

@@ -22,8 +22,8 @@
     <ImageButton
         android:id="@+id/profileButton"
         style="@style/Widget.AppCompat.ImageButton"
-        android:layout_width="45dp"
-        android:layout_height="45dp"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
         android:layout_marginTop="24dp"
         android:layout_marginEnd="24dp"
         android:adjustViewBounds="true"
@@ -60,12 +60,6 @@
             android:id="@+id/settingsButton"
             android:text="@string/settings_text"
             style="@style/MainButtons" />
-      
-        <Button
-            android:id="@+id/button"
-            style="@style/MainButtons"
-            android:text="GO TO LYRICS GETTER" />
-
 
 
         <Button

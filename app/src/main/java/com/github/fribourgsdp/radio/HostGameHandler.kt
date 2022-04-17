@@ -5,6 +5,8 @@ import com.google.firebase.firestore.FieldValue
 import kotlin.streams.toList
 
 class HostGameHandler(private val game: Game, private val view: GameView, db: Database = FirestoreDatabase()): GameHandler(view, db) {
+    private var latestSingerId: String? = null
+
     override fun handleSnapshot(snapshot: DocumentSnapshot?) {
         if (snapshot != null && snapshot.exists()) {
             val doneMap = snapshot.get("player_done_map")!! as HashMap<String, Boolean>
@@ -13,13 +15,28 @@ class HostGameHandler(private val game: Game, private val view: GameView, db: Da
             val allDone = !doneMap.containsValue(false)
 
             if (allDone) {
-                val updatesMap = createUpdatesMap()
+                // when everybody is done, add the points
+                val scoresOfRound = snapshot.get("scores_of_round")!! as HashMap<String, Long>
+                game.addPoints(scoresOfRound)
 
-                // When everybody is done, change update the game
+                // then update the points of the singer
+                val playerFoundMap = snapshot.get("player_found_map")!! as HashMap<String, Boolean>
+
+                // Count the number of players that found the answer
+                // We then multiply by the number of points the singer gets
+                val singerPoints = playerFoundMap.count { (_, hasFound) -> hasFound } * NB_POINTS_PER_PLAYER_FOUND
+
+                // On the first run, the singer id will be null, so we don't update the map
+                latestSingerId?.let { game.addPoints(it, singerPoints) }
+
+                // update the game
+                val updatesMap = createUpdatesMap()
                 db.updateGame(game.id, updatesMap).addOnSuccessListener {
-                    db.resetPlayerDoneMap(
+                    // update the latest singer
+                    latestSingerId = updatesMap["singer"] as String
+                    db.resetGameMetadata(
                         game.id,
-                        updatesMap["singer"] as String
+                        latestSingerId!!
                     ).addOnFailureListener {
                         view.displayError("An error occurred.")
                     }
@@ -38,16 +55,25 @@ class HostGameHandler(private val game: Game, private val view: GameView, db: Da
     }
 
     private fun createUpdatesMap(): Map<String, Any> {
+        val done = game.isDone()
         val nextChoices = game.getChoices(3).stream()
             .map { song -> song.name }
             .toList()
 
+        val nextUser = game.getUserToPlay()
+
         return hashMapOf(
+            "finished" to done,
             "current_round" to game.currentRound,
             "current_song" to FieldValue.delete(),
-            "singer" to game.getUserToPlay(),
-            "song_choices" to nextChoices
+            "singer" to nextUser,
+            "song_choices" to nextChoices,
+            "scores" to game.getAllScores()
         )
+    }
+
+    companion object {
+        private const val NB_POINTS_PER_PLAYER_FOUND = 50L
     }
 
 }
