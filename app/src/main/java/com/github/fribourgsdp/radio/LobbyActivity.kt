@@ -7,7 +7,6 @@ import android.content.pm.PackageManager
 import android.graphics.drawable.Drawable
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import android.widget.*
 import androidx.core.app.ActivityCompat
@@ -241,7 +240,7 @@ open class LobbyActivity : AppCompatActivity(), User.Loader {
             }
 
             if (snapshot != null && snapshot.exists()) {
-                val newList = snapshot.get("players")!! as ArrayList<HashMap<String, String>>
+                val newMap = snapshot.get("players")!! as HashMap<String, String>
 
                 val isGameLaunched = snapshot.getBoolean("launched")
 
@@ -249,7 +248,7 @@ open class LobbyActivity : AppCompatActivity(), User.Loader {
                 val atLeastOnePermissionMissing = mapNameToPermissions.containsValue(false)
                 launchGameButton.isEnabled = !atLeastOnePermissionMissing
 
-                updatePlayersList(mapNameToPermissions, newList)
+                updateLobbyWithPlayers(newMap, mapNameToPermissions)
 
 
                 if (!isHost && isGameLaunched != null && isGameLaunched) {
@@ -263,8 +262,8 @@ open class LobbyActivity : AppCompatActivity(), User.Loader {
         }
     }
 
-    private fun updatePlayersList(nameToPermissions: Map<String, Boolean>, playersList: List<Map<String, String>>) {
-        val users = playersList.map { u -> u["name"]!! }
+    private fun updateLobbyWithPlayers(playersMap: Map<String, String>, nameToPermissions: Map<String, Boolean>) {
+        val users = playersMap.values
         val micPermissions = arrayListOf<Int>()
         for (user in users) {
             if (nameToPermissions[user]!!) {
@@ -276,10 +275,9 @@ open class LobbyActivity : AppCompatActivity(), User.Loader {
         }
         layoutAdapter?.setContent(users.toTypedArray(), micPermissions.toIntArray())
         layoutAdapter?.notifyDataSetChanged()
-        gameBuilder.setUserIdList(playersList.map { u -> u["id"]!! })
-        mapIdToName = playersList.associate {
-            it["id"]!! to it["name"]!!
-        } as HashMap<String, String>
+
+        gameBuilder.setUserIdList(playersMap.keys)
+        mapIdToName = HashMap(playersMap)
     }
 
     protected open fun goToGameActivity(isHost: Boolean, game: Game? = null, gameID: Long) {

@@ -8,17 +8,21 @@ import androidx.test.core.app.ApplicationProvider
 import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.intent.Intents
+import androidx.test.espresso.intent.matcher.IntentMatchers
 import androidx.test.espresso.matcher.RootMatchers.isDialog
 import androidx.test.espresso.matcher.ViewMatchers.*
 import androidx.test.ext.junit.runners.AndroidJUnit4
+import com.github.fribourgsdp.radio.utils.CustomMatchers.Companion.atPosition
 import com.github.fribourgsdp.radio.mockimplementations.MockGameActivity
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
+import org.hamcrest.Matchers.allOf
 import org.hamcrest.Matchers.not
 import org.junit.After
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
+
 
 @RunWith(AndroidJUnit4::class)
 class GameActivityTest {
@@ -173,6 +177,57 @@ class GameActivityTest {
             onView(withText(R.string.pick_a_song)) // Look for the dialog => use its title
                 .inRoot(isDialog()) // check that it's indeed in a dialog
                 .check(matches(isDisplayed()));
+        }
+    }
+
+    @Test
+    fun scoresDisplayedCorrectly() {
+        val scores = hashMapOf(
+            "singer0" to 85L,
+            "singer1" to 70L,
+            "singer2" to 100L
+        )
+
+        val testIntent = Intent(ctx, GameActivity::class.java)
+        ActivityScenario.launch<GameActivity>(testIntent).use { scenario ->
+            scenario.onActivity {
+                it.displayPlayerScores(scores)
+            }
+
+            // Check that the scores are displayed with the correct data and in the correct order
+            onView(withId(R.id.scoresRecyclerView))
+                .check(matches(allOf(
+                    atPosition(0, R.id.nameScoreTextView, withText("singer2")),
+                    atPosition(0, R.id.scoreTextView, withText("100")),
+                    atPosition(1, R.id.nameScoreTextView, withText("singer0")),
+                    atPosition(1, R.id.scoreTextView, withText("85")),
+                    atPosition(2, R.id.nameScoreTextView, withText("singer1")),
+                    atPosition(2, R.id.scoreTextView, withText("70"))
+                )))
+        }
+    }
+
+    @Test
+    fun goToEndGameActivityOnGameOver() {
+        val scores = hashMapOf(
+            "singer0" to 85L,
+            "singer1" to 70L,
+            "singer2" to 100L
+        )
+
+        val testIntent = Intent(ctx, GameActivity::class.java)
+        ActivityScenario.launch<GameActivity>(testIntent).use { scenario ->
+            scenario.onActivity {
+                it.gameOver(scores)
+            }
+
+            Intents.intended(
+                allOf(
+                    IntentMatchers.hasComponent(EndGameActivity::class.java.name),
+                    IntentMatchers.hasExtra(SCORES_KEY, ArrayList(scores.toList())),
+                    IntentMatchers.toPackage("com.github.fribourgsdp.radio")
+                )
+            )
         }
     }
 }

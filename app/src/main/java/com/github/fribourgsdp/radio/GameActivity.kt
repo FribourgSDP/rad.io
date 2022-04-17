@@ -1,18 +1,24 @@
 package com.github.fribourgsdp.radio
 
-import androidx.appcompat.app.AppCompatActivity
+import android.content.Intent
 import android.os.Bundle
 import android.view.KeyEvent
 import android.view.View
 import android.view.inputmethod.EditorInfo
-import android.widget.*
+import android.widget.Button
+import android.widget.EditText
+import android.widget.ImageButton
+import android.widget.TextView
+import androidx.appcompat.app.AppCompatActivity
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import io.agora.rtc.Constants
 import io.agora.rtc.RtcEngine
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.json.Json
 import kotlin.math.absoluteValue
-import kotlin.random.Random
 
+const val SCORES_KEY = "com.github.fribourgsdp.radio.SCORES"
 
 open class GameActivity : AppCompatActivity(), GameView, User.Loader {
     private lateinit var user: User
@@ -26,8 +32,8 @@ open class GameActivity : AppCompatActivity(), GameView, User.Loader {
     private lateinit var muteButton : ImageButton
     private lateinit var songGuessSubmitButton: Button
 
-    private lateinit var playersListView : ListView
-    private lateinit var namesAdapter : ArrayAdapter<String>
+    private lateinit var scoresRecyclerView: RecyclerView
+    private val scoresAdapter = ScoresAdapter()
 
     private lateinit var mapIdToName: HashMap<String, String>
     protected lateinit var voiceChannel: VoiceIpEngineDecorator
@@ -125,14 +131,32 @@ open class GameActivity : AppCompatActivity(), GameView, User.Loader {
         displaySong(getString(R.string.wait_for_pick_format, mapIdToName[singer]  ?: singer))
     }
 
+    override fun displayPlayerScores(playerScores: Map<String, Long>) {
+        scoresAdapter.updateScore(
+            // Replace ids by names
+            playerScores.map { (id, score) -> Pair(mapIdToName[id] ?: id, score)}
+        )
+    }
+
+    override fun gameOver(finalScores: Map<String, Long>) {
+        val intent = Intent(this, EndGameActivity::class.java).apply {
+            putExtra(SCORES_KEY,
+                // Replace ids by names and put in an ArrayList to make it Serializable
+                ArrayList(finalScores.map { (id, score) -> Pair(mapIdToName[id] ?: id, score)})
+            )
+        }
+        startActivity(intent)
+    }
+
     private fun initViews() {
         currentRoundTextView = findViewById(R.id.currentRoundView)
         singerTextView = findViewById(R.id.singerTextView)
         songTextView = findViewById(R.id.songTextView)
         errorOrFailureTextView = findViewById(R.id.errorOrFailureTextView)
-        // TODO: Initialise in later sprint
-        // namesAdapter = ArrayAdapter(this, android.R.layout.simple_list_item_1)
-        // playersListView.adapter = namesAdapter
+
+        scoresRecyclerView = findViewById(R.id.scoresRecyclerView)
+        scoresRecyclerView.layoutManager = LinearLayoutManager(this)
+        scoresRecyclerView.adapter = scoresAdapter
 
         songGuessEditText = findViewById(R.id.songGuessEditText)
         songGuessSubmitButton = findViewById(R.id.songGuessSubmitButton)

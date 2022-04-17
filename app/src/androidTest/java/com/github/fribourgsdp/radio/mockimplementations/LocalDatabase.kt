@@ -104,11 +104,11 @@ class LocalDatabase : Database {
         TODO("Not yet implemented")
     }
 
-    override fun setPlayerDone(gameID: Long, playerID: String): Task<Void> {
+    override fun playerEndTurn(gameID: Long, playerID: String, hasFound: Boolean): Task<Void> {
         TODO("Not yet implemented")
     }
 
-    override fun resetPlayerDoneMap(gameID: Long, singer: String): Task<Void> {
+    override fun resetGameMetadata(gameID: Long, singer: String): Task<Void> {
         TODO("Not yet implemented")
     }
 

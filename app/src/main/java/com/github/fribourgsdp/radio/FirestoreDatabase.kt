@@ -212,7 +212,7 @@ class FirestoreDatabase(var refMake: FirestoreRef) : Database {
             "nbRounds" to settings.nbRounds,
             "withHint" to settings.withHint,
             "private" to settings.isPrivate,
-            "players" to arrayListOf<String>(),
+            "players" to hashMapOf<String, String>(),
             "permissions" to hashMapOf<String, Boolean>(),
             "launched" to false
         )
@@ -258,10 +258,15 @@ class FirestoreDatabase(var refMake: FirestoreRef) : Database {
                 throw IllegalArgumentException("Document $id not found.")
             }
 
-            val list = snapshot.get("players")!! as ArrayList<HashMap<String, String>>
-            list.add(idAndName(user))
+            val mapIdToName = snapshot.get("players")!! as HashMap<String, String>
+            if (mapIdToName.containsKey(user.id)) {
+                // A user with the same id was already added
+                throw IllegalArgumentException("id: ${user.id} is already in the database")
+            }
 
-            transaction.update(docRef, "players", list)
+            mapIdToName[user.id] = user.name
+
+            transaction.update(docRef, "players", mapIdToName)
 
             val playerPermissions = snapshot.get("permissions")!! as HashMap<String, Boolean>
             playerPermissions[user.name] = hasMicPermissions
@@ -293,21 +298,16 @@ class FirestoreDatabase(var refMake: FirestoreRef) : Database {
         }
     }
 
-    private fun idAndName(user: User): HashMap<String, String> {
-        return hashMapOf(
-            "id" to user.id,
-            "name" to user.name
-        )
-    }
-
     override fun openGame(id: Long): Task<Void> {
         return db.collection("games").document(id.toString())
             .set(
                 hashMapOf(
+                    "finished" to false,
                     "current_round" to 0L,
                     "current_song" to "",
                     "singer" to "",
-                    "song_choices" to ArrayList<String>()
+                    "song_choices" to ArrayList<String>(),
+                    "scores" to HashMap<String, Int>()
                 )
             )
     }
@@ -316,7 +316,9 @@ class FirestoreDatabase(var refMake: FirestoreRef) : Database {
         return db.collection("games_metadata").document(id.toString())
             .set(
                 hashMapOf(
-                    "player_done_map" to usersIds.associateWith { true }
+                    "player_done_map" to usersIds.associateWith { true },
+                    "player_found_map" to usersIds.associateWith { false },
+                    "scores_of_round" to usersIds.associateWith { 0 }
                 )
             )
     }
@@ -339,7 +341,7 @@ class FirestoreDatabase(var refMake: FirestoreRef) : Database {
             .update(updatesMap)
     }
 
-    override fun setPlayerDone(gameID: Long, playerID: String): Task<Void> {
+    override fun playerEndTurn(gameID: Long, playerID: String, hasFound: Boolean): Task<Void> {
         val docRef = db.collection("games_metadata").document(gameID.toString())
 
         return db.runTransaction { transaction ->
@@ -349,17 +351,39 @@ class FirestoreDatabase(var refMake: FirestoreRef) : Database {
                 throw IllegalArgumentException("Document $gameID in games not found.")
             }
 
-            val updatedMap = snapshot.get("player_done_map")!! as HashMap<String, Boolean>
-            updatedMap[playerID] = true
+            // Set the player to done
+            val updatedDoneMap = snapshot.get("player_done_map")!! as HashMap<String, Boolean>
+            updatedDoneMap[playerID] = true
 
-            transaction.update(docRef, "player_done_map", updatedMap)
+            // Set if the player has found or not
+            val updatedFoundMap = snapshot.get("player_found_map")!! as HashMap<String, Boolean>
+            updatedFoundMap[playerID] = hasFound
+
+
+            // Count the number of players that found the answer and compute the points
+            val points = Game.computeScore(
+                // The position of the player:
+                updatedFoundMap.count { (_, hasFound) -> hasFound }
+            )
+
+            val updatedScoreMap = snapshot.get("scores_of_round")!! as HashMap<String, Int>
+            updatedScoreMap[playerID] = points
+
+            // Update on database
+            transaction.update(
+                docRef,
+                "player_done_map", updatedDoneMap,
+                "player_found_map", updatedFoundMap,
+                "scores_of_round", updatedScoreMap
+            )
 
             // Success
             null
+
         }
     }
 
-    override fun resetPlayerDoneMap(gameID: Long, singer: String): Task<Void> {
+    override fun resetGameMetadata(gameID: Long, singer: String): Task<Void> {
         val docRef = db.collection("games_metadata").document(gameID.toString())
 
         return db.runTransaction { transaction ->
@@ -369,10 +393,25 @@ class FirestoreDatabase(var refMake: FirestoreRef) : Database {
                 throw IllegalArgumentException("Document $gameID in games not found.")
             }
 
-            val updatedMap = snapshot.get("player_done_map")!! as HashMap<String, Boolean>
-            updatedMap.replaceAll {k, _ -> k == singer}
+            // reset done map
+            val updatedDoneMap = snapshot.get("player_done_map")!! as HashMap<String, Boolean>
+            updatedDoneMap.replaceAll { k, _ -> k == singer}
 
-            transaction.update(docRef, "player_done_map", updatedMap)
+            // reset found map
+            val updatedFoundMap = snapshot.get("player_found_map")!! as HashMap<String, Boolean>
+            updatedFoundMap.replaceAll { _, _ -> false}
+
+            // reset scores of round
+            val scoresOfRound = snapshot.get("scores_of_round")!! as HashMap<String, Long>
+            scoresOfRound.replaceAll { _, _ -> 0L}
+
+            // Update on database
+            transaction.update(
+                docRef,
+                "player_done_map", updatedDoneMap,
+                "player_found_map", updatedFoundMap,
+                "scores_of_round", scoresOfRound
+            )
 
             // Success
             null

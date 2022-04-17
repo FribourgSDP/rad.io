@@ -16,10 +16,19 @@ class PlayerGameHandler(
 
     override fun handleSnapshot(snapshot: DocumentSnapshot?) {
         if (snapshot != null && snapshot.exists()) {
+            val scores = snapshot.get("scores") as HashMap<String, Long>
+            if (snapshot.getBoolean("finished")!!) {
+                view.gameOver(scores)
+                return
+            }
+
             val singerName = snapshot.getString("singer")!!
 
             view.updateSinger(singerName)
             view.updateRound(snapshot.getLong("current_round")!!)
+
+            // update the score
+            view.displayPlayerScores(scores)
 
             // Get the picked song
             // It's not null when there is one.
@@ -49,19 +58,22 @@ class PlayerGameHandler(
     }
 
     fun handleGuess(guess: String, userId: String) {
-        // TODO: In a later update, use a point system
-        if (songToGuess != null && songToGuess!!.lowercase() == guess.lowercase()) {
-            view.displaySong(guess)
+        if (songToGuess == null) { return }
+
+        val nbErrors = StringComparisons.compare(songToGuess!!, guess)
+        if (nbErrors == NOT_THE_SAME) {
+            view.displayError("Wrong answer")
+        } else if (nbErrors != 0) {
+            view.displayError("You're close!")
+        } else {
+            view.displaySong("You correctly guessed $guess")
 
             // Hide the error if a wrong guess was made
             view.hideError()
 
-            db.setPlayerDone(gameID, userId).addOnFailureListener {
-                view.displayError("An error occurred")
-            }
-
-        } else if (songToGuess != null) {
-            view.displayError("Wrong answer")
+            db.playerEndTurn(gameID, userId, true).addOnFailureListener {
+                    view.displayError("An error occurred")
+                }
         }
     }
 
