@@ -18,6 +18,8 @@ class FakeGameView(private val playerID: String = ""): GameView {
 
     var scores: Map<String, Long> = HashMap()
 
+    var gameOver = false
+
     override fun chooseSong(choices: List<String>, listener: GameView.OnPickListener) {
         listener.onPick(choices[0])
     }
@@ -60,6 +62,10 @@ class FakeGameView(private val playerID: String = ""): GameView {
 
     override fun displayPlayerScores(playerScores: Map<String, Long>) {
         scores = HashMap(playerScores)
+    }
+
+    override fun gameOver(finalScores: Map<String, Long>) {
+        gameOver = true
     }
 
 }
