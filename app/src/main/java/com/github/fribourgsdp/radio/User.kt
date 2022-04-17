@@ -10,7 +10,6 @@ import kotlinx.serialization.Serializable
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
-import java.io.File
 
 
 @Serializable
@@ -44,7 +43,8 @@ data class User (var name: String, val color: Int) {
 
     companion object {
         const val USER_DATA_PATH = "user_data_file"
-        lateinit var fileSystemGetter: FileSystem.FileSystemGetter
+        private var fileSystemGetter: FileSystem.FileSystemGetter =
+            AppSpecificFileSystem.AppSpecificFSGetter
 
         /**
          * loads a user from the app-specific storage on the device.
@@ -60,8 +60,8 @@ data class User (var name: String, val color: Int) {
          * @return the user saved on the device
          */
         fun load(context: Context, path: String = USER_DATA_PATH) : User {
-            val userFile = File(context.filesDir, path)
-            return Json.decodeFromString(userFile.readText())
+            val fs = fileSystemGetter.getFileSystem(context)
+            return Json.decodeFromString(fs.read(path))
         }
 
         /**
@@ -101,6 +101,16 @@ data class User (var name: String, val color: Int) {
                 (Random.nextInt(100, 200) shl 16) or
                 (Random.nextInt(100, 200) shl 8) or
                 Random.nextInt(100, 200)
+
+        /**
+         * changes the default app specific file system wrapper to a custom one
+         * useful for tests
+         *
+         * @param fsg the [FileSystem.FileSystemGetter] to will replace the current implementation
+         */
+        fun setFSGetter(fsg: FileSystem.FileSystemGetter) {
+            fileSystemGetter = fsg
+        }
     }
 
     /**
@@ -113,8 +123,8 @@ data class User (var name: String, val color: Int) {
      *      user location
      */
     fun save(context: Context, path: String = USER_DATA_PATH){
-        val userFile = File(context.filesDir, path)
-        userFile.writeText(Json.encodeToString(this))
+        val fs = fileSystemGetter.getFileSystem(context)
+        fs.write(path, Json.encodeToString(this))
     }
 
     /**

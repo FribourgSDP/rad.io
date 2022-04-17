@@ -14,7 +14,7 @@ class AppSpecificFileSystem (val context: Context) : FileSystem {
         return file.readText()
     }
 
-    class AppSpecificFSGetter : FileSystem.FileSystemGetter {
+    companion object AppSpecificFSGetter : FileSystem.FileSystemGetter {
         override fun getFileSystem(context: Context): FileSystem {
             return AppSpecificFileSystem(context)
         }
