@@ -30,6 +30,12 @@ class WorkingLobbyActivity : LobbyActivity() {
 
         startActivity(intent)
     }
+
+    override fun loadUser(): User {
+        val testUser = User("the best player")
+        testUser.id = "123456789"
+        return testUser
+    }
 }
 
 class BuggyLobbyActivity : LobbyActivity() {
@@ -49,6 +55,12 @@ class BuggyLobbyActivity : LobbyActivity() {
         }
 
         startActivity(intent)
+    }
+
+    override fun loadUser(): User {
+        val testUser = User("the buggy player")
+        testUser.id = "9999999"
+        return testUser
     }
 }
 

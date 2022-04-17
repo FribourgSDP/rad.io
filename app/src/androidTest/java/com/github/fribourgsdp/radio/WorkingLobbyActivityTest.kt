@@ -1,17 +1,23 @@
 package com.github.fribourgsdp.radio
 
+import android.Manifest
 import android.content.Context
 import android.content.Intent
+import android.os.Build
+import androidx.test.InstrumentationRegistry.getTargetContext
 import androidx.test.core.app.ActivityScenario
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.espresso.Espresso
+import androidx.test.espresso.action.ViewActions
 import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.intent.Intents
 import androidx.test.espresso.matcher.ViewMatchers.*
 import androidx.test.ext.junit.runners.AndroidJUnit4
-import com.github.fribourgsdp.radio.mockimplementations.LocalDatabase
-import com.github.fribourgsdp.radio.mockimplementations.LyricsGettingWorkingLobbyActivity
-import com.github.fribourgsdp.radio.mockimplementations.WorkingLobbyActivity
+import androidx.test.platform.app.InstrumentationRegistry
+import androidx.test.platform.app.InstrumentationRegistry.getInstrumentation
+import androidx.test.uiautomator.UiDevice
+import androidx.test.uiautomator.UiSelector
+import com.github.fribourgsdp.radio.mockimplementations.*
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 import org.hamcrest.Matchers.not
@@ -20,6 +26,7 @@ import org.junit.Assert.assertTrue
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
+
 
 /**
  * Lobby Activity Tests with working database
@@ -46,7 +53,6 @@ class WorkingLobbyActivityTest {
     @Test
     fun lobbyDisplayCorrectInfosWhenHost() {
         // Test values
-        val testHost = User("The Boss")
         val testName = "Hello World!"
         val testPlaylist = Playlist("Rap Playlist")
         val testNbRounds = 20
@@ -55,8 +61,8 @@ class WorkingLobbyActivityTest {
 
         // Init views
         val uuidTextView = Espresso.onView(withId(R.id.uuidText))
-        val hostNameTextView = Espresso.onView(withId(R.id.hostNameText))
         val gameNameTextView = Espresso.onView(withId(R.id.gameNameText))
+        val hostNameTextView = Espresso.onView(withId(R.id.hostNameText))
         val playlistTextView = Espresso.onView(withId(R.id.playlistText))
         val nbRoundsTextView = Espresso.onView(withId(R.id.nbRoundsText))
         val withHintTextView = Espresso.onView(withId(R.id.withHintText))
@@ -64,7 +70,6 @@ class WorkingLobbyActivityTest {
         val launchGameButton = Espresso.onView(withId(R.id.launchGameButton))
 
         val testIntent = Intent(ctx, WorkingLobbyActivity::class.java).apply {
-            putExtra(GAME_HOST_KEY, Json.encodeToString(testHost))
             putExtra(GAME_NAME_KEY, testName)
             putExtra(GAME_PLAYLIST_KEY, Json.encodeToString(testPlaylist))
             putExtra(GAME_NB_ROUNDS_KEY, testNbRounds)
@@ -75,7 +80,7 @@ class WorkingLobbyActivityTest {
 
         ActivityScenario.launch<WorkingLobbyActivity>(testIntent).use {
             uuidTextView.check(matches(withText(ctx.getString(R.string.uid_text_format, LocalDatabase.EXPECTED_UID))))
-            hostNameTextView.check(matches(withText(ctx.getString(R.string.host_name_format, testHost.name))))
+            hostNameTextView.check(matches(withText(ctx.getString(R.string.host_name_format, "the best player"))))
             gameNameTextView.check(matches(withText(ctx.getString(R.string.game_name_format, testName))))
             playlistTextView.check(matches(withText(ctx.getString(R.string.playlist_format, testPlaylist.name))))
             nbRoundsTextView.check(matches(withText(ctx.getString(R.string.number_of_rounds_format, testNbRounds))))
@@ -90,7 +95,6 @@ class WorkingLobbyActivityTest {
     fun lobbyDisplayCorrectInfosWhenInvited() {
         // Test values
         val testUID = 42L
-        val testHost = User("The Boss")
         val testName = "Hello World!"
         val testPlaylist = Playlist("Rap Playlist")
         val testNbRounds = 20
@@ -99,17 +103,16 @@ class WorkingLobbyActivityTest {
 
         // Init views
         val uuidTextView = Espresso.onView(withId(R.id.uuidText))
-        val hostNameTextView = Espresso.onView(withId(R.id.hostNameText))
         val gameNameTextView = Espresso.onView(withId(R.id.gameNameText))
         val playlistTextView = Espresso.onView(withId(R.id.playlistText))
         val nbRoundsTextView = Espresso.onView(withId(R.id.nbRoundsText))
+        val hostNameTextView = Espresso.onView(withId(R.id.hostNameText))
         val withHintTextView = Espresso.onView(withId(R.id.withHintText))
         val privateTextView  = Espresso.onView(withId(R.id.privateText))
         val launchGameButton = Espresso.onView(withId(R.id.launchGameButton))
 
         val testIntent = Intent(ctx, WorkingLobbyActivity::class.java).apply {
             putExtra(GAME_UID_KEY, testUID)
-            putExtra(GAME_HOST_KEY, Json.encodeToString(testHost))
             putExtra(GAME_NAME_KEY, testName)
             putExtra(GAME_PLAYLIST_KEY, Json.encodeToString(testPlaylist))
             putExtra(GAME_NB_ROUNDS_KEY, testNbRounds)
@@ -120,7 +123,7 @@ class WorkingLobbyActivityTest {
 
         ActivityScenario.launch<WorkingLobbyActivity>(testIntent).use {
             uuidTextView.check(matches(withText(ctx.getString(R.string.uid_text_format, testUID))))
-            hostNameTextView.check(matches(withText(ctx.getString(R.string.host_name_format, testHost.name))))
+            hostNameTextView.check(matches(withText(ctx.getString(R.string.host_name_format, ""))))
             gameNameTextView.check(matches(withText(ctx.getString(R.string.game_name_format, testName))))
             playlistTextView.check(matches(withText(ctx.getString(R.string.playlist_format, testPlaylist.name))))
             nbRoundsTextView.check(matches(withText(ctx.getString(R.string.number_of_rounds_format, testNbRounds))))
@@ -171,5 +174,4 @@ class WorkingLobbyActivityTest {
             assertTrue(testHost.getPlaylists().any { p -> p.getSongs().any { s -> s.lyrics == lyrics } })
         }
     }
-
 }
