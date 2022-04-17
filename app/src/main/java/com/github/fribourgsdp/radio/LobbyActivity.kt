@@ -1,6 +1,7 @@
 package com.github.fribourgsdp.radio
 
 import android.Manifest
+import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.drawable.Drawable
@@ -281,8 +282,7 @@ open class LobbyActivity : AppCompatActivity(), User.Loader {
         } as HashMap<String, String>
     }
 
-
-    open protected fun goToGameActivity(isHost: Boolean, game: Game? = null, gameID: Long) {
+    protected open fun goToGameActivity(isHost: Boolean, game: Game? = null, gameID: Long) {
         val intent: Intent = Intent(this, GameActivity::class.java).apply {
             putExtra(GAME_IS_HOST_KEY, isHost)
             putExtra(MAP_ID_NAME_KEY, mapIdToName)
@@ -291,9 +291,23 @@ open class LobbyActivity : AppCompatActivity(), User.Loader {
 
         if (isHost && game != null) {
             intent.putExtra(GAME_KEY, Json.encodeToString(game))
+            loadLyrics(game.playlist, MusixmatchLyricsGetter, user)
         }
 
         startActivity(intent)
+    }
+    protected fun loadLyrics(playlist : Playlist, lyricsGetter: LyricsGetter, host : User){
+        if (host.getPlaylists().contains(playlist)){
+            for (song in playlist.getSongs()){
+                if(song.lyrics == "") {
+                    lyricsGetter.getLyrics(song.name, song.artist).thenAccept { f ->
+                        val songWithLyrics = Song(song.name, song.artist, f)
+                        host.updateSongInPlaylist(playlist, songWithLyrics)
+                        host.save(applicationContext)
+                    }
+                }
+            }
+        }
     }
 
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {

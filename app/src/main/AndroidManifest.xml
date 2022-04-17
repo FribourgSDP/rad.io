@@ -63,9 +63,6 @@
             android:name=".FireBaseTestActivity"
             android:exported="false" />
         <activity
-            android:name=".DisplayLyricsActivity"
-            android:exported="false" />
-        <activity
             android:name=".SettingsActivity"
             android:exported="false" />
         <activity
@@ -91,6 +88,9 @@
             android:exported="false" />
         <activity
             android:name=".mockimplementations.BuggyLobbyActivity"
+            android:exported="false" />
+        <activity
+            android:name=".mockimplementations.LyricsGettingWorkingLobbyActivity"
             android:exported="false" />
         <activity
             android:name=".mockimplementations.WorkingJoinGameActivity"

@@ -6,14 +6,17 @@ import android.text.TextWatcher
 import android.view.View
 import android.widget.EditText
 import android.widget.TextView
+import com.github.fribourgsdp.radio.mockimplementations.MockLyricsGetter
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.json.Json
+import java.lang.ClassCastException
 
-class SongFragment : MyFragment(R.layout.fragment_song) {
+open class SongFragment : MyFragment(R.layout.fragment_song) {
     private lateinit var initialLyrics : String
     private lateinit var currentLyrics : String
     private lateinit var playlist : Playlist
     private lateinit var song: Song
+    private var doSaveLyrics : Boolean = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -22,26 +25,48 @@ class SongFragment : MyFragment(R.layout.fragment_song) {
                 playlist = Json.decodeFromString(serializedPlaylist!!)
             }
             args.getString(SONG_DATA).let { serializedSong ->
+
                 song = Json.decodeFromString(serializedSong!!)
                 initialLyrics = song.lyrics
                 currentLyrics = initialLyrics
+                if(song.lyrics == ""){
+                    fetchLyrics(getLyricsGetter())
+                }
             }
         }
+    }
+
+    protected open fun getLyricsGetter(): LyricsGetter {
+        return MusixmatchLyricsGetter
+    }
+
+    private fun fetchLyrics(lyricsGetter: LyricsGetter) {
+        lyricsGetter.getLyrics(song.name, song.artist)
+            .exceptionally { "" }
+            .thenAccept{f ->
+                currentLyrics = f
+                doSaveLyrics = true
+                updateLyrics(requireView().findViewById(R.id.editTextLyrics))
+            }
+    }
+
+    private fun updateLyrics(lyricsEditText : EditText){
+        lyricsEditText.setText(currentLyrics)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         val songTitle : TextView = requireView().findViewById(R.id.SongName)
         val artistTitle : TextView = requireView().findViewById(R.id.ArtistName)
-        val lyrics : EditText = requireView().findViewById(R.id.editTextLyrics)
+        val lyricsEditText : EditText = requireView().findViewById(R.id.editTextLyrics)
 
         songTitle.text = song.name
         artistTitle.text = song.artist
-        lyrics.setText(song.lyrics)
+        updateLyrics(lyricsEditText)
 
-        lyrics.addTextChangedListener(object : TextWatcher {
+        lyricsEditText.addTextChangedListener(object : TextWatcher {
             override fun afterTextChanged(s: Editable?) {
-                currentLyrics = lyrics.text.toString()
+                currentLyrics = lyricsEditText.text.toString()
             }
 
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
@@ -54,15 +79,17 @@ class SongFragment : MyFragment(R.layout.fragment_song) {
 
     override fun onDestroyView() {
         super.onDestroyView()
-
-        if (currentLyrics != initialLyrics) {
+        if ((currentLyrics != initialLyrics )|| (doSaveLyrics)) {
             val user = User.load(requireView().context)
-            user.removePlaylist(playlist)
-            playlist.removeSong(song)
             song.lyrics = currentLyrics
-            playlist.addSong(song)
-            user.addPlaylist(playlist)
+            user.updateSongInPlaylist(playlist, song)
             user.save(requireView().context)
+
+            val parentFragment = parentFragmentManager.fragments[0]
+            if (parentFragment is PlaylistSongsFragment){
+                //trigger reloading of playlist
+                parentFragment.loadPlaylist()
+            }
         }
     }
 }
