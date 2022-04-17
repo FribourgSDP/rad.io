@@ -12,6 +12,7 @@ import androidx.test.espresso.intent.Intents
 import androidx.test.espresso.matcher.ViewMatchers.*
 import androidx.test.ext.junit.rules.ActivityScenarioRule
 import androidx.test.ext.junit.runners.AndroidJUnit4
+import com.github.fribourgsdp.radio.mockimplementations.MockFileSystem
 import com.google.android.gms.tasks.Tasks
 import com.google.firebase.auth.FirebaseAuth
 import org.junit.After
@@ -56,6 +57,8 @@ class PlaylistRecyclerViewTest {
         Tasks.await(task)
         val context: Context = ApplicationProvider.getApplicationContext()
         val string = "test"
+        MockFileSystem.wipeData()
+        User.setFSGetter(MockFileSystem.MockFSGetter)
         val user = User(string, 0)
         val playlistTitle = "testTitle"
         val playlist1 = Playlist(playlistTitle, Genre.ROCK)
