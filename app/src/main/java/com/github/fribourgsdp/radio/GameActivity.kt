@@ -153,7 +153,7 @@ open class GameActivity : AppCompatActivity(), GameView, User.Loader {
         }
     }
 
-    open protected fun initVoiceChat(gameUid: Long) {
+    protected open fun initVoiceChat(gameUid: Long) {
 
         val map = mapIdToName.mapKeys { it.hashCode().absoluteValue }
         if (!this::voiceChannel.isInitialized) voiceChannel = VoiceIpEngineDecorator(this, MyIRtcEngineEventHandler(this, map))
@@ -162,9 +162,4 @@ open class GameActivity : AppCompatActivity(), GameView, User.Loader {
         voiceChannel.enableAudioVolumeIndication(200,3,true)
         voiceChannel.joinChannel(voiceChannel.getToken(userId, gameUid.toString()), gameUid.toString(), "", userId)
     }
-
-    override fun loadUser(): User {
-        return User.load(this)
-    }
-
 }
