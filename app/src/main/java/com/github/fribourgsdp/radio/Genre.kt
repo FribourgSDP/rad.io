@@ -23,7 +23,7 @@ enum class Genre (private val genreName: String){
     MOVIE("Movie Music"),
     COUNTRY("Country");
 
-    override fun toString(): String {
+    /*override fun toString(): String {
         return genreName
-    }
+    }*/
 }
