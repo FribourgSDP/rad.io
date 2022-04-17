@@ -15,4 +15,13 @@ object SetUtility {
     fun <E> addAllToSet(set : MutableSet<E>, items : Iterable<E>){
         items.forEach{ i : E -> addToSet(set, i)}
     }
+
+    fun <E : Nameable> getNamedFromSet(set : MutableSet<E>, name: String) : E {
+        val filteredSet = set.filter { nameable -> nameable.name == name }
+        if (filteredSet.isEmpty()) {
+            throw NoSuchElementException()
+        } else {
+            return filteredSet[0]
+        }
+    }
 }

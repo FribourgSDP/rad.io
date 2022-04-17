@@ -189,12 +189,7 @@ data class User (var name: String, val color: Int) {
      * @throws NoSuchFileException
      */
     fun getPlaylistWithName(name: String): Playlist {
-        val filteredPlaylists = playlists.filter { playlist -> playlist.name == name }
-        if (filteredPlaylists.isEmpty()) {
-            throw NoSuchElementException()
-        } else {
-            return filteredPlaylists[0]
-        }
+        return SetUtility.getNamedFromSet(playlists, name)
     }
 
     fun addSpotifyPlaylistUId(playlistName: String, spotifyUid: String){

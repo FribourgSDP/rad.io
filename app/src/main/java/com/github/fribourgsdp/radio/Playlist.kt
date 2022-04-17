@@ -14,7 +14,7 @@ import kotlinx.serialization.Serializable
  * @property genre genre of the playlist
  * @constructor creates a Playlist with the given name and genre
  */
-data class Playlist (var name: String, var genre: Genre) {
+data class Playlist (override var name: String, var genre: Genre) : Nameable {
 
     private val songs: MutableSet<Song> = mutableSetOf()
 
@@ -88,12 +88,7 @@ data class Playlist (var name: String, var genre: Genre) {
      * @throws NoSuchFileException
      */
     fun getSong(name: String): Song {
-        val filteredSongs = songs.filter { song -> song.name == name }
-        if (filteredSongs.isEmpty()) {
-            throw NoSuchElementException()
-        } else {
-            return filteredSongs[0]
-        }
+        return SetUtility.getNamedFromSet(songs, name)
     }
 
     override fun equals(other: Any?): Boolean {
