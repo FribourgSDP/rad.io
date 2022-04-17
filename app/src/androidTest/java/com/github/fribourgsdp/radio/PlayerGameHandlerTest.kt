@@ -136,10 +136,6 @@ class PlayerGameHandlerTest {
         val db = mock(Database::class.java)
         `when`(db.playerEndTurn(anyLong(), anyString(), anyBoolean()))
             .thenReturn(Tasks.forResult(null))
-        `when`(db.getPositionInGame(anyLong(), anyString()))
-            .thenReturn(Tasks.forResult(1))
-        `when`(db.addPointsToPlayer(anyLong(), anyString(), anyInt()))
-            .thenReturn(Tasks.forResult(null))
 
         `when`(mockSnapshot.getString("current_song")).thenReturn(song)
 
@@ -164,10 +160,6 @@ class PlayerGameHandlerTest {
         val view = FakeGameView("Not Singer")
         val db = mock(Database::class.java)
         `when`(db.playerEndTurn(anyLong(), anyString(), anyBoolean()))
-            .thenReturn(Tasks.forResult(null))
-        `when`(db.getPositionInGame(anyLong(), anyString()))
-            .thenReturn(Tasks.forResult(1))
-        `when`(db.addPointsToPlayer(anyLong(), anyString(), anyInt()))
             .thenReturn(Tasks.forResult(null))
 
         `when`(mockSnapshot.getString("current_song")).thenReturn(song)
