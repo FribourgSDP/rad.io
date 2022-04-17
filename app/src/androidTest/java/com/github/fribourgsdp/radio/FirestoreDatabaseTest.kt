@@ -48,7 +48,9 @@ class FirestoreDatabaseTest {
         `when`(mockDocumentReference.get()).thenReturn(Tasks.forResult(mockSnapshot))
         `when`(mockDocumentReference.set(anyMap<String,String>())).thenReturn( Tasks.whenAll(listOf(Tasks.forResult(3))))
 
-        `when`(mockFirestoreRef.getUserRef(userIdTest)).thenReturn(mockDocumentReference)
+        `when`(mockFirestoreRef.getUserRef((anyString()))).thenReturn(mockDocumentReference)
+        `when`(mockFirestoreRef.getSongRef(anyString())).thenReturn(mockDocumentReference)
+        `when`(mockFirestoreRef.getPlaylistRef((anyString()))).thenReturn(mockDocumentReference)
 
     }
     @Test
@@ -71,23 +73,25 @@ class FirestoreDatabaseTest {
     @Test
     fun fetchingUnregisteredUserReturnsNull(){
         `when`(mockSnapshot.exists()).thenReturn(false)
-
         val user = Tasks.withTimeout(db.getUser(userIdTest),10,TimeUnit.SECONDS)
         assertEquals( null,Tasks.await(user))
     }
 
     @Test
     fun  registerSongAndFetchingItWorks(){
-        db.registerSong(song1)
+
         `when`(mockSnapshot.exists()).thenReturn(true)
 
         `when`(mockSnapshot.get("songName")).thenReturn("song1")
-        `when`(mockSnapshot.get("artistsName")).thenReturn("artist1")
+        `when`(mockSnapshot.get("artistName")).thenReturn("artist1")
         `when`(mockSnapshot.get("lyrics")).thenReturn("lyricsTest1")
         `when`(mockSnapshot.get("songId")).thenReturn("idTest1")
 
-        val song = db.getSong("idTest1")
-        assertEquals(song1,Tasks.await(song))
+        db.registerSong(song1)
+        val song = Tasks.await(db.getSong("idTest1"))
+        assertEquals(song1,song)
+
+
 
     }
    /* @Test(expected = IllegalArgumentException::class)
@@ -98,4 +102,21 @@ class FirestoreDatabaseTest {
         Tasks.await(t1)
         )*/
     }*/
+
+    @Test
+    fun registerPlaylistAndFetchingItWorks(){
+        db.registerPlaylist(playlist1)
+
+        `when`(mockSnapshot.exists()).thenReturn(true)
+
+        `when`(mockSnapshot.get("playlistName")).thenReturn("playlist1")
+        `when`(mockSnapshot.get("genre")).thenReturn("FRENCH")
+        `when`(mockSnapshot.get("songs")).thenReturn(arrayListOf(
+            hashMapOf("songId" to song1.id,"songName" to song1.name, "songArtist" to song1.artist),
+            hashMapOf("songId" to song2.id,"songName" to song2.name, "songArtist" to song2.artist)))
+
+        val t1 = db.getPlaylist("playlist1.id")
+        assertEquals(playlist1,Tasks.await(t1))
+
+    }
 }
