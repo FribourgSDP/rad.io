@@ -233,12 +233,7 @@ open class LobbyActivity : AppCompatActivity(), User.Loader {
             }
 
             if (snapshot != null && snapshot.exists()) {
-<<<<<<< HEAD
                 val newMap = snapshot.get("players")!! as HashMap<String, String>
-                updateLobbyWithPlayers(newMap)
-=======
-                val newList = snapshot.get("players")!! as ArrayList<HashMap<String, String>>
->>>>>>> origin/master
 
                 val isGameLaunched = snapshot.getBoolean("launched")
 
@@ -246,7 +241,7 @@ open class LobbyActivity : AppCompatActivity(), User.Loader {
                 val atLeastOnePermissionMissing = mapNameToPermissions.containsValue(false)
                 launchGameButton.isEnabled = !atLeastOnePermissionMissing
 
-                updatePlayersList(mapNameToPermissions, newList)
+                updateLobbyWithPlayers(newMap, mapNameToPermissions)
 
 
                 if (!isHost && isGameLaunched != null && isGameLaunched) {
@@ -260,16 +255,8 @@ open class LobbyActivity : AppCompatActivity(), User.Loader {
         }
     }
 
-<<<<<<< HEAD
-    private fun updateLobbyWithPlayers(playersMap: Map<String, String>) {
-        namesAdapter.clear()
-        namesAdapter.addAll(playersMap.values)
-        namesAdapter.notifyDataSetChanged()
-        gameBuilder.setUserIdList(playersMap.keys)
-        mapIdToName = HashMap(playersMap)
-=======
-    private fun updatePlayersList(nameToPermissions: Map<String, Boolean>, playersList: List<Map<String, String>>) {
-        val users = playersList.map { u -> u["name"]!! }
+    private fun updateLobbyWithPlayers(playersMap: Map<String, String>, nameToPermissions: Map<String, Boolean>) {
+        val users = playersMap.keys
         val micPermissions = arrayListOf<Int>()
         for (user in users) {
             if (nameToPermissions[user]!!) {
@@ -281,11 +268,9 @@ open class LobbyActivity : AppCompatActivity(), User.Loader {
         }
         layoutAdapter?.setContent(users.toTypedArray(), micPermissions.toIntArray())
         layoutAdapter?.notifyDataSetChanged()
-        gameBuilder.setUserIdList(playersList.map { u -> u["id"]!! })
-        mapIdToName = playersList.associate {
-            it["id"]!! to it["name"]!!
-        } as HashMap<String, String>
->>>>>>> origin/master
+
+        gameBuilder.setUserIdList(playersMap.keys)
+        mapIdToName = HashMap(playersMap)
     }
 
 
