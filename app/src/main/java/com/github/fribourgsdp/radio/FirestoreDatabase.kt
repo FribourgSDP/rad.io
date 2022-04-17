@@ -348,8 +348,8 @@ class FirestoreDatabase : Database {
             updatedFoundMap.replaceAll { _, _ -> false}
 
             // reset scores of round
-            val scoresOfRound = snapshot.get("scores_of_round")!! as HashMap<String, Int>
-            scoresOfRound.replaceAll { _, _ -> 0}
+            val scoresOfRound = snapshot.get("scores_of_round")!! as HashMap<String, Long>
+            scoresOfRound.replaceAll { _, _ -> 0L}
 
             // Update on database
             transaction.update(
