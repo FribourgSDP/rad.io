@@ -92,7 +92,7 @@ class LocalDatabase : Database {
         TODO("Not yet implemented")
     }
 
-    override fun setPlayerDone(gameID: Long, playerID: String, hasFound: Boolean): Task<Void> {
+    override fun playerEndTurn(gameID: Long, playerID: String, hasFound: Boolean): Task<Int> {
         TODO("Not yet implemented")
     }
 
@@ -101,10 +101,6 @@ class LocalDatabase : Database {
     }
 
     override fun addPointsToPlayer(gameID: Long, playerID: String, points: Int): Task<Void> {
-        TODO("Not yet implemented")
-    }
-
-    override fun getPositionInGame(gameID: Long, userId: String): Task<Int> {
         TODO("Not yet implemented")
     }
 

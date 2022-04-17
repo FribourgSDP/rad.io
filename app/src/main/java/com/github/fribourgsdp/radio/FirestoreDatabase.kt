@@ -260,7 +260,7 @@ class FirestoreDatabase : Database {
             .update(updatesMap)
     }
 
-    override fun setPlayerDone(gameID: Long, playerID: String, hasFound: Boolean): Task<Void> {
+    override fun playerEndTurn(gameID: Long, playerID: String, hasFound: Boolean): Task<Int> {
         val docRef = db.collection("games_metadata").document(gameID.toString())
 
         return db.runTransaction { transaction ->
@@ -285,9 +285,10 @@ class FirestoreDatabase : Database {
                 "player_found_map", updatedFoundMap
             )
 
-
             // Success
-            null
+            // Count the number of players that found the answer
+            updatedFoundMap.count { (_, hasFound) -> hasFound }
+
         }
     }
 
@@ -308,24 +309,6 @@ class FirestoreDatabase : Database {
 
             // Success
             null
-        }
-    }
-
-    override fun getPositionInGame(gameID: Long, userId: String): Task<Int> {
-        val docRef = db.collection("games_metadata").document(gameID.toString())
-
-        return db.runTransaction { transaction ->
-            val snapshot = transaction.get(docRef)
-
-            if (!snapshot.exists()) {
-                throw IllegalArgumentException("Document $gameID in games_metadata not found.")
-            }
-
-            val playerFoundMap = snapshot.get("player_found_map")!! as HashMap<String, Boolean>
-
-            // Count the number of players that found the answer
-            // We then add one since positions starts at one
-            playerFoundMap.count { (_, hasFound) -> hasFound } + 1
         }
     }
 
