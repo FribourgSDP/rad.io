@@ -28,8 +28,6 @@ class MainActivity : AppCompatActivity() {
         joinButton.setOnClickListener {startActivity(Intent(this, JoinGameActivity::class.java))}
         val settingsButton = findViewById<Button>(R.id.settingsButton)
         settingsButton.setOnClickListener {startActivity(Intent(this, SettingsActivity::class.java))}
-        val button : Button = findViewById(R.id.button)
-        button.setOnClickListener {startActivity(Intent(this, DisplayLyricsActivity::class.java))}
         val profileButton: ImageButton = findViewById(R.id.profileButton)
         profileButton.setOnClickListener {
             startActivity(Intent(this, UserProfileActivity::class.java))

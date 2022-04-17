@@ -2,13 +2,11 @@ package com.github.fribourgsdp.radio
 
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import android.widget.Button
 import android.widget.TextView
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.google.android.gms.tasks.Tasks
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
@@ -35,12 +33,11 @@ class PlaylistSongsFragment : MyFragment(R.layout.fragment_playlist_display), On
         }
     }
 
-
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         val playlistTitle : TextView = requireView().findViewById(R.id.PlaylistName)
         playlistTitle.text = playlistName
-        initializeRecyclerView()
+
         //sets listeners to 2 buttons
         editButton = requireView().findViewById(R.id.editButton)
         editButton.setOnClickListener {
@@ -48,9 +45,9 @@ class PlaylistSongsFragment : MyFragment(R.layout.fragment_playlist_display), On
             intent.putExtra(PLAYLIST_TO_MODIFY, Json.encodeToString(playlist))
             startActivity(intent)
         }
-        User.loadOrDefault(requireContext()).addOnSuccessListener { l ->
-            user = l
-        }
+
+        loadPlaylist()
+
         deleteButton = requireView().findViewById(R.id.deleteButton)
         deleteButton.setOnClickListener{
             //val user = Tasks.await()
@@ -58,6 +55,16 @@ class PlaylistSongsFragment : MyFragment(R.layout.fragment_playlist_display), On
             user.removePlaylist(playlist)
             user.save(requireContext())
             activity?.onBackPressed()
+        }
+    }
+
+
+    fun loadPlaylist(){
+        User.loadOrDefault(requireContext()).addOnSuccessListener { l ->
+            user = l
+            playlist = user.getPlaylistByName(playlistName) ?: Playlist("")
+            songs = playlist.getSongs().toList()
+            initializeRecyclerView()
         }
     }
 

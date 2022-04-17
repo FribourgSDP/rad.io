@@ -25,7 +25,7 @@
 
     <LinearLayout
         android:id="@+id/linearLayout"
-        android:layout_width="379dp"
+        android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_marginStart="16dp"
         android:layout_marginTop="64dp"
@@ -40,39 +40,32 @@
         app:layout_constraintVertical_bias="0.0">
 
 
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:layout_width="match_parent"
-            android:layout_height="60dp">
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
 
             <EditText
                 android:id="@+id/addSongToPlaylistSongName"
-                android:layout_width="170dp"
-                android:layout_height="49dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentTop="true"
                 android:hint="@string/song_name"
-                android:minWidth="48dp"
-                android:minHeight="48dp"
                 android:textColorHint="#757575"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toStartOf="@+id/addSongToPlaylistArtistName"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
                 android:inputType="text"
                 android:autofillHints="song name" />
 
             <EditText
+                android:layout_toEndOf="@id/addSongToPlaylistSongName"
                 android:id="@+id/addSongToPlaylistArtistName"
-                android:layout_width="195dp"
-                android:layout_height="48dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:autofillHints="artist name"
                 android:hint="@string/artist_name"
-                android:minWidth="48dp"
-                android:minHeight="48dp"
-                android:textColorHint="#757575"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
                 android:inputType="text"
-                android:autofillHints="artist name" />
-        </androidx.constraintlayout.widget.ConstraintLayout>
+                android:textColorHint="#757575" />
+        </RelativeLayout>
 
         <TextView
             android:id="@+id/addPlaylistErrorTextView"
