@@ -26,7 +26,7 @@ const val SCOPES = "playlist-read-private,playlist-read-collaborative"
 const val RECREATE_USER = "com.github.fribourgsdp.radio.avoidRecreatingUser"
 const val USER_DATA = "com.github.fribourgsdp.radio.USER_DATA"
 
-class UserProfileActivity : AppCompatActivity() {
+open class UserProfileActivity : AppCompatActivity() {
     private lateinit var user : User
     private lateinit var usernameField : EditText
     private lateinit var usernameInitialText : TextView
@@ -52,7 +52,7 @@ class UserProfileActivity : AppCompatActivity() {
         User.loadOrDefault(this).addOnSuccessListener { u ->
             user = u
 
-            checkUser()
+//            checkUser()
 
             usernameField.setText(user.name)
             usernameInitialText.text = user.initial.uppercaseChar().toString()
