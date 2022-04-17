@@ -1,10 +1,12 @@
 package com.github.fribourgsdp.radio
 
+import android.content.ContentValues
 import android.content.Context
 import android.content.Intent
 import android.graphics.PorterDuff
 import android.graphics.PorterDuffColorFilter
 import android.os.Bundle
+import android.util.Log
 import android.widget.Button
 import android.widget.EditText
 import android.widget.ImageView
@@ -133,14 +135,16 @@ class UserProfileActivity : AppCompatActivity() {
     private fun checkUser(){
         //get current user
         val firebaseUser = firebaseAuth.currentUser
+
         if(firebaseUser != null){
             //check whether it is a new user of not, if yes, we saved the default user info in the cloud
             //if no we load the data from the cloud.
             val mockUser = db.getUser(firebaseUser.uid)
             mockUser.addOnSuccessListener { l ->
+
                 if(l == null){
                     db.setUser(firebaseUser.uid,user)
-                }else{
+                }else if(l.id != user.id){
                     user = l
                     user.save(this)
                 }

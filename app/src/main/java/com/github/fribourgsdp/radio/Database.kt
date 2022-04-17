@@ -51,7 +51,16 @@ interface Database {
      * @return a task loading a unique ID for the user.
      */
     fun generateUserId() : Task<Long>
-
+   /**
+    * Get a unique ID for a playlist. It is an asynchronous operation, so it is returned in a task.
+    * @return a task loading a unique ID for the playlist.
+    */
+    fun generatePlaylistId() : Task<Long>
+   /**
+    * Get a unique ID for a song. It is an asynchronous operation, so it is returned in a task.
+    * @return a task loading a unique ID for the song.
+    */
+    fun generateSongId() : Task<Long>
     /**
      * Open a lobby on the database.
      * @return a task void so that we know if the lobby was correctly opened.
