@@ -3,21 +3,17 @@ package com.github.fribourgsdp.radio
 
 import android.content.Context
 import android.content.Intent
-import android.view.View
-import androidx.recyclerview.widget.RecyclerView
 import androidx.test.core.app.ActivityScenario
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.intent.Intents
-import androidx.test.espresso.matcher.BoundedMatcher
 import androidx.test.espresso.matcher.RootMatchers.isDialog
 import androidx.test.espresso.matcher.ViewMatchers.*
 import androidx.test.ext.junit.runners.AndroidJUnit4
+import com.github.fribourgsdp.radio.utils.CustomMatchers.Companion.atPosition
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
-import org.hamcrest.Description
-import org.hamcrest.Matcher
 import org.hamcrest.Matchers.allOf
 import org.hamcrest.Matchers.not
 import org.junit.After
@@ -206,26 +202,6 @@ class GameActivityTest {
                     atPosition(2, R.id.nameScoreTextView, withText("singer1")),
                     atPosition(2, R.id.scoreTextView, withText("70"))
                 )))
-        }
-    }
-
-    private fun atPosition(position: Int, itemId: Int, itemMatcher: Matcher<View?>): Matcher<View?> {
-        return object : BoundedMatcher<View?, RecyclerView>(RecyclerView::class.java) {
-            override fun describeTo(description: Description) {
-                // Update the description of the matcher
-                description.appendText("Item at position $position: ")
-                itemMatcher.describeTo(description)
-            }
-
-            override fun matchesSafely(view: RecyclerView): Boolean {
-                val viewHolder = view.findViewHolderForAdapterPosition(position)
-                    // if null:
-                    ?: return false
-
-                return itemMatcher.matches(
-                    viewHolder.itemView.findViewById(itemId)
-                )
-            }
         }
     }
 }
