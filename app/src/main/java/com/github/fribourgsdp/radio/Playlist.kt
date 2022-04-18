@@ -14,7 +14,7 @@ import kotlinx.serialization.Serializable
  * @property genre genre of the playlist
  * @constructor creates a Playlist with the given name and genre
  */
-data class Playlist (var name: String, var genre: Genre) {
+data class Playlist (override var name: String, var genre: Genre) : Nameable {
 
     private val songs: MutableSet<Song> = mutableSetOf()
     var id : String = ""
@@ -80,6 +80,16 @@ data class Playlist (var name: String, var genre: Genre) {
         return songs.toSet()
     }
 
+    /**
+     * getter for a single song, matched according to the name give
+     *
+     * @param name the name of the song we are trying to retrieve
+     * @return the requested song
+     * @throws NoSuchFileException
+     */
+    fun getSong(name: String): Song {
+        return SetUtility.getNamedFromSet(songs, name)
+    }
 
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
@@ -95,5 +105,4 @@ data class Playlist (var name: String, var genre: Genre) {
     override fun hashCode(): Int {
         return name.hashCode()
     }
-
 }

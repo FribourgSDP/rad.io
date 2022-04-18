@@ -12,6 +12,14 @@ import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 
 class WorkingLobbyActivity : LobbyActivity() {
+    override fun onCreate(savedInstanceState: Bundle?) {
+        User.setFSGetter(MockFileSystem.MockFSGetter)
+        val testUser = User("the best player")
+        testUser.id = "123456789"
+        super.onCreate(savedInstanceState)
+        testUser.save(this)
+    }
+
     override fun initDatabase(): Database {
         return LocalDatabase()
 
@@ -30,15 +38,17 @@ class WorkingLobbyActivity : LobbyActivity() {
 
         startActivity(intent)
     }
-
-    override fun loadUser(): User {
-        val testUser = User("the best player")
-        testUser.id = "123456789"
-        return testUser
-    }
 }
 
 class BuggyLobbyActivity : LobbyActivity() {
+    override fun onCreate(savedInstanceState: Bundle?) {
+        User.setFSGetter(MockFileSystem.MockFSGetter)
+        val testUser = User("the buggy player")
+        testUser.id = "9999999"
+        testUser.save(this)
+        super.onCreate(savedInstanceState)
+    }
+
     override fun initDatabase(): Database {
         return BuggyDatabase()
     }
@@ -55,12 +65,6 @@ class BuggyLobbyActivity : LobbyActivity() {
         }
 
         startActivity(intent)
-    }
-
-    override fun loadUser(): User {
-        val testUser = User("the buggy player")
-        testUser.id = "9999999"
-        return testUser
     }
 }
 

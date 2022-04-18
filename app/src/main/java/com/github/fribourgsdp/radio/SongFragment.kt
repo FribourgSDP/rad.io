@@ -6,32 +6,24 @@ import android.text.TextWatcher
 import android.view.View
 import android.widget.EditText
 import android.widget.TextView
-import com.github.fribourgsdp.radio.mockimplementations.MockLyricsGetter
-import kotlinx.serialization.decodeFromString
-import kotlinx.serialization.json.Json
-import java.lang.ClassCastException
 
 open class SongFragment : MyFragment(R.layout.fragment_song) {
     private lateinit var initialLyrics : String
     private lateinit var currentLyrics : String
-    private lateinit var playlist : Playlist
+    private lateinit var playlistName : String
+    private lateinit var songName: String
+    private lateinit var playlist: Playlist
     private lateinit var song: Song
     private var doSaveLyrics : Boolean = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let { args ->
-            args.getString(PLAYLIST_DATA).let { serializedPlaylist ->
-                playlist = Json.decodeFromString(serializedPlaylist!!)
+            args.getString(PLAYLIST_DATA).let { playlistName ->
+                this.playlistName = playlistName!!
             }
-            args.getString(SONG_DATA).let { serializedSong ->
-
-                song = Json.decodeFromString(serializedSong!!)
-                initialLyrics = song.lyrics
-                currentLyrics = initialLyrics
-                if(song.lyrics == ""){
-                    fetchLyrics(getLyricsGetter())
-                }
+            args.getString(SONG_DATA).let { songName ->
+                this.songName = songName!!
             }
         }
     }
@@ -60,6 +52,15 @@ open class SongFragment : MyFragment(R.layout.fragment_song) {
         val artistTitle : TextView = requireView().findViewById(R.id.ArtistName)
         val lyricsEditText : EditText = requireView().findViewById(R.id.editTextLyrics)
 
+        val user = User.load(requireContext())
+        playlist = user.getPlaylistWithName(playlistName)
+        song = playlist.getSong(songName)
+        initialLyrics = song.lyrics
+        currentLyrics = initialLyrics
+        if(song.lyrics == ""){
+            fetchLyrics(getLyricsGetter())
+        }
+
         songTitle.text = song.name
         artistTitle.text = song.artist
         updateLyrics(lyricsEditText)
@@ -84,12 +85,6 @@ open class SongFragment : MyFragment(R.layout.fragment_song) {
             song.lyrics = currentLyrics
             user.updateSongInPlaylist(playlist, song)
             user.save(requireView().context)
-
-            val parentFragment = parentFragmentManager.fragments[0]
-            if (parentFragment is PlaylistSongsFragment){
-                //trigger reloading of playlist
-                parentFragment.loadPlaylist()
-            }
         }
     }
 }

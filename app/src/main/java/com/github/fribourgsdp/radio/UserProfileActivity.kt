@@ -28,7 +28,7 @@ const val SCOPES = "playlist-read-private,playlist-read-collaborative"
 const val RECREATE_USER = "com.github.fribourgsdp.radio.avoidRecreatingUser"
 const val USER_DATA = "com.github.fribourgsdp.radio.USER_DATA"
 
-class UserProfileActivity : AppCompatActivity() {
+open class UserProfileActivity : AppCompatActivity() {
     private lateinit var user : User
     private lateinit var usernameField : EditText
     private lateinit var usernameInitialText : TextView
@@ -64,8 +64,6 @@ class UserProfileActivity : AppCompatActivity() {
             val bundle = Bundle()
             bundle.putString(USER_DATA, Json.encodeToString(user))
             MyFragment.beginTransaction<UserPlaylistsFragment>(supportFragmentManager, bundle)
-
-
         }
 
             launchSpotifyButton.setOnClickListener {
@@ -132,7 +130,7 @@ class UserProfileActivity : AppCompatActivity() {
     }
 
 
-    private fun checkUser(){
+    open fun checkUser(){
         //get current user
         val firebaseUser = firebaseAuth.currentUser
 

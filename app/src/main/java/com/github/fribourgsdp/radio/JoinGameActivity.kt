@@ -21,7 +21,7 @@ const val GAME_HOST_NAME_KEY = "com.github.fribourgsdp.radio.GAME_HOST_NAME"
 const val GAME_PLAYLIST_NAME_KEY = "com.github.fribourgsdp.radio.GAME_PLAYLIST_NAME"
 
 
-open class JoinGameActivity : AppCompatActivity(), User.Loader {
+open class JoinGameActivity : AppCompatActivity() {
     private val db = this.initDatabase()
 
     private lateinit var idInput: EditText
@@ -62,7 +62,7 @@ open class JoinGameActivity : AppCompatActivity(), User.Loader {
 
     private fun connectToLobby(id: Long) {
         db.getGameSettingsFromLobby(id).addOnSuccessListener { settings ->
-            db.addUserToLobby(id, loadUser(), (ContextCompat.checkSelfPermission(this, Manifest.permission.RECORD_AUDIO) == PackageManager.PERMISSION_GRANTED)).addOnSuccessListener {
+            db.addUserToLobby(id, User.load(this), (ContextCompat.checkSelfPermission(this, Manifest.permission.RECORD_AUDIO) == PackageManager.PERMISSION_GRANTED)).addOnSuccessListener {
                 startActivity(Intent(this, LobbyActivity::class.java).apply {
                     putExtra(GAME_HOST_NAME_KEY, settings.hostName)
                     putExtra(GAME_NAME_KEY, settings.name)
@@ -83,9 +83,5 @@ open class JoinGameActivity : AppCompatActivity(), User.Loader {
             joinErrorView.text = getString(R.string.lobby_not_found, id)
             joinErrorView.visibility = View.VISIBLE
         }
-    }
-
-    override fun loadUser(): User {
-        return User.load(this)
     }
 }

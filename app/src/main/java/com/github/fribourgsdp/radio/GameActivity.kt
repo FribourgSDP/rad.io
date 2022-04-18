@@ -20,7 +20,7 @@ import kotlin.math.absoluteValue
 
 const val SCORES_KEY = "com.github.fribourgsdp.radio.SCORES"
 
-open class GameActivity : AppCompatActivity(), GameView, User.Loader {
+open class GameActivity : AppCompatActivity(), GameView {
     private lateinit var user: User
     private var isHost: Boolean = false
 
@@ -41,7 +41,7 @@ open class GameActivity : AppCompatActivity(), GameView, User.Loader {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_game)
-        user = loadUser()
+        user = User.load(this)
         mapIdToName = intent.getSerializableExtra(MAP_ID_NAME_KEY)?.let {
             it as HashMap<String, String>
         } ?: HashMap()
@@ -175,7 +175,7 @@ open class GameActivity : AppCompatActivity(), GameView, User.Loader {
         }
     }
 
-    open protected fun initVoiceChat(gameUid: Long) {
+    protected open fun initVoiceChat(gameUid: Long) {
 
         val map = mapIdToName.mapKeys { it.hashCode().absoluteValue }
         if (!this::voiceChannel.isInitialized) voiceChannel = VoiceIpEngineDecorator(this, MyIRtcEngineEventHandler(this, map))
@@ -184,9 +184,4 @@ open class GameActivity : AppCompatActivity(), GameView, User.Loader {
         voiceChannel.enableAudioVolumeIndication(200,3,true)
         voiceChannel.joinChannel(voiceChannel.getToken(userId, gameUid.toString()), gameUid.toString(), "", userId)
     }
-
-    override fun loadUser(): User {
-        return User.load(this)
-    }
-
 }
