@@ -6,13 +6,18 @@ import com.github.fribourgsdp.radio.*
 import org.mockito.Mockito
 import org.mockito.Mockito.mock
 
+const val userName = "test"
+const val playListName = "testTitle"
+const val songName = "TestSongName"
+
 class MockUserProfileActivity : UserProfileActivity() {
+
     override fun onCreate(savedInstanceState: Bundle?) {
         User.setFSGetter(MockFileSystem.MockFSGetter)
-        val string = "test"
-        val user = User(string, 0)
-        val playlistTitle = "testTitle"
-        val playlist1 = Playlist(playlistTitle, Genre.ROCK)
+        val user = User(userName, 0)
+        val playlist1 = Playlist(playListName, Genre.ROCK)
+        val song = Song(songName, "artist")
+        playlist1.addSong(song)
         user.addPlaylists(setOf(playlist1))
         user.save(mock(Context::class.java))
         super.onCreate(savedInstanceState)
