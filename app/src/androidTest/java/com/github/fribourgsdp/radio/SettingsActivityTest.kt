@@ -42,22 +42,6 @@ class SettingsActivityTest {
         Intents.release()
     }
 
-
-    @Test
-    fun correctTextOnTextView() {
-        val context: Context = ApplicationProvider.getApplicationContext()
-        val intent = Intent(context, GoogleSignInActivity::class.java)
-        ActivityScenario.launch<GoogleSignInActivity>(intent).use { scenario ->
-
-            val txtView = Espresso.onView(ViewMatchers.withId(R.id.captionTv))
-            txtView.check(
-                ViewAssertions.matches(
-                    ViewMatchers.withText("Welcome to Google SignIn")
-                )
-            )
-        }
-    }
-
     @Test
     fun backPressedWorkCorrectly() {
         val context: Context = ApplicationProvider.getApplicationContext()
