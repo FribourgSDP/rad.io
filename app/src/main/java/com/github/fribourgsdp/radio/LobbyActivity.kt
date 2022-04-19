@@ -23,7 +23,7 @@ const val PERMISSION_REQ_ID_RECORD_AUDIO = 22
 const val NO_MIC_PERMISSIONS_DRAWABLE = R.drawable.ic_action_name
 const val MIC_PERMISSIONS_ENABLED_DRAWABLE = R.drawable.ic_unmute
 
-open class LobbyActivity : AppCompatActivity(){
+open class LobbyActivity : MyAppCompatActivity(){
 
     private val db = this.initDatabase()
 

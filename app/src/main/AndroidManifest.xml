@@ -16,7 +16,8 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.Radio"
-        android:usesCleartextTraffic="true">
+        android:usesCleartextTraffic="true"
+       >
         <activity
             android:name=".EndGameActivity"
             android:exported="false"
