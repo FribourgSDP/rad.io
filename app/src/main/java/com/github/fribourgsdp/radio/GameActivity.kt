@@ -2,13 +2,9 @@ package com.github.fribourgsdp.radio
 
 import android.content.Intent
 import android.os.Bundle
-import android.view.KeyEvent
-import android.view.View
+import android.view.*
 import android.view.inputmethod.EditorInfo
-import android.widget.Button
-import android.widget.EditText
-import android.widget.ImageButton
-import android.widget.TextView
+import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -17,6 +13,7 @@ import io.agora.rtc.RtcEngine
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.json.Json
 import kotlin.math.absoluteValue
+
 
 const val SCORES_KEY = "com.github.fribourgsdp.radio.SCORES"
 
@@ -28,6 +25,7 @@ open class GameActivity : AppCompatActivity(), GameView, User.Loader {
     private lateinit var singerTextView : TextView
     private lateinit var songTextView : TextView
     private lateinit var errorOrFailureTextView : TextView
+    private lateinit var lyricsPopup : PopupWindow
     private lateinit var songGuessEditText : EditText
     private lateinit var muteButton : ImageButton
     private lateinit var songGuessSubmitButton: Button
@@ -175,7 +173,7 @@ open class GameActivity : AppCompatActivity(), GameView, User.Loader {
         }
     }
 
-    open protected fun initVoiceChat(gameUid: Long) {
+    protected open fun initVoiceChat(gameUid: Long) {
 
         val map = mapIdToName.mapKeys { it.hashCode().absoluteValue }
         if (!this::voiceChannel.isInitialized) voiceChannel = VoiceIpEngineDecorator(this, MyIRtcEngineEventHandler(this, map))
@@ -189,4 +187,23 @@ open class GameActivity : AppCompatActivity(), GameView, User.Loader {
         return User.load(this)
     }
 
+    override fun displayLyrics(lyrics : String) {
+        val inflater = getSystemService(LAYOUT_INFLATER_SERVICE) as LayoutInflater
+        val popupView: View = inflater.inflate(R.layout.popup_lyrics, null)
+        val lyricsTextView : TextView = popupView.findViewById(R.id.lyricsPopupTextView)
+        val width = LinearLayout.LayoutParams.WRAP_CONTENT
+        val height = LinearLayout.LayoutParams.WRAP_CONTENT
+        val focusable = true // lets taps outside the popup also dismiss it
+
+        lyricsPopup = PopupWindow(popupView, width, height, focusable)
+        lyricsPopup.showAtLocation(songTextView, Gravity.CENTER, 0, 0);
+        lyricsTextView.text = lyrics
+
+//        // dismiss the popup window when touched
+//        popupView.setOnTouchListener { v, _ ->
+//            v.performClick()
+//            lyricsPopup.dismiss()
+//            true
+//        }
+    }
 }
