@@ -173,7 +173,7 @@ open class GameActivity : AppCompatActivity(), GameView {
         }
     }
 
-    open protected fun initVoiceChat(gameUid: Long) {
+    protected open fun initVoiceChat(gameUid: Long) {
 
         val map = mapIdToName.mapKeys { it.hashCode().absoluteValue }
         if (!this::voiceChannel.isInitialized) voiceChannel = VoiceIpEngineDecorator(this, MyIRtcEngineEventHandler(this, map))
@@ -196,6 +196,9 @@ open class GameActivity : AppCompatActivity(), GameView {
         lyricsTextView.text = lyrics
 
 //        // dismiss the popup window when touched
+        popupView.findViewById<ImageView>(R.id.close_popup_button).setOnClickListener{
+            lyricsPopup.dismiss()
+        }
 //        popupView.setOnTouchListener { v, _ ->
 //            v.performClick()
 //            lyricsPopup.dismiss()
