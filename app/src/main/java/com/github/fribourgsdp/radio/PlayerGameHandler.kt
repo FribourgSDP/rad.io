@@ -1,5 +1,7 @@
 package com.github.fribourgsdp.radio
 
+import android.util.Log
+import com.google.android.gms.tasks.Task
 import com.google.firebase.firestore.DocumentSnapshot
 
 class PlayerGameHandler(
@@ -9,12 +11,14 @@ class PlayerGameHandler(
 ): GameHandler(view, db), GameView.OnPickListener {
 
     private var songToGuess: String? = null
+    private var lyrics : String? = null
 
     override fun linkToDatabase() {
         db.listenToGameUpdate(gameID, executeOnUpdate())
     }
 
     override fun handleSnapshot(snapshot: DocumentSnapshot?) {
+        Log.println(Log.ASSERT, "*", "HANDLE SNAPSHOT Player")
         if (snapshot != null && snapshot.exists()) {
             val scores = snapshot.get("scores") as HashMap<String, Long>
             if (snapshot.getBoolean("finished")!!) {
@@ -33,6 +37,7 @@ class PlayerGameHandler(
             // Get the picked song
             // It's not null when there is one.
             songToGuess = snapshot.getString("current_song")
+            lyrics = snapshot.getString("current_lyrics")
 
             if (view.checkPlayer(singerName)) {
                 if (songToGuess == null) {
@@ -81,6 +86,7 @@ class PlayerGameHandler(
         db.updateCurrentSongOfGame(gameID, song)
             .addOnSuccessListener {
                 view.displaySong(song)
+                view.displayLyrics("****")
             }
             .addOnFailureListener {
                 view.displayError("An error occurred")

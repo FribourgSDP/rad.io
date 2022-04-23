@@ -1,5 +1,6 @@
 package com.github.fribourgsdp.radio
 
+import android.util.Log
 import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.FieldValue
 import kotlin.streams.toList
@@ -8,6 +9,7 @@ class HostGameHandler(private val game: Game, private val view: GameView, db: Da
     private var latestSingerId: String? = null
 
     override fun handleSnapshot(snapshot: DocumentSnapshot?) {
+        Log.println(Log.ASSERT, "*", "HANDLE SNAPSHOT Host")
         if (snapshot != null && snapshot.exists()) {
             val doneMap = snapshot.get("player_done_map")!! as HashMap<String, Boolean>
 
@@ -56,9 +58,13 @@ class HostGameHandler(private val game: Game, private val view: GameView, db: Da
 
     private fun createUpdatesMap(): Map<String, Any> {
         val done = game.isDone()
-        val nextChoices = game.getChoices(3).stream()
-            .map { song -> song.name }
-            .toList()
+        val nextChoices = MutableList<String>(3) { "" }
+        val nextChoicesLyrics = HashMap<String, String>(3)
+        game.getChoices(3).stream()
+            .forEach { song ->
+                nextChoices.add(song.name)
+                nextChoicesLyrics[song.name] = song.lyrics
+            }
 
         val nextUser = game.getUserToPlay()
 
@@ -68,6 +74,7 @@ class HostGameHandler(private val game: Game, private val view: GameView, db: Da
             "current_song" to FieldValue.delete(),
             "singer" to nextUser,
             "song_choices" to nextChoices,
+            "song_choices_lyrics" to nextChoicesLyrics,
             "scores" to game.getAllScores()
         )
     }

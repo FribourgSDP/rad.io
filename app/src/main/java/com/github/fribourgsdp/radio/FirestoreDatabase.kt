@@ -307,6 +307,7 @@ class FirestoreDatabase(var refMake: FirestoreRef) : Database {
                     "current_song" to "",
                     "singer" to "",
                     "song_choices" to ArrayList<String>(),
+                    "song_choices_lyrics" to HashMap<String, String>(),
                     "scores" to HashMap<String, Int>()
                 )
             )
