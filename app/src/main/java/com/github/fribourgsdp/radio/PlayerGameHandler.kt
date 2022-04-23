@@ -3,6 +3,7 @@ package com.github.fribourgsdp.radio
 import android.util.Log
 import com.google.android.gms.tasks.Task
 import com.google.firebase.firestore.DocumentSnapshot
+import com.google.firebase.firestore.ktx.getField
 
 class PlayerGameHandler(
     private val gameID: Long,
@@ -11,7 +12,6 @@ class PlayerGameHandler(
 ): GameHandler(view, db), GameView.OnPickListener {
 
     private var songToGuess: String? = null
-    private var lyrics : String? = null
 
     override fun linkToDatabase() {
         db.listenToGameUpdate(gameID, executeOnUpdate())
@@ -37,18 +37,24 @@ class PlayerGameHandler(
             // Get the picked song
             // It's not null when there is one.
             songToGuess = snapshot.getString("current_song")
-            lyrics = snapshot.getString("current_lyrics")
 
             if (view.checkPlayer(singerName)) {
                 if (songToGuess == null) {
                     val choices = snapshot.get("song_choices")!! as ArrayList<String>
                     view.chooseSong(choices, this)
+                } else{
+                    Log.println(Log.ASSERT, "*", "Trying to display lyrics")
+                    val lyricsHashMap =
+                        snapshot.get("song_choices_lyrics")!! as Map<String, String>
+                    val lyrics = lyricsHashMap[songToGuess!!]
+                    view.displayLyrics(lyrics!!)
                 }
 
             } else {
                 if (songToGuess != null) {
                     // The singer picked a song so the player can guess
                     view.displayGuessInput()
+
                 } else {
                     // The singer is till picking, so the player waits
                     view.displayWaitOnSinger(singerName)
@@ -86,7 +92,6 @@ class PlayerGameHandler(
         db.updateCurrentSongOfGame(gameID, song)
             .addOnSuccessListener {
                 view.displaySong(song)
-                view.displayLyrics("****")
             }
             .addOnFailureListener {
                 view.displayError("An error occurred")
