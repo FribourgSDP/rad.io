@@ -1,16 +1,22 @@
 package com.github.fribourgsdp.radio
 
+import android.content.Context
 import android.os.Bundle
 import androidx.fragment.app.testing.launchFragmentInContainer
+import androidx.test.core.app.ApplicationProvider
 import androidx.test.espresso.Espresso
 import androidx.test.espresso.ViewAssertion
 import androidx.test.espresso.assertion.ViewAssertions
+import androidx.test.espresso.intent.Intents
 import androidx.test.espresso.matcher.ViewMatchers
 import androidx.test.internal.runner.junit4.AndroidJUnit4ClassRunner
+import com.github.fribourgsdp.radio.mockimplementations.MockFileSystem
 import com.github.fribourgsdp.radio.mockimplementations.MockLyricsGetter
 import com.github.fribourgsdp.radio.mockimplementations.MockSongFragment
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
+import org.junit.After
+import org.junit.Before
 import org.junit.FixMethodOrder
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -20,6 +26,18 @@ import org.mockito.Mock
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 @RunWith(AndroidJUnit4ClassRunner::class)
 class SongFragmentTest {
+
+    @Before
+    fun initIntent() {
+        Intents.init()
+        User.setFSGetter(MockFileSystem.MockFSGetter)
+    }
+
+    @After
+    fun releaseIntent() {
+        Intents.release()
+    }
+
     @Test
     fun songAttributesAreCorrect() {
         val bundle = Bundle()
@@ -29,8 +47,12 @@ class SongFragmentTest {
         val playlist = Playlist(playlistName, Genre.NONE)
         val song = Song(songName, songArtist, "")
         playlist.addSong(song)
-        bundle.putString(PLAYLIST_DATA, Json.encodeToString(playlist))
-        bundle.putString(SONG_DATA, Json.encodeToString(song))
+        val user : User = User("Test User")
+        user.addPlaylist(playlist)
+        val context: Context = ApplicationProvider.getApplicationContext()
+        user.save(context)
+        bundle.putString(PLAYLIST_DATA, playlist.name)
+        bundle.putString(SONG_DATA, song.name)
         val scenario = launchFragmentInContainer<SongFragment>(bundle)
         Espresso.onView(ViewMatchers.withId(R.id.SongName))
             .check(ViewAssertions.matches(ViewMatchers.withText(songName)))
@@ -45,8 +67,12 @@ class SongFragmentTest {
         val playlist = Playlist("test", Genre.NONE)
         val song = Song("test", "test", lyrics)
         playlist.addSong(song)
-        bundle.putString(PLAYLIST_DATA, Json.encodeToString(playlist))
-        bundle.putString(SONG_DATA, Json.encodeToString(song))
+        val user : User = User("Test User")
+        user.addPlaylist(playlist)
+        val context: Context = ApplicationProvider.getApplicationContext()
+        user.save(context)
+        bundle.putString(PLAYLIST_DATA, playlist.name)
+        bundle.putString(SONG_DATA, song.name)
         val scenario = launchFragmentInContainer<SongFragment>(bundle)
         Espresso.onView(ViewMatchers.withId(R.id.editTextLyrics))
             .check(ViewAssertions.matches(ViewMatchers.withText(lyrics)))
@@ -54,14 +80,18 @@ class SongFragmentTest {
     @Test
     fun getLyricsInSongFragment() {
         val bundle = Bundle()
+        val user : User = User("Test User")
         val songName = "Momentum"
         val songArtist = "Truckfighters"
         val playlistName = "test"
         val playlist = Playlist(playlistName, Genre.NONE)
         val song = Song(songName, songArtist)
         playlist.addSong(song)
-        bundle.putString(PLAYLIST_DATA, Json.encodeToString(playlist))
-        bundle.putString(SONG_DATA, Json.encodeToString(song))
+        user.addPlaylist(playlist)
+        val context: Context = ApplicationProvider.getApplicationContext()
+        user.save(context)
+        bundle.putString(PLAYLIST_DATA, playlistName)
+        bundle.putString(SONG_DATA, songName)
         val scenario = launchFragmentInContainer<MockSongFragment>(bundle)
         Espresso.onView(ViewMatchers.withId(R.id.editTextLyrics))
             .check(ViewAssertions.matches(
