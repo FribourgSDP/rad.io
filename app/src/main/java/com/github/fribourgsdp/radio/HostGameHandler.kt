@@ -58,7 +58,7 @@ class HostGameHandler(private val game: Game, private val view: GameView, db: Da
 
     private fun createUpdatesMap(): Map<String, Any> {
         val done = game.isDone()
-        val nextChoices = MutableList<String>(3) { "" }
+        val nextChoices = MutableList<String>(0) { "" }
         val nextChoicesLyrics = HashMap<String, String>(3)
         game.getChoices(3).stream()
             .forEach { song ->
@@ -67,13 +67,14 @@ class HostGameHandler(private val game: Game, private val view: GameView, db: Da
             }
 
         val nextUser = game.getUserToPlay()
+        Log.println(Log.ASSERT, "*", nextChoices.toString())
 
         return hashMapOf(
             "finished" to done,
             "current_round" to game.currentRound,
             "current_song" to FieldValue.delete(),
             "singer" to nextUser,
-            "song_choices" to nextChoices,
+            "song_choices" to nextChoices.toList(),
             "song_choices_lyrics" to nextChoicesLyrics,
             "scores" to game.getAllScores()
         )
