@@ -68,4 +68,8 @@ class FakeGameView(private val playerID: String = ""): GameView {
         gameOver = true
     }
 
+    override fun displayLyrics(lyrics: String) {
+
+    }
+
 }
