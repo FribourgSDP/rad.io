@@ -5,6 +5,7 @@ import okhttp3.*
 import java.io.IOException
 import java.util.*
 import java.util.concurrent.CompletableFuture
+import java.util.concurrent.Future
 
 const val API_KEY = "a3454edb65483e706c127deaa11df69d"
 const val BASE_URL = "http://api.musixmatch.com/ws/1.1/"
@@ -48,6 +49,7 @@ object MusixmatchLyricsGetter : LyricsGetter {
             client: OkHttpClient,
             parser: JSONParser
         ): CompletableFuture<String> {
+            return CompletableFuture.completedFuture("If you feel little chance make a stance")
             Log.println(Log.ASSERT, "*", "LYRICS GETTER CALL !!!!")
             val future = CompletableFuture<String>()
             val trackIDFuture = getSongID(songName, artistName, client)
