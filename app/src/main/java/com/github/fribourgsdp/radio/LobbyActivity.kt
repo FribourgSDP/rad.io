@@ -1,10 +1,8 @@
 package com.github.fribourgsdp.radio
 
 import android.Manifest
-import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
-import android.graphics.drawable.Drawable
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
@@ -167,7 +165,7 @@ open class LobbyActivity : AppCompatActivity(){
         recyclerView.adapter = layoutAdapter
         if (isHost) {
             val hostMicPermissionsImg = if (hasVoiceIdPermissions) MIC_PERMISSIONS_ENABLED_DRAWABLE else NO_MIC_PERMISSIONS_DRAWABLE
-            layoutAdapter?.setContent(arrayOf(user.name), intArrayOf(hostMicPermissionsImg))
+            layoutAdapter?.setContent(arrayListOf(Pair(user.id, user.name)), intArrayOf(hostMicPermissionsImg))
             layoutAdapter?.notifyDataSetChanged()
         }
     }
@@ -244,11 +242,11 @@ open class LobbyActivity : AppCompatActivity(){
 
                 val isGameLaunched = snapshot.getBoolean("launched")
 
-                val mapNameToPermissions = snapshot.get("permissions")!! as HashMap<String, Boolean>
-                val atLeastOnePermissionMissing = mapNameToPermissions.containsValue(false)
+                val mapIdToPermissions = snapshot.get("permissions")!! as HashMap<String, Boolean>
+                val atLeastOnePermissionMissing = mapIdToPermissions.containsValue(false)
                 launchGameButton.isEnabled = !atLeastOnePermissionMissing
 
-                updateLobbyWithPlayers(newMap, mapNameToPermissions)
+                updateLobbyWithPlayers(newMap, mapIdToPermissions)
 
 
                 if (!isHost && isGameLaunched != null && isGameLaunched) {
@@ -263,17 +261,17 @@ open class LobbyActivity : AppCompatActivity(){
     }
 
     private fun updateLobbyWithPlayers(playersMap: Map<String, String>, nameToPermissions: Map<String, Boolean>) {
-        val users = playersMap.values
         val micPermissions = arrayListOf<Int>()
-        for (user in users) {
-            if (nameToPermissions[user]!!) {
+        val users = arrayListOf<Pair<String, String>>()
+        for ((userId, userName) in playersMap) {
+            if (nameToPermissions[userId]!!) {
                 micPermissions.add(MIC_PERMISSIONS_ENABLED_DRAWABLE)
-            }
-            else {
+            } else {
                 micPermissions.add(NO_MIC_PERMISSIONS_DRAWABLE)
             }
+            users.add(Pair(userId, userName))
         }
-        layoutAdapter?.setContent(users.toTypedArray(), micPermissions.toIntArray())
+        layoutAdapter?.setContent(users, micPermissions.toIntArray())
         layoutAdapter?.notifyDataSetChanged()
 
         gameBuilder.setUserIdList(playersMap.keys)
