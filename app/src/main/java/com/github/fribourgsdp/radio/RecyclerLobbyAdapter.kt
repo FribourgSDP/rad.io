@@ -9,7 +9,8 @@ import androidx.recyclerview.widget.RecyclerView
 
 class RecyclerLobbyAdapter: RecyclerView.Adapter<RecyclerLobbyAdapter.LobbyListViewEntry>() {
 
-    private var userNames: Array<String> = arrayOf()
+    //Each element is a tuple (userId, userName)
+    private var userNames: List<Pair<String, String>> = arrayListOf()
     private var micImages = intArrayOf()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): LobbyListViewEntry {
@@ -18,7 +19,7 @@ class RecyclerLobbyAdapter: RecyclerView.Adapter<RecyclerLobbyAdapter.LobbyListV
     }
 
     override fun onBindViewHolder(holder: LobbyListViewEntry, position: Int) {
-        holder.userName.text = userNames[position]
+        holder.userName.text = userNames[position].second
         holder.micImage.setImageResource(micImages[position])
     }
 
@@ -26,7 +27,7 @@ class RecyclerLobbyAdapter: RecyclerView.Adapter<RecyclerLobbyAdapter.LobbyListV
         return userNames.size
     }
 
-    fun setContent(newUsers: Array<String>, newImages: IntArray) {
+    fun setContent(newUsers: List<Pair<String, String>>, newImages: IntArray) {
         userNames = newUsers
         micImages = newImages
     }
