@@ -269,7 +269,7 @@ class FirestoreDatabase(var refMake: FirestoreRef) : Database {
             transaction.update(docRef, "players", mapIdToName)
 
             val playerPermissions = snapshot.get("permissions")!! as HashMap<String, Boolean>
-            playerPermissions[user.name] = hasMicPermissions
+            playerPermissions[user.id] = hasMicPermissions
 
             transaction.update(docRef, "permissions", playerPermissions)
 
@@ -289,7 +289,7 @@ class FirestoreDatabase(var refMake: FirestoreRef) : Database {
             }
 
             val playerPermissions = snapshot.get("permissions")!! as HashMap<String, Boolean>
-            playerPermissions[user.name] = newPermissions
+            playerPermissions[user.id] = newPermissions
 
             transaction.update(docRef, "permissions", playerPermissions)
 
