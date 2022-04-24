@@ -91,7 +91,6 @@ class SettingsActivity : MyAppCompatActivity() {
     private fun onItemSelectedHandler(adapterView: AdapterView<*>, view: View, position: Int, id: Long) {
         val adapter: Adapter = adapterView.adapter
         val language: Language = adapter.getItem(position) as Language
-        Toast.makeText(this@SettingsActivity, "Selected Employee: $language",Toast.LENGTH_SHORT).show()
         settingsBuilder.language(language)
         settings = settingsBuilder.build()
         settings.save(this)
