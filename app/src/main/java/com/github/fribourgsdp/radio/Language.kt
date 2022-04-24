@@ -1,8 +1,8 @@
 package com.github.fribourgsdp.radio
 
-enum class Language(val id: Int, val code: String, val s: String) {
-    ENGLISH(0,"en", "English"),
-    FRENCH(1,"fr", "Français");
+enum class Language( val code: String, val s: String) {
+    ENGLISH("en", "English"),
+    FRENCH("fr", "Français");
 
     override fun toString(): String {
         return s

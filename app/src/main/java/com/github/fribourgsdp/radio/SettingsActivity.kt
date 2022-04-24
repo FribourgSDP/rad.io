@@ -76,7 +76,7 @@ class SettingsActivity : MyAppCompatActivity() {
         val adapter: ArrayAdapter<Language> = ArrayAdapter<Language>(this,android.R.layout.simple_spinner_item,languageList)
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinnerLanguage.setAdapter(adapter);
-        spinnerLanguage.setSelection(actualLanguage.id, false);
+        spinnerLanguage.setSelection(actualLanguage.ordinal, false);
         spinnerLanguage.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(parent: AdapterView<*>?,view: View?,position: Int,id: Long) {
                 if (parent != null && view != null) {
