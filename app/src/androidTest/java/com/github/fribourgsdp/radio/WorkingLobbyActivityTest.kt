@@ -36,6 +36,7 @@ class WorkingLobbyActivityTest {
 
     @Before
     fun initIntent() {
+        LanguageManager(ctx).setLang("en")
         Intents.init()
     }
 
