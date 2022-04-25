@@ -114,4 +114,11 @@ class AddPlaylistActivity : AppCompatActivity() {
             findViewById<EditText>(R.id.newPlaylistName).setText(playlist.name)
         }
     }
+
+    override fun onBackPressed() {
+        super.onBackPressed()
+        val intent = Intent(this, com.google.firebase.firestore.auth.User::class.java)
+        startActivity(intent)
+        finish()
+    }
 }

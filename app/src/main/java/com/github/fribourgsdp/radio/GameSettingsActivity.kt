@@ -69,6 +69,13 @@ open class GameSettingsActivity : AppCompatActivity() {
 
     }
 
+    override fun onBackPressed() {
+        super.onBackPressed()
+        val intent = Intent(this, MainActivity::class.java)
+        startActivity(intent)
+        finish()
+    }
+
     private fun getUserPlaylistNames(user: User) : Array<String> {
         return user.getPlaylists()
             .map { x -> x.name }
@@ -122,5 +129,6 @@ open class GameSettingsActivity : AppCompatActivity() {
             errorText.visibility = View.GONE
             return false
         }
+
     }
 }
