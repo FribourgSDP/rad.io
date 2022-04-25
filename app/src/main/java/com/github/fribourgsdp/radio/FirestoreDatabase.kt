@@ -214,7 +214,8 @@ class FirestoreDatabase(var refMake: FirestoreRef) : Database {
             "private" to settings.isPrivate,
             "players" to hashMapOf<String, String>(),
             "permissions" to hashMapOf<String, Boolean>(),
-            "launched" to false
+            "launched" to false,
+            "validity" to true
         )
 
         return db.collection("lobby").document(id.toString())
@@ -272,6 +273,54 @@ class FirestoreDatabase(var refMake: FirestoreRef) : Database {
             playerPermissions[user.id] = hasMicPermissions
 
             transaction.update(docRef, "permissions", playerPermissions)
+
+            // Success
+            null
+        }
+    }
+
+    override fun removeUserFromLobby(id: Long, user: User) : Task<Void> {
+        val docRef = db.collection("lobby").document(id.toString())
+
+        return db.runTransaction { transaction ->
+            val snapshot = transaction.get(docRef)
+
+            if (!snapshot.exists()) {
+                throw IllegalArgumentException("Document $id not found.")
+            }
+
+            val mapIdToName = snapshot.get("players")!! as HashMap<String, String>
+            if (!mapIdToName.containsKey(user.id)) {
+                // A user with the same id was already added
+                throw IllegalArgumentException("id: ${user.id} is not in the database")
+            }
+
+            mapIdToName.remove(user.id)
+
+            transaction.update(docRef, "players", mapIdToName)
+
+            val playerPermissions = snapshot.get("permissions")!! as HashMap<String, Boolean>
+            playerPermissions.remove(user.id)
+
+            transaction.update(docRef, "permissions", playerPermissions)
+
+            // Success
+            null
+        }
+    }
+
+    override fun disableGame(id: Long): Task<Void> {
+        val docRef = db.collection("lobby").document(id.toString())
+
+        return db.runTransaction { transaction ->
+            val snapshot = transaction.get(docRef)
+
+            if (!snapshot.exists()) {
+                throw IllegalArgumentException("Document $id not found.")
+            }
+
+
+            transaction.update(docRef, "validity", false)
 
             // Success
             null

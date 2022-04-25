@@ -37,6 +37,7 @@ open class GameActivity : AppCompatActivity(), GameView {
 
     private lateinit var mapIdToName: HashMap<String, String>
     protected lateinit var voiceChannel: VoiceIpEngineDecorator
+    lateinit var playerGameHandler: PlayerGameHandler
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -56,7 +57,7 @@ open class GameActivity : AppCompatActivity(), GameView {
             val hostGameHandler = HostGameHandler(game, this)
             hostGameHandler.linkToDatabase()
         }
-        val playerGameHandler = PlayerGameHandler(gameUid, this)
+        playerGameHandler = PlayerGameHandler(gameUid, this)
 
         // On submit make the player game handler handle the guess
         songGuessSubmitButton.setOnClickListener {

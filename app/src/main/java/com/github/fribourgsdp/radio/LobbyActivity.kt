@@ -323,4 +323,9 @@ open class LobbyActivity : AppCompatActivity(){
         }
     }
 
+    override fun onBackPressed() {
+        val warningDisplay = QuitGameOrLobbyDialog(this, isHost, false, user, db, gameLobbyId)
+        warningDisplay.show(supportFragmentManager, "warningForQuittingLobby")
+    }
+
 }

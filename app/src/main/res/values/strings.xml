@@ -77,5 +77,8 @@
     <string name="warningMessageQuitAddPlaylist">Are you sure you want to return to the main menu? All unsaved changes will be discarded.</string>
     <string name="validateMessageQuitAddPlaylist">Delete and return to main menu</string>
     <string name="cancelMessageQuitAddPlaylist">Continue editing my playlist</string>
+    <string name="warningMessageQuitGameOrLobby">Warning: by clicking on continue, you will be kicked from the lobby. If you are host this will end the game for all players.</string>
+    <string name="validateMessageQuitGameOrLobby">Continue</string>
+    <string name="cancelMessageQuitGameOrLobby">Cancel</string>
 </resources>
 

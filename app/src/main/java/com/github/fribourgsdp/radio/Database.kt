@@ -149,4 +149,7 @@ interface Database {
      */
     fun resetGameMetadata(gameID: Long, singer: String): Task<Void>
 
+    fun removeUserFromLobby(id: Long, user: User): Task<Void>
+
+    fun disableGame(id: Long): Task<Void>
 }

@@ -3,10 +3,12 @@ package com.github.fribourgsdp.radio
 import com.google.firebase.firestore.DocumentSnapshot
 
 class PlayerGameHandler(
-    private val gameID: Long,
+    val gameID: Long,
     private val view: GameView,
     db: Database = FirestoreDatabase()
 ): GameHandler(view, db), GameView.OnPickListener {
+
+    val database = db
 
     private var songToGuess: String? = null
 
