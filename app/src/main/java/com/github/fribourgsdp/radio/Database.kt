@@ -51,7 +51,16 @@ interface Database {
      * @return a task loading a unique ID for the user.
      */
     fun generateUserId() : Task<Long>
-
+   /**
+    * Get a unique ID for a playlist. It is an asynchronous operation, so it is returned in a task.
+    * @return a task loading a unique ID for the playlist.
+    */
+    fun generatePlaylistId() : Task<Long>
+   /**
+    * Get a unique ID for a song. It is an asynchronous operation, so it is returned in a task.
+    * @return a task loading a unique ID for the song.
+    */
+    fun generateSongId() : Task<Long>
     /**
      * Open a lobby on the database.
      * @return a task void so that we know if the lobby was correctly opened.
@@ -71,10 +80,16 @@ interface Database {
     fun getGameSettingsFromLobby(id: Long) :Task<Game.Settings>
 
     /**
-     * Add [user] to the lobby [id].
+     * Add [user] to the lobby [id] with [hasMicPermissions] microphone permissions.
      * @return a task void  so that we know if the [user] was correctly added to the lobby [id].
      */
-    fun addUserToLobby(id: Long, user: User) : Task<Void>
+    fun addUserToLobby(id: Long, user: User, hasMicPermissions: Boolean) : Task<Void>
+
+    /**
+     * Modify [user]'s permission in [id]'th lobby with [newPermissions] microphone permissions.
+     * @return a task void  so that we know if the [user] was correctly added to the lobby [id].
+     */
+    fun modifyUserMicPermissions(id: Long, user: User, newPermissions: Boolean) : Task<Void>
 
     /**
      * Open a game on the database.
@@ -86,7 +101,7 @@ interface Database {
      * Open a game metadata document on the database.
      * @return a task void so that we know if the game metadata was correctly opened.
      */
-    fun openGameMetadata(id: Long, users: List<User>): Task<Void>
+    fun openGameMetadata(id: Long, usersIds: List<String>): Task<Void>
 
     /**
      * Launches a game from the lobby.
@@ -121,15 +136,17 @@ interface Database {
     }
 
     /**
-     * Set the player with id [playerID] to done in the metadata of game [gameID]
-     * @return a task void so that we know if the player with id [playerID] was correctly set to done in the metadata of game [gameID].
+     * End the turn of the player with id [playerID] in the metadata of game [gameID]
+     * It sets that the player's turn was done and also whether the player [found][hasFound] the answer of not.
+     * It also updates its score on the database.
+     * @return a task void so that we know if the player's turn was ended correctly on the database.
      */
-    fun setPlayerDone(gameID: Long, playerID: String): Task<Void>
+    fun playerEndTurn(gameID: Long, playerID: String, hasFound: Boolean = false): Task<Void>
 
     /**
-     * Reset the map where players are done or not to false for everyone but the singer.
-     * @return a task void so that we know if the map was correctly reset.
+     * Reset the game metadata on the [Database].
+     * @return a task void so that we know if the game metadata was correctly reset on the [Database].
      */
-    fun resetPlayerDoneMap(gameID: Long, singer: String): Task<Void>
+    fun resetGameMetadata(gameID: Long, singer: String): Task<Void>
 
 }

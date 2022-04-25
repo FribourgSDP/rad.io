@@ -10,9 +10,9 @@ interface GameView {
 
     /**
      * Update the view to display the current singer in the game.
-     * @param singerName the name of the new singer
+     * @param singerId the id of the singer
      */
-    fun updateSinger(singerName: String)
+    fun updateSinger(singerId: String)
 
     /**
      * Update the view to display the current round of the game.
@@ -52,6 +52,16 @@ interface GameView {
      * Make the view display that the [singer] is currently picking a song.
      */
     fun displayWaitOnSinger(singer: String)
+
+    /**
+     * Display on the view the scores in the map [playerScores].
+     */
+    fun displayPlayerScores(playerScores: Map<String, Long>)
+
+    /**
+     * Handle the end of the game.
+     */
+    fun gameOver(finalScores: Map<String, Long>)
 
     /**
      * An interface creating listeners able to handle songs pick in a [GameView].

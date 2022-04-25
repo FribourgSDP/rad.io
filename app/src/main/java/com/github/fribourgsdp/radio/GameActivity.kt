@@ -1,23 +1,27 @@
 package com.github.fribourgsdp.radio
 
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Log
 import android.view.KeyEvent
 import android.view.View
 import android.view.inputmethod.EditorInfo
-import android.widget.*
+import android.widget.Button
+import android.widget.EditText
+import android.widget.ImageButton
+import android.widget.TextView
+import androidx.appcompat.app.AppCompatActivity
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import io.agora.rtc.Constants
 import io.agora.rtc.RtcEngine
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.json.Json
-import kotlin.random.Random
+import kotlin.math.absoluteValue
 
+const val SCORES_KEY = "com.github.fribourgsdp.radio.SCORES"
 
-class GameActivity : AppCompatActivity(), GameView {
-    // TODO: Use 'User.load(this)' when available
-    private var user = User("The second best player")
+open class GameActivity : AppCompatActivity(), GameView {
+    private lateinit var user: User
     private var isHost: Boolean = false
 
     private lateinit var currentRoundTextView : TextView
@@ -28,36 +32,35 @@ class GameActivity : AppCompatActivity(), GameView {
     private lateinit var muteButton : ImageButton
     private lateinit var songGuessSubmitButton: Button
 
-    private lateinit var playersListView : ListView
-    private lateinit var namesAdapter : ArrayAdapter<String>
+    private lateinit var scoresRecyclerView: RecyclerView
+    private val scoresAdapter = ScoresAdapter()
 
-    private lateinit var voiceChannel: VoiceIpEngineDecorator
-
+    private lateinit var mapIdToName: HashMap<String, String>
+    protected lateinit var voiceChannel: VoiceIpEngineDecorator
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_game)
+        user = User.load(this)
+        mapIdToName = intent.getSerializableExtra(MAP_ID_NAME_KEY)?.let {
+            it as HashMap<String, String>
+        } ?: HashMap()
         isHost = intent.getBooleanExtra(GAME_IS_HOST_KEY, false)
         initViews()
-
 
         val gameUid = intent.getLongExtra(GAME_UID_KEY, -1L)
         initVoiceChat(gameUid)
 
         if (isHost) {
-            val json = Json {
-                allowStructuredMapKeys = true
-            }
-            val game = json.decodeFromString(intent.getStringExtra(GAME_KEY)!!) as Game
+            val game = Json.decodeFromString(intent.getStringExtra(GAME_KEY)!!) as Game
             val hostGameHandler = HostGameHandler(game, this)
             hostGameHandler.linkToDatabase()
-            user = User("The best player")
         }
         val playerGameHandler = PlayerGameHandler(gameUid, this)
 
         // On submit make the player game handler handle the guess
         songGuessSubmitButton.setOnClickListener {
-            playerGameHandler.handleGuess(songGuessEditText.text.toString(), user.name)
+            playerGameHandler.handleGuess(songGuessEditText.text.toString(), user.id)
         }
 
         playerGameHandler.linkToDatabase()
@@ -75,8 +78,8 @@ class GameActivity : AppCompatActivity(), GameView {
         songPicker.show(supportFragmentManager, "songPicker")
     }
 
-    override fun updateSinger(singerName: String) {
-        singerTextView.text = getString(R.string.singing_format, singerName)
+    override fun updateSinger(singerId: String) {
+        singerTextView.text = getString(R.string.singing_format, mapIdToName[singerId] ?: singerId)
     }
 
     override fun updateRound(currentRound: Long) {
@@ -120,12 +123,29 @@ class GameActivity : AppCompatActivity(), GameView {
     }
 
     override fun checkPlayer(id: String): Boolean {
-        return user.name == id
+        return user.id == id
     }
 
     override fun displayWaitOnSinger(singer: String) {
         // We can display the wait message where the same box as the song
-        displaySong(getString(R.string.wait_for_pick_format, singer))
+        displaySong(getString(R.string.wait_for_pick_format, mapIdToName[singer]  ?: singer))
+    }
+
+    override fun displayPlayerScores(playerScores: Map<String, Long>) {
+        scoresAdapter.updateScore(
+            // Replace ids by names
+            playerScores.map { (id, score) -> Pair(mapIdToName[id] ?: id, score)}
+        )
+    }
+
+    override fun gameOver(finalScores: Map<String, Long>) {
+        val intent = Intent(this, EndGameActivity::class.java).apply {
+            putExtra(SCORES_KEY,
+                // Replace ids by names and put in an ArrayList to make it Serializable
+                ArrayList(finalScores.map { (id, score) -> Pair(mapIdToName[id] ?: id, score)})
+            )
+        }
+        startActivity(intent)
     }
 
     private fun initViews() {
@@ -133,9 +153,10 @@ class GameActivity : AppCompatActivity(), GameView {
         singerTextView = findViewById(R.id.singerTextView)
         songTextView = findViewById(R.id.songTextView)
         errorOrFailureTextView = findViewById(R.id.errorOrFailureTextView)
-        // TODO: Initialise in later sprint
-        // namesAdapter = ArrayAdapter(this, android.R.layout.simple_list_item_1)
-        // playersListView.adapter = namesAdapter
+
+        scoresRecyclerView = findViewById(R.id.scoresRecyclerView)
+        scoresRecyclerView.layoutManager = LinearLayoutManager(this)
+        scoresRecyclerView.adapter = scoresAdapter
 
         songGuessEditText = findViewById(R.id.songGuessEditText)
         songGuessSubmitButton = findViewById(R.id.songGuessSubmitButton)
@@ -154,13 +175,13 @@ class GameActivity : AppCompatActivity(), GameView {
         }
     }
 
-    private fun initVoiceChat(gameUid: Long) {
-        voiceChannel = VoiceIpEngineDecorator(this)
-        val userId = Random.nextInt(100000000)
-        voiceChannel.setAudioProfile(Constants.AUDIO_PROFILE_MUSIC_STANDARD, Constants.AUDIO_SCENARIO_CHATROOM_ENTERTAINMENT);
-        voiceChannel.enableAudioVolumeIndication(500,5,true)
-        voiceChannel.joinChannel(voiceChannel.getToken(userId, gameUid.toString()), gameUid.toString(), "", userId)
-        Log.d("Game uid is: ", gameUid.toString())
-    }
+    protected open fun initVoiceChat(gameUid: Long) {
 
+        val map = mapIdToName.mapKeys { it.hashCode().absoluteValue }
+        if (!this::voiceChannel.isInitialized) voiceChannel = VoiceIpEngineDecorator(this, MyIRtcEngineEventHandler(this, map))
+        val userId = user.name.hashCode().absoluteValue
+        voiceChannel.setAudioProfile(Constants.AUDIO_PROFILE_MUSIC_STANDARD, Constants.AUDIO_SCENARIO_CHATROOM_ENTERTAINMENT);
+        voiceChannel.enableAudioVolumeIndication(200,3,true)
+        voiceChannel.joinChannel(voiceChannel.getToken(userId, gameUid.toString()), gameUid.toString(), "", userId)
+    }
 }

@@ -12,6 +12,8 @@ import androidx.test.espresso.matcher.ViewMatchers.withId
 import androidx.test.ext.junit.rules.ActivityScenarioRule
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import org.hamcrest.Matchers
+import org.junit.After
+import org.junit.Before
 
 
 import org.junit.Rule
@@ -34,9 +36,17 @@ class MainActivityTest {
     @get:Rule
     var mainActivityRule = ActivityScenarioRule(MainActivity::class.java)
 
+    @Before
+    fun initIntent() {
+        Intents.init()
+    }
+
+    @After
+    fun releaseIntent() {
+        Intents.release()
+    }
     @Test
     fun playButtonStartsGameSettings() {
-        Intents.init()
         val playButton = Espresso.onView(withId(R.id.playButton))
         playButton.perform(ViewActions.click())
 
@@ -46,13 +56,10 @@ class MainActivityTest {
                 IntentMatchers.toPackage("com.github.fribourgsdp.radio")
             )
         )
-
-        Intents.release()
     }
 
     @Test
     fun settingsButtonStartsSettings() {
-        Intents.init()
         val settingsButton = Espresso.onView(withId(R.id.settingsButton))
         settingsButton.perform(ViewActions.click())
 
@@ -62,35 +69,17 @@ class MainActivityTest {
                 IntentMatchers.toPackage("com.github.fribourgsdp.radio")
             )
         )
-
-        Intents.release()
-    }
-
-    @Test
-    fun correctTransitionToDisplayLyricsActivity(){
-        Intents.init()
-        Espresso.onView(withId(R.id.button)).perform(ViewActions.click())
-        Intents.intended(IntentMatchers.hasComponent(DisplayLyricsActivity::class.java.name))
-        Intents.release()
     }
 
     @Test
     fun correctTransitionToUserProfile(){
-        Intents.init()
         Espresso.onView(withId(R.id.profileButton)).perform(ViewActions.click())
         Intents.intended(IntentMatchers.hasComponent(UserProfileActivity::class.java.name))
-        Intents.release()
     }
+
     @Test
     fun correctTransitionToVoiceOverIpActivity(){
-        Intents.init()
         Espresso.onView(withId(R.id.VoiceOverIpButton)).perform(ViewActions.click())
         Intents.intended(IntentMatchers.hasComponent(VoiceOverIPActivity::class.java.name))
-        Intents.release()
     }
-
-
-
-
-
 }

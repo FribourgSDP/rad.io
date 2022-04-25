@@ -2,17 +2,17 @@ package com.github.fribourgsdp.radio
 
 
 import android.content.Context
+
+import com.google.android.gms.tasks.Task
+import com.google.android.gms.tasks.Tasks
+import kotlin.random.Random
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
-import java.io.File
-import kotlin.random.Random
 
-const val USER_DATA_PATH = "user_data_file"
 
 @Serializable
-
 /**
  * A data class for users with playlists
  * Serializable: supports the use of Json.encodeToString(<user>)
@@ -42,10 +42,14 @@ data class User (var name: String, val color: Int) {
 
 
     companion object {
+        const val USER_DATA_PATH = "user_data_file"
+        private var fileSystemGetter: FileSystem.FileSystemGetter =
+            AppSpecificFileSystem.AppSpecificFSGetter
+
         /**
          * loads a user from the app-specific storage on the device.
          * There can only be a single User stored on the device at the default path
-         * which is written with <user>.save().
+         * which is written with [User].save().
          * This function can be used from any activity of the app and retrieves the same data
          *
          * @param context the context to use for loading from a file (usually this in an activity)
@@ -56,8 +60,38 @@ data class User (var name: String, val color: Int) {
          * @return the user saved on the device
          */
         fun load(context: Context, path: String = USER_DATA_PATH) : User {
-            val userFile = File(context.filesDir, path)
-            return Json.decodeFromString(userFile.readText())
+            val fs = fileSystemGetter.getFileSystem(context)
+            return Json.decodeFromString(fs.read(path))
+        }
+
+        /**
+         * Tries to load a user from the app-specific storage on the device.
+         * If it fails, it returns a default [User]
+         *
+         * @param context the context to use for loading from a file (usually this in an activity)
+         * @return the user saved on the device if it exists or a default [User] otherwise
+         */
+        fun loadOrDefault(context: Context) : Task<User> {
+            return try {
+                Tasks.forResult(load(context))
+            } catch (e: java.io.FileNotFoundException) {
+                createDefaultUser()
+                //User("No User Found", User.generateColor())
+            }
+        }
+
+        /**
+         * Create a [User] with default settings. Note that this user doesn't have an [id]
+         *
+         * @return a default [User]
+         */
+        fun createDefaultUser(): Task<User> {
+            return FirestoreDatabase().generateUserId().continueWith { id ->
+                val generatedUser = User("Guest", generateColor())
+                generatedUser.id = id.result.toString()
+                generatedUser
+            }
+
         }
 
         /**
@@ -68,11 +102,20 @@ data class User (var name: String, val color: Int) {
                 (Random.nextInt(100, 200) shl 8) or
                 Random.nextInt(100, 200)
 
+        /**
+         * changes the default app specific file system wrapper to a custom one
+         * useful for tests
+         *
+         * @param fsg the [FileSystem.FileSystemGetter] to will replace the current implementation
+         */
+        fun setFSGetter(fsg: FileSystem.FileSystemGetter) {
+            fileSystemGetter = fsg
+        }
     }
 
     /**
      * saves a user to the app-specific storage on the device.
-     * There can only be a single User stored on the device at the default path
+     * There can only be a single User stored on the device at the default path, so this can overwrite
      * This function can be used from any activity of the app to save data accessible from anywhere
      *
      * @param context the context to use for saving to a file (usually this in an activity)
@@ -80,26 +123,26 @@ data class User (var name: String, val color: Int) {
      *      user location
      */
     fun save(context: Context, path: String = USER_DATA_PATH){
-        val userFile = File(context.filesDir, path)
-        userFile.writeText(Json.encodeToString(this))
+        val fs = fileSystemGetter.getFileSystem(context)
+        fs.write(path, Json.encodeToString(this))
     }
 
     /**
      * Adds a single playlist to the user's set of playlists
-     *
+     * If the set already contains a playlist with the same name, it is replaced.
      * @param playlist the playlist to add
      */
     fun addPlaylist(playlist: Playlist){
-        playlists.add(playlist)
+        SetUtility.addToSet(playlists, playlist)
     }
 
     /**
      * Adds multiple playlists to the user's set of playlists
-     *
+     * If the user playlists already contains a playlist with the same name as one in the given set, it is replaced.
      * @param addedPlaylists the set of playlists to add
      */
     fun addPlaylists(addedPlaylists: Set<Playlist>){
-        playlists.addAll(addedPlaylists)
+        SetUtility.addAllToSet(playlists, addedPlaylists)
     }
 
     /**
@@ -136,6 +179,27 @@ data class User (var name: String, val color: Int) {
      */
     fun getPlaylists(): Set<Playlist> {
         return playlists.toSet()
+    }
+
+    /**
+     * getter for a single playlist, matched according to the name give
+     *
+     * @param name the name of the playlist we are trying to retrieve
+     * @return the requested playlist
+     * @throws NoSuchFileException
+     */
+    fun getPlaylistWithName(name: String): Playlist {
+        return SetUtility.getNamedFromSet(playlists, name)
+    }
+
+    /**
+     * Modifies a song in a playlist of the user
+     *
+     * @param playlist the name of the playlist we are trying to modify
+     * @param song the name of the song we are trying to modify or add
+     */
+    fun updateSongInPlaylist(playlist: Playlist, song: Song){
+        getPlaylistWithName(playlist.name).addSong(song)
     }
 
     fun addSpotifyPlaylistUId(playlistName: String, spotifyUid: String){

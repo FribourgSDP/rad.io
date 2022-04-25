@@ -20,7 +20,7 @@ class GameTest {
 
     private val name = "Game Test"
     private val host = User("host")
-    private val other = User("other")
+    private val otherId = "other_id"
     private val nbRounds = 3
     private val withHint = true
     private val isPrivate = false
@@ -31,7 +31,7 @@ class GameTest {
         .setWithHint(withHint)
         .setNbRounds(nbRounds)
         .setPrivacy(isPrivate)
-        .addUser(other)
+        .addUserId(otherId)
 
     @Test
     fun builderWorksCorrectlyWithCorrectArgs() {
@@ -72,22 +72,40 @@ class GameTest {
     @Test(expected = IllegalArgumentException::class)
     fun errorWhenAddingPointToFakeUser() {
         val game = gameBuilder.build()
-
-        game.addPoints(User("fake"), 10)
+        game.addPoints("fake", 10)
     }
 
     @Test
     fun pointsUpdateCorrectly() {
         val game = gameBuilder.build()
 
-        assertEquals(0, game.getScore(host))
-        assertEquals(0, game.getScore(other))
+        assertEquals(0L, game.getScore(host.id))
+        assertEquals(0L, game.getScore(otherId))
 
-        game.addPoints(host, 10)
-        game.addPoints(other, 100)
+        game.addPoints(host.id, 10L)
+        game.addPoints(otherId, 100L)
 
-        assertEquals(10, game.getScore(host))
-        assertEquals(100, game.getScore(other))
+        assertEquals(10L, game.getScore(host.id))
+        assertEquals(100L, game.getScore(otherId))
+    }
+
+    @Test
+    fun pointsUpdateCorrectlyWithMapFunctions() {
+        val game = gameBuilder.build()
+
+        assertTrue(game.getAllScores().all { (_, value) -> value == 0L })
+
+        game.addPoints(
+            hashMapOf(
+                host.id to 10L,
+                otherId to 100L
+            )
+        )
+
+        val scores = game.getAllScores()
+
+        assertEquals(10L, scores[host.id])
+        assertEquals(100L, scores[otherId])
     }
 
     @Test
@@ -138,5 +156,18 @@ class GameTest {
             playlistTest.getSongs().size,
             game.getChoices(playlistTest.getSongs().size + 15).size
         )
+    }
+
+    @Test
+    fun computeScoreWorksAsIntended() {
+        assertEquals(100, Game.computeScore(1))
+        assertEquals(85, Game.computeScore(2))
+        assertEquals(70, Game.computeScore(3))
+        assertEquals(65, Game.computeScore(4))
+        assertEquals(60, Game.computeScore(5))
+        assertEquals(15, Game.computeScore(14))
+        assertEquals(10, Game.computeScore(15))
+        assertEquals(10, Game.computeScore(16))
+        assertEquals(10, Game.computeScore(160))
     }
 }

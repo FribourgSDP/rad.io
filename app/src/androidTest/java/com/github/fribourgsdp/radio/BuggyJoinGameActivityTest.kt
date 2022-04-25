@@ -8,7 +8,6 @@ import androidx.test.espresso.assertion.ViewAssertions
 import androidx.test.espresso.matcher.ViewMatchers
 import androidx.test.ext.junit.rules.ActivityScenarioRule
 import androidx.test.ext.junit.runners.AndroidJUnit4
-import com.github.fribourgsdp.radio.mockimplementations.BuggyDatabase
 import com.github.fribourgsdp.radio.mockimplementations.BuggyJoinGameActivity
 import org.junit.Rule
 import org.junit.Test

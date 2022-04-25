@@ -14,10 +14,10 @@ import kotlinx.serialization.Serializable
  * @property genre genre of the playlist
  * @constructor creates a Playlist with the given name and genre
  */
-data class Playlist (var name: String, var genre: Genre) {
+data class Playlist (override var name: String, var genre: Genre) : Nameable {
 
     private val songs: MutableSet<Song> = mutableSetOf()
-
+    var id : String = ""
     constructor(name: String, set: Set<Song>, genre: Genre) : this(name, genre) {
         this.addSongs(set)
     }
@@ -26,10 +26,11 @@ data class Playlist (var name: String, var genre: Genre) {
 
     /**
      * Adds a single song to the playlist
+     * We do not allow two song with the same name and artist. The given song might replace an already existing one.
      * @param song the song to add
      */
     fun addSong(song: Song){
-        songs.add(song)
+        SetUtility.addToSet(songs, song)
     }
 
     /**
@@ -37,7 +38,7 @@ data class Playlist (var name: String, var genre: Genre) {
      * @param addedSongs the Set of songs to add
      */
     fun addSongs(addedSongs: Set<Song>){
-        songs.addAll(addedSongs)
+        SetUtility.addAllToSet(songs, addedSongs)
     }
 
     /**
@@ -79,11 +80,29 @@ data class Playlist (var name: String, var genre: Genre) {
         return songs.toSet()
     }
 
-    override fun hashCode(): Int {
-        return name.hashCode()
+    /**
+     * getter for a single song, matched according to the name give
+     *
+     * @param name the name of the song we are trying to retrieve
+     * @return the requested song
+     * @throws NoSuchFileException
+     */
+    fun getSong(name: String): Song {
+        return SetUtility.getNamedFromSet(songs, name)
     }
 
     override fun equals(other: Any?): Boolean {
-        return name == (other as Playlist).name
+        if (this === other) return true
+        if (javaClass != other?.javaClass) return false
+
+        other as Playlist
+
+        if (name != other.name) return false
+
+        return true
+    }
+
+    override fun hashCode(): Int {
+        return name.hashCode()
     }
 }

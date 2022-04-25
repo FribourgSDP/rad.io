@@ -40,7 +40,7 @@ class UserPlaylistsFragment : MyFragment(R.layout.fragment_user_playlists_displa
     override fun onItemClick(position: Int) {
         activity?.run {
             val intent = Intent(this, PlaylistsFragmentHolderActivity::class.java)
-                .putExtra(PLAYLIST_DATA, Json.encodeToString(userPlaylists[position]))
+                .putExtra(PLAYLIST_DATA, userPlaylists[position].name)
             startActivity(intent)
         }
     }

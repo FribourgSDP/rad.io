@@ -28,8 +28,6 @@ class MainActivity : AppCompatActivity() {
         joinButton.setOnClickListener {startActivity(Intent(this, JoinGameActivity::class.java))}
         val settingsButton = findViewById<Button>(R.id.settingsButton)
         settingsButton.setOnClickListener {startActivity(Intent(this, SettingsActivity::class.java))}
-        val button : Button = findViewById(R.id.button)
-        button.setOnClickListener {startActivity(Intent(this, DisplayLyricsActivity::class.java))}
         val profileButton: ImageButton = findViewById(R.id.profileButton)
         profileButton.setOnClickListener {
             startActivity(Intent(this, UserProfileActivity::class.java))
@@ -48,14 +46,10 @@ class MainActivity : AppCompatActivity() {
 
     }
     private fun createUser(){
-
-        //for now, we set to 1 the user ID, we will then use the database function
-         db.generateUserId().addOnSuccessListener { id->
-            val userName = "Guest"
-            val generatedUser = User(userName)
-            generatedUser.id = id.toString()
-            generatedUser.save(this)
-            db.setUser(id.toString(),generatedUser)
+        User.createDefaultUser().continueWith{ user ->
+            val result = user.result
+            result.save(this)
+            db.setUser(result.id,result)
         }
 
     }

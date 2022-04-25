@@ -52,6 +52,14 @@ class LocalDatabase : Database {
         return Tasks.forResult(EXPECTED_USER_UID)
     }
 
+    override fun generatePlaylistId(): Task<Long> {
+        TODO("Not yet implemented")
+    }
+
+    override fun generateSongId(): Task<Long> {
+        TODO("Not yet implemented")
+    }
+
     override fun openLobby(id: Long, settings: Game.Settings): Task<Void> {
         return Tasks.forResult(null)
     }
@@ -64,7 +72,11 @@ class LocalDatabase : Database {
         return Tasks.forResult(EXPECTED_SETTINGS)
     }
 
-    override fun addUserToLobby(id: Long, user: User): Task<Void> {
+    override fun addUserToLobby(id: Long, user: User, hasMicPermissions: Boolean): Task<Void> {
+        return Tasks.forResult(null)
+    }
+
+    override fun modifyUserMicPermissions(id: Long, user: User, newPermissions: Boolean): Task<Void> {
         return Tasks.forResult(null)
     }
 
@@ -72,7 +84,7 @@ class LocalDatabase : Database {
         TODO("Not yet implemented")
     }
 
-    override fun openGameMetadata(id: Long, users: List<User>): Task<Void> {
+    override fun openGameMetadata(id: Long, usersIds: List<String>): Task<Void> {
         TODO("Not yet implemented")
     }
 
@@ -92,18 +104,18 @@ class LocalDatabase : Database {
         TODO("Not yet implemented")
     }
 
-    override fun setPlayerDone(gameID: Long, playerID: String): Task<Void> {
+    override fun playerEndTurn(gameID: Long, playerID: String, hasFound: Boolean): Task<Void> {
         TODO("Not yet implemented")
     }
 
-    override fun resetPlayerDoneMap(gameID: Long, singer: String): Task<Void> {
+    override fun resetGameMetadata(gameID: Long, singer: String): Task<Void> {
         TODO("Not yet implemented")
     }
 
     companion object {
         const val EXPECTED_USER_UID = 392L
         const val EXPECTED_UID = 794L
-        val EXPECTED_SETTINGS = Game.Settings(User("Host"), "Hello World!", Playlist("Host's Playlist"), 42, true, true)
+        val EXPECTED_SETTINGS = Game.Settings("Host", "Hello World!", "Host's Playlist", 42, true, true)
 
     }
 }

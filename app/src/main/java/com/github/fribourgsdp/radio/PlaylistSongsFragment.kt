@@ -2,7 +2,6 @@ package com.github.fribourgsdp.radio
 
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import android.widget.Button
 import android.widget.TextView
@@ -21,24 +20,27 @@ class PlaylistSongsFragment : MyFragment(R.layout.fragment_playlist_display), On
     private lateinit var playlistName: String
     private lateinit var editButton: Button
     private lateinit var deleteButton: Button
+    private lateinit var user : User
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let { args ->
-            args.getString(PLAYLIST_DATA).let { serializedPlaylist ->
-                playlist = Json.decodeFromString(serializedPlaylist!!)
-                songs = playlist.getSongs().toList()
-                playlistName = playlist.name
+            args.getString(PLAYLIST_DATA).let { playlistName ->
+                this.playlistName = playlistName!!
             }
         }
     }
 
-
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        user = User.load(requireContext())
+        playlist = user.getPlaylistWithName(playlistName)
+        songs = playlist.getSongs().toList()
+
         val playlistTitle : TextView = requireView().findViewById(R.id.PlaylistName)
         playlistTitle.text = playlistName
-        initializeRecyclerView()
+
         //sets listeners to 2 buttons
         editButton = requireView().findViewById(R.id.editButton)
         editButton.setOnClickListener {
@@ -46,16 +48,26 @@ class PlaylistSongsFragment : MyFragment(R.layout.fragment_playlist_display), On
             intent.putExtra(PLAYLIST_TO_MODIFY, Json.encodeToString(playlist))
             startActivity(intent)
         }
+
+        loadPlaylist()
+
         deleteButton = requireView().findViewById(R.id.deleteButton)
         deleteButton.setOnClickListener{
-            val user = UserProfileActivity.loadUser(requireContext())
+            //val user = Tasks.await()
             //removes playlist from user playlists
-            log(user)
-            log(user.getPlaylists().size)
-            log(playlist)
-            log(user.removePlaylistByName(playlistName))
+            user.removePlaylist(playlist)
             user.save(requireContext())
             activity?.onBackPressed()
+        }
+    }
+
+
+    private fun loadPlaylist(){
+        User.loadOrDefault(requireContext()).addOnSuccessListener { l ->
+            user = l
+            playlist = user.getPlaylistWithName(playlistName) ?: Playlist("")
+            songs = playlist.getSongs().toList()
+            initializeRecyclerView()
         }
     }
 
@@ -68,16 +80,11 @@ class PlaylistSongsFragment : MyFragment(R.layout.fragment_playlist_display), On
 
     override fun onItemClick(position: Int) {
         val bundle = Bundle()
-        bundle.putString(PLAYLIST_DATA, Json.encodeToString(playlist))
-        bundle.putString(SONG_DATA, Json.encodeToString(songs[position]))
+        bundle.putString(PLAYLIST_DATA, playlist.name)
+        bundle.putString(SONG_DATA, songs[position].name)
         activity?.supportFragmentManager?.beginTransaction()
             ?.replace(R.id.container, SongFragment::class.java, bundle)
             ?.addToBackStack("SongFragment")
             ?.commit()
-    }
-    companion object{
-        fun log(s : Any){
-            Log.println(Log.ASSERT, "******* ", s.toString())
-        }
     }
 }

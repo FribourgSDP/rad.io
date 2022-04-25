@@ -8,6 +8,7 @@ import android.widget.EditText
 import android.widget.Spinner
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
+import com.google.android.gms.tasks.Tasks
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import kotlinx.serialization.decodeFromString
@@ -30,7 +31,10 @@ class AddPlaylistActivity : AppCompatActivity() {
         genreSpinner.adapter = ArrayAdapter(this, android.R.layout.simple_spinner_item, Genre.values())
         errorTextView = findViewById(R.id.addPlaylistErrorTextView)
 
-        user = UserProfileActivity.loadUser(this)
+        User.loadOrDefault(this).addOnSuccessListener { u ->
+            user = u
+        }
+
 
         processIntent(intent)
 

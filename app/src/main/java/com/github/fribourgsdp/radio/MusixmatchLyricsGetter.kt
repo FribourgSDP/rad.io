@@ -15,14 +15,24 @@ const val TRACK_SEARCH = "track.search"
 const val QUERY_TRACK_FIELD = "q_track"
 const val QUERY_ARTIST_FIELD = "q_artist"
 const val SORT_CONDITION = "s_artist_rating=desc"
+
+interface LyricsGetter{
+    fun getLyrics(
+        songName: String,
+        artistName: String = "",
+        client: OkHttpClient = OkHttpClient(),
+        parser: JSONParser = JSONStandardParser()
+    ): CompletableFuture<String>
+    fun getSongID(songName: String, artistName: String, client: OkHttpClient = OkHttpClient(), parser : JSONParser = JSONStandardParser()) : CompletableFuture<Int>
+}
 /**
  * Tool to get lyrics from a given song name and artist using Musixmatch API.
  * API Call doc : https://stackoverflow.com/questions/45219379/how-to-make-an-api-request-in-kotlin
  */
-
-class LyricsGetter {
-    companion object {
+object MusixmatchLyricsGetter : LyricsGetter {
         const val LYRICS_NOT_FOUND = "---No lyrics were found for this song.---"
+
+        class LyricsNotFoundException(val reason : String = LYRICS_NOT_FOUND) : Exception()
 
         /**
          * Asks Musixmatch and retrieves the lyrics of a song.
@@ -32,19 +42,20 @@ class LyricsGetter {
          * @param client The HTTP Client used for connection
          * @param parser The JSON parser used to parse response
          */
-        fun getLyrics(
+        override fun getLyrics(
             songName: String,
-            artistName: String = "",
-            client: OkHttpClient = OkHttpClient(),
-            parser: JSONParser = JSONStandardParser()
+            artistName: String,
+            client: OkHttpClient,
+            parser: JSONParser
         ): CompletableFuture<String> {
+            Log.println(Log.ASSERT, "*", "LYRICS GETTER CALL !!!!")
             val future = CompletableFuture<String>()
             val trackIDFuture = getSongID(songName, artistName, client)
             val trackID: Int
             try {
                 trackID = trackIDFuture.get()
             } catch (e: Throwable) {
-                future.complete(LYRICS_NOT_FOUND)
+                future.completeExceptionally(LyricsNotFoundException())
                 return future
             }
             val url = "$BASE_URL$TRACK_LYRICS_GET?$TRACK_ID_FIELD=$trackID&$API_KEY_FIELD=$API_KEY"
@@ -62,7 +73,7 @@ class LyricsGetter {
          * @param parser The JSON parser used to parse response
          * @return The ID of the searched song
          */
-        fun getSongID(songName: String, artistName: String, client: OkHttpClient = OkHttpClient(), parser : JSONParser = JSONStandardParser()) : CompletableFuture<Int> {
+        override fun getSongID(songName: String, artistName: String, client: OkHttpClient, parser : JSONParser) : CompletableFuture<Int> {
             //API needed : 24
             val future = CompletableFuture<Int>()
             val url = "$BASE_URL$TRACK_SEARCH?$QUERY_TRACK_FIELD=$songName&$QUERY_ARTIST_FIELD=$artistName&$API_KEY_FIELD=$API_KEY&$SORT_CONDITION"
@@ -80,25 +91,26 @@ class LyricsGetter {
             override fun onResponse(call: Call, response: Response) {
                 val parsedResponseString = response.body()?.string()
                 val parsedResponse = parser.parse(parsedResponseString)
-                var lyrics : String?
+                val lyrics : String?
                 if(parsedResponse == null){
-                    lyrics = LYRICS_NOT_FOUND
+                    future.completeExceptionally(LyricsNotFoundException())
                 } else {
                     val status = parsedResponse.getJSONObject("message").getJSONObject("header").getInt("status_code")
-                    lyrics = if (status == 404) {
-                        LYRICS_NOT_FOUND
+                    if (status == 404) {
+                        future.completeExceptionally(LyricsNotFoundException())
                     } else {
-                        parsedResponse
+                        lyrics = parsedResponse
                             .getJSONObject("message")
                             .getJSONObject("body")
                             .getJSONObject("lyrics")
                             .getString("lyrics_body")
-                    }
-                    if (lyrics?.isEmpty() == true) {
-                        lyrics = LYRICS_NOT_FOUND
+                        if (lyrics?.isEmpty() == true) {
+                            future.completeExceptionally(LyricsNotFoundException())
+                        } else {
+                            future.complete(lyrics)
+                        }
                     }
                 }
-                future.complete(lyrics)
             }
         }
 
@@ -117,7 +129,7 @@ class LyricsGetter {
                     ?.getJSONObject("body")
                     ?.getJSONArray("track_list")
                 if(trackList?.length() == 0){
-                    future.completeExceptionally(Exception("Song not found"))
+                    future.completeExceptionally(LyricsNotFoundException())
                 } else {
                     val firstTrackID = trackList
                         ?.getJSONObject(0)
@@ -156,5 +168,4 @@ class LyricsGetter {
                     .replace(name, "<strike>${name[0].uppercase() + name.lowercase().substring(1)}</strike>", ignoreCase = true)
                     .replace("\n", "<br>")
         }
-    }
 }

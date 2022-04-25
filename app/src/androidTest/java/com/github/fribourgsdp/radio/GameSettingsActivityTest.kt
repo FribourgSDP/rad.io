@@ -13,9 +13,12 @@ import androidx.test.espresso.matcher.ViewMatchers
 import androidx.test.espresso.matcher.ViewMatchers.withId
 import androidx.test.ext.junit.rules.ActivityScenarioRule
 import androidx.test.ext.junit.runners.AndroidJUnit4
+import com.github.fribourgsdp.radio.mockimplementations.MockGameSettingsActivity
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 import org.hamcrest.Matchers.allOf
+import org.junit.After
+import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -28,17 +31,27 @@ import org.junit.runner.RunWith
 @RunWith(AndroidJUnit4::class)
 class GameSettingsActivityTest {
     @get:Rule
-    var gameSettingsActivityRule = ActivityScenarioRule(GameSettingsActivity::class.java)
+    var gameSettingsActivityRule = ActivityScenarioRule(MockGameSettingsActivity::class.java)
 
     private val ctx: Context = ApplicationProvider.getApplicationContext()
+
 
     private val json = Json {
         allowStructuredMapKeys = true
     }
 
+    @Before
+    fun initIntent() {
+        Intents.init()
+    }
+
+    @After
+    fun releaseIntent() {
+        Intents.release()
+    }
+
     @Test
     fun intentWorksWithCorrectSettings() {
-        Intents.init()
 
         // Test values
         val testName = "Hello World!"
@@ -85,22 +98,18 @@ class GameSettingsActivityTest {
             allOf(
                 toPackage("com.github.fribourgsdp.radio"),
                 hasComponent(LobbyActivity::class.java.name),
-                hasExtraWithKey(GAME_HOST_KEY),
                 hasExtra(GAME_NAME_KEY, testName),
-                hasExtra(GAME_PLAYLIST_KEY, json.encodeToString(testPlaylist)),
+                hasExtra(GAME_PLAYLIST_KEY, Json.encodeToString(testPlaylist)),
                 hasExtra(GAME_NB_ROUNDS_KEY, testNbRounds),
                 hasExtra(GAME_HINT_KEY, withHint),
                 hasExtra(GAME_PRIVACY_KEY, private)
             )
         )
-
-        Intents.release()
     }
 
 
     @Test
     fun intentWorksWithDefaultSettings() {
-        Intents.init()
 
         // Test values
         val testPlaylist = Playlist("Rap Playlist")
@@ -120,17 +129,16 @@ class GameSettingsActivityTest {
         Intents.intended(
             allOf(
                 hasComponent(LobbyActivity::class.java.name),
-                hasExtraWithKey(GAME_HOST_KEY),
                 hasExtra(GAME_NAME_KEY, ctx.getString(R.string.default_game_name)),
-                hasExtra(GAME_PLAYLIST_KEY, json.encodeToString(testPlaylist)),
+                hasExtra(GAME_PLAYLIST_KEY, Json.encodeToString(testPlaylist)),
                 hasExtra(GAME_NB_ROUNDS_KEY, ctx.getString(R.string.default_game_nb_rounds).toInt()),
                 hasExtra(GAME_HINT_KEY, false),
                 hasExtra(GAME_PRIVACY_KEY, false),
+                hasExtra(GAME_IS_HOST_KEY, true),
                 toPackage("com.github.fribourgsdp.radio")
             )
         )
 
-        Intents.release()
     }
 
     @Test

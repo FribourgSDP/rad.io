@@ -3,8 +3,7 @@
     package="com.github.fribourgsdp.radio">
 
     <uses-permission android:name="android.permission.INTERNET" />
-    <uses-permission android:name="android.permission.INTERNET" />
-    <uses-permission android:name="android.permission.RECORD_AUDIO" />
+    <uses-permission android:name="android.permission.RECORD_AUDIO"/>
     <uses-permission android:name="android.permission.MODIFY_AUDIO_SETTINGS" />
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
@@ -19,6 +18,15 @@
         android:theme="@style/Theme.Radio"
         android:usesCleartextTraffic="true">
         <activity
+            android:name=".EndGameActivity"
+            android:exported="false"
+            android:parentActivityName=".MainActivity">
+            <!-- The meta-data tag is required if you support API level 15 and lower -->
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".MainActivity" />
+        </activity>
+        <activity
             android:name=".GameActivity"
             android:exported="false" />
         <activity
@@ -32,7 +40,7 @@
             android:exported="false" />
         <activity
             android:name=".JoinGameActivity"
-            android:exported="true" />
+            android:exported="false" />
         <activity
             android:name=".SpotifyReceiveActivity"
             android:exported="true"
@@ -54,7 +62,7 @@
             android:exported="false" />
         <activity
             android:name=".LobbyActivity"
-            android:exported="true" />
+            android:exported="false" />
         <activity
             android:name=".UserProfileActivity"
             android:exported="false"
@@ -63,14 +71,11 @@
             android:name=".FireBaseTestActivity"
             android:exported="false" />
         <activity
-            android:name=".DisplayLyricsActivity"
-            android:exported="true" />
-        <activity
             android:name=".SettingsActivity"
-            android:exported="true" />
+            android:exported="false" />
         <activity
             android:name=".GameSettingsActivity"
-            android:exported="true" />
+            android:exported="false" />
         <activity
             android:name=".GoogleSignInActivity"
             android:exported="false" />
@@ -82,9 +87,10 @@
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-        </activity>
-
-        <!-- Test implementations of activities -->
+        </activity> <!-- Test implementations of activities -->
+        <activity
+            android:name=".mockimplementations.MockGameSettingsActivity"
+            android:exported="false" />
         <activity
             android:name=".mockimplementations.WorkingLobbyActivity"
             android:exported="false" />
@@ -92,10 +98,19 @@
             android:name=".mockimplementations.BuggyLobbyActivity"
             android:exported="false" />
         <activity
+            android:name=".mockimplementations.LyricsGettingWorkingLobbyActivity"
+            android:exported="false" />
+        <activity
             android:name=".mockimplementations.WorkingJoinGameActivity"
             android:exported="false" />
         <activity
             android:name=".mockimplementations.BuggyJoinGameActivity"
+            android:exported="false" />
+        <activity
+            android:name=".mockimplementations.MockGameActivity"
+            android:exported="false" />
+        <activity
+            android:name=".mockimplementations.MockUserProfileActivity"
             android:exported="false" />
     </application>
 

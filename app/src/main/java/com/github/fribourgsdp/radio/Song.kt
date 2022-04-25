@@ -18,12 +18,16 @@ import java.util.concurrent.CompletableFuture
  * @property artist the reformatted name of the artist of the song
  * @constructor creates a Song with the given name, artist name and possibly blank lyrics
  */
-class Song (private val rawName: String, private val rawArtist: String, var lyrics: String) {
-    val name: String = reformatName(rawName)
-    val artist: String = reformatName(rawArtist)
+class Song (private val rawName: String, private val rawArtist: String, var lyrics: String) : Nameable {
+    override var name: String = reformatName(rawName)
+    var artist: String = reformatName(rawArtist)
+    var id: String = ""
 
     constructor(name: String, artist: String): this(name, artist,"")
     constructor(name: String, artist: String, lyrics: CompletableFuture<String>): this(name, artist, lyrics.get())
+    constructor(name: String, artist: String,lyrics: String, id: String): this(name,artist,lyrics){
+        this.id = id
+    }
 
     private fun reformatName(unformattedName: String): String {
         val noSpacesRegex = Regex(" +")

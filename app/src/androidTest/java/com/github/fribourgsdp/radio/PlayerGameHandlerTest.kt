@@ -13,10 +13,15 @@ import org.mockito.Mockito.*
 class PlayerGameHandlerTest {
     private lateinit var mockSnapshot: DocumentSnapshot
 
+    private val sleepingTime = 50L
     private val singer = "Singer"
     private val song = "A good song"
     private val round = 1L
     private val listOfSongs = arrayListOf("Song0", "Song1", "Song2")
+    private val scores = hashMapOf(
+        "singer0" to 100L,
+        "singer1" to 85L
+    )
 
     @Before
     fun setup() {
@@ -26,6 +31,8 @@ class PlayerGameHandlerTest {
         `when`(mockSnapshot.getLong("current_round")).thenReturn(round)
         `when`(mockSnapshot.get("song_choices")).thenReturn(listOfSongs)
         `when`(mockSnapshot.getString("current_song")).thenReturn(null)
+        `when`(mockSnapshot.get("scores")).thenReturn(scores)
+        `when`(mockSnapshot.getBoolean("finished")).thenReturn(false)
     }
 
     @Test
@@ -68,7 +75,11 @@ class PlayerGameHandlerTest {
 
         handler.handleSnapshot(mockSnapshot)
 
+
+        // Wait for the task of the database to execute
+
         assertFalse(view.checkPlayer(singer))
+
         assertEquals(View.VISIBLE, view.songVisibility)
         assertEquals(singer, view.song)
         assertEquals(View.GONE, view.guessInputVisibility)
@@ -86,7 +97,7 @@ class PlayerGameHandlerTest {
         handler.handleSnapshot(mockSnapshot)
 
         // Wait for the task of the database to execute
-        Thread.sleep(1000)
+        Thread.sleep(sleepingTime)
 
         assertTrue(view.checkPlayer(singer))
         assertEquals(View.VISIBLE, view.songVisibility)
@@ -124,7 +135,7 @@ class PlayerGameHandlerTest {
     fun displaySongOnGoodGuess() {
         val view = FakeGameView("Not Singer")
         val db = mock(Database::class.java)
-        `when`(db.setPlayerDone(anyLong(), anyString()))
+        `when`(db.playerEndTurn(anyLong(), anyString(), anyBoolean()))
             .thenReturn(Tasks.forResult(null))
 
         `when`(mockSnapshot.getString("current_song")).thenReturn(song)
@@ -141,7 +152,7 @@ class PlayerGameHandlerTest {
         Thread.sleep(1)
 
         assertEquals(View.VISIBLE, view.songVisibility)
-        assertEquals(song, view.song)
+        assertEquals("You correctly guessed $song", view.song)
         assertEquals(View.GONE, view.guessInputVisibility)
     }
 
@@ -149,8 +160,56 @@ class PlayerGameHandlerTest {
     fun displayErrorOnBadGuess() {
         val view = FakeGameView("Not Singer")
         val db = mock(Database::class.java)
-        `when`(db.setPlayerDone(anyLong(), anyString()))
+        `when`(db.playerEndTurn(anyLong(), anyString(), anyBoolean()))
             .thenReturn(Tasks.forResult(null))
+
+        `when`(mockSnapshot.getString("current_song")).thenReturn(song)
+
+        val handler = PlayerGameHandler(0, view, db)
+
+        // Update song to guess
+        handler.handleSnapshot(mockSnapshot)
+
+        // Check it
+        handler.handleGuess("Not the song", "")
+
+        // Wait for the task of the database to execute
+        Thread.sleep(1)
+
+        assertEquals("Wrong answer", view.error)
+        assertEquals(View.VISIBLE, view.errorVisibility)
+    }
+
+    @Test
+    fun displayOtherErrorWhenClose() {
+        val view = FakeGameView("Not Singer")
+        val db = mock(Database::class.java)
+        `when`(db.playerEndTurn(anyLong(), anyString(), anyBoolean()))
+            .thenReturn(Tasks.forResult(null))
+
+        `when`(mockSnapshot.getString("current_song")).thenReturn(song)
+
+        val handler = PlayerGameHandler(0, view, db)
+
+        // Update song to guess
+        handler.handleSnapshot(mockSnapshot)
+
+        // Check it
+        handler.handleGuess(song + "a", "")
+
+        // Wait for the task of the database to execute
+        Thread.sleep(1)
+
+        assertEquals("You're close!", view.error)
+        assertEquals(View.VISIBLE, view.errorVisibility)
+    }
+
+    @Test
+    fun displayErrorOnDatabaseFailureToEndTurn() {
+        val view = FakeGameView("Not Singer")
+        val db = mock(Database::class.java)
+        `when`(db.playerEndTurn(anyLong(), anyString(), anyBoolean()))
+            .thenReturn(Tasks.forException(Exception()))
 
         `when`(mockSnapshot.getString("current_song")).thenReturn(song)
 
@@ -204,6 +263,34 @@ class PlayerGameHandlerTest {
         
         assertEquals("An error occurred", view.error)
         assertEquals(View.VISIBLE, view.errorVisibility)
+    }
+
+    @Test
+    fun displayScoresWorks() {
+        val view = FakeGameView()
+        val handler = PlayerGameHandler(0, view)
+
+        handler.handleSnapshot(mockSnapshot)
+
+        assertTrue(mapEquals(scores, view.scores))
+    }
+
+    private  fun mapEquals(first: Map<String, Long>, second: Map<String, Long>): Boolean {
+        return if (first.size != second.size)  false
+        else first.entries.stream()
+            .allMatch { (k, v) -> v == second[k] }
+    }
+
+    @Test
+    fun gameFinishedCorrectlyHandled() {
+        val view = FakeGameView()
+        val handler = PlayerGameHandler(0, view)
+
+        `when`(mockSnapshot.getBoolean("finished")).thenReturn(true)
+
+        handler.handleSnapshot(mockSnapshot)
+
+        assertTrue(view.gameOver)
     }
 
 }

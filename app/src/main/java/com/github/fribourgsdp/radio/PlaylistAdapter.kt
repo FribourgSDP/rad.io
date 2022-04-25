@@ -18,7 +18,7 @@ class PlaylistAdapter(private val playlistList: List<Playlist>,
         val playlist = playlistList[position]
 
         holder.titleView.text = playlist.name
-        holder.subtitleView.text = playlist.genre.toString()
+        holder.subtitleView.text = playlist.genre.toText()
     }
 
     override fun getItemCount(): Int = playlistList.size

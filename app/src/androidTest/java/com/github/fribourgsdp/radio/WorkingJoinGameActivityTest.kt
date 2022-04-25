@@ -19,6 +19,7 @@ import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
+import org.mockito.Mockito
 
 /**
  * Join Game Activity Tests with working database
@@ -30,12 +31,6 @@ import org.junit.runner.RunWith
 class WorkingJoinGameActivityTest {
     @get:Rule
     var gameSettingsActivityRule = ActivityScenarioRule(WorkingJoinGameActivity::class.java)
-
-    private val json = Json {
-        allowStructuredMapKeys = true
-    }
-
-    private val ctx: Context = ApplicationProvider.getApplicationContext()
 
     @Before
     fun initIntent() {
@@ -49,8 +44,8 @@ class WorkingJoinGameActivityTest {
 
     @Test
     fun intentWorksWithCorrectSettings() {
-        // Test values
-        val testUID = 567L
+        // Test values => this one cannot exist, so it won't look in the database
+        val testUID = 1001L
 
         val joinButton = Espresso.onView(ViewMatchers.withId(R.id.joinGameButton))
 
@@ -77,9 +72,9 @@ class WorkingJoinGameActivityTest {
             Matchers.allOf(
                 IntentMatchers.toPackage("com.github.fribourgsdp.radio"),
                 IntentMatchers.hasComponent(LobbyActivity::class.java.name),
-                IntentMatchers.hasExtra(GAME_HOST_KEY, json.encodeToString(LocalDatabase.EXPECTED_SETTINGS.host)),
+                IntentMatchers.hasExtra(GAME_HOST_NAME_KEY, LocalDatabase.EXPECTED_SETTINGS.hostName),
                 IntentMatchers.hasExtra(GAME_NAME_KEY, LocalDatabase.EXPECTED_SETTINGS.name),
-                IntentMatchers.hasExtra(GAME_PLAYLIST_KEY, json.encodeToString(LocalDatabase.EXPECTED_SETTINGS.playlist)),
+                IntentMatchers.hasExtra(GAME_PLAYLIST_NAME_KEY,LocalDatabase.EXPECTED_SETTINGS.playlistName),
                 IntentMatchers.hasExtra(GAME_NB_ROUNDS_KEY, LocalDatabase.EXPECTED_SETTINGS.nbRounds),
                 IntentMatchers.hasExtra(GAME_HINT_KEY, LocalDatabase.EXPECTED_SETTINGS.withHint),
                 IntentMatchers.hasExtra(GAME_PRIVACY_KEY, LocalDatabase.EXPECTED_SETTINGS.isPrivate),

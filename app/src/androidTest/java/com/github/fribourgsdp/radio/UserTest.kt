@@ -3,8 +3,7 @@ package com.github.fribourgsdp.radio
 import android.content.Context
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.ext.junit.runners.AndroidJUnit4
-import junit.framework.Assert.assertEquals
-import org.junit.Assert
+import org.junit.Assert.*
 import org.junit.Test
 import org.junit.runner.RunWith
 
@@ -16,35 +15,35 @@ class UserTest {
     fun constructorTest(){
         val string = "test"
         val user = User(string)
-        Assert.assertEquals(string, user.name)
-        Assert.assertEquals(true, user.getPlaylists().isEmpty())
-        Assert.assertEquals(false, user.linkedSpotify)
-        Assert.assertEquals(string[0], user.initial)
+        assertEquals(string, user.name)
+        assertTrue(user.getPlaylists().isEmpty())
+        assertFalse(user.linkedSpotify)
+        assertEquals(string[0], user.initial)
     }
 
     @Test(expected = IllegalArgumentException::class)
     fun constructorWithNoNameThrowsIAE(){
         val string = ""
         val user = User(string)
-        Assert.assertEquals(string[0], user.initial)
+        assertEquals(string[0], user.initial)
     }
 
     @Test(expected = IllegalArgumentException::class)
     fun constructorWithBlankNameThrowsIAE(){
         val string = " "
         val user = User(string)
-        Assert.assertEquals(string[0], user.initial)
+        assertEquals(string[0], user.initial)
     }
 
     @Test
     fun addPlaylistWorksAsExpected(){
         val string = "test"
         val user = User(string)
-        Assert.assertEquals(true, user.getPlaylists().isEmpty())
+        assertTrue(user.getPlaylists().isEmpty())
         val playlist = Playlist("test", Genre.ROCK)
         user.addPlaylist(playlist)
-        Assert.assertEquals(1, user.getPlaylists().size)
-        Assert.assertEquals(true, user.getPlaylists().contains(playlist))
+        assertEquals(1, user.getPlaylists().size)
+        assertTrue(user.getPlaylists().contains(playlist))
     }
 
     @Test
@@ -53,22 +52,22 @@ class UserTest {
         val user = User(string)
         val playlist = Playlist("test", Genre.ROCK)
         user.addPlaylist(playlist)
-        Assert.assertEquals(1, user.getPlaylists().size)
+        assertEquals(1, user.getPlaylists().size)
         user.removePlaylist(playlist)
-        Assert.assertEquals(true, user.getPlaylists().isEmpty())
+        assertTrue(user.getPlaylists().isEmpty())
     }
 
     @Test
     fun addPlaylistsWorksAsExpected(){
         val string = "test"
         val user = User(string)
-        Assert.assertEquals(true, user.getPlaylists().isEmpty())
+        assertTrue(user.getPlaylists().isEmpty())
         val playlist1 = Playlist("test", Genre.ROCK)
         val playlist2 = Playlist("test2", Genre.ROCK)
         user.addPlaylists(setOf(playlist1,playlist2))
-        Assert.assertEquals(2, user.getPlaylists().size)
-        Assert.assertEquals(true, user.getPlaylists().contains(playlist1))
-        Assert.assertEquals(true, user.getPlaylists().contains(playlist2))
+        assertEquals(2, user.getPlaylists().size)
+        assertTrue(user.getPlaylists().contains(playlist1))
+        assertTrue(user.getPlaylists().contains(playlist2))
     }
 
     @Test
@@ -80,11 +79,11 @@ class UserTest {
         val playlist2 = Playlist("test2", Genre.ROCK)
         val playlist3 = Playlist("test3", Genre.ROCK)
         user.addPlaylists(setOf(playlist1,playlist2, playlist3))
-        Assert.assertEquals(3, user.getPlaylists().size)
+        assertEquals(3, user.getPlaylists().size)
         user.removePlaylists(setOf(playlist1, playlist2))
-        Assert.assertEquals(1, user.getPlaylists().size)
-        Assert.assertEquals(false, user.getPlaylists().contains(playlist1))
-        Assert.assertEquals(false, user.getPlaylists().contains(playlist2))
+        assertEquals(1, user.getPlaylists().size)
+        assertFalse(user.getPlaylists().contains(playlist1))
+        assertFalse(user.getPlaylists().contains(playlist2))
     }
 
     @Test
@@ -97,10 +96,10 @@ class UserTest {
         val playlist2 = Playlist("test2", Genre.ROCK)
         val playlist3 = Playlist("test3", Genre.ROCK)
         user.addPlaylists(setOf(playlist1,playlist2, playlist3))
-        Assert.assertEquals(3, user.getPlaylists().size)
+        assertEquals(3, user.getPlaylists().size)
         user.save(ctx)
         val newUser = User.load(ctx)
-        Assert.assertEquals(3, newUser.getPlaylists().size)
+        assertEquals(3, newUser.getPlaylists().size)
     }
 
     @Test
@@ -123,5 +122,27 @@ class UserTest {
     @Test
     fun getSpotifyPlaylistUidWhenNonExistent(){
         assertEquals(null, User("testUser", 0).getSpotifyPlaylistUId("none"))
+    }
+
+    @Test
+    fun getPlaylistWithNameWorks(){
+        val user = User("user", 0)
+        val playlistName = "test2"
+        val playlist1 = Playlist("test", Genre.ROCK)
+        val playlist2 = Playlist(playlistName, Genre.ROCK)
+        val playlist3 = Playlist("test3", Genre.ROCK)
+        user.addPlaylists(setOf(playlist1,playlist2, playlist3))
+        assertEquals(playlist2, user.getPlaylistWithName(playlistName))
+    }
+
+    @Test(expected = NoSuchElementException::class)
+    fun getNonExistingPlaylistWithNameThrowsException(){
+        val user = User("user", 0)
+        val playlistName = "test2"
+        val playlist1 = Playlist("test", Genre.ROCK)
+        val playlist2 = Playlist(playlistName, Genre.ROCK)
+        val playlist3 = Playlist("test3", Genre.ROCK)
+        user.addPlaylists(setOf(playlist1,playlist2, playlist3))
+        user.getPlaylistWithName("doesNotExist")
     }
 }
