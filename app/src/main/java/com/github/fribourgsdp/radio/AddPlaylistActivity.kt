@@ -115,10 +115,35 @@ class AddPlaylistActivity : AppCompatActivity() {
         }
     }
 
+    private fun allFieldsEmpty(): Boolean {
+        if (findViewById<EditText>(R.id.newPlaylistName).text.toString().isNotBlank()){
+            return false
+        }
+        if (genreSpinner.selectedItem.toString() != Genre.values()[0].toString()){
+            return false
+        }
+        if (findViewById<EditText>(R.id.addSongToPlaylistSongName).text.toString().isNotBlank()){
+            return false
+        }
+        if (findViewById<EditText>(R.id.addSongToPlaylistArtistName).text.toString().isNotBlank()){
+            return false
+        }
+        if (listSongs.isNotEmpty()){
+            return false
+        }
+        return true
+    }
+
     override fun onBackPressed() {
-        super.onBackPressed()
-        val intent = Intent(this, com.google.firebase.firestore.auth.User::class.java)
-        startActivity(intent)
-        finish()
+        if (allFieldsEmpty()){
+            super.onBackPressed()
+            val intent = Intent(this, UserProfileActivity::class.java)
+            startActivity(intent)
+            finish()
+        }
+        else {
+            val warningDialog = QuitAddPlaylistDialog(this)
+            warningDialog.show(supportFragmentManager, "warningForQuittingAddPlaylist")
+        }
     }
 }

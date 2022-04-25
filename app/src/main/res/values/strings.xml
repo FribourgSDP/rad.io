@@ -74,5 +74,8 @@
     <string name="wait_for_pick_format">Waiting on %s to pick a song</string>
     <string name="congrats">Congratulations!</string>
     <string name="micPermissionError">The microphone permissions could not be updated.</string>
+    <string name="warningMessageQuitAddPlaylist">Are you sure you want to return to the main menu? All unsaved changes will be discarded.</string>
+    <string name="validateMessageQuitAddPlaylist">Delete and return to main menu</string>
+    <string name="cancelMessageQuitAddPlaylist">Continue editing my playlist</string>
 </resources>
 
