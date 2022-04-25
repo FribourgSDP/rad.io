@@ -1,5 +1,6 @@
 package com.github.fribourgsdp.radio
 
+import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
 import android.view.KeyEvent

@@ -116,4 +116,8 @@ class BuggyDatabase : Database {
         TODO("Not yet implemented")
     }
 
+    override fun removePlayerFromGame(gameID: Long, user: User): Task<Void> {
+        TODO("Not yet implemented")
+    }
+
 }

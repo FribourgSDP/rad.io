@@ -154,4 +154,6 @@ interface Database {
     fun disableGame(id: Long): Task<Void>
 
     fun disableLobby(gameID: Long): Task<Void>
+
+    fun removePlayerFromGame(gameID: Long, user: User): Task<Void>
 }

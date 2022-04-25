@@ -343,6 +343,29 @@ class FirestoreDatabase(var refMake: FirestoreRef) : Database {
         }
     }
 
+    override fun removePlayerFromGame(gameID: Long, user: User): Task<Void> {
+        val docRef = db.collection("games_metadata").document(gameID.toString())
+
+        return db.runTransaction { transaction ->
+            val snapshot = transaction.get(docRef)
+
+            if (!snapshot.exists()) {
+                throw IllegalArgumentException("Document $gameID not found.")
+            }
+
+            val playerDoneMap = snapshot.get("player_done_map")!! as HashMap<String, Boolean>
+            val playerFoundMap = snapshot.get("player_found_map")!! as HashMap<String, Boolean>
+            playerDoneMap.remove(user.id)
+            playerFoundMap.remove(user.id)
+
+            transaction.update(docRef, "player_done_map", playerDoneMap)
+            transaction.update(docRef, "player_found_map", playerFoundMap)
+
+            // Success
+            null
+        }
+    }
+
     override fun modifyUserMicPermissions(id: Long, user: User, newPermissions: Boolean): Task<Void> {
         val docRef = db.collection("lobby").document(id.toString())
 
