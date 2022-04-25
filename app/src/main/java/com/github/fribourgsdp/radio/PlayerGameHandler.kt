@@ -1,5 +1,6 @@
 package com.github.fribourgsdp.radio
 
+import android.content.Intent
 import com.google.firebase.firestore.DocumentSnapshot
 
 class PlayerGameHandler(
@@ -18,8 +19,9 @@ class PlayerGameHandler(
 
     override fun handleSnapshot(snapshot: DocumentSnapshot?) {
         if (snapshot != null && snapshot.exists()) {
+            val gameStillValid = snapshot.get("validity") as Boolean
             val scores = snapshot.get("scores") as HashMap<String, Long>
-            if (snapshot.getBoolean("finished")!!) {
+            if (snapshot.getBoolean("finished")!! || !gameStillValid) {
                 view.gameOver(scores)
                 return
             }
@@ -88,6 +90,7 @@ class PlayerGameHandler(
                 view.displayError("An error occurred")
             }
     }
+
 
 
 }

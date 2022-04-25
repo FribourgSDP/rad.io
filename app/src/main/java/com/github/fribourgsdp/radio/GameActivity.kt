@@ -149,6 +149,12 @@ open class GameActivity : AppCompatActivity(), GameView {
         startActivity(intent)
     }
 
+    override fun returnToMainMenu() {
+        val intent = Intent(this, MainActivity::class.java)
+        startActivity(intent)
+        finish()
+    }
+
     private fun initViews() {
         currentRoundTextView = findViewById(R.id.currentRoundView)
         singerTextView = findViewById(R.id.singerTextView)
@@ -184,5 +190,10 @@ open class GameActivity : AppCompatActivity(), GameView {
         voiceChannel.setAudioProfile(Constants.AUDIO_PROFILE_MUSIC_STANDARD, Constants.AUDIO_SCENARIO_CHATROOM_ENTERTAINMENT);
         voiceChannel.enableAudioVolumeIndication(200,3,true)
         voiceChannel.joinChannel(voiceChannel.getToken(userId, gameUid.toString()), gameUid.toString(), "", userId)
+    }
+
+    override fun onBackPressed() {
+        val warningDisplay = QuitGameOrLobbyDialog(this, isHost, true, user, playerGameHandler.database, playerGameHandler.gameID)
+        warningDisplay.show(supportFragmentManager, "warningForQuittingLobby")
     }
 }

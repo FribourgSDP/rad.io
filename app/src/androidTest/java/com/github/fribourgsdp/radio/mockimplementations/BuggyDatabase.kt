@@ -112,4 +112,8 @@ class BuggyDatabase : Database {
         TODO("Not yet implemented")
     }
 
+    override fun disableLobby(gameID: Long): Task<Void> {
+        TODO("Not yet implemented")
+    }
+
 }

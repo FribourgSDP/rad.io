@@ -72,4 +72,7 @@ interface GameView {
          */
         fun onPick(song: String)
     }
+
+
+    fun returnToMainMenu()
 }

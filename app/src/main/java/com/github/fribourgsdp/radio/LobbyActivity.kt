@@ -238,6 +238,10 @@ open class LobbyActivity : AppCompatActivity(){
             }
 
             if (snapshot != null && snapshot.exists()) {
+                val gameStillValid = snapshot.get("validity")!! as Boolean
+                if (!gameStillValid) {
+                    goToMainActivity()
+                }
                 val newMap = snapshot.get("players")!! as HashMap<String, String>
 
                 val isGameLaunched = snapshot.getBoolean("launched")
@@ -326,6 +330,12 @@ open class LobbyActivity : AppCompatActivity(){
     override fun onBackPressed() {
         val warningDisplay = QuitGameOrLobbyDialog(this, isHost, false, user, db, gameLobbyId)
         warningDisplay.show(supportFragmentManager, "warningForQuittingLobby")
+    }
+
+    private fun goToMainActivity(){
+        val intent = Intent(this, MainActivity::class.java)
+        startActivity(intent)
+        finish()
     }
 
 }

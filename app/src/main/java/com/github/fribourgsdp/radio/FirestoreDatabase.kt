@@ -310,7 +310,7 @@ class FirestoreDatabase(var refMake: FirestoreRef) : Database {
     }
 
     override fun disableGame(id: Long): Task<Void> {
-        val docRef = db.collection("lobby").document(id.toString())
+        val docRef = db.collection("games").document(id.toString())
 
         return db.runTransaction { transaction ->
             val snapshot = transaction.get(docRef)
@@ -319,6 +319,22 @@ class FirestoreDatabase(var refMake: FirestoreRef) : Database {
                 throw IllegalArgumentException("Document $id not found.")
             }
 
+            transaction.update(docRef, "validity", false)
+
+            // Success
+            null
+        }
+    }
+
+    override fun disableLobby(gameID: Long): Task<Void> {
+        val docRef = db.collection("lobby").document(gameID.toString())
+
+        return db.runTransaction { transaction ->
+            val snapshot = transaction.get(docRef)
+
+            if (!snapshot.exists()) {
+                throw IllegalArgumentException("Document $gameID not found.")
+            }
 
             transaction.update(docRef, "validity", false)
 
@@ -356,7 +372,8 @@ class FirestoreDatabase(var refMake: FirestoreRef) : Database {
                     "current_song" to "",
                     "singer" to "",
                     "song_choices" to ArrayList<String>(),
-                    "scores" to HashMap<String, Int>()
+                    "scores" to HashMap<String, Int>(),
+                    "validity" to true
                 )
             )
     }
