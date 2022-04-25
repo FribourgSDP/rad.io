@@ -19,7 +19,7 @@ class PlayerGameHandler(
 
     override fun handleSnapshot(snapshot: DocumentSnapshot?) {
         if (snapshot != null && snapshot.exists()) {
-            val gameStillValid = snapshot.get("validity") as Boolean
+            val gameStillValid = snapshot.getBoolean("validity")!!
             val scores = snapshot.get("scores") as HashMap<String, Long>
             if (snapshot.getBoolean("finished")!! || !gameStillValid) {
                 view.gameOver(scores)

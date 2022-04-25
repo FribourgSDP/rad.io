@@ -33,6 +33,7 @@ class PlayerGameHandlerTest {
         `when`(mockSnapshot.getString("current_song")).thenReturn(null)
         `when`(mockSnapshot.get("scores")).thenReturn(scores)
         `when`(mockSnapshot.getBoolean("finished")).thenReturn(false)
+        `when`(mockSnapshot.getBoolean("validity")).thenReturn(true)
     }
 
     @Test
