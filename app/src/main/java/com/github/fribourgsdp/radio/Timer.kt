@@ -4,13 +4,13 @@ import java.util.Timer as JavaTimer
 
 class Timer(private val period: Long) {
 
-    constructor(deadline: Date, currentTimeInMillis: () -> Long): this(currentTimeInMillis() - deadline.time)
+    constructor(deadline: Date, currentTimeInMillis: () -> Long): this((currentTimeInMillis() - deadline.time) * 1000)
     constructor(deadline: Date): this(deadline, System::currentTimeMillis)
 
     var isRunning = false
         private set
 
-    var currentTimeInMillis = period
+    var currentTimeInSeconds = period
         private set
 
     private val scheduler = JavaTimer()
@@ -25,14 +25,14 @@ class Timer(private val period: Long) {
 
     init {
         // Decrement the time every millisecond
-        scheduler.scheduleAtFixedRate(updateTimeTask, 0L, 1L)
+        scheduler.scheduleAtFixedRate(updateTimeTask, 0L, 1000L)
     }
 
     fun start(delay: Long = 0L) {
         isRunning = true
 
         // Schedule the done time to the end of the period
-        scheduler.schedule(doneTask, delay, period)
+        scheduler.schedule(doneTask, delay * 1000, period)
     }
 
     fun stop() {
@@ -44,7 +44,7 @@ class Timer(private val period: Long) {
         isRunning = true
 
         // Schedule the done time to the remaining of time
-        scheduler.schedule(doneTask, delay, currentTimeInMillis)
+        scheduler.schedule(doneTask, delay * 1000, currentTimeInSeconds)
     }
 
     fun setOnDoneListener(listener: OnTimerDoneListener) {
@@ -61,13 +61,13 @@ class Timer(private val period: Long) {
     }
 
     interface OnTimerUpdateListener {
-        fun onUpdate(timeInMillis: Long)
+        fun onUpdate(timeInSeconds: Long)
     }
 
     private inner class UpdateTimeTask: TimerTask() {
         override fun run() {
             if (isRunning) {
-                currentTimeInMillis -= 1
+                currentTimeInSeconds -= 1
             }
         }
     }
@@ -83,7 +83,7 @@ class Timer(private val period: Long) {
     private inner class UpdateTask: TimerTask() {
         override fun run() {
             if (isRunning) {
-                updateListener?.onUpdate(currentTimeInMillis)
+                updateListener?.onUpdate(currentTimeInSeconds)
             }
         }
     }
