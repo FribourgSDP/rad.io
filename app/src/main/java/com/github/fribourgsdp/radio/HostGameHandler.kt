@@ -66,6 +66,7 @@ class HostGameHandler(private val game: Game, private val view: GameView, db: Da
             "finished" to done,
             "current_round" to game.currentRound,
             "current_song" to FieldValue.delete(),
+            "round_deadline" to FieldValue.delete(),
             "singer" to nextUser,
             "song_choices" to nextChoices,
             "scores" to game.getAllScores()

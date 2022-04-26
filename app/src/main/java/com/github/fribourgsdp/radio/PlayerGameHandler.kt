@@ -42,8 +42,11 @@ class PlayerGameHandler(
 
             } else {
                 if (songToGuess != null) {
+                    val deadline = snapshot.getTimestamp("round_deadline")!!
+
                     // The singer picked a song so the player can guess
-                    view.displayGuessInput()
+                    view.displayGuessInput(deadline.toDate())
+
                 } else {
                     // The singer is till picking, so the player waits
                     view.displayWaitOnSinger(singerName)
