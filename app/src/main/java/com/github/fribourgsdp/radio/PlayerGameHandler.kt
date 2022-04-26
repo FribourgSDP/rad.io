@@ -42,6 +42,7 @@ class PlayerGameHandler(
                 if (songToGuess == null) {
                     val choices = snapshot.get("song_choices")!! as ArrayList<String>
                     view.chooseSong(choices, this)
+                    db.makeSingerDone(gameID, singerName)
                 }
 
             } else {

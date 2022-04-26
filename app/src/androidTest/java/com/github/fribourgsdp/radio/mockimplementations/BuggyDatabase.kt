@@ -120,4 +120,8 @@ class BuggyDatabase : Database {
         TODO("Not yet implemented")
     }
 
+    override fun makeSingerDone(gameID: Long, singerName: String): Task<Void> {
+        TODO("Not yet implemented")
+    }
+
 }

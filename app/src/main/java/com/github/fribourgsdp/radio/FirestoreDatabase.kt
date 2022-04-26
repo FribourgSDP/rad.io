@@ -366,6 +366,26 @@ class FirestoreDatabase(var refMake: FirestoreRef) : Database {
         }
     }
 
+    override fun makeSingerDone(gameID: Long, singerId: String): Task<Void> {
+        val docRef = db.collection("game_metadata").document(gameID.toString())
+
+        return db.runTransaction { transaction ->
+            val snapshot = transaction.get(docRef)
+
+            if (!snapshot.exists()) {
+                throw IllegalArgumentException("Document $gameID not found.")
+            }
+
+            val playerDoneMap = snapshot.get("player_done_map")!! as HashMap<String, Boolean>
+            playerDoneMap[singerId] = true
+
+            transaction.update(docRef, "player_done_map", playerDoneMap)
+
+            // Success
+            null
+        }
+    }
+
     override fun modifyUserMicPermissions(id: Long, user: User, newPermissions: Boolean): Task<Void> {
         val docRef = db.collection("lobby").document(id.toString())
 
@@ -484,7 +504,7 @@ class FirestoreDatabase(var refMake: FirestoreRef) : Database {
 
             // reset done map
             val updatedDoneMap = snapshot.get("player_done_map")!! as HashMap<String, Boolean>
-            updatedDoneMap.replaceAll { k, _ -> k == singer}
+            updatedDoneMap.replaceAll { _, _ -> false}
 
             // reset found map
             val updatedFoundMap = snapshot.get("player_found_map")!! as HashMap<String, Boolean>
