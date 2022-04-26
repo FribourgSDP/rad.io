@@ -15,6 +15,11 @@ class HostGameHandler(private val game: Game, private val view: GameView, db: Da
             // Check that all values are 'true' => does not contains 'false'
             val allDone = !doneMap.containsValue(false)
 
+            //Check if only the host is left
+            if (doneMap.size <= 1) {
+                view.gameOver(game.getAllScores())
+            }
+
             if (allDone) {
                 // when everybody is done, add the points
                 val scoresOfRound = snapshot.get("scores_of_round")!! as HashMap<String, Long>
