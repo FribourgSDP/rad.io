@@ -309,7 +309,6 @@ class FirestoreDatabase(var refMake: FirestoreRef) : Database {
                 hashMapOf(
                     "finished" to false,
                     "current_round" to 0L,
-                    "current_song" to "",
                     "singer" to "",
                     "song_choices" to ArrayList<String>(),
                     "scores" to HashMap<String, Int>()
