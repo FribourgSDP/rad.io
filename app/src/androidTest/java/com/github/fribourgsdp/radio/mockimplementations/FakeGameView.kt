@@ -2,6 +2,8 @@ package com.github.fribourgsdp.radio.mockimplementations
 
 import android.view.View
 import com.github.fribourgsdp.radio.GameView
+import java.util.*
+import kotlin.collections.HashMap
 
 class FakeGameView(private val playerID: String = ""): GameView {
 
@@ -38,7 +40,7 @@ class FakeGameView(private val playerID: String = ""): GameView {
         songVisibility = View.VISIBLE
     }
 
-    override fun displayGuessInput() {
+    override fun displayGuessInput(deadline: Date?) {
         songVisibility = View.GONE
         guessInputVisibility = View.VISIBLE
     }
