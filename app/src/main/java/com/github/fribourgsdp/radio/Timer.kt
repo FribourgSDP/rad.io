@@ -2,15 +2,17 @@ package com.github.fribourgsdp.radio
 import java.util.*
 import java.util.Timer as JavaTimer
 
-class Timer(private val period: Long) {
-
+class Timer(time: Long = 0L) {
     constructor(deadline: Date, currentTimeInMillis: () -> Long): this((currentTimeInMillis() - deadline.time) * 1000)
     constructor(deadline: Date): this(deadline, System::currentTimeMillis)
 
     var isRunning = false
         private set
 
-    var currentTimeInSeconds = period
+    var currentTimeInSeconds = time
+        private set
+
+    var time = time
         private set
 
     private val scheduler = JavaTimer()
@@ -32,7 +34,7 @@ class Timer(private val period: Long) {
         isRunning = true
 
         // Schedule the done time to the end of the period
-        scheduler.schedule(doneTask, delay * 1000, period)
+        scheduler.schedule(doneTask, delay * 1000, time)
     }
 
     fun stop() {
@@ -54,6 +56,18 @@ class Timer(private val period: Long) {
     fun setOnUpdateListener(listener: OnTimerUpdateListener, refreshRate: Long) {
         updateListener = listener
         scheduler.scheduleAtFixedRate(updateTask, 0L, refreshRate)
+    }
+
+    fun setTime(time: Long) {
+        this.time = time
+    }
+
+    fun setTime(deadline: Date, currentTimeInMillis: () -> Long) {
+        setTime((currentTimeInMillis() - deadline.time) * 1000)
+    }
+
+    fun setTime(deadline: Date) {
+        setTime(deadline, System::currentTimeMillis)
     }
 
     interface OnTimerDoneListener {
