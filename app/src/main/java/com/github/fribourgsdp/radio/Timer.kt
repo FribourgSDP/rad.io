@@ -2,16 +2,37 @@ package com.github.fribourgsdp.radio
 import java.util.*
 import java.util.Timer as JavaTimer
 
+/**
+ * An instance of a timer that runs for the given [time].
+ */
 class Timer(time: Long = 0L) {
+
+    /**
+     * An instance of a timer that runs until the given [deadline].
+     * To know what is the current time, we can give a function [currentTimeInMillis] that returns a [Long].
+     */
     constructor(deadline: Date, currentTimeInMillis: () -> Long): this((currentTimeInMillis() - deadline.time) * 1000)
+
+    /**
+     * An instance of a timer that runs until the given [deadline].
+     */
     constructor(deadline: Date): this(deadline, System::currentTimeMillis)
 
+    /**
+     * Whether the timer is running or not
+     */
     var isRunning = false
         private set
 
+    /**
+     * The current time of the timer in seconds
+     */
     var currentTimeInSeconds = time
         private set
 
+    /**
+     * The total time of the timer in seconds
+     */
     var time = time
         private set
 
@@ -30,6 +51,10 @@ class Timer(time: Long = 0L) {
         scheduler.scheduleAtFixedRate(updateTimeTask, 0L, 1000L)
     }
 
+    /**
+     * Starts the timer
+     * @param delay an optional delay to the start of the timer. By default: 0
+     */
     fun start(delay: Long = 0L) {
         isRunning = true
 
@@ -37,16 +62,12 @@ class Timer(time: Long = 0L) {
         scheduler.schedule(doneTask, delay * 1000, time)
     }
 
+    /**
+     * Stops the timer
+     */
     fun stop() {
         isRunning = false
         doneTask.cancel()
-    }
-
-    fun resume(delay: Long = 0L) {
-        isRunning = true
-
-        // Schedule the done time to the remaining of time
-        scheduler.schedule(doneTask, delay * 1000, currentTimeInSeconds)
     }
 
     fun setOnDoneListener(listener: OnTimerDoneListener) {
