@@ -441,7 +441,7 @@ class FirestoreDatabase(var refMake: FirestoreRef) : Database {
 
     companion object {
         // Here it's 45 seconds in milliseconds
-        private const val ROUND_TIME_IN_MILLIS = 45_000L
+        private const val ROUND_TIME_IN_MILLIS = 120_000L
     }
 
 
