@@ -5,10 +5,7 @@ import android.os.Bundle
 import android.view.KeyEvent
 import android.view.View
 import android.view.inputmethod.EditorInfo
-import android.widget.Button
-import android.widget.EditText
-import android.widget.ImageButton
-import android.widget.TextView
+import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -16,11 +13,14 @@ import io.agora.rtc.Constants
 import io.agora.rtc.RtcEngine
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.json.Json
+import java.util.*
+import kotlin.collections.ArrayList
+import kotlin.collections.HashMap
 import kotlin.math.absoluteValue
 
 const val SCORES_KEY = "com.github.fribourgsdp.radio.SCORES"
 
-open class GameActivity : AppCompatActivity(), GameView {
+open class GameActivity : AppCompatActivity(), GameView, Timer.OnTimerDoneListener, Timer.OnTimerUpdateListener {
     private lateinit var user: User
     private var isHost: Boolean = false
 
@@ -31,6 +31,8 @@ open class GameActivity : AppCompatActivity(), GameView {
     private lateinit var songGuessEditText : EditText
     private lateinit var muteButton : ImageButton
     private lateinit var songGuessSubmitButton: Button
+    private lateinit var roundProgressBar: ProgressBar
+    private val timer = Timer()
 
     private lateinit var scoresRecyclerView: RecyclerView
     private val scoresAdapter = ScoresAdapter()
@@ -98,7 +100,12 @@ open class GameActivity : AppCompatActivity(), GameView {
         }
     }
 
-    override fun displayGuessInput() {
+    override fun displayGuessInput(deadline: Date?) {
+        deadline?.let {
+            timer.setTime(it)
+            startTimer()
+        }
+
         // Hide the song view
         songTextView.visibility = View.GONE
 
@@ -173,6 +180,11 @@ open class GameActivity : AppCompatActivity(), GameView {
         muteButton.setOnClickListener {
             voiceChannel.mute(muteButton)
         }
+
+        roundProgressBar = findViewById(R.id.roundProgressBar)
+
+        timer.setOnDoneListener(this)
+        timer.setOnUpdateListener(this, 500L)
     }
 
     protected open fun initVoiceChat(gameUid: Long) {
@@ -183,5 +195,29 @@ open class GameActivity : AppCompatActivity(), GameView {
         voiceChannel.setAudioProfile(Constants.AUDIO_PROFILE_MUSIC_STANDARD, Constants.AUDIO_SCENARIO_CHATROOM_ENTERTAINMENT);
         voiceChannel.enableAudioVolumeIndication(200,3,true)
         voiceChannel.joinChannel(voiceChannel.getToken(userId, gameUid.toString()), gameUid.toString(), "", userId)
+    }
+
+    private fun startTimer(delay: Long = 0L) {
+        roundProgressBar.max = timer.time.toInt()
+        roundProgressBar.progress = 0
+        roundProgressBar.visibility = View.VISIBLE
+        timer.start(delay)
+    }
+
+    private fun stopTimer() {
+        roundProgressBar.max = timer.time.toInt()
+        roundProgressBar.progress = 0
+        roundProgressBar.visibility = View.INVISIBLE
+        timer.stop()
+    }
+
+    override fun onDone() {
+        // When the timer is done it means the user didn't guess in time
+        // We display this in the same box as the sound so that is hides the guess input view
+        displaySong(getString(R.string.round_done))
+    }
+
+    override fun onUpdate(timeInSeconds: Long) {
+        roundProgressBar.setProgress(timeInSeconds.toInt(), true)
     }
 }
