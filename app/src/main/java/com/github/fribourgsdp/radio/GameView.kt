@@ -1,5 +1,7 @@
 package com.github.fribourgsdp.radio
 
+import java.util.*
+
 interface GameView {
     /**
      * Make the user of the view pick a song from the given [choices].
@@ -28,8 +30,9 @@ interface GameView {
 
     /**
      * Update the view to display the input text view to guess a song.
+     * @param deadline an optional parameter that gives a deadline to the guess
      */
-    fun displayGuessInput()
+    fun displayGuessInput(deadline: Date? = null)
 
     /**
      * Display an error on the view.
