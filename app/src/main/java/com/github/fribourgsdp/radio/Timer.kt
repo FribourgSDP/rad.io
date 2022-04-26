@@ -11,7 +11,7 @@ class Timer(time: Long = 0L) {
      * An instance of a timer that runs until the given [deadline].
      * To know what is the current time, we can give a function [currentTimeInMillis], that returns a [Long].
      */
-    constructor(deadline: Date, currentTimeInMillis: () -> Long): this((currentTimeInMillis() - deadline.time) * 1000)
+    constructor(deadline: Date, currentTimeInMillis: () -> Long): this((deadline.time - currentTimeInMillis()) * 1000)
 
     /**
      * An instance of a timer that runs until the given [deadline].
