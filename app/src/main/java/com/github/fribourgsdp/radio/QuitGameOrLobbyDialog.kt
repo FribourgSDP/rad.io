@@ -59,6 +59,8 @@ class QuitGameOrLobbyDialog(val ctx: Context, private val isHost: Boolean, priva
         if (isFromGameActivity) {
             db.removePlayerFromGame(gameID, user)
         }
+        val intent = Intent(ctx, MainActivity::class.java)
+        startActivity(intent)
         getActivity(ctx)?.finish()
     }
 
