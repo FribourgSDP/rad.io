@@ -18,6 +18,7 @@ class HostGameHandler(private val game: Game, private val view: GameView, db: Da
             //Check if only the host is left
             if (doneMap.size <= 1) {
                 view.gameOver(game.getAllScores())
+                return
             }
 
             if (allDone) {
