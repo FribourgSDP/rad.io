@@ -69,14 +69,7 @@ class Timer(time: Long = 0L) {
         isRunning = false
         doneTask.cancel()
     }
-
-    fun resume(delay: Long = 0L) {
-        isRunning = true
-
-        // Schedule the done time to the remaining of time
-        scheduler.schedule(doneTask, delay * 1000, currentTimeInSeconds)
-    }
-
+    
     /**
      * Set the [listener] to handle when the timer is done.
      */
