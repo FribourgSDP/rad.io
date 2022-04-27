@@ -1,9 +1,6 @@
 package com.github.fribourgsdp.radio
 
-import android.util.Log
-import com.google.android.gms.tasks.Task
 import com.google.firebase.firestore.DocumentSnapshot
-import com.google.firebase.firestore.ktx.getField
 
 class PlayerGameHandler(
     private val gameID: Long,
@@ -18,7 +15,6 @@ class PlayerGameHandler(
     }
 
     override fun handleSnapshot(snapshot: DocumentSnapshot?) {
-        Log.println(Log.ASSERT, "*", "HANDLE SNAPSHOT Player")
         if (snapshot != null && snapshot.exists()) {
             val scores = snapshot.get("scores") as HashMap<String, Long>
             if (snapshot.getBoolean("finished")!!) {
@@ -38,22 +34,8 @@ class PlayerGameHandler(
             // It's not null when there is one.
             songToGuess = snapshot.getString("current_song")
 
-            if (view.checkPlayer(singerName)) {
-                if (songToGuess == null) {
-                    chooseSong(snapshot)
-                } else{
-                    displayLyrics(snapshot)
-                }
-            } else {
-                if (songToGuess != null) {
-                    // The singer picked a song so the player can guess
-                    view.displayGuessInput()
+            updateViewForPlayer(snapshot, singerName)
 
-                } else {
-                    // The singer is till picking, so the player waits
-                    view.displayWaitOnSinger(singerName)
-                }
-            }
         } else {
             view.displayError("An error occurred")
         }
@@ -99,6 +81,25 @@ class PlayerGameHandler(
     private fun chooseSong(snapshot: DocumentSnapshot){
         val choices = snapshot.get("song_choices")!! as ArrayList<String>
         view.chooseSong(choices, this)
+    }
+
+    private fun updateViewForPlayer(snapshot: DocumentSnapshot, singerName : String){
+        if (view.checkPlayer(singerName)) {
+            if (songToGuess == null) {
+                chooseSong(snapshot)
+            } else{
+                displayLyrics(snapshot)
+            }
+        } else {
+            if (songToGuess != null) {
+                // The singer picked a song so the player can guess
+                view.displayGuessInput()
+
+            } else {
+                // The singer is till picking, so the player waits
+                view.displayWaitOnSinger(singerName)
+            }
+        }
     }
 
 
