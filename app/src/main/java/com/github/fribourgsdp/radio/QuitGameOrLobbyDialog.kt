@@ -45,7 +45,7 @@ class QuitGameOrLobbyDialog(val ctx: Context, private val isHost: Boolean, priva
 
     private fun quitGameForHost() {
         db.disableGame(gameID)
-        getActivity(ctx)?.finish()
+        activity?.finish()
     }
 
     private fun quitLobbyForHost() {
@@ -59,23 +59,6 @@ class QuitGameOrLobbyDialog(val ctx: Context, private val isHost: Boolean, priva
         if (isFromGameActivity) {
             db.removePlayerFromGame(gameID, user)
         }
-        val intent = Intent(ctx, MainActivity::class.java)
-        intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
-        startActivity(intent)
-        getActivity(ctx)?.finish()
+        activity?.finish()
     }
-
-    private fun getActivity(context: Context?): Activity? {
-        if (context == null) {
-            return null
-        } else if (context is ContextWrapper) {
-            return if (context is Activity) {
-                context as Activity?
-            } else {
-                getActivity((context as ContextWrapper).baseContext)
-            }
-        }
-        return null
-    }
-
 }
