@@ -5,6 +5,8 @@ import com.github.fribourgsdp.radio.GameView
 
 class FakeGameView(private val playerID: String = ""): GameView {
 
+    var flag = false
+
     var singer = ""
     var round = 0L
 
@@ -69,7 +71,7 @@ class FakeGameView(private val playerID: String = ""): GameView {
     }
 
     override fun displayLyrics(lyrics: String) {
-
+        flag = true
     }
 
 }

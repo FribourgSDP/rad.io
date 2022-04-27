@@ -208,6 +208,18 @@ class GameActivityTest {
     }
 
     @Test
+    fun testDisplayLyrics(){
+        val testIntent = Intent(ctx, GameActivity::class.java)
+        ActivityScenario.launch<GameActivity>(testIntent).use { scenario ->
+            scenario.onActivity {
+                it.displayLyrics("Lorem ipsum, dolor sit amet")
+            }
+            onView(withId(R.id.showLyricsButton)).check(matches(isDisplayed()))
+
+        }
+    }
+
+    @Test
     fun goToEndGameActivityOnGameOver() {
         val scores = hashMapOf(
             "singer0" to 85L,

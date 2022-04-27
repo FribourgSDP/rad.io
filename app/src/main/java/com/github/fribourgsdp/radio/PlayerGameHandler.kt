@@ -1,5 +1,6 @@
 package com.github.fribourgsdp.radio
 
+import android.util.Log
 import com.google.firebase.firestore.DocumentSnapshot
 
 class PlayerGameHandler(
