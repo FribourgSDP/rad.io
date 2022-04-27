@@ -2,6 +2,7 @@ package com.github.fribourgsdp.radio
 
 import android.util.Log
 import okhttp3.*
+import org.json.JSONArray
 import java.io.IOException
 import java.util.*
 import java.util.concurrent.CompletableFuture
@@ -124,10 +125,14 @@ object MusixmatchLyricsGetter : LyricsGetter {
                 if(parsedResponse == null){
                     future.completeExceptionally(Exception("Error parsing response"))
                 }
-                val trackList = parsedResponse
-                    ?.getJSONObject("message")
-                    ?.getJSONObject("body")
-                    ?.getJSONArray("track_list")
+                val trackList = try {
+                    parsedResponse
+                        ?.getJSONObject("message")
+                        ?.getJSONObject("body")
+                        ?.getJSONArray("track_list")
+                } catch (e : Exception){
+                    JSONArray()
+                }
                 if(trackList?.length() == 0){
                     future.completeExceptionally(LyricsNotFoundException())
                 } else {
