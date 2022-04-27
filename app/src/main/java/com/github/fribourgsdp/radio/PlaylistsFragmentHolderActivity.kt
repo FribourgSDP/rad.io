@@ -3,7 +3,7 @@ package com.github.fribourgsdp.radio
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 
-class PlaylistsFragmentHolderActivity : AppCompatActivity() {
+class PlaylistsFragmentHolderActivity : MyAppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_playlists_fragment_holder)
