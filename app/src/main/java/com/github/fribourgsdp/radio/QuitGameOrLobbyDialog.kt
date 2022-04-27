@@ -9,7 +9,9 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
+import androidx.core.os.bundleOf
 import androidx.fragment.app.DialogFragment
+import androidx.fragment.app.setFragmentResult
 
 
 class QuitGameOrLobbyDialog(val ctx: Context, private val isHost: Boolean, private val isFromGameActivity: Boolean, private val user: User, private val db: Database, private val gameID: Long): DialogFragment() {
@@ -25,46 +27,14 @@ class QuitGameOrLobbyDialog(val ctx: Context, private val isHost: Boolean, priva
         // Add the buttons of the view to the list
         buttons.add(rootView.findViewById(R.id.cancelQuitGameOrLobby))
         buttons[0].setOnClickListener {
+            setFragmentResult("quitRequest", bundleOf("hasQuit" to false))
             dismiss()
         }
         buttons.add(rootView.findViewById(R.id.validateQuitGameOrLobby))
         buttons[1].setOnClickListener {
-            if (isHost && isFromGameActivity) {
-                quitGameForHost()
-            }
-            else if (isHost && !isFromGameActivity) {
-                quitLobbyForHost()
-            }
-            else {
-                quitGameOrLobbyForNonHost()
-            }
+            setFragmentResult("quitRequest", bundleOf("hasQuit" to true))
+            dismiss()
         }
         return rootView
-    }
-
-    private fun quitGameForHost() {
-        dismiss()
-        db.disableGame(gameID)
-        val intent = Intent(ctx, MainActivity::class.java)
-        startActivity(intent)
-        activity?.finish()
-    }
-
-    private fun quitLobbyForHost() {
-        dismiss()
-        db.disableLobby(gameID)
-        val intent = Intent(ctx, MainActivity::class.java)
-        startActivity(intent)
-    }
-
-    private fun quitGameOrLobbyForNonHost() {
-        dismiss()
-        db.removeUserFromLobby(gameID, user)
-        if (isFromGameActivity) {
-            db.removePlayerFromGame(gameID, user)
-        }
-        val intent = Intent(ctx, MainActivity::class.java)
-        startActivity(intent)
-        activity?.finish()
     }
 }

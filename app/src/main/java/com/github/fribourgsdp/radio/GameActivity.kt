@@ -150,10 +150,19 @@ open class GameActivity : AppCompatActivity(), GameView {
         startActivity(intent)
     }
 
-    override fun returnToMainMenu() {
+    private fun returnToMainMenu() {
+
+        if (isHost) {
+            playerGameHandler.database.disableGame(playerGameHandler.gameID)
+        }
+        else {
+            playerGameHandler.database.removeUserFromLobby(playerGameHandler.gameID, user)
+            playerGameHandler.database.removePlayerFromGame(playerGameHandler.gameID, user)
+        }
         val intent = Intent(this, MainActivity::class.java)
         startActivity(intent)
         finish()
+
     }
 
     private fun initViews() {
@@ -196,5 +205,12 @@ open class GameActivity : AppCompatActivity(), GameView {
     override fun onBackPressed() {
         val warningDisplay = QuitGameOrLobbyDialog(this, isHost, true, user, playerGameHandler.database, playerGameHandler.gameID)
         warningDisplay.show(supportFragmentManager, "warningForQuittingLobby")
+        supportFragmentManager
+            .setFragmentResultListener("quitRequest", this) { _, bundle ->
+                val hasQuit = bundle.getBoolean("hasQuit")
+                if (hasQuit) {
+                    returnToMainMenu()
+                }
+            }
     }
 }

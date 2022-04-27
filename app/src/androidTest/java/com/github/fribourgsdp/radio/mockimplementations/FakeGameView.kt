@@ -67,9 +67,6 @@ class FakeGameView(private val playerID: String = ""): GameView {
     override fun gameOver(finalScores: Map<String, Long>) {
         gameOver = true
     }
-
-    override fun returnToMainMenu() {
-        TODO("Not yet implemented")
-    }
+    
 
 }
