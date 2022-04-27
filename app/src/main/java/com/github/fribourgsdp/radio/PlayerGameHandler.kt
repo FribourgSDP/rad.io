@@ -40,16 +40,10 @@ class PlayerGameHandler(
 
             if (view.checkPlayer(singerName)) {
                 if (songToGuess == null) {
-                    val choices = snapshot.get("song_choices")!! as ArrayList<String>
-                    view.chooseSong(choices, this)
+                    chooseSong(snapshot)
                 } else{
-                    Log.println(Log.ASSERT, "*", "Trying to display lyrics")
-                    val lyricsHashMap =
-                        snapshot.get("song_choices_lyrics")!! as Map<String, String>
-                    val lyrics = lyricsHashMap[songToGuess!!]
-                    view.displayLyrics(lyrics!!)
+                    displayLyrics(snapshot)
                 }
-
             } else {
                 if (songToGuess != null) {
                     // The singer picked a song so the player can guess
@@ -59,10 +53,7 @@ class PlayerGameHandler(
                     // The singer is till picking, so the player waits
                     view.displayWaitOnSinger(singerName)
                 }
-
-
             }
-
         } else {
             view.displayError("An error occurred")
         }
@@ -96,6 +87,18 @@ class PlayerGameHandler(
             .addOnFailureListener {
                 view.displayError("An error occurred")
             }
+    }
+
+    private fun displayLyrics(snapshot: DocumentSnapshot){
+        val lyricsHashMap =
+            snapshot.get("song_choices_lyrics")!! as Map<String, String>
+        val lyrics = lyricsHashMap[songToGuess!!]
+        view.displayLyrics(lyrics!!)
+    }
+
+    private fun chooseSong(snapshot: DocumentSnapshot){
+        val choices = snapshot.get("song_choices")!! as ArrayList<String>
+        view.chooseSong(choices, this)
     }
 
 
