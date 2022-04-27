@@ -12,11 +12,11 @@ fun DocumentSnapshot.getPlayerFoundMap() : HashMap<String, Boolean>{
     return this.getAndCast("player_found_map")
 }
 fun DocumentSnapshot.getPlayerDoneMap() : HashMap<String, Boolean>{
-    return this.getAndCast("player_found_map")
+    return this.getAndCast("player_done_map")
 }
 fun DocumentSnapshot.getPlayers() : HashMap<String, String>{
-    return this.getAndCast("player_found_map")
+    return this.getAndCast("players")
 }
 fun <T> DocumentSnapshot.getScoresOfRound() : HashMap<String, T>{
-    return this.getAndCast("player_found_map")
+    return this.getAndCast("scores_of_round")
 }
