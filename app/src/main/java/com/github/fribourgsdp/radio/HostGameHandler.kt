@@ -11,18 +11,18 @@ class HostGameHandler(private val game: Game, private val view: GameView, db: Da
     override fun handleSnapshot(snapshot: DocumentSnapshot?) {
         Log.println(Log.ASSERT, "*", "HANDLE SNAPSHOT Host")
         if (snapshot != null && snapshot.exists()) {
-            val doneMap = snapshot.getAndCast<HashMap<String, Boolean>>("player_done_map")
+            val doneMap = snapshot.getPlayerDoneMap()
 
             // Check that all values are 'true' => does not contains 'false'
             val allDone = !doneMap.containsValue(false)
 
             if (allDone) {
                 // when everybody is done, add the points
-                val scoresOfRound = snapshot.getAndCast<HashMap<String, Long>>("scores_of_round")
+                val scoresOfRound = snapshot.getScoresOfRound<Long>()
                 game.addPoints(scoresOfRound)
 
                 // then update the points of the singer
-                val playerFoundMap = snapshot.getAndCast<HashMap<String, Boolean>>("player_found_map")
+                val playerFoundMap = snapshot.getPlayerFoundMap()
 
                 // Count the number of players that found the answer
                 // We then multiply by the number of points the singer gets

@@ -238,11 +238,11 @@ open class LobbyActivity : MyAppCompatActivity(){
             }
 
             if (snapshot != null && snapshot.exists()) {
-                val newMap = snapshot.getAndCast<HashMap<String, String>>("players")
+                val newMap = snapshot.getPlayers()
 
                 val isGameLaunched = snapshot.getBoolean("launched")
 
-                val mapIdToPermissions = snapshot.getAndCast<HashMap<String, Boolean>>("permissions")
+                val mapIdToPermissions = snapshot.getPermissions()
                 val atLeastOnePermissionMissing = mapIdToPermissions.containsValue(false)
                 launchGameButton.isEnabled = !atLeastOnePermissionMissing
 
