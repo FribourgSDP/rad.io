@@ -51,7 +51,7 @@ class GameActivityTest {
         val testIntent = Intent(ctx, MockGameActivity::class.java)
         ActivityScenario.launch<MockGameActivity>(testIntent).use { _ ->
             Espresso.pressBack()
-            Espresso.onView(withId(R.id.cancelQuitGameOrLobby))
+            onView(withId(R.id.cancelQuitGameOrLobby))
                 .perform(ViewActions.click())
         }
     }

@@ -49,7 +49,23 @@ class WorkingLobbyActivityTest {
 
     @Test
     fun pressingOnBackThenCancelStaysInLobby(){
-        Intent(ctx, WorkingLobbyActivity::class.java).apply {
+        // Test values
+        val testName = "Hello World!"
+        val testPlaylist = Playlist("Rap Playlist")
+        val testNbRounds = 20
+        val withHint = true
+        val private = true
+
+        val testIntent = Intent(ctx, WorkingLobbyActivity::class.java).apply {
+            putExtra(GAME_NAME_KEY, testName)
+            putExtra(GAME_PLAYLIST_KEY, Json.encodeToString(testPlaylist))
+            putExtra(GAME_NB_ROUNDS_KEY, testNbRounds)
+            putExtra(GAME_HINT_KEY, withHint)
+            putExtra(GAME_PRIVACY_KEY, private)
+            putExtra(GAME_IS_HOST_KEY, true)
+        }
+
+        ActivityScenario.launch<WorkingLobbyActivity>(testIntent).use{
             Espresso.pressBack()
             Espresso.onView(withId(R.id.cancelQuitGameOrLobby))
                 .perform(ViewActions.click())
@@ -58,7 +74,8 @@ class WorkingLobbyActivityTest {
 
     @Test
     fun pressingOnBackThenContinueGoesToMain() {
-        Intent(ctx, WorkingLobbyActivity::class.java).apply {
+        val testIntent = Intent(ctx, WorkingLobbyActivity::class.java)
+        ActivityScenario.launch<WorkingLobbyActivity>(testIntent).use{
             Espresso.pressBack()
             Espresso.onView(withId(R.id.validateQuitGameOrLobby))
                 .perform(ViewActions.click())

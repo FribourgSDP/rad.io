@@ -113,20 +113,16 @@ class LocalDatabase : Database {
     }
 
     override fun removeUserFromLobby(id: Long, user: User): Task<Void> {
-        TODO("Not yet implemented")
-    }
+        return Tasks.forResult(null)    }
 
     override fun disableGame(id: Long): Task<Void> {
-        TODO("Not yet implemented")
-    }
+        return Tasks.forResult(null)    }
 
     override fun disableLobby(gameID: Long): Task<Void> {
-        TODO("Not yet implemented")
-    }
+        return Tasks.forResult(null)    }
 
     override fun removePlayerFromGame(gameID: Long, user: User): Task<Void> {
-        TODO("Not yet implemented")
-    }
+        return Tasks.forResult(null)    }
 
     override fun makeSingerDone(gameID: Long, singerName: String): Task<Void> {
         TODO("Not yet implemented")
