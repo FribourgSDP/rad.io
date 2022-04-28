@@ -10,14 +10,16 @@ import org.junit.Test
 
 class SavePlaylistOnlinePickerDialogTest {
 
-    @Test
-    fun SaveOnlineReturnTrueInListener(){
-        var picked = false
-        val testListener = object: SavePlaylistOnlinePickerDialog.OnPickListener{
-            override fun onPick(online: Boolean){
-                picked = online
-            }
+    private var picked = false
+    private val testListener = object: SavePlaylistOnlinePickerDialog.OnPickListener{
+        override fun onPick(online: Boolean){
+            picked = online
         }
+    }
+
+    @Test
+    fun saveOnlineReturnTrueInListener(){
+        picked = false
         with(launchFragment (
             themeResId = R.style.Theme_Radio,
             instantiate = { SavePlaylistOnlinePickerDialog(testListener)}
@@ -25,18 +27,11 @@ class SavePlaylistOnlinePickerDialogTest {
             onView(withId(R.id.saveOnlinePlaylistYes)).perform(ViewActions.click())
             assertTrue(picked)
         }
-
-
     }
 
     @Test
     fun notSaveOnlineReturnFalseInListener(){
-        var picked = true
-        val testListener = object: SavePlaylistOnlinePickerDialog.OnPickListener{
-            override fun onPick(online: Boolean){
-                picked = online
-            }
-        }
+        picked = true
         with(launchFragment (
             themeResId = R.style.Theme_Radio,
             instantiate = { SavePlaylistOnlinePickerDialog(testListener)}
@@ -44,8 +39,6 @@ class SavePlaylistOnlinePickerDialogTest {
             onView(withId(R.id.saveOnlinePlaylistNo)).perform(ViewActions.click())
             assertFalse(picked)
         }
-
-
     }
 
 
