@@ -3,11 +3,13 @@ package com.github.fribourgsdp.radio
 import android.view.View
 import com.github.fribourgsdp.radio.mockimplementations.FakeGameView
 import com.google.android.gms.tasks.Tasks
+import com.google.firebase.Timestamp
 import com.google.firebase.firestore.DocumentSnapshot
 import org.junit.Assert.*
 import org.junit.Before
 import org.junit.Test
 import org.mockito.Mockito.*
+import java.util.*
 
 
 class PlayerGameHandlerTest {
@@ -22,6 +24,7 @@ class PlayerGameHandlerTest {
         "singer0" to 100L,
         "singer1" to 85L
     )
+    private val deadline = Date(1998_000L)
 
     @Before
     fun setup() {
@@ -33,6 +36,7 @@ class PlayerGameHandlerTest {
         `when`(mockSnapshot.getString("current_song")).thenReturn(null)
         `when`(mockSnapshot.get("scores")).thenReturn(scores)
         `when`(mockSnapshot.getBoolean("finished")).thenReturn(false)
+        `when`(mockSnapshot.getTimestamp("round_deadline")).thenReturn(Timestamp(deadline))
     }
 
     @Test
