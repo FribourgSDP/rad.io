@@ -39,18 +39,9 @@ class Timer(time: Long? = null) {
 
     private val scheduler = JavaTimer()
 
-    private val updateTimeTask = UpdateTimeTask()
-
-    private val doneTask = DoneTask()
     private var doneListener: OnTimerDoneListener? = null
-
-    private val updateTask = UpdateTask()
     private var updateListener: OnTimerUpdateListener? = null
-
-    init {
-        // Decrement the time every millisecond
-        scheduler.schedule(updateTimeTask, 0L, 1000L)
-    }
+    private var updateListenerRefreshRate = 0L
 
     /**
      * Starts the timer
@@ -60,7 +51,19 @@ class Timer(time: Long? = null) {
         Log.d("Start Timer", "${this.time}")
 
         // Schedule the done time to the end of the period
-        time?.let { scheduler.schedule(doneTask, it * 1000) }
+        time?.let {
+            scheduler.apply {
+                schedule(DoneTask(), it * 1000)
+
+                // Decrement the time every millisecond
+                schedule(UpdateTimeTask(), 0L, 1000L)
+
+                // if there was an update listener -> reschedule it
+                updateListener?.let {
+                    schedule(UpdateTask(), 0L, updateListenerRefreshRate)
+                }
+            }
+        }
     }
 
     /**
@@ -68,8 +71,10 @@ class Timer(time: Long? = null) {
      */
     fun stop() {
         isRunning = false
-        doneTask.cancel()
-        scheduler.purge()
+        scheduler.apply {
+            cancel()
+            purge()
+        }
     }
     
     /**
@@ -84,7 +89,7 @@ class Timer(time: Long? = null) {
      */
     fun setOnUpdateListener(listener: OnTimerUpdateListener, refreshRate: Long) {
         updateListener = listener
-        scheduler.schedule(updateTask, 0L, refreshRate)
+        updateListenerRefreshRate = refreshRate
     }
 
     /**
@@ -100,6 +105,7 @@ class Timer(time: Long? = null) {
      */
     fun setTime(time: Long) {
         this.time = time
+        this.currentTimeInSeconds = time
         Log.d("Timer", "${this.time}")
     }
 
@@ -171,15 +177,15 @@ class Timer(time: Long? = null) {
 
     private inner class DoneTask: TimerTask() {
         override fun run() {
-            isRunning = false
-            updateTimeTask.cancel()
             doneListener?.onDone()
+            stop()
         }
     }
 
     private inner class UpdateTask: TimerTask() {
         override fun run() {
             if (isRunning) {
+                Log.d("\tCurrent Timer Update", "$currentTimeInSeconds")
                 currentTimeInSeconds?.let { updateListener?.onUpdate(it) }
             }
         }
