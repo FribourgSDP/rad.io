@@ -376,11 +376,11 @@ class FirestoreDatabase(var refMake: FirestoreRef) : Database {
             updatedFoundMap[playerID] = hasFound
 
 
-            // Count the number of players that found the answer and compute the points
-            val points = Game.computeScore(
+            // Count the number of players that found the answer and compute the points if the player found
+            val points = if (hasFound) Game.computeScore(
                 // The position of the player:
                 updatedFoundMap.count { (_, hasFound) -> hasFound }
-            )
+            ) else 0
 
             val updatedScoreMap = snapshot.get("scores_of_round")!! as HashMap<String, Int>
             updatedScoreMap[playerID] = points
@@ -441,7 +441,7 @@ class FirestoreDatabase(var refMake: FirestoreRef) : Database {
 
     companion object {
         // Here it's 45 seconds in milliseconds
-        private const val ROUND_TIME_IN_MILLIS = 120000L
+        private const val ROUND_TIME_IN_MILLIS = 10_000L
     }
 
 
