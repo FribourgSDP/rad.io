@@ -145,26 +145,33 @@ internal class PlaylistTest {
     @Test
     fun transformOnlineWorks(){
         val songSet = mutableSetOf<Song>(song1,song2,song3,song4)
-        val mockDB = Mockito.mock(FirestoreDatabase::class.java)
+        val mockDB = mock(Database::class.java)
         `when`(mockDB.generateSongIds(anyInt())).thenReturn(Tasks.forResult(Pair(0,songSet.size.toLong())))
         `when`(mockDB.generatePlaylistId()).thenReturn(Tasks.forResult(0))
         val playlist = Playlist("Test",songSet,Genre.NONE)
+        playlist.db = mockDB
         Tasks.await(playlist.transformToOnline())
         assertEquals("0",playlist.id)
-        val songs = playlist.getSongs()
-        assertEquals("0",song1.id)
-        assertEquals("1",song2.id)
-        assertEquals("2",song3.id)
-        assertEquals("3",song4.id)
+        val songs = playlist.getSongs().toList()
+        assertEquals("0",songs[0].id)
+        assertEquals("1",songs[1].id)
+        assertEquals("2",songs[2].id)
+        assertEquals("3",songs[3].id)
     }
+
+    private fun <T> any(): T {
+        Mockito.any<T>()
+        return uninitialized()
+    }
+    private fun <T> uninitialized(): T = null as T
 
     @Test
     fun saveOnlineWorks(){
         val songSet = mutableSetOf<Song>(song1,song2,song3,song4)
-        val mockDB = Mockito.mock(FirestoreDatabase::class.java)
+        val mockDB = mock(Database::class.java)
         `when`(mockDB.generateSongIds(anyInt())).thenReturn(Tasks.forResult(Pair(0,songSet.size.toLong())))
         `when`(mockDB.generatePlaylistId()).thenReturn(Tasks.forResult(0))
-        `when`(mockDB.registerSong(any())).thenReturn(Tasks.forResult(null))
+        `when`(mockDB.registerSong(any<Song>())).thenReturn(Tasks.forResult(null))
         `when`(mockDB.registerPlaylist(any())).thenReturn(Tasks.forResult(null))
 
 
