@@ -19,7 +19,7 @@ import io.agora.rtc.Constants
 
 const val MAX_SERVER_CONNECT_TENTATIVES = 5
 
-class VoiceOverIPActivity : AppCompatActivity() {
+class VoiceOverIPActivity : MyAppCompatActivity() {
 
     private val APP_ID = "971046257e964b73bafc7f9458fa9996"
     private val CHANNEL = "test44"

@@ -20,7 +20,7 @@ import com.google.firebase.auth.GoogleAuthProvider
 import java.lang.Exception
 
 
-class GoogleSignInActivity : AppCompatActivity() {
+class GoogleSignInActivity : MyAppCompatActivity() {
 
 
     //view binding

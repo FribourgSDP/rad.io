@@ -3,9 +3,11 @@ package com.github.fribourgsdp.radio
 
 import android.content.Context
 import android.content.Intent
+import android.util.Log
 import androidx.test.core.app.ActivityScenario
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.espresso.Espresso.onView
+import androidx.test.espresso.action.ViewActions
 import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.intent.Intents
 import androidx.test.espresso.intent.matcher.IntentMatchers
@@ -19,6 +21,7 @@ import kotlinx.serialization.json.Json
 import org.hamcrest.Matchers.allOf
 import org.hamcrest.Matchers.not
 import org.junit.After
+import org.junit.Assert.assertTrue
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -204,6 +207,21 @@ class GameActivityTest {
                     atPosition(2, R.id.nameScoreTextView, withText("singer1")),
                     atPosition(2, R.id.scoreTextView, withText("70"))
                 )))
+        }
+    }
+
+    @Test
+    fun testDisplayLyrics(){
+        val testIntent = Intent(ctx, GameActivity::class.java)
+        ActivityScenario.launch<GameActivity>(testIntent).use { scenario ->
+            scenario.onActivity {
+                it.displayLyrics("Lorem ipsum, dolor sit amet")
+//                assertTrue(it.supportFragmentManager.fragments.any{f -> f.tag == "lyricsPopup"})
+            }
+            onView(withId(R.id.close_popup_button)).perform(ViewActions.click())
+            Thread.sleep(1)
+            onView(withId(R.id.showLyricsButton)).check(matches(isDisplayed()))
+
         }
     }
 
