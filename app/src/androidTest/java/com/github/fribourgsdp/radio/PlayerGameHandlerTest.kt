@@ -79,7 +79,7 @@ class PlayerGameHandlerTest {
     }
 
     @Test
-    fun test(){
+    fun callDisplayLyricsOnSnapshot(){
         val view = FakeGameView("")
         val handler = PlayerGameHandler(0, view)
         handler.handleSnapshot(mockSnapshot2)
