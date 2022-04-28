@@ -45,7 +45,8 @@ class PlayerGameHandler(
                     val deadline = snapshot.getTimestamp("round_deadline")!!
 
                     // The singer picked a song so the player can guess
-                    view.displayGuessInput(deadline.toDate())
+                    view.displayGuessInput()
+                    view.startTimer(deadline.toDate())
 
                 } else {
                     // The singer is till picking, so the player waits
@@ -70,6 +71,7 @@ class PlayerGameHandler(
             view.displayError("You're close!")
         } else {
             view.displaySong("You correctly guessed $guess")
+            view.stopTimer()
 
             // Hide the error if a wrong guess was made
             view.hideError()

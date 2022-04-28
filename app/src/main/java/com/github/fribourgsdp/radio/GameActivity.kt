@@ -14,13 +14,11 @@ import io.agora.rtc.RtcEngine
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.json.Json
 import java.util.*
-import kotlin.collections.ArrayList
-import kotlin.collections.HashMap
 import kotlin.math.absoluteValue
 
 const val SCORES_KEY = "com.github.fribourgsdp.radio.SCORES"
 
-open class GameActivity : AppCompatActivity(), GameView, Timer.OnTimerDoneListener, Timer.OnTimerUpdateListener {
+open class GameActivity : AppCompatActivity(), GameView, Timer.Listener {
     private lateinit var user: User
     private var isHost: Boolean = false
 
@@ -31,8 +29,7 @@ open class GameActivity : AppCompatActivity(), GameView, Timer.OnTimerDoneListen
     private lateinit var songGuessEditText : EditText
     private lateinit var muteButton : ImageButton
     private lateinit var songGuessSubmitButton: Button
-    private lateinit var roundProgressBar: ProgressBar
-    private val timer = Timer()
+    private lateinit var timerProgressBarHandler: TimerProgressBarHandler
 
     private lateinit var scoresRecyclerView: RecyclerView
     private val scoresAdapter = ScoresAdapter()
@@ -100,11 +97,7 @@ open class GameActivity : AppCompatActivity(), GameView, Timer.OnTimerDoneListen
         }
     }
 
-    override fun displayGuessInput(deadline: Date?) {
-        deadline?.let {
-            timer.setTime(it)
-            startTimer()
-        }
+    override fun displayGuessInput() {
 
         // Hide the song view
         songTextView.visibility = View.GONE
@@ -145,6 +138,14 @@ open class GameActivity : AppCompatActivity(), GameView, Timer.OnTimerDoneListen
         )
     }
 
+    override fun startTimer(deadline: Date, delay: Long) {
+        timerProgressBarHandler.startTimer(deadline, delay)
+    }
+
+    override fun stopTimer() {
+        timerProgressBarHandler.stopTimer()
+    }
+
     override fun gameOver(finalScores: Map<String, Long>) {
         val intent = Intent(this, EndGameActivity::class.java).apply {
             putExtra(SCORES_KEY,
@@ -181,10 +182,8 @@ open class GameActivity : AppCompatActivity(), GameView, Timer.OnTimerDoneListen
             voiceChannel.mute(muteButton)
         }
 
-        roundProgressBar = findViewById(R.id.roundProgressBar)
-
-        timer.setOnDoneListener(this)
-        timer.setOnUpdateListener(this, 500L)
+        // Init for the TimerProgressBarHolder
+        timerProgressBarHandler = TimerProgressBarHandler(Timer(), findViewById(R.id.roundProgressBar), this)
     }
 
     protected open fun initVoiceChat(gameUid: Long) {
@@ -197,27 +196,19 @@ open class GameActivity : AppCompatActivity(), GameView, Timer.OnTimerDoneListen
         voiceChannel.joinChannel(voiceChannel.getToken(userId, gameUid.toString()), gameUid.toString(), "", userId)
     }
 
-    private fun startTimer(delay: Long = 0L) {
-        roundProgressBar.max = timer.time.toInt()
-        roundProgressBar.progress = 0
-        roundProgressBar.visibility = View.VISIBLE
-        timer.start(delay)
-    }
-
-    private fun stopTimer() {
-        roundProgressBar.max = timer.time.toInt()
-        roundProgressBar.progress = 0
-        roundProgressBar.visibility = View.INVISIBLE
-        timer.stop()
-    }
-
     override fun onDone() {
-        // When the timer is done it means the user didn't guess in time
-        // We display this in the same box as the sound so that is hides the guess input view
-        displaySong(getString(R.string.round_done))
+        // Run on main thread
+        runOnUiThread {
+            // When the timer is done it means the user didn't guess in time
+            // We display this in the same box as the sound so that is hides the guess input view
+            displaySong(getString(R.string.round_done))
+        }
     }
 
     override fun onUpdate(timeInSeconds: Long) {
-        roundProgressBar.setProgress(timeInSeconds.toInt(), true)
+        // Run on main thread
+        runOnUiThread {
+            timerProgressBarHandler.progressBar.setProgress(timeInSeconds.toInt(), true)
+        }
     }
 }
