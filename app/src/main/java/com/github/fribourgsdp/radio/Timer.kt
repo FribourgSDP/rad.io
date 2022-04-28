@@ -37,7 +37,7 @@ class Timer(time: Long? = null) {
     var time = time
         private set
 
-    private val scheduler = JavaTimer()
+    private var scheduler = JavaTimer()
 
     private var doneListener: OnTimerDoneListener? = null
     private var updateListener: OnTimerUpdateListener? = null
@@ -75,6 +75,9 @@ class Timer(time: Long? = null) {
             cancel()
             purge()
         }
+
+        // since the scheduler was canceled -> rebuild it
+        scheduler = JavaTimer()
     }
     
     /**
