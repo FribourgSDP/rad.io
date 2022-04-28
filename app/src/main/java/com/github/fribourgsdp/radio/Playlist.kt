@@ -4,6 +4,7 @@ import android.content.ContentValues
 import android.util.Log
 import com.google.android.gms.tasks.Task
 import com.google.android.gms.tasks.Tasks
+import kotlinx.serialization.Contextual
 import kotlinx.serialization.Serializable
 
 @Serializable
@@ -21,6 +22,9 @@ import kotlinx.serialization.Serializable
 data class Playlist (override var name: String, var genre: Genre) : Nameable {
 
     private val songs: MutableSet<Song> = mutableSetOf()
+    @Contextual
+    var db : FirestoreDatabase = FirestoreDatabase()
+
     var id : String = ""
     var savedOnline = false
     var savedLocally = true
@@ -98,25 +102,25 @@ data class Playlist (override var name: String, var genre: Genre) : Nameable {
     }
 
     fun transformToOnline(): Task<Void> {
-        val songTask =  FirestoreDatabase().generateSongIds(songs.size).continueWith {songIdRange ->
+        val songTask =  db.generateSongIds(songs.size).continueWith {songIdRange ->
             for ((i, song) in songs.withIndex()) {
                 song.id = (songIdRange.result.first + i).toString()
             }
         }
-        val playlistId =  FirestoreDatabase().generatePlaylistId().addOnSuccessListener { l ->
+        val playlistId =  db.generatePlaylistId().addOnSuccessListener { l ->
             id = l.toString()
         }
         return Tasks.whenAll(songTask,playlistId)
     }
 
     fun saveOnline(): Task<Void>{
-        val db = FirestoreDatabase()
         for( song in songs){
             db.registerSong(song)
         }
         savedOnline = true
         return db.registerPlaylist(this)
     }
+
 
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
