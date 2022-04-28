@@ -15,12 +15,12 @@ class TimerProgressBarHandler(val timer: Timer, val progressBar: ProgressBar, ti
 
     init {
         timer.setListener(timerListener, 500L)
-        progressBar.max = timer.time.toInt()
+        timer.time?.let { progressBar.max = it.toInt() }
         progressBar.progress = 0
     }
 
     override fun startTimer(deadline: Date, delay: Long) {
-        progressBar.max = timer.time.toInt()
+        timer.time?.let { progressBar.max = it.toInt() }
         progressBar.progress = 0
         progressBar.visibility = View.VISIBLE
         timer.apply {
@@ -30,7 +30,7 @@ class TimerProgressBarHandler(val timer: Timer, val progressBar: ProgressBar, ti
     }
 
     override fun stopTimer() {
-        progressBar.max = timer.time.toInt()
+        timer.time?.let { progressBar.max = it.toInt() }
         progressBar.progress = 0
         progressBar.visibility = View.INVISIBLE
         timer.stop()
