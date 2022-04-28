@@ -37,6 +37,8 @@ open class GameActivity : AppCompatActivity(), GameView, Timer.Listener {
     private lateinit var mapIdToName: HashMap<String, String>
     protected lateinit var voiceChannel: VoiceIpEngineDecorator
 
+    private lateinit var playerGameHandler: PlayerGameHandler
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_game)
@@ -55,7 +57,8 @@ open class GameActivity : AppCompatActivity(), GameView, Timer.Listener {
             val hostGameHandler = HostGameHandler(game, this)
             hostGameHandler.linkToDatabase()
         }
-        val playerGameHandler = PlayerGameHandler(gameUid, this)
+
+        playerGameHandler = PlayerGameHandler(gameUid, this)
 
         // On submit make the player game handler handle the guess
         songGuessSubmitButton.setOnClickListener {
@@ -202,6 +205,7 @@ open class GameActivity : AppCompatActivity(), GameView, Timer.Listener {
             // When the timer is done it means the user didn't guess in time
             // We display this in the same box as the sound so that is hides the guess input view
             displaySong(getString(R.string.round_done))
+            playerGameHandler.handleGuess("", user.id, true)
         }
     }
 

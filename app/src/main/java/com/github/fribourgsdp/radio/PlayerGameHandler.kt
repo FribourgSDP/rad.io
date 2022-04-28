@@ -61,8 +61,20 @@ class PlayerGameHandler(
         }
     }
 
-    fun handleGuess(guess: String, userId: String) {
+    fun handleGuess(guess: String, userId: String, timeout: Boolean = false) {
         if (songToGuess == null) { return }
+
+        if (timeout) {
+            db.playerEndTurn(gameID, userId, false).addOnFailureListener {
+                view.displayError("An error occurred")
+            }
+
+            // Hide the error if a wrong guess was made
+            view.hideError()
+
+            // exit the handling when timeout
+            return
+        }
 
         val nbErrors = StringComparisons.compare(songToGuess!!, guess)
         if (nbErrors == NOT_THE_SAME) {
