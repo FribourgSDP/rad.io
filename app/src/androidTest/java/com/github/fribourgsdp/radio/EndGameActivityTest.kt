@@ -7,6 +7,7 @@ import androidx.test.core.app.ApplicationProvider
 import androidx.test.espresso.Espresso
 import androidx.test.espresso.assertion.ViewAssertions
 import androidx.test.espresso.intent.Intents
+import androidx.test.espresso.intent.matcher.IntentMatchers
 import androidx.test.espresso.matcher.ViewMatchers
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.github.fribourgsdp.radio.utils.CustomMatchers.Companion.atPosition
@@ -32,6 +33,19 @@ class EndGameActivityTest{
     @After
     fun releaseIntent() {
         Intents.release()
+    }
+
+    @Test
+    fun onBackPressedGoesToMainMenu() {
+        val intent = Intent(ctx, EndGameActivity::class.java)
+        ActivityScenario.launch<EndGameActivity>(intent).use{ _ ->
+            Espresso.pressBack()
+            Intents.intended(
+                Matchers.allOf(
+                    IntentMatchers.hasComponent(MainActivity::class.java.name)
+                )
+            )
+        }
     }
 
     @Test

@@ -5,8 +5,10 @@ import android.content.Intent
 import androidx.test.core.app.ActivityScenario
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.espresso.Espresso
+import androidx.test.espresso.action.ViewActions
 import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.intent.Intents
+import androidx.test.espresso.intent.matcher.IntentMatchers
 import androidx.test.espresso.matcher.ViewMatchers.*
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.github.fribourgsdp.radio.mockimplementations.LocalDatabase
@@ -14,6 +16,7 @@ import com.github.fribourgsdp.radio.mockimplementations.LyricsGettingWorkingLobb
 import com.github.fribourgsdp.radio.mockimplementations.WorkingLobbyActivity
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
+import org.hamcrest.Matchers
 import org.hamcrest.Matchers.not
 import org.junit.After
 import org.junit.Assert.assertTrue
@@ -42,6 +45,29 @@ class WorkingLobbyActivityTest {
     @After
     fun releaseIntent() {
         Intents.release()
+    }
+
+    @Test
+    fun pressingOnBackThenCancelStaysInLobby(){
+        Intent(ctx, WorkingLobbyActivity::class.java).apply {
+            Espresso.pressBack()
+            Espresso.onView(withId(R.id.cancelQuitGameOrLobby))
+                .perform(ViewActions.click())
+        }
+    }
+
+    @Test
+    fun pressingOnBackThenContinueGoesToMain() {
+        Intent(ctx, WorkingLobbyActivity::class.java).apply {
+            Espresso.pressBack()
+            Espresso.onView(withId(R.id.validateQuitGameOrLobby))
+                .perform(ViewActions.click())
+            Intents.intended(
+                Matchers.allOf(
+                    IntentMatchers.hasComponent(MainActivity::class.java.name)
+                )
+            )
+        }
     }
 
     @Test
