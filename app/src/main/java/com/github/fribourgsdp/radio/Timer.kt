@@ -69,6 +69,7 @@ class Timer(time: Long? = null) {
     fun stop() {
         isRunning = false
         doneTask.cancel()
+        scheduler.purge()
     }
     
     /**
