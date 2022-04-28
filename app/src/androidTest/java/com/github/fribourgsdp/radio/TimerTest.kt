@@ -66,19 +66,16 @@ class TimerTest {
         val timer = Timer(timerTimeInSeconds)
         var counter = 0L
 
-        // Set the update time to be slightly bigger thant one sec to correctly get the value
         timer.setOnUpdateListener(1_001L) {
             counter = it
         }
 
         timer.start()
 
-        for (i in 0 until timerTimeInSeconds) {
-            assertEquals(i, counter)
+        Thread.sleep(timerTimeInSeconds * 1000 + 1)
 
-            // Sleep a little more than the update refresh rate to correctly check
-            Thread.sleep(1_002L)
-        }
+        // Last value should be time - 1
+        assertEquals(timerTimeInSeconds - 1, counter)
     }
 
     @Test
