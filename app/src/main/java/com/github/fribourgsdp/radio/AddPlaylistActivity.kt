@@ -14,7 +14,7 @@ import androidx.recyclerview.widget.RecyclerView
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.json.Json
 
-class AddPlaylistActivity : AppCompatActivity() {
+class AddPlaylistActivity : MyAppCompatActivity() {
     private val listSongs = ArrayList<Song>()
     private var listNames = ArrayList<String>()
     private lateinit var listAdapter: SongAdapter

@@ -1,15 +1,12 @@
 package com.github.fribourgsdp.radio
 
 import android.app.Activity
+import android.app.Dialog
 import android.content.Intent
 import android.os.Bundle
-import android.view.KeyEvent
-import android.view.View
+import android.view.*
 import android.view.inputmethod.EditorInfo
-import android.widget.Button
-import android.widget.EditText
-import android.widget.ImageButton
-import android.widget.TextView
+import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -18,6 +15,7 @@ import io.agora.rtc.RtcEngine
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.json.Json
 import kotlin.math.absoluteValue
+
 
 const val SCORES_KEY = "com.github.fribourgsdp.radio.SCORES"
 
@@ -29,9 +27,11 @@ open class GameActivity : AppCompatActivity(), GameView {
     private lateinit var singerTextView : TextView
     private lateinit var songTextView : TextView
     private lateinit var errorOrFailureTextView : TextView
+    private lateinit var lyricsPopup : PopupWindow
     private lateinit var songGuessEditText : EditText
     private lateinit var muteButton : ImageButton
     private lateinit var songGuessSubmitButton: Button
+    private lateinit var showLyricsButton: Button
 
     private lateinit var scoresRecyclerView: RecyclerView
     private val scoresAdapter = ScoresAdapter()
@@ -93,6 +93,8 @@ open class GameActivity : AppCompatActivity(), GameView {
         songGuessEditText.visibility = View.GONE
         songGuessSubmitButton.visibility = View.GONE
 
+        showLyricsButton.visibility = View.VISIBLE
+
         // Show the song instead
         songTextView.apply {
             text = songName
@@ -103,6 +105,8 @@ open class GameActivity : AppCompatActivity(), GameView {
     override fun displayGuessInput() {
         // Hide the song view
         songTextView.visibility = View.GONE
+
+        showLyricsButton.visibility = View.GONE
 
         // Show the edit text and the submit button instead
         songGuessEditText.apply {
@@ -177,6 +181,7 @@ open class GameActivity : AppCompatActivity(), GameView {
 
         songGuessEditText = findViewById(R.id.songGuessEditText)
         songGuessSubmitButton = findViewById(R.id.songGuessSubmitButton)
+        showLyricsButton = findViewById(R.id.showLyricsButton)
 
         // trigger the submit button when the user presses "enter" in the text field
         songGuessEditText.setOnEditorActionListener { _: TextView?, actionId: Int, _: KeyEvent? ->
@@ -212,5 +217,12 @@ open class GameActivity : AppCompatActivity(), GameView {
                     returnToMainMenu()
                 }
             }
+    }
+}
+    override fun displayLyrics(lyrics : String) {
+        showLyricsButton.visibility = View.VISIBLE
+        showLyricsButton.setOnClickListener { displayLyrics(lyrics) }
+        val lyricsPopup = LyricsPopup(lyrics)
+        lyricsPopup.show(supportFragmentManager, "lyricsPopup")
     }
 }

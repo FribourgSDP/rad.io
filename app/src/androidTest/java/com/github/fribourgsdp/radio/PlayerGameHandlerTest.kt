@@ -34,6 +34,7 @@ class PlayerGameHandlerTest {
         `when`(mockSnapshot.get("scores")).thenReturn(scores)
         `when`(mockSnapshot.getBoolean("finished")).thenReturn(false)
         `when`(mockSnapshot.getBoolean("validity")).thenReturn(true)
+
     }
 
     @Test
@@ -67,6 +68,23 @@ class PlayerGameHandlerTest {
         assertFalse(view.checkPlayer(singer))
         assertEquals(View.GONE, view.songVisibility)
         assertEquals(View.VISIBLE, view.guessInputVisibility)
+    }
+
+    @Test
+    fun callDisplayLyricsOnSnapshot(){
+        val view = FakeGameView("")
+        val handler = PlayerGameHandler(0, view)
+        val mockSnapshot2 = mock(DocumentSnapshot::class.java)
+        `when`(mockSnapshot2.getString("singer")).thenReturn("")
+        `when`(mockSnapshot2.exists()).thenReturn(true)
+        `when`(mockSnapshot2.getLong("current_round")).thenReturn(round)
+        `when`(mockSnapshot2.get("song_choices")).thenReturn(listOfSongs)
+        `when`(mockSnapshot2.get("song_choices_lyrics")).thenReturn(hashMapOf("Momentum" to "Lorem Ipsum"))
+        `when`(mockSnapshot2.getString("current_song")).thenReturn("Momentum")
+        `when`(mockSnapshot2.get("scores")).thenReturn(scores)
+        `when`(mockSnapshot2.getBoolean("finished")).thenReturn(false)
+        handler.handleSnapshot(mockSnapshot2)
+        assertEquals(view.flag, true)
     }
 
     @Test

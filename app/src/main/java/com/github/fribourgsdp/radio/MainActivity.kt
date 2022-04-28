@@ -13,7 +13,7 @@ import androidx.appcompat.app.AppCompatActivity
 
 import android.widget.ImageButton
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : MyAppCompatActivity() {
     private val db = FirestoreDatabase()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

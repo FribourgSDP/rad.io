@@ -21,7 +21,7 @@ const val GAME_HOST_NAME_KEY = "com.github.fribourgsdp.radio.GAME_HOST_NAME"
 const val GAME_PLAYLIST_NAME_KEY = "com.github.fribourgsdp.radio.GAME_PLAYLIST_NAME"
 
 
-open class JoinGameActivity : AppCompatActivity() {
+open class JoinGameActivity : MyAppCompatActivity() {
     private val db = this.initDatabase()
 
     private lateinit var idInput: EditText
