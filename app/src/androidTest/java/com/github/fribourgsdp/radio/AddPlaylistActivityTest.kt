@@ -102,11 +102,11 @@ class AddPlaylistActivityTest {
             .perform(ViewActions.click())
 
         //check that a popup has spawned and click on saveOffline
-        onView(ViewMatchers.withText("coucou")) // Look for the dialog => use its title
+        onView(ViewMatchers.withText(R.string.saveOnlineQuestionText)) // Look for the dialog => use its title
             .inRoot(RootMatchers.isDialog()) // check that it's indeed in a dialog
             .check(ViewAssertions.matches(ViewMatchers.isDisplayed()));
 
-        onView(withId(R.id.saveOfflinePlaylist))
+        onView(withId(R.id.saveOnlinePlaylistNo))
             .perform(ViewActions.click())
         Intents.intended(
             allOf(
