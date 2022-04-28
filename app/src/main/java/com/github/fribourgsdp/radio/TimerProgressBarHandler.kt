@@ -7,6 +7,8 @@ import java.util.*
 /**
  * An instance of a handler to link a [progress bar][ProgressBar] and a [timer][Timer] together.
  *
+ * NB: The parameter [timerListener][Timer.Listener] is responsible to update the [progress bar][progressBar]
+ *     since the update needs to be done on the main ui thread.
  *
  * @property timer the [timer] of the [handler][TimerProgressBarHandler].
  * @property progressBar the [progress bar][progressBar] of the [handler][TimerProgressBarHandler].
