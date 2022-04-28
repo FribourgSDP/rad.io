@@ -23,7 +23,7 @@ data class Playlist (override var name: String, var genre: Genre) : Nameable {
 
     private val songs: MutableSet<Song> = mutableSetOf()
     @Contextual
-    var db : FirestoreDatabase = FirestoreDatabase()
+    var db :Database= FirestoreDatabase()
 
     var id : String = ""
     var savedOnline = false
