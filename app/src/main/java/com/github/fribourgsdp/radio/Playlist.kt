@@ -19,7 +19,7 @@ import kotlinx.serialization.Serializable
  * @property genre genre of the playlist
  * @constructor creates a Playlist with the given name and genre
  */
-data class Playlist (override var name: String, var genre: Genre) : Nameable {
+ data class Playlist (override var name: String, var genre: Genre) : Nameable {
 
     private val songs: MutableSet<Song> = mutableSetOf()
 
