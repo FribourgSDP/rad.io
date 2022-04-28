@@ -1,5 +1,9 @@
 package com.github.fribourgsdp.radio
 
+import android.content.ContentValues
+import android.util.Log
+import com.google.android.gms.tasks.Task
+import com.google.android.gms.tasks.Tasks
 import kotlinx.serialization.Serializable
 
 @Serializable
@@ -18,6 +22,8 @@ data class Playlist (override var name: String, var genre: Genre) : Nameable {
 
     private val songs: MutableSet<Song> = mutableSetOf()
     var id : String = ""
+    var savedOnline = false
+    var savedLocally = true
     constructor(name: String, set: Set<Song>, genre: Genre) : this(name, genre) {
         this.addSongs(set)
     }
@@ -89,6 +95,27 @@ data class Playlist (override var name: String, var genre: Genre) : Nameable {
      */
     fun getSong(name: String): Song {
         return SetUtility.getNamedFromSet(songs, name)
+    }
+
+    fun transformToOnline(): Task<Void> {
+        val songTask =  FirestoreDatabase().generateSongIds(songs.size).continueWith {songIdRange ->
+            for ((i, song) in songs.withIndex()) {
+                song.id = (songIdRange.result.first + i).toString()
+            }
+        }
+        val playlistId =  FirestoreDatabase().generatePlaylistId().addOnSuccessListener { l ->
+            id = l.toString()
+        }
+        return Tasks.whenAll(songTask,playlistId)
+    }
+
+    fun saveOnline(): Task<Void>{
+        val db = FirestoreDatabase()
+        for( song in songs){
+            db.registerSong(song)
+        }
+        savedOnline = true
+        return db.registerPlaylist(this)
     }
 
     override fun equals(other: Any?): Boolean {
