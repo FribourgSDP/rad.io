@@ -54,14 +54,13 @@ class Timer(time: Long? = null) {
 
     /**
      * Starts the timer
-     * @param delay an optional delay to the start of the timer. By default: 0
      */
-    fun start(delay: Long = 0L) {
+    fun start() {
         isRunning = true
         Log.d("Start Timer", "${this.time}")
 
         // Schedule the done time to the end of the period
-        time?.let { scheduler.schedule(doneTask, delay * 1000, it) }
+        time?.let { scheduler.schedule(doneTask, it) }
     }
 
     /**
@@ -152,9 +151,8 @@ class Timer(time: Long? = null) {
         /**
          * Start a timer
          * @param deadline the deadline of the timer
-         * @param delay an optional delay to the start of the timer. By default: 0
          */
-        fun startTimer(deadline: Date, delay: Long = 0L)
+        fun startTimer(deadline: Date)
 
         /**
          * Stop a timer

@@ -19,13 +19,13 @@ class TimerProgressBarHandler(val timer: Timer, val progressBar: ProgressBar, ti
         progressBar.progress = 0
     }
 
-    override fun startTimer(deadline: Date, delay: Long) {
+    override fun startTimer(deadline: Date) {
         timer.time?.let { progressBar.max = it.toInt() }
         progressBar.progress = 0
         progressBar.visibility = View.VISIBLE
         timer.apply {
             setTime(deadline)
-            start(delay)
+            start()
         }
     }
 

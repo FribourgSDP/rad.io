@@ -138,8 +138,8 @@ open class GameActivity : AppCompatActivity(), GameView, Timer.Listener {
         )
     }
 
-    override fun startTimer(deadline: Date, delay: Long) {
-        timerProgressBarHandler.startTimer(deadline, delay)
+    override fun startTimer(deadline: Date) {
+        timerProgressBarHandler.startTimer(deadline)
     }
 
     override fun stopTimer() {
