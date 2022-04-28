@@ -411,7 +411,7 @@ class FirestoreDatabase(var refMake: FirestoreRef) : Database {
 
             // reset done map
             val updatedDoneMap = snapshot.get("player_done_map")!! as HashMap<String, Boolean>
-            updatedDoneMap.replaceAll { k, _ -> k == singer}
+            updatedDoneMap.replaceAll { _, _ -> false}
 
             // reset found map
             val updatedFoundMap = snapshot.get("player_found_map")!! as HashMap<String, Boolean>
