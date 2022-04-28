@@ -1,8 +1,11 @@
 package com.github.fribourgsdp.radio
 
+import com.google.android.gms.tasks.Tasks
 import org.junit.Test
 
 import org.junit.Assert.*
+import org.mockito.Mockito
+import org.mockito.Mockito.*
 
 internal class PlaylistTest {
 
@@ -136,5 +139,41 @@ internal class PlaylistTest {
         val testerSet = mutableSetOf(song1, song2, song3, song4)
         val playlist = Playlist("First", testerSet, Genre.POP)
         assertEquals(song1, playlist.getSong("unknown"))
+    }
+
+
+    @Test
+    fun transformOnlineWorks(){
+        val songSet = mutableSetOf<Song>(song1,song2,song3,song4)
+        val mockDB = Mockito.mock(FirestoreDatabase::class.java)
+        `when`(mockDB.generateSongIds(anyInt())).thenReturn(Tasks.forResult(Pair(0,songSet.size.toLong())))
+        `when`(mockDB.generatePlaylistId()).thenReturn(Tasks.forResult(0))
+        val playlist = Playlist("Test",songSet,Genre.NONE)
+        Tasks.await(playlist.transformToOnline())
+        assertEquals("0",playlist.id)
+        val songs = playlist.getSongs()
+        assertEquals("0",song1.id)
+        assertEquals("1",song2.id)
+        assertEquals("2",song3.id)
+        assertEquals("3",song4.id)
+    }
+
+    @Test
+    fun saveOnlineWorks(){
+        val songSet = mutableSetOf<Song>(song1,song2,song3,song4)
+        val mockDB = Mockito.mock(FirestoreDatabase::class.java)
+        `when`(mockDB.generateSongIds(anyInt())).thenReturn(Tasks.forResult(Pair(0,songSet.size.toLong())))
+        `when`(mockDB.generatePlaylistId()).thenReturn(Tasks.forResult(0))
+        `when`(mockDB.registerSong(any())).thenReturn(Tasks.forResult(null))
+        `when`(mockDB.registerPlaylist(any())).thenReturn(Tasks.forResult(null))
+
+
+        val playlist = Playlist("Test",songSet,Genre.NONE)
+        playlist.db = mockDB
+        Tasks.await(playlist.transformToOnline())
+        playlist.saveOnline()
+        assertEquals(true,playlist.savedOnline)
+
+
     }
 }
