@@ -12,7 +12,6 @@ import org.mockito.Mockito.*
 
 class PlayerGameHandlerTest {
     private lateinit var mockSnapshot: DocumentSnapshot
-    private lateinit var mockSnapshot2: DocumentSnapshot
 
     private val sleepingTime = 50L
     private val singer = "Singer"
@@ -34,15 +33,7 @@ class PlayerGameHandlerTest {
         `when`(mockSnapshot.getString("current_song")).thenReturn(null)
         `when`(mockSnapshot.get("scores")).thenReturn(scores)
         `when`(mockSnapshot.getBoolean("finished")).thenReturn(false)
-        mockSnapshot2 = mock(DocumentSnapshot::class.java)
-        `when`(mockSnapshot2.getString("singer")).thenReturn("")
-        `when`(mockSnapshot2.exists()).thenReturn(true)
-        `when`(mockSnapshot2.getLong("current_round")).thenReturn(round)
-        `when`(mockSnapshot2.get("song_choices")).thenReturn(listOfSongs)
-        `when`(mockSnapshot2.get("song_choices_lyrics")).thenReturn(hashMapOf("Momentum" to "Lorem Ipsum"))
-        `when`(mockSnapshot2.getString("current_song")).thenReturn("Momentum")
-        `when`(mockSnapshot2.get("scores")).thenReturn(scores)
-        `when`(mockSnapshot2.getBoolean("finished")).thenReturn(false)
+
     }
 
     @Test
@@ -82,6 +73,15 @@ class PlayerGameHandlerTest {
     fun callDisplayLyricsOnSnapshot(){
         val view = FakeGameView("")
         val handler = PlayerGameHandler(0, view)
+        val mockSnapshot2 = mock(DocumentSnapshot::class.java)
+        `when`(mockSnapshot2.getString("singer")).thenReturn("")
+        `when`(mockSnapshot2.exists()).thenReturn(true)
+        `when`(mockSnapshot2.getLong("current_round")).thenReturn(round)
+        `when`(mockSnapshot2.get("song_choices")).thenReturn(listOfSongs)
+        `when`(mockSnapshot2.get("song_choices_lyrics")).thenReturn(hashMapOf("Momentum" to "Lorem Ipsum"))
+        `when`(mockSnapshot2.getString("current_song")).thenReturn("Momentum")
+        `when`(mockSnapshot2.get("scores")).thenReturn(scores)
+        `when`(mockSnapshot2.getBoolean("finished")).thenReturn(false)
         handler.handleSnapshot(mockSnapshot2)
         assertEquals(view.flag, true)
     }
