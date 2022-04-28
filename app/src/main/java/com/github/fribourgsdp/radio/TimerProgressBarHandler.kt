@@ -7,13 +7,17 @@ import java.util.*
 /**
  * An instance of a handler to link a [progress bar][ProgressBar] and a [timer][Timer] together.
  *
- * NB: The parameter [timerListener][Timer.Listener] is responsible to update the [progress bar][progressBar]
- *     since the update needs to be done on the main ui thread.
+ * NB:
+ *
+ * The parameter [timerListener][Timer.Listener] is responsible to update the [progress bar][progressBar]
+ * since the update needs to be done on the main ui thread.
+ *
+ * To know what is the current time, we can give a function currentTimeInMillis. By default, it's [System.currentTimeMillis]
  *
  * @property timer the [timer] of the [handler][TimerProgressBarHandler].
  * @property progressBar the [progress bar][progressBar] of the [handler][TimerProgressBarHandler].
  */
-class TimerProgressBarHandler(val timer: Timer, val progressBar: ProgressBar, timerListener: Timer.Listener): Timer.DeadlineHandler {
+class TimerProgressBarHandler(val timer: Timer, val progressBar: ProgressBar, timerListener: Timer.Listener, private val currentTimeInMillis: () -> Long = System::currentTimeMillis): Timer.DeadlineHandler {
 
     init {
         timer.setListener(500L, timerListener)
@@ -25,15 +29,13 @@ class TimerProgressBarHandler(val timer: Timer, val progressBar: ProgressBar, ti
         progressBar.progress = 0
         progressBar.visibility = View.VISIBLE
         timer.apply {
-            setDeadline(deadline)
+            setDeadline(deadline, currentTimeInMillis)
             time?.let { progressBar.max = it.toInt() }
             start()
         }
     }
 
     override fun stopTimer() {
-        timer.time?.let { progressBar.max = it.toInt() }
-        progressBar.progress = 0
         progressBar.visibility = View.INVISIBLE
         timer.stop()
     }
