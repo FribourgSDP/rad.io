@@ -17,12 +17,21 @@ import org.junit.Test
 import org.junit.runner.RunWith
 import org.junit.runners.MethodSorters
 import androidx.test.espresso.Espresso.*
+import androidx.test.espresso.ViewAssertion
 import androidx.test.espresso.action.ViewActions
 import androidx.test.espresso.intent.matcher.IntentMatchers.hasComponent
 import androidx.test.espresso.matcher.ViewMatchers.*
+import com.github.fribourgsdp.radio.mockimplementations.BuggyDatabase
+import com.github.fribourgsdp.radio.utils.CustomMatchers
+import com.google.android.gms.tasks.Tasks
 import junit.framework.Assert.assertTrue
 import kotlinx.serialization.decodeFromString
 import org.hamcrest.Matchers.allOf
+import org.junit.Assert.assertEquals
+import org.junit.Before
+import org.mockito.Mockito
+import org.mockito.Mockito.`when`
+import org.mockito.Mockito.anyString
 import java.util.HashSet
 
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
@@ -105,6 +114,85 @@ class PlaylistSongsFragmentTest {
                 .perform(ViewActions.click())
             user = User.load(context)
             assertTrue("${user.getPlaylists().size}", user.getPlaylists().isEmpty())
+        }
+    }
+
+
+    /*@Test
+    fun savePlaylistOnlineTest(){
+        val bundle = Bundle()
+        var mockPlaylist = Mockito.mock(Playlist::class.java)
+        `when`(mockPlaylist.saveOnline()).thenReturn(Tasks.forResult(null))
+        `when`(mockPlaylist.transformToOnline()).thenReturn(Tasks.forResult(null))
+
+        val playlistName = "test"
+        mockPlaylist  =Playlist(playlistName, Genre.NONE)
+        mockPlaylist.id = "TEST"
+        mockPlaylist.addSong(Song("rouge", "sardou"))
+        mockPlaylist.addSong(Song("salut", "sardou"))
+        mockPlaylist.addSong(Song("Le France", "sardou"))
+
+        bundle.putString(PLAYLIST_DATA, mockPlaylist.name)
+
+        val playlistUncomplete = Playlist(playlistName,Genre.NONE)
+        playlistUncomplete.id = "TEST"
+        var user : User = User("Test User")
+        user.addPlaylist(playlistUncomplete)
+        val context: Context = ApplicationProvider.getApplicationContext()
+        user.save(context)
+
+        val scenario = launchFragmentInContainer<MockPlaylistSongsFragment>(bundle)
+        scenario.use {
+
+            onView(withId(R.id.SaveOnlineButton)).perform(ViewActions.click())
+            onView(withId(R.id.SaveOnlineButton)).check(matches(isNotClickable()))
+        }
+
+        //launch the fragment and click on save
+    }*/
+
+    @Test
+    fun loadAStoredOnlinePlaylistTest(){
+        val bundle = Bundle()
+        val playlistName = "test"
+        val playlist : Playlist = Playlist(playlistName, Genre.NONE)
+        playlist.id = "TEST"
+        playlist.addSong(Song("rouge", "sardou"))
+        playlist.addSong(Song("salut", "sardou"))
+        playlist.addSong(Song("Le France", "sardou"))
+
+        bundle.putString(PLAYLIST_DATA, playlist.name)
+
+        val playlistUncomplete = Playlist(playlistName,Genre.NONE)
+        playlistUncomplete.savedOnline = true
+        playlistUncomplete.savedLocally = false
+        playlistUncomplete.id = "TEST"
+        var user : User = User("Test User")
+        user.addPlaylist(playlistUncomplete)
+        val context: Context = ApplicationProvider.getApplicationContext()
+        user.save(context)
+        assertEquals(0,user.getPlaylistWithName("test").getSongs().size)
+        val scenario = launchFragmentInContainer<MockPlaylistSongsFragment>(bundle)
+        scenario.use {
+            onView(withId(R.id.SongRecyclerView)).check(matches(isDisplayed()))
+            onView(withId(R.id.SongRecyclerView)).check(matches(hasChildCount(3)))
+        }
+
+
+    }
+
+
+    class MockPlaylistSongsFragment : PlaylistSongsFragment() {
+        override fun initializeDatabase(): Database {
+            val db = Mockito.mock(Database::class.java)
+            val playlistName = "test"
+            val playlist : Playlist = Playlist(playlistName, Genre.NONE)
+            playlist.id = "TEST"
+            playlist.addSong(Song("rouge", "sardou"))
+            playlist.addSong(Song("salut", "sardou"))
+            playlist.addSong(Song("Le France", "sardou"))
+            `when`(db.getPlaylist(anyString())).thenReturn(Tasks.forResult(playlist))
+            return db
         }
     }
 }
