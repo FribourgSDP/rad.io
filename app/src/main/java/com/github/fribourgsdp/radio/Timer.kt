@@ -60,7 +60,7 @@ class Timer(time: Long? = null) {
         Log.d("Start Timer", "${this.time}")
 
         // Schedule the done time to the end of the period
-        time?.let { scheduler.schedule(doneTask, it) }
+        time?.let { scheduler.schedule(doneTask, it * 1000) }
     }
 
     /**
