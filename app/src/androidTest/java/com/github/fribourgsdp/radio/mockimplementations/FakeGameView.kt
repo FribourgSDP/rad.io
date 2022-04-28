@@ -22,6 +22,10 @@ class FakeGameView(private val playerID: String = ""): GameView {
 
     var gameOver = false
 
+    var timerRunning = false
+    var timerDeadline: Date? = null
+    var timerDelay = 0L
+
     override fun chooseSong(choices: List<String>, listener: GameView.OnPickListener) {
         listener.onPick(choices[0])
     }
@@ -40,7 +44,7 @@ class FakeGameView(private val playerID: String = ""): GameView {
         songVisibility = View.VISIBLE
     }
 
-    override fun displayGuessInput(deadline: Date?) {
+    override fun displayGuessInput() {
         songVisibility = View.GONE
         guessInputVisibility = View.VISIBLE
     }
@@ -68,6 +72,16 @@ class FakeGameView(private val playerID: String = ""): GameView {
 
     override fun gameOver(finalScores: Map<String, Long>) {
         gameOver = true
+    }
+
+    override fun startTimer(deadline: Date, delay: Long) {
+        timerRunning = true
+        timerDeadline = deadline
+        timerDelay = delay
+    }
+
+    override fun stopTimer() {
+        timerRunning = false
     }
 
 }
