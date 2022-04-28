@@ -5,7 +5,7 @@ import java.util.Timer as JavaTimer
 /**
  * An instance of a timer that runs for the given [time] in seconds.
  */
-class Timer(time: Long = 0L) {
+class Timer(time: Long? = null) {
 
     /**
      * An instance of a timer that runs until the given [deadline].
@@ -59,7 +59,7 @@ class Timer(time: Long = 0L) {
         isRunning = true
 
         // Schedule the done time to the end of the period
-        scheduler.schedule(doneTask, delay * 1000, time)
+        time?.let { scheduler.schedule(doneTask, delay * 1000, it) }
     }
 
     /**
@@ -162,7 +162,7 @@ class Timer(time: Long = 0L) {
     private inner class UpdateTimeTask: TimerTask() {
         override fun run() {
             if (isRunning) {
-                currentTimeInSeconds -= 1
+                currentTimeInSeconds = currentTimeInSeconds?.minus(1)
             }
         }
     }
@@ -178,7 +178,7 @@ class Timer(time: Long = 0L) {
     private inner class UpdateTask: TimerTask() {
         override fun run() {
             if (isRunning) {
-                updateListener?.onUpdate(currentTimeInSeconds)
+                currentTimeInSeconds?.let { updateListener?.onUpdate(it) }
             }
         }
     }
