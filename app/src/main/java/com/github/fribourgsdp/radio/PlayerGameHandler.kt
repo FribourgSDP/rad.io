@@ -98,22 +98,26 @@ class PlayerGameHandler(
     }
 
     private fun updateViewForPlayer(snapshot: DocumentSnapshot, singerName : String){
+        val deadline = snapshot.getTimestamp("round_deadline")
+
         if (view.checkPlayer(singerName)) {
             if (songToGuess == null) {
                 chooseSong(snapshot)
             } else {
+                view.startTimer(deadline!!.toDate())
                 displayLyrics(snapshot)
             }
 
         } else {
             if (songToGuess != null) {
-                val deadline = snapshot.getTimestamp("round_deadline")!!
-
                 // The singer picked a song so the player can guess
                 view.displayGuessInput()
-                view.startTimer(deadline.toDate())
+                view.startTimer(deadline!!.toDate())
 
             } else {
+                // Stop the timer while waiting
+                view.stopTimer()
+
                 // The singer is till picking, so the player waits
                 view.displayWaitOnSinger(singerName)
             }
