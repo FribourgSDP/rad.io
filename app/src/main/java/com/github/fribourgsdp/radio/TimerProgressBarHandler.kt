@@ -14,7 +14,7 @@ import java.util.*
 class TimerProgressBarHandler(val timer: Timer, val progressBar: ProgressBar, timerListener: Timer.Listener): Timer.DeadlineHandler {
 
     init {
-        timer.setListener(timerListener, 500L)
+        timer.setListener(500L, timerListener)
         timer.time?.let { progressBar.max = it.toInt() }
         progressBar.progress = 0
     }

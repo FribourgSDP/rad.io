@@ -27,7 +27,7 @@ class Timer(time: Long? = null) {
     /**
      * The current time of the timer in seconds
      */
-    var currentTimeInSeconds = time
+    var currentTimeInSeconds = 0L
         private set
 
     /**
@@ -41,6 +41,7 @@ class Timer(time: Long? = null) {
     private var doneListener: OnTimerDoneListener? = null
     private var updateListener: OnTimerUpdateListener? = null
     private var updateListenerRefreshRate = 0L
+    private var updateListenerDelay = 0L
 
     /**
      * Starts the timer
@@ -53,12 +54,12 @@ class Timer(time: Long? = null) {
             scheduler.apply {
                 schedule(DoneTask(), it * 1000)
 
-                // Decrement the time every millisecond
-                schedule(UpdateTimeTask(), 0L, 1000L)
+                // Decrement the time every second
+                schedule(UpdateTimeTask(), 1_000L, 1_000L)
 
                 // if there was an update listener -> reschedule it
                 updateListener?.let {
-                    schedule(UpdateTask(), 0L, updateListenerRefreshRate)
+                    schedule(UpdateTask(), updateListenerDelay, updateListenerRefreshRate)
                 }
             }
         }
@@ -88,7 +89,7 @@ class Timer(time: Long? = null) {
     /**
      * Set the [listener] to handle the updates of the timer at the [refreshRate] in milliseconds.
      */
-    fun setOnUpdateListener(listener: OnTimerUpdateListener, refreshRate: Long) {
+    fun setOnUpdateListener(refreshRate: Long, listener: OnTimerUpdateListener) {
         updateListener = listener
         updateListenerRefreshRate = refreshRate
     }
@@ -96,9 +97,9 @@ class Timer(time: Long? = null) {
     /**
      * Set the [listener] to handle when the timer is done and on the updates with the given [refreshRate] in milliseconds.
      */
-    fun setListener(listener: Listener, refreshRate: Long) {
+    fun setListener(refreshRate: Long, listener: Listener) {
         setOnDoneListener(listener)
-        setOnUpdateListener(listener, refreshRate)
+        setOnUpdateListener(refreshRate, listener)
     }
 
     /**
@@ -106,7 +107,7 @@ class Timer(time: Long? = null) {
      */
     fun setTime(time: Long) {
         this.time = time
-        this.currentTimeInSeconds = time
+        this.currentTimeInSeconds = 0L
     }
 
     /**
@@ -127,7 +128,7 @@ class Timer(time: Long? = null) {
     /**
      * An interface creating listeners able to handle the end of a [Timer].
      */
-    interface OnTimerDoneListener {
+    fun interface OnTimerDoneListener {
         /**
          * Handle the behavior when the [Timer] is done.
          */
@@ -137,7 +138,7 @@ class Timer(time: Long? = null) {
     /**
      * An interface creating listeners able to handle the update of a [Timer].
      */
-    interface OnTimerUpdateListener {
+    fun interface OnTimerUpdateListener {
         /**
          * Handle the behavior on an update of the [Timer].
          * @param timeInSeconds the [time in seconds][Long] of the [Timer] at the moment of the update.
@@ -170,7 +171,7 @@ class Timer(time: Long? = null) {
     private inner class UpdateTimeTask: TimerTask() {
         override fun run() {
             if (isRunning) {
-                currentTimeInSeconds = currentTimeInSeconds?.minus(1)
+                ++currentTimeInSeconds
             }
         }
     }
@@ -178,6 +179,11 @@ class Timer(time: Long? = null) {
     private inner class DoneTask: TimerTask() {
         override fun run() {
             doneListener?.onDone()
+
+            // Add 1 to currentTimeInSeconds to display the final time
+            // This isn't done in the UpdateTask as it count's from zero to time - 1
+            ++currentTimeInSeconds
+
             stop()
         }
     }
@@ -185,7 +191,7 @@ class Timer(time: Long? = null) {
     private inner class UpdateTask: TimerTask() {
         override fun run() {
             if (isRunning) {
-                currentTimeInSeconds?.let { updateListener?.onUpdate(it) }
+                updateListener?.onUpdate(currentTimeInSeconds)
             }
         }
     }
