@@ -1,4 +1,5 @@
 package com.github.fribourgsdp.radio
+import android.util.Log
 import java.util.*
 import java.util.Timer as JavaTimer
 
@@ -57,6 +58,7 @@ class Timer(time: Long? = null) {
      */
     fun start(delay: Long = 0L) {
         isRunning = true
+        Log.d("Start Timer", "${this.time}")
 
         // Schedule the done time to the end of the period
         time?.let { scheduler.schedule(doneTask, delay * 1000, it) }
@@ -98,6 +100,7 @@ class Timer(time: Long? = null) {
      */
     fun setTime(time: Long) {
         this.time = time
+        Log.d("Timer", "${this.time}")
     }
 
     /**
@@ -185,7 +188,7 @@ class Timer(time: Long? = null) {
 
     companion object {
         private fun computeTimeFromDeadline(deadline: Date, currentTimeInMillis: () -> Long): Long {
-            return (deadline.time - currentTimeInMillis()) * 1000
+            return (deadline.time - currentTimeInMillis()) / 1000
         }
     }
 }
