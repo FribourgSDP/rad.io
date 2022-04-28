@@ -26,6 +26,8 @@ class PlaylistSongsFragment : MyFragment(R.layout.fragment_playlist_display), On
     private lateinit var deleteButton: Button
     private lateinit var saveOnlineButton : Button
     private lateinit var user : User
+    
+    var db = FirestoreDatabase()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -92,7 +94,7 @@ class PlaylistSongsFragment : MyFragment(R.layout.fragment_playlist_display), On
             initializeRecyclerView()
         }.addOnSuccessListener {
             if(playlist.savedOnline && !playlist.savedLocally){
-                FirestoreDatabase().getPlaylist(playlist.id).addOnSuccessListener {
+               db.getPlaylist(playlist.id).addOnSuccessListener {
                     playlist = it
                     songs = playlist.getSongs().toList()
                     initializeRecyclerView()
