@@ -50,6 +50,8 @@ class FirestoreDatabase(var refMake: FirestoreRef) : Database {
 
                     val pl = Playlist(playlist["playlistName"]!!,Genre.valueOf(playlist["genre"]!!))
                     pl.id = playlist["playlistId"]!!
+                    pl.savedOnline = true
+                    pl.savedLocally = false
                     playlistSet.add(pl)
                 }
 
@@ -162,23 +164,26 @@ class FirestoreDatabase(var refMake: FirestoreRef) : Database {
     }
 
     override fun getLobbyId() : Task<Long> {
-        return getId("lobby","id")
+        return getId("lobby","id",1).continueWith { pair -> pair.result.first }
     }
 
+    override fun generateSongIds(number: Int): Task<Pair<Long,Long>> {
+        return getId("metadata", "SongInfo",number)
+    }
     override fun generateUserId() : Task<Long> {
-        return getId("metadata","UserInfo")
+        return getId("metadata","UserInfo",1).continueWith { pair -> pair.result.first }
     }
 
     override fun generateSongId() : Task<Long> {
-        return getId("metadata","SongInfo")
+        return getId("metadata","SongInfo",1).continueWith { pair -> pair.result.first }
     }
 
     override fun generatePlaylistId() : Task<Long> {
-        return getId("metadata", "PlaylistInfo")
+        return getId("metadata", "PlaylistInfo",1).continueWith { pair -> pair.result.first }
     }
 
 
-    private fun getId(collectionPath : String, documentPath : String ) : Task<Long>{
+    private fun getId(collectionPath : String, documentPath : String, number : Int  ) : Task<Pair<Long,Long>>{
         val keyID = "current_id"
         val keyMax = "max_id"
 
@@ -192,12 +197,12 @@ class FirestoreDatabase(var refMake: FirestoreRef) : Database {
             }
 
             val id = snapshot.getLong(keyID)!!
-            val nextId = (id + 1) % snapshot.getLong(keyMax)!!
+            val nextId = (id + number) % snapshot.getLong(keyMax)!!
 
             transaction.update(docRef, keyID, nextId)
 
             // Success
-            id
+            Pair(id,nextId)
         }
     }
 
