@@ -5,10 +5,10 @@
     android:layout_height="match_parent">
 
     <TextView
-        android:id="@+id/warningQuitGameOrLobby"
+        android:id="@+id/SavePlaylistOnline"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="coucou"
+        android:text="@string/saveOnlineQuestionText"
         android:textSize="24sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -24,18 +24,18 @@
         android:textSize="24sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/warningQuitGameOrLobby">
+        app:layout_constraintTop_toBottomOf="@+id/SavePlaylistOnline">
 
         <Button
-            android:id="@+id/saveOnlinePlaylist"
+            android:id="@+id/saveOnlinePlaylistYes"
             style="@style/SongChoices"
             android:layout_height="wrap_content"
-            android:text="Save Online" />
+            android:text="@string/yes" />
 
         <Button
-            android:id="@+id/saveOfflinePlaylist"
+            android:id="@+id/saveOnlinePlaylistNo"
             style="@style/SongChoices"
-            android:text="Save Offline" />
+            android:text="@string/no" />
 
     </LinearLayout>
 
