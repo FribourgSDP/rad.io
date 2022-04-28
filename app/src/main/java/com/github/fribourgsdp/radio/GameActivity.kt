@@ -218,7 +218,6 @@ open class GameActivity : AppCompatActivity(), GameView {
                 }
             }
     }
-}
     override fun displayLyrics(lyrics : String) {
         showLyricsButton.visibility = View.VISIBLE
         showLyricsButton.setOnClickListener { displayLyrics(lyrics) }

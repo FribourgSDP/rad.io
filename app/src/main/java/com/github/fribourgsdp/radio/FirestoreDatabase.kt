@@ -416,7 +416,7 @@ class FirestoreDatabase(var refMake: FirestoreRef) : Database {
                     "singer" to "",
                     "song_choices" to ArrayList<String>(),
                     "scores" to HashMap<String, Int>(),
-                    "validity" to true
+                    "validity" to true,
                     "song_choices_lyrics" to HashMap<String, String>(),
                 )
             )
