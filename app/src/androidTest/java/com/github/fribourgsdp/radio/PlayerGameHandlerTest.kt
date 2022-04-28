@@ -297,4 +297,65 @@ class PlayerGameHandlerTest {
         assertTrue(view.gameOver)
     }
 
+    @Test
+    fun timerLaunchedWhenGuessing() {
+        val view = FakeGameView("Not singer")
+        val handler = PlayerGameHandler(0, view)
+        `when`(mockSnapshot.getString("current_song")).thenReturn(song)
+
+        handler.handleSnapshot(mockSnapshot)
+
+        assertTrue(view.timerRunning)
+        assertEquals(deadline, view.timerDeadline)
+    }
+
+    @Test
+    fun timerStoppedOnGoodGuess() {
+        val view = FakeGameView("Not Singer")
+        // Say the view started the timer to see the difference
+        view.startTimer(deadline)
+
+        val db = mock(Database::class.java)
+        `when`(db.playerEndTurn(anyLong(), anyString(), anyBoolean()))
+            .thenReturn(Tasks.forResult(null))
+
+        `when`(mockSnapshot.getString("current_song")).thenReturn(song)
+
+        val handler = PlayerGameHandler(0, view, db)
+
+        // Update song to guess
+        handler.handleSnapshot(mockSnapshot)
+
+        // Check it
+        handler.handleGuess(song, "")
+
+        // Wait for the task of the database to execute
+        Thread.sleep(1)
+
+        assertFalse(view.timerRunning)
+    }
+
+    @Test
+    fun hideErrorOnTimeout() {
+        val view = FakeGameView("Not Singer")
+        val db = mock(Database::class.java)
+        `when`(db.playerEndTurn(anyLong(), anyString(), anyBoolean()))
+            .thenReturn(Tasks.forResult(null))
+
+        `when`(mockSnapshot.getString("current_song")).thenReturn(song)
+
+        val handler = PlayerGameHandler(0, view, db)
+
+        // Update song to guess
+        handler.handleSnapshot(mockSnapshot)
+
+        // Check it
+        handler.handleGuess("", "", true)
+
+        // Wait for the task of the database to execute
+        Thread.sleep(1)
+
+        assertEquals(View.GONE, view.errorVisibility)
+    }
+
 }
