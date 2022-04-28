@@ -2,9 +2,11 @@ package com.github.fribourgsdp.radio
 
 import android.util.Log
 import okhttp3.*
+import org.json.JSONArray
 import java.io.IOException
 import java.util.*
 import java.util.concurrent.CompletableFuture
+import java.util.concurrent.Future
 
 const val API_KEY = "a3454edb65483e706c127deaa11df69d"
 const val BASE_URL = "http://api.musixmatch.com/ws/1.1/"
@@ -48,6 +50,7 @@ object MusixmatchLyricsGetter : LyricsGetter {
             client: OkHttpClient,
             parser: JSONParser
         ): CompletableFuture<String> {
+//            return CompletableFuture.completedFuture("If you feel little chance make a stance")
             Log.println(Log.ASSERT, "*", "LYRICS GETTER CALL !!!!")
             val future = CompletableFuture<String>()
             val trackIDFuture = getSongID(songName, artistName, client)
@@ -124,10 +127,14 @@ object MusixmatchLyricsGetter : LyricsGetter {
                 if(parsedResponse == null){
                     future.completeExceptionally(Exception("Error parsing response"))
                 }
-                val trackList = parsedResponse
-                    ?.getJSONObject("message")
-                    ?.getJSONObject("body")
-                    ?.getJSONArray("track_list")
+                val trackList = try {
+                    parsedResponse
+                        ?.getJSONObject("message")
+                        ?.getJSONObject("body")
+                        ?.getJSONArray("track_list")
+                } catch (e : Exception){
+                    JSONArray()
+                }
                 if(trackList?.length() == 0){
                     future.completeExceptionally(LyricsNotFoundException())
                 } else {

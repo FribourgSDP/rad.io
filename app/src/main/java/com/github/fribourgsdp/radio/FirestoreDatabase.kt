@@ -258,7 +258,7 @@ class FirestoreDatabase(var refMake: FirestoreRef) : Database {
                 throw IllegalArgumentException("Document $id not found.")
             }
 
-            val mapIdToName = snapshot.get("players")!! as HashMap<String, String>
+            val mapIdToName = snapshot.getPlayers()
             if (mapIdToName.containsKey(user.id)) {
                 // A user with the same id was already added
                 throw IllegalArgumentException("id: ${user.id} is already in the database")
@@ -268,7 +268,7 @@ class FirestoreDatabase(var refMake: FirestoreRef) : Database {
 
             transaction.update(docRef, "players", mapIdToName)
 
-            val playerPermissions = snapshot.get("permissions")!! as HashMap<String, Boolean>
+            val playerPermissions = snapshot.getPermissions()
             playerPermissions[user.id] = hasMicPermissions
 
             transaction.update(docRef, "permissions", playerPermissions)
@@ -288,7 +288,7 @@ class FirestoreDatabase(var refMake: FirestoreRef) : Database {
                 throw IllegalArgumentException("Document $id not found.")
             }
 
-            val playerPermissions = snapshot.get("permissions")!! as HashMap<String, Boolean>
+            val playerPermissions = snapshot.getPermissions()
             playerPermissions[user.id] = newPermissions
 
             transaction.update(docRef, "permissions", playerPermissions)
@@ -307,6 +307,7 @@ class FirestoreDatabase(var refMake: FirestoreRef) : Database {
                     "current_song" to "",
                     "singer" to "",
                     "song_choices" to ArrayList<String>(),
+                    "song_choices_lyrics" to HashMap<String, String>(),
                     "scores" to HashMap<String, Int>()
                 )
             )
@@ -352,11 +353,11 @@ class FirestoreDatabase(var refMake: FirestoreRef) : Database {
             }
 
             // Set the player to done
-            val updatedDoneMap = snapshot.get("player_done_map")!! as HashMap<String, Boolean>
+            val updatedDoneMap = snapshot.getPlayerDoneMap()
             updatedDoneMap[playerID] = true
 
             // Set if the player has found or not
-            val updatedFoundMap = snapshot.get("player_found_map")!! as HashMap<String, Boolean>
+            val updatedFoundMap = snapshot.getPlayerFoundMap()
             updatedFoundMap[playerID] = hasFound
 
 
@@ -366,7 +367,7 @@ class FirestoreDatabase(var refMake: FirestoreRef) : Database {
                 updatedFoundMap.count { (_, hasFound) -> hasFound }
             )
 
-            val updatedScoreMap = snapshot.get("scores_of_round")!! as HashMap<String, Int>
+            val updatedScoreMap = snapshot.getScoresOfRound<Int>()
             updatedScoreMap[playerID] = points
 
             // Update on database
@@ -394,15 +395,15 @@ class FirestoreDatabase(var refMake: FirestoreRef) : Database {
             }
 
             // reset done map
-            val updatedDoneMap = snapshot.get("player_done_map")!! as HashMap<String, Boolean>
+            val updatedDoneMap = snapshot.getPlayerDoneMap()
             updatedDoneMap.replaceAll { k, _ -> k == singer}
 
             // reset found map
-            val updatedFoundMap = snapshot.get("player_found_map")!! as HashMap<String, Boolean>
+            val updatedFoundMap = snapshot.getPlayerFoundMap()
             updatedFoundMap.replaceAll { _, _ -> false}
 
             // reset scores of round
-            val scoresOfRound = snapshot.get("scores_of_round")!! as HashMap<String, Long>
+            val scoresOfRound = snapshot.getScoresOfRound<Long>()
             scoresOfRound.replaceAll { _, _ -> 0L}
 
             // Update on database
