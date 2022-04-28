@@ -49,7 +49,7 @@ class Timer(time: Long? = null) {
 
     init {
         // Decrement the time every millisecond
-        scheduler.scheduleAtFixedRate(updateTimeTask, 0L, 1000L)
+        scheduler.schedule(updateTimeTask, 0L, 1000L)
     }
 
     /**
@@ -84,7 +84,7 @@ class Timer(time: Long? = null) {
      */
     fun setOnUpdateListener(listener: OnTimerUpdateListener, refreshRate: Long) {
         updateListener = listener
-        scheduler.scheduleAtFixedRate(updateTask, 0L, refreshRate)
+        scheduler.schedule(updateTask, 0L, refreshRate)
     }
 
     /**
