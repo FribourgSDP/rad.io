@@ -18,7 +18,7 @@ import kotlinx.serialization.json.Json
 const val SONG_DATA = "com.github.fribourgsdp.radio.SONG_INNER_DATA"
 const val PLAYLIST_TO_MODIFY = "com.github.fribourgsdp.radio.PLAYLIST_TO_MODIFY"
 
-class PlaylistSongsFragment : MyFragment(R.layout.fragment_playlist_display), OnClickListener{
+open class PlaylistSongsFragment : MyFragment(R.layout.fragment_playlist_display), OnClickListener, DatabaseHolder{
     private lateinit var playlist: Playlist
     private lateinit var songs: List<Song>
     private lateinit var playlistName: String
@@ -27,7 +27,7 @@ class PlaylistSongsFragment : MyFragment(R.layout.fragment_playlist_display), On
     private lateinit var saveOnlineButton : Button
     private lateinit var user : User
     
-    var db = FirestoreDatabase()
+    var db : Database = initializeDatabase()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
