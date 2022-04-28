@@ -86,6 +86,14 @@ class Timer(time: Long = 0L) {
     }
 
     /**
+     * Set the [listener] to handle when the timer is done and on the updates with the given [refreshRate] in milliseconds.
+     */
+    fun setListener(listener: Listener, refreshRate: Long) {
+        setOnDoneListener(listener)
+        setOnUpdateListener(listener, refreshRate)
+    }
+
+    /**
      * Set the [time] in seconds.
      */
     fun setTime(time: Long) {
@@ -126,6 +134,29 @@ class Timer(time: Long = 0L) {
          * @param timeInSeconds the [time in seconds][Long] of the [Timer] at the moment of the update.
          */
         fun onUpdate(timeInSeconds: Long)
+    }
+
+    /**
+     * An interface creating listeners able to handle both the update and the end of a [Timer].
+     */
+    interface Listener: OnTimerUpdateListener, OnTimerDoneListener
+
+    /**
+     * An interface creating handlers for a [Timer] with a [deadline][Date].
+     */
+    interface DeadlineHandler {
+
+        /**
+         * Start a timer
+         * @param deadline the deadline of the timer
+         * @param delay an optional delay to the start of the timer. By default: 0
+         */
+        fun startTimer(deadline: Date, delay: Long = 0L)
+
+        /**
+         * Stop a timer
+         */
+        fun stopTimer()
     }
 
     private inner class UpdateTimeTask: TimerTask() {
