@@ -100,8 +100,9 @@ class PlayerGameHandler(
     private fun updateViewForPlayer(snapshot: DocumentSnapshot, singerName : String){
         if (view.checkPlayer(singerName)) {
             if (songToGuess == null) {
-                val choices = snapshot.get("song_choices")!! as ArrayList<String>
-                view.chooseSong(choices, this)
+                chooseSong(snapshot)
+            } else {
+                displayLyrics(snapshot)
             }
 
         } else {
