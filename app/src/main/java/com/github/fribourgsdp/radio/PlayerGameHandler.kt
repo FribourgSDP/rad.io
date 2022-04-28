@@ -104,8 +104,8 @@ class PlayerGameHandler(
             if (songToGuess == null) {
                 chooseSong(snapshot)
             } else {
-                view.startTimer(deadline!!.toDate())
                 displayLyrics(snapshot)
+                view.startTimer(deadline!!.toDate())
             }
 
         } else {

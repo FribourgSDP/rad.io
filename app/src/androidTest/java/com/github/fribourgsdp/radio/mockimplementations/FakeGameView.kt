@@ -7,7 +7,7 @@ import kotlin.collections.HashMap
 
 class FakeGameView(private val playerID: String = ""): GameView {
 
-    var flag = false
+    var lyricsDisplayed = false
 
     var singer = ""
     var round = 0L
@@ -85,7 +85,7 @@ class FakeGameView(private val playerID: String = ""): GameView {
     }
 
     override fun displayLyrics(lyrics: String) {
-        flag = true
+        lyricsDisplayed = true
     }
 
 }
