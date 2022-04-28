@@ -113,15 +113,15 @@ class Timer(time: Long? = null) {
      * Set the [time] to be the time from now until the given [deadline].
      * To know what is the current time, we can give a function [currentTimeInMillis], that returns a [Long].
      */
-    fun setTime(deadline: Date, currentTimeInMillis: () -> Long) {
+    fun setDeadline(deadline: Date, currentTimeInMillis: () -> Long) {
         setTime(computeTimeFromDeadline(deadline, currentTimeInMillis))
     }
 
     /**
      * Set the [time] to be the time from now until the given [deadline].
      */
-    fun setTime(deadline: Date) {
-        setTime(deadline, System::currentTimeMillis)
+    fun setDeadline(deadline: Date) {
+        setDeadline(deadline, System::currentTimeMillis)
     }
 
     /**

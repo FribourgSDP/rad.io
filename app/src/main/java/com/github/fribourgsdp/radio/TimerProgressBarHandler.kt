@@ -23,7 +23,7 @@ class TimerProgressBarHandler(val timer: Timer, val progressBar: ProgressBar, ti
         progressBar.progress = 0
         progressBar.visibility = View.VISIBLE
         timer.apply {
-            setTime(deadline)
+            setDeadline(deadline)
             time?.let { progressBar.max = it.toInt() }
             start()
         }
