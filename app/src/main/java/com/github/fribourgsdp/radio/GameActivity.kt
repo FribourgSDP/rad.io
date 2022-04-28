@@ -195,36 +195,5 @@ open class GameActivity : AppCompatActivity(), GameView {
         showLyricsButton.setOnClickListener { displayLyrics(lyrics) }
         val lyricsPopup = LyricsPopup(lyrics)
         lyricsPopup.show(supportFragmentManager, "lyricsPopup")
-
-//        val lyricsDialog = Dialog(this)
-//        lyricsDialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
-//        lyricsDialog.setContentView(R.layout.popup_lyrics)
-//        lyricsDialog.setCanceledOnTouchOutside(false)
-//        lyricsDialog.findViewById<TextView>(R.id.lyricsPopupTextView).text = lyrics
-//        lyricsDialog.findViewById<ImageView>(R.id.close_popup_button).setOnClickListener{
-//            lyricsDialog.dismiss()
-//        }
-//        lyricsDialog.show()
-
-//        val inflater = getSystemService(LAYOUT_INFLATER_SERVICE) as LayoutInflater
-//        val popupView: View = inflater.inflate(R.layout.popup_lyrics, null)
-//        val lyricsTextView : TextView = popupView.findViewById(R.id.lyricsPopupTextView)
-//        val width = LinearLayout.LayoutParams.WRAP_CONTENT
-//        val height = LinearLayout.LayoutParams.WRAP_CONTENT
-//        val focusable = true // lets taps outside the popup also dismiss it
-//
-//        lyricsPopup = PopupWindow(popupView, width, height, focusable)
-//        lyricsPopup.showAtLocation(songTextView, Gravity.CENTER, 0, 0);
-//        lyricsTextView.text = lyrics
-//
-////        // dismiss the popup window when touched
-//        popupView.findViewById<ImageView>(R.id.close_popup_button).setOnClickListener{
-//            lyricsPopup.dismiss()
-//        }
-//        popupView.setOnTouchListener { v, _ ->
-//            v.performClick()
-//            lyricsPopup.dismiss()
-//            true
-//        }
     }
 }
