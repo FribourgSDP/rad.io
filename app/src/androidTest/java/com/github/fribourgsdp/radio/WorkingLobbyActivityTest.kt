@@ -62,11 +62,6 @@ class WorkingLobbyActivityTest {
             Espresso.pressBack()
             Espresso.onView(withId(R.id.validateQuitGameOrLobby))
                 .perform(ViewActions.click())
-            Intents.intended(
-                Matchers.allOf(
-                    IntentMatchers.hasComponent(MainActivity::class.java.name)
-                )
-            )
         }
     }
 

@@ -5,7 +5,9 @@ import android.content.Context
 import android.content.Intent
 import androidx.test.core.app.ActivityScenario
 import androidx.test.core.app.ApplicationProvider
+import androidx.test.espresso.Espresso
 import androidx.test.espresso.Espresso.onView
+import androidx.test.espresso.action.ViewActions
 import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.intent.Intents
 import androidx.test.espresso.intent.matcher.IntentMatchers
@@ -16,6 +18,7 @@ import com.github.fribourgsdp.radio.utils.CustomMatchers.Companion.atPosition
 import com.github.fribourgsdp.radio.mockimplementations.MockGameActivity
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
+import org.hamcrest.Matchers
 import org.hamcrest.Matchers.allOf
 import org.hamcrest.Matchers.not
 import org.junit.After
@@ -41,6 +44,26 @@ class GameActivityTest {
     @After
     fun releaseIntent() {
         Intents.release()
+    }
+
+    @Test
+    fun onBackPressedThenCancelStays() {
+        val testIntent = Intent(ctx, MockGameActivity::class.java)
+        ActivityScenario.launch<MockGameActivity>(testIntent).use { _ ->
+            Espresso.pressBack()
+            Espresso.onView(withId(R.id.cancelQuitGameOrLobby))
+                .perform(ViewActions.click())
+        }
+    }
+
+    @Test
+    fun onBackPressedThenContinueGoesToMain() {
+        val testIntent = Intent(ctx, MockGameActivity::class.java)
+        ActivityScenario.launch<MockGameActivity>(testIntent).use { _ ->
+            Espresso.pressBack()
+            Espresso.onView(withId(R.id.validateQuitGameOrLobby))
+                .perform(ViewActions.click())
+        }
     }
 
     @Test
