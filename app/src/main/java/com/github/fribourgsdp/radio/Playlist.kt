@@ -22,8 +22,6 @@ import kotlinx.serialization.Serializable
 data class Playlist (override var name: String, var genre: Genre) : Nameable {
 
     private val songs: MutableSet<Song> = mutableSetOf()
-    @Contextual
-    var db :Database= FirestoreDatabase()
 
     var id : String = ""
     var savedOnline = false
@@ -101,7 +99,7 @@ data class Playlist (override var name: String, var genre: Genre) : Nameable {
         return SetUtility.getNamedFromSet(songs, name)
     }
 
-    fun transformToOnline(): Task<Void> {
+    fun transformToOnline(db : Database = FirestoreDatabase()): Task<Void> {
         val songTask =  db.generateSongIds(songs.size).continueWith {songIdRange ->
             for ((i, song) in songs.withIndex()) {
                 song.id = (songIdRange.result.first + i).toString()
@@ -113,7 +111,7 @@ data class Playlist (override var name: String, var genre: Genre) : Nameable {
         return Tasks.whenAll(songTask,playlistId)
     }
 
-    fun saveOnline(): Task<Void>{
+    fun saveOnline(db : Database = FirestoreDatabase()): Task<Void>{
         for( song in songs){
             db.registerSong(song)
         }
@@ -136,4 +134,6 @@ data class Playlist (override var name: String, var genre: Genre) : Nameable {
     override fun hashCode(): Int {
         return name.hashCode()
     }
+
+
 }
