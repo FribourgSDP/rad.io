@@ -22,7 +22,9 @@ class LyricsPopupTest {
         with(launchFragment(
             themeResId = R.style.Theme_Radio,
             instantiate = {LyricsPopup("Lorem Ipsum")})) {
-            onView(withId(R.id.lyricsPopupTextView)).check(matches(withText("Lorem Ipsum")))
+            onView(withId(R.id.lyricsPopupTextView))
+                .inRoot(isDialog())
+                .check(matches(withText("Lorem Ipsum")))
         }
     }
     @Test
@@ -30,8 +32,12 @@ class LyricsPopupTest {
         with(launchFragment(
             themeResId = R.style.Theme_Radio,
             instantiate = {LyricsPopup("Lorem Ipsum")})) {
-            onView(withId(R.id.close_popup_button)).perform(ViewActions.click())
-            onView(withId(R.id.close_popup_button)).check(doesNotExist())
+            onView(withId(R.id.close_popup_button))
+                .inRoot(isDialog())
+                .perform(ViewActions.click())
+
+            onView(withId(R.id.close_popup_button))
+                .check(doesNotExist())
         }
     }
 
