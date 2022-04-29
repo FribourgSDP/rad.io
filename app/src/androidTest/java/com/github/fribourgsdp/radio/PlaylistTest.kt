@@ -128,13 +128,13 @@ internal class PlaylistTest {
     fun getPlaylistWithNameWorks(){
         val testerSet = mutableSetOf(song1, song2, song3, song4)
         val playlist = Playlist("First", testerSet, Genre.POP)
-        assertEquals(song1, playlist.getSong(song1.name))
+        assertEquals(song1, playlist.getSong(song1.name, song1.artist))
     }
 
     @Test(expected = NoSuchElementException::class)
     fun getNonExistingPlaylistWithNameThrowsException(){
         val testerSet = mutableSetOf(song1, song2, song3, song4)
         val playlist = Playlist("First", testerSet, Genre.POP)
-        assertEquals(song1, playlist.getSong("unknown"))
+        playlist.getSong("unknown", "any")
     }
 }
