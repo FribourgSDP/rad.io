@@ -208,7 +208,7 @@ open class GameActivity : AppCompatActivity(), GameView {
     }
 
     override fun onBackPressed() {
-        val warningDisplay = QuitGameOrLobbyDialog(this, isHost, true, user, playerGameHandler.database, playerGameHandler.gameID)
+        val warningDisplay = QuitGameOrLobbyDialog(this)
         warningDisplay.show(supportFragmentManager, "warningForQuittingLobby")
         supportFragmentManager
             .setFragmentResultListener("quitRequest", this) { _, bundle ->

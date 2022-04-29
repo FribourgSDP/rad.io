@@ -14,7 +14,7 @@ import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.setFragmentResult
 
 
-class QuitGameOrLobbyDialog(val ctx: Context, private val isHost: Boolean, private val isFromGameActivity: Boolean, private val user: User, private val db: Database, private val gameID: Long): DialogFragment() {
+class QuitGameOrLobbyDialog(val ctx: Context): DialogFragment() {
     private val buttons = ArrayList<Button>()
 
     override fun onCreateView(
