@@ -46,6 +46,10 @@ interface Database {
      */
     fun getLobbyId() : Task<Long>
 
+    /**
+     * Generate of range of ID for songs. It is an asynchronous operation, so it is returned in a task.
+     * @return a task loading a Pair of ID for songs, one for the lower bound and on for the upper bound.
+     */
     fun generateSongIds(number: Int) :Task<Pair<Long,Long>>
     /**
      * Get a unique ID for a user. It is an asynchronous operation, so it is returned in a task.
