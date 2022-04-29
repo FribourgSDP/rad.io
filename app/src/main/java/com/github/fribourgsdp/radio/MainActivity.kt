@@ -53,4 +53,8 @@ class MainActivity : MyAppCompatActivity() {
         }
 
     }
+
+    override fun onBackPressed() {
+        /* This activity is the main activity of our app and we wish to stay on this*/
+    }
 }

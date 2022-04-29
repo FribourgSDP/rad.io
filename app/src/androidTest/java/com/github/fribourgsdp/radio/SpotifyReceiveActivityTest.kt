@@ -87,4 +87,19 @@ class SpotifyReceiveActivityTest {
 
         }
     }
+
+    @Test
+    fun clickingBackGoesBackToUserProfileActivity() {
+        val intent = Intent(ctx,SpotifyReceiveActivity::class.java )
+        ActivityScenario.launch<SpotifyReceiveActivity>(intent).use{
+            Espresso.pressBack()
+
+            Intents.intended(
+                Matchers.allOf(
+                    IntentMatchers.hasComponent(UserProfileActivity::class.java.name)
+                )
+            )
+
+        }
+    }
 }

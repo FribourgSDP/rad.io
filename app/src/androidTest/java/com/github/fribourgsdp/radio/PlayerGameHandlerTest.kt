@@ -37,6 +37,8 @@ class PlayerGameHandlerTest {
         `when`(mockSnapshot.get("scores")).thenReturn(scores)
         `when`(mockSnapshot.getBoolean("finished")).thenReturn(false)
         `when`(mockSnapshot.getTimestamp("round_deadline")).thenReturn(Timestamp(deadline))
+        `when`(mockSnapshot.getBoolean("validity")).thenReturn(true)
+
     }
 
     @Test

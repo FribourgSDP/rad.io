@@ -121,6 +121,13 @@ class GoogleSignInActivity : MyAppCompatActivity() {
                 ).show()
             }
     }
+
+    override fun onBackPressed() {
+        super.onBackPressed()
+        val intent = Intent(this, UserProfileActivity::class.java)
+        startActivity(intent)
+        finish()
+    }
 }
 
 /*

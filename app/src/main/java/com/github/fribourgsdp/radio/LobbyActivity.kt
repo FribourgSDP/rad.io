@@ -238,6 +238,11 @@ open class LobbyActivity : MyAppCompatActivity(){
             }
 
             if (snapshot != null && snapshot.exists()) {
+                val gameStillValid = snapshot.get("validity")!! as Boolean
+                if (!gameStillValid) {
+                    returnToMainMenu()
+                }
+         
                 val newMap = snapshot.getPlayers()
 
                 val isGameLaunched = snapshot.getBoolean("launched")
@@ -322,4 +327,29 @@ open class LobbyActivity : MyAppCompatActivity(){
             }
         }
     }
+
+    override fun onBackPressed() {
+        val warningDisplay = QuitGameOrLobbyDialog(this)
+        warningDisplay.show(supportFragmentManager, "warningForQuittingLobby")
+        supportFragmentManager
+            .setFragmentResultListener("quitRequest", this) { _, bundle ->
+                val hasQuit = bundle.getBoolean("hasQuit")
+                if (hasQuit) {
+                    returnToMainMenu()
+                }
+            }
+    }
+
+    private fun returnToMainMenu(){
+        if (isHost) {
+            db.disableLobby(gameLobbyId)
+        }
+        else {
+            db.removeUserFromLobby(gameLobbyId, user)
+        }
+        val intent = Intent(this, MainActivity::class.java)
+        startActivity(intent)
+        finish()
+    }
+
 }

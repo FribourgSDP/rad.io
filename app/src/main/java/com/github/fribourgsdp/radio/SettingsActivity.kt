@@ -1,28 +1,9 @@
 package com.github.fribourgsdp.radio
 
-import android.content.res.Configuration
-import android.content.res.Resources
-import androidx.appcompat.app.AppCompatActivity
+import android.content.Intent
 import android.os.Bundle
-import android.util.DisplayMetrics
-import android.util.Log
 import android.view.View
 import android.widget.*
-import android.content.Intent
-import java.util.Locale
-import android.widget.Toast
-
-import android.widget.AdapterView
-import android.os.Build
-
-
-
-
-
-
-
-
-
 
 
 class SettingsActivity : MyAppCompatActivity() {
@@ -57,6 +38,7 @@ class SettingsActivity : MyAppCompatActivity() {
         startActivity(intent)
         finish()
     }
+
 
 
     private fun initSaveSettingsButton(){

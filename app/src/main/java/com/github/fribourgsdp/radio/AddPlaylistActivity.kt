@@ -114,4 +114,36 @@ class AddPlaylistActivity : MyAppCompatActivity() {
             findViewById<EditText>(R.id.newPlaylistName).setText(playlist.name)
         }
     }
+
+    private fun allFieldsEmpty(): Boolean {
+        if (findViewById<EditText>(R.id.newPlaylistName).text.toString().isNotBlank()){
+            return false
+        }
+        if (genreSpinner.selectedItem.toString() != Genre.values()[0].toString()){
+            return false
+        }
+        if (findViewById<EditText>(R.id.addSongToPlaylistSongName).text.toString().isNotBlank()){
+            return false
+        }
+        if (findViewById<EditText>(R.id.addSongToPlaylistArtistName).text.toString().isNotBlank()){
+            return false
+        }
+        if (listSongs.isNotEmpty()){
+            return false
+        }
+        return true
+    }
+
+    override fun onBackPressed() {
+        if (allFieldsEmpty()){
+            super.onBackPressed()
+            val intent = Intent(this, UserProfileActivity::class.java)
+            startActivity(intent)
+            finish()
+        }
+        else {
+            val warningDialog = QuitAddPlaylistDialog(this)
+            warningDialog.show(supportFragmentManager, "warningForQuittingAddPlaylist")
+        }
+    }
 }
