@@ -189,7 +189,7 @@ data class User (var name: String, val color: Int) {
      * @throws NoSuchFileException
      */
     fun getPlaylistWithName(name: String): Playlist {
-        return SetUtility.getNamedFromSet(playlists, name)
+        return SetUtility.getNamedFromSet(playlists, Playlist(name))
     }
 
     /**
