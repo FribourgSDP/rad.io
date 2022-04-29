@@ -118,39 +118,6 @@ class PlaylistSongsFragmentTest {
     }
 
 
-    /*@Test
-    fun savePlaylistOnlineTest(){
-        val bundle = Bundle()
-        var mockPlaylist = Mockito.mock(Playlist::class.java)
-        `when`(mockPlaylist.saveOnline()).thenReturn(Tasks.forResult(null))
-        `when`(mockPlaylist.transformToOnline()).thenReturn(Tasks.forResult(null))
-
-        val playlistName = "test"
-        mockPlaylist  =Playlist(playlistName, Genre.NONE)
-        mockPlaylist.id = "TEST"
-        mockPlaylist.addSong(Song("rouge", "sardou"))
-        mockPlaylist.addSong(Song("salut", "sardou"))
-        mockPlaylist.addSong(Song("Le France", "sardou"))
-
-        bundle.putString(PLAYLIST_DATA, mockPlaylist.name)
-
-        val playlistUncomplete = Playlist(playlistName,Genre.NONE)
-        playlistUncomplete.id = "TEST"
-        var user : User = User("Test User")
-        user.addPlaylist(playlistUncomplete)
-        val context: Context = ApplicationProvider.getApplicationContext()
-        user.save(context)
-
-        val scenario = launchFragmentInContainer<MockPlaylistSongsFragment>(bundle)
-        scenario.use {
-
-            onView(withId(R.id.SaveOnlineButton)).perform(ViewActions.click())
-            onView(withId(R.id.SaveOnlineButton)).check(matches(isNotClickable()))
-        }
-
-        //launch the fragment and click on save
-    }*/
-
     @Test
     fun loadAStoredOnlinePlaylistTest(){
         val bundle = Bundle()
