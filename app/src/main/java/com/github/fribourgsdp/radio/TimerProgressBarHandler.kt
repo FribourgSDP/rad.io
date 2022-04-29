@@ -20,7 +20,7 @@ import java.util.*
 class TimerProgressBarHandler(val timer: Timer, val progressBar: ProgressBar, timerListener: Timer.Listener, private val currentTimeInMillis: () -> Long = System::currentTimeMillis): Timer.DeadlineHandler {
 
     init {
-        timer.setListener(500L, timerListener)
+        timer.setListener(PROGRESS_REFRESH_RATE, timerListener)
         timer.time?.let { progressBar.max = it.toInt() }
         progressBar.progress = 0
     }
@@ -38,5 +38,9 @@ class TimerProgressBarHandler(val timer: Timer, val progressBar: ProgressBar, ti
     override fun stopTimer() {
         progressBar.visibility = View.INVISIBLE
         timer.stop()
+    }
+
+    companion object {
+        private const val PROGRESS_REFRESH_RATE = 500L
     }
 }

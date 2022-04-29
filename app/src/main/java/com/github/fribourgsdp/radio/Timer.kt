@@ -200,5 +200,8 @@ class Timer(time: Long? = null) {
         private fun computeTimeFromDeadline(deadline: Date, currentTimeInMillis: () -> Long): Long {
             return (deadline.time - currentTimeInMillis()) / 1000
         }
+
+        // The update refresh rate is of 1sec since the timer displays seconds
+        private const val UPDATE_REFRESH_RATE = 1_000L
     }
 }
