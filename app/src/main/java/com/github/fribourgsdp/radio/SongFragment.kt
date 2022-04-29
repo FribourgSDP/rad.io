@@ -12,6 +12,7 @@ open class SongFragment : MyFragment(R.layout.fragment_song) {
     private lateinit var currentLyrics : String
     private lateinit var playlistName : String
     private lateinit var songName: String
+    private lateinit var songArtist: String
     private lateinit var playlist: Playlist
     private lateinit var song: Song
     private var doSaveLyrics : Boolean = false
@@ -22,8 +23,9 @@ open class SongFragment : MyFragment(R.layout.fragment_song) {
             args.getString(PLAYLIST_DATA).let { playlistName ->
                 this.playlistName = playlistName!!
             }
-            args.getString(SONG_DATA).let { songName ->
-                this.songName = songName!!
+            args.getStringArray(SONG_DATA).let { songData ->
+                this.songName = songData!![SONG_NAME_INDEX]
+                this.songArtist = songData[SONG_ARTIST_INDEX]
             }
         }
     }
@@ -54,7 +56,7 @@ open class SongFragment : MyFragment(R.layout.fragment_song) {
 
         val user = User.load(requireContext())
         playlist = user.getPlaylistWithName(playlistName)
-        song = playlist.getSong(songName)
+        song = playlist.getSong(songName, songArtist)
         initialLyrics = song.lyrics
         currentLyrics = initialLyrics
         if(song.lyrics == ""){

@@ -19,8 +19,8 @@ import kotlinx.serialization.Serializable
  * @property genre genre of the playlist
  * @constructor creates a Playlist with the given name and genre
  */
- data class Playlist (override var name: String, var genre: Genre) : Nameable {
 
+data class Playlist (override var name: String, var genre: Genre) : Nameable {
     private val songs: MutableSet<Song> = mutableSetOf()
 
     var id : String = ""
@@ -89,14 +89,15 @@ import kotlinx.serialization.Serializable
     }
 
     /**
-     * getter for a single song, matched according to the name give
+     * getter for a single song, which has the same name and artist
      *
      * @param name the name of the song we are trying to retrieve
+     * @param artist the artist of the song we are trying to retrieve
      * @return the requested song
      * @throws NoSuchFileException
      */
-    fun getSong(name: String): Song {
-        return SetUtility.getNamedFromSet(songs, name)
+    fun getSong(name: String, artist: String): Song {
+        return SetUtility.getNamedFromSet(songs, Song(name, artist))
     }
 
     fun transformToOnline(db : Database = FirestoreDatabase()): Task<Void> {
