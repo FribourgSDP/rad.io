@@ -12,6 +12,8 @@ import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 
 const val SONG_DATA = "com.github.fribourgsdp.radio.SONG_INNER_DATA"
+const val SONG_NAME_INDEX = 0
+const val SONG_ARTIST_INDEX = 1
 const val PLAYLIST_TO_MODIFY = "com.github.fribourgsdp.radio.PLAYLIST_TO_MODIFY"
 
 class PlaylistSongsFragment : MyFragment(R.layout.fragment_playlist_display), OnClickListener{
@@ -81,7 +83,7 @@ class PlaylistSongsFragment : MyFragment(R.layout.fragment_playlist_display), On
     override fun onItemClick(position: Int) {
         val bundle = Bundle()
         bundle.putString(PLAYLIST_DATA, playlist.name)
-        bundle.putString(SONG_DATA, songs[position].name)
+        bundle.putStringArray(SONG_DATA, arrayOf(songs[position].name, songs[position].artist))
         activity?.supportFragmentManager?.beginTransaction()
             ?.replace(R.id.container, SongFragment::class.java, bundle)
             ?.addToBackStack("SongFragment")
