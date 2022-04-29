@@ -17,7 +17,8 @@ import com.google.android.gms.tasks.Task
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.json.Json
 
-class AddPlaylistActivity : AppCompatActivity(), SavePlaylistOnlinePickerDialog.OnPickListener {
+class AddPlaylistActivity : MyAppCompatActivity(), SavePlaylistOnlinePickerDialog.OnPickListener {
+
     private val listSongs = ArrayList<Song>()
     private var listNames = ArrayList<String>()
     private lateinit var listAdapter: SongAdapter
@@ -118,6 +119,7 @@ class AddPlaylistActivity : AppCompatActivity(), SavePlaylistOnlinePickerDialog.
         }
     }
 
+
     override fun onPick(online: Boolean) {
         val playlistName : String = findViewById<EditText>(R.id.newPlaylistName).text.toString()
         val genre : Genre = genreSpinner.selectedItem as Genre
@@ -132,6 +134,39 @@ class AddPlaylistActivity : AppCompatActivity(), SavePlaylistOnlinePickerDialog.
             user.save(this)
             val intent = Intent(this@AddPlaylistActivity, UserProfileActivity::class.java)
             startActivity(intent)
+        }
+    }
+
+    private fun allFieldsEmpty(): Boolean {
+        if (findViewById<EditText>(R.id.newPlaylistName).text.toString().isNotBlank()){
+            return false
+        }
+        if (genreSpinner.selectedItem.toString() != Genre.values()[0].toString()){
+            return false
+        }
+        if (findViewById<EditText>(R.id.addSongToPlaylistSongName).text.toString().isNotBlank()){
+            return false
+        }
+        if (findViewById<EditText>(R.id.addSongToPlaylistArtistName).text.toString().isNotBlank()){
+            return false
+        }
+        if (listSongs.isNotEmpty()){
+            return false
+        }
+        return true
+    }
+
+    override fun onBackPressed() {
+        if (allFieldsEmpty()){
+            super.onBackPressed()
+            val intent = Intent(this, UserProfileActivity::class.java)
+            startActivity(intent)
+            finish()
+        }
+        else {
+            val warningDialog = QuitAddPlaylistDialog(this)
+            warningDialog.show(supportFragmentManager, "warningForQuittingAddPlaylist")
+
         }
     }
 }

@@ -1,31 +1,38 @@
 package com.github.fribourgsdp.radio
 
 import android.content.Context
+import android.os.Bundle
 import android.view.View
+import androidx.fragment.app.testing.launchFragment
+import androidx.fragment.app.testing.launchFragmentInContainer
 import androidx.test.core.app.ApplicationProvider
-import androidx.test.espresso.Espresso.closeSoftKeyboard
-import androidx.test.espresso.Espresso.onView
+import androidx.test.espresso.Espresso
+import androidx.test.espresso.Espresso.*
 import androidx.test.espresso.UiController
 import androidx.test.espresso.ViewAction
 import androidx.test.espresso.action.ViewActions
+import androidx.test.espresso.action.ViewActions.click
 import androidx.test.espresso.assertion.ViewAssertions
+import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.contrib.RecyclerViewActions
 import androidx.test.espresso.intent.Intents
+import androidx.test.espresso.intent.matcher.IntentMatchers
 import androidx.test.espresso.intent.matcher.IntentMatchers.*
-import androidx.test.espresso.matcher.RootMatchers
+ import androidx.test.espresso.matcher.RootMatchers
+import androidx.test.espresso.matcher.RootMatchers.isDialog
 import androidx.test.espresso.matcher.ViewMatchers
+import androidx.test.espresso.matcher.ViewMatchers.isDisplayed
 import androidx.test.espresso.matcher.ViewMatchers.withId
 import androidx.test.ext.junit.rules.ActivityScenarioRule
 import androidx.test.ext.junit.runners.AndroidJUnit4
 
 import com.google.android.gms.tasks.Tasks
-import org.hamcrest.Matchers.allOf
 import org.junit.After
 import org.junit.Assert.*
 import org.junit.Before
 import org.hamcrest.Matcher
-import org.hamcrest.Matchers.allOf
-import org.hamcrest.Matchers.nullValue
+import org.hamcrest.Matchers
+import org.hamcrest.Matchers.*
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -35,7 +42,7 @@ import org.junit.runner.RunWith
 class AddPlaylistActivityTest {
 
     @get:Rule
-    var assPlaylistActivityRule = ActivityScenarioRule(AddPlaylistActivity::class.java)
+    var addPlaylistActivityRule = ActivityScenarioRule(AddPlaylistActivity::class.java)
     private val ctx: Context = ApplicationProvider.getApplicationContext()
 
     @Before
@@ -137,7 +144,198 @@ class AddPlaylistActivityTest {
 
     }
 
-    private fun initializeSardouPlaylist(){
+    @Test
+    fun pressingBackWhenNothingHasBeenModifiedGoesToUserProfile(){
+        Espresso.pressBack()
+        Intents.intended(
+            Matchers.allOf(
+                IntentMatchers.hasComponent(UserProfileActivity::class.java.name)
+            )
+        )
+    }
+
+    @Test
+    fun modifyingPlaylistNameMakesPopupAppear(){
+        onView(withId(R.id.newPlaylistName))
+            .perform(
+                ViewActions.typeText("Sardou playlist")
+            )
+        closeSoftKeyboard()
+        Espresso.pressBack()
+
+        onView(withId(R.id.warningQuitAddPlaylist))
+            .inRoot(isDialog())
+            .check(matches(isDisplayed()))
+
+        onView(withId(R.id.validateQuitAddPlaylist))
+            .inRoot(isDialog())
+            .check(matches(isDisplayed()))
+
+
+        onView(withId(R.id.cancelQuitAddPlaylist))
+            .inRoot(isDialog())
+            .check(matches(isDisplayed()))
+    }
+
+    @Test
+    fun modifyingGenreMakesPopupAppear(){
+        onView(withId(R.id.genreSpinner))
+            .perform(
+                ViewActions.click()
+            )
+        onData(allOf(`is`(instanceOf(Genre::class.java)),
+            `is`(Genre.COUNTRY))).perform(click())
+
+        Espresso.pressBack()
+
+        onView(withId(R.id.warningQuitAddPlaylist))
+            .inRoot(isDialog())
+            .check(matches(isDisplayed()))
+
+        onView(withId(R.id.validateQuitAddPlaylist))
+            .inRoot(isDialog())
+            .check(matches(isDisplayed()))
+
+
+        onView(withId(R.id.cancelQuitAddPlaylist))
+            .inRoot(isDialog())
+            .check(matches(isDisplayed()))
+    }
+
+    @Test
+    fun writingSongNameMakesPopupAppear(){
+        onView(withId(R.id.addSongToPlaylistSongName))
+            .perform(
+                ViewActions.typeText("name")
+            )
+        closeSoftKeyboard()
+        Espresso.pressBack()
+
+        onView(withId(R.id.warningQuitAddPlaylist))
+            .inRoot(isDialog())
+            .check(matches(isDisplayed()))
+
+        onView(withId(R.id.validateQuitAddPlaylist))
+            .inRoot(isDialog())
+            .check(matches(isDisplayed()))
+
+
+        onView(withId(R.id.cancelQuitAddPlaylist))
+            .inRoot(isDialog())
+            .check(matches(isDisplayed()))
+    }
+
+    @Test
+    fun writingArtistNameMakesPopupAppear(){
+        onView(withId(R.id.addSongToPlaylistArtistName))
+            .perform(
+                ViewActions.typeText("artistname")
+            )
+        closeSoftKeyboard()
+        Espresso.pressBack()
+
+        onView(withId(R.id.warningQuitAddPlaylist))
+            .inRoot(isDialog())
+            .check(matches(isDisplayed()))
+
+        onView(withId(R.id.validateQuitAddPlaylist))
+            .inRoot(isDialog())
+            .check(matches(isDisplayed()))
+
+
+        onView(withId(R.id.cancelQuitAddPlaylist))
+            .inRoot(isDialog())
+            .check(matches(isDisplayed()))
+    }
+
+    @Test
+    fun addingASongToPlaylistMakesPopupAppear(){
+        onView(withId(R.id.addSongToPlaylistSongName))
+            .perform(ViewActions.typeText("Rouge"))
+        closeSoftKeyboard()
+        onView(withId(R.id.addSongToPlaylistArtistName))
+            .perform(ViewActions.typeText("Sardou"))
+        closeSoftKeyboard()
+        onView(withId(R.id.addSongToPlaylistBtn))
+            .perform(ViewActions.click())
+
+        Espresso.pressBack()
+
+        onView(withId(R.id.warningQuitAddPlaylist))
+            .inRoot(isDialog())
+            .check(matches(isDisplayed()))
+
+        onView(withId(R.id.validateQuitAddPlaylist))
+            .inRoot(isDialog())
+            .check(matches(isDisplayed()))
+
+
+        onView(withId(R.id.cancelQuitAddPlaylist))
+            .inRoot(isDialog())
+            .check(matches(isDisplayed()))
+
+    }
+
+    @Test
+    fun pressingOnQuitGoesToMain() {
+        onView(withId(R.id.addSongToPlaylistSongName))
+            .perform(ViewActions.typeText("Rouge"))
+        closeSoftKeyboard()
+        Espresso.pressBack()
+
+        onView(withId(R.id.warningQuitAddPlaylist))
+            .inRoot(isDialog())
+            .check(matches(isDisplayed()))
+
+        onView(withId(R.id.validateQuitAddPlaylist))
+            .inRoot(isDialog())
+            .check(matches(isDisplayed()))
+
+
+        onView(withId(R.id.cancelQuitAddPlaylist))
+            .inRoot(isDialog())
+            .check(matches(isDisplayed()))
+
+        onView(withId(R.id.validateQuitAddPlaylist))
+            .perform(click())
+
+        Intents.intended(
+            Matchers.allOf(
+                IntentMatchers.hasComponent(UserProfileActivity::class.java.name)
+            )
+        )
+    }
+
+    @Test
+    fun pressingOnCancelStaysOnCurrentActivity() {
+        onView(withId(R.id.addSongToPlaylistSongName))
+            .perform(ViewActions.typeText("Rouge"))
+        closeSoftKeyboard()
+        Espresso.pressBack()
+        onView(withId(R.id.warningQuitAddPlaylist))
+            .inRoot(isDialog())
+            .check(matches(isDisplayed()))
+
+        onView(withId(R.id.validateQuitAddPlaylist))
+            .inRoot(isDialog())
+            .check(matches(isDisplayed()))
+
+
+        onView(withId(R.id.cancelQuitAddPlaylist))
+            .inRoot(isDialog())
+            .check(matches(isDisplayed()))
+
+        onView(withId(R.id.cancelQuitAddPlaylist))
+            .perform(click())
+
+        onView(withId(R.id.addSongToPlaylistSongName))
+            .check(
+            ViewAssertions.matches(
+                ViewMatchers.withText("Rouge")
+            ))
+    }
+
+    private fun initializeSardouPlaylist() {
         onView(withId(R.id.newPlaylistName))
             .perform(ViewActions.typeText("Sardou playlist"))
         closeSoftKeyboard()
@@ -168,6 +366,5 @@ class AddPlaylistActivityTest {
         closeSoftKeyboard()
         onView(withId(R.id.addSongToPlaylistBtn))
             .perform(ViewActions.click())
-
     }
 }

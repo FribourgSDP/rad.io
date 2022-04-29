@@ -20,7 +20,7 @@ import com.google.firebase.auth.GoogleAuthProvider
 import java.lang.Exception
 
 
-class GoogleSignInActivity : AppCompatActivity() {
+class GoogleSignInActivity : MyAppCompatActivity() {
 
 
     //view binding
@@ -120,6 +120,13 @@ class GoogleSignInActivity : AppCompatActivity() {
                     Toast.LENGTH_SHORT
                 ).show()
             }
+    }
+
+    override fun onBackPressed() {
+        super.onBackPressed()
+        val intent = Intent(this, UserProfileActivity::class.java)
+        startActivity(intent)
+        finish()
     }
 }
 

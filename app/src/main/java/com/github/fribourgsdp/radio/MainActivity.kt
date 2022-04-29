@@ -13,7 +13,7 @@ import androidx.appcompat.app.AppCompatActivity
 
 import android.widget.ImageButton
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : MyAppCompatActivity() {
     private val db = FirestoreDatabase()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -52,5 +52,9 @@ class MainActivity : AppCompatActivity() {
             db.setUser(result.id,result)
         }
 
+    }
+
+    override fun onBackPressed() {
+        /* This activity is the main activity of our app and we wish to stay on this*/
     }
 }

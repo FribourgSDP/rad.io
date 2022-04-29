@@ -1,13 +1,14 @@
 package com.github.fribourgsdp.radio
 
 import android.content.ContentValues
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import com.google.android.gms.tasks.Tasks
 
-class FireBaseTestActivity : AppCompatActivity() {
+class FireBaseTestActivity : MyAppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_fire_base_test)
@@ -137,6 +138,13 @@ class FireBaseTestActivity : AppCompatActivity() {
         }*/
 
          */
+    }
+
+    override fun onBackPressed() {
+        super.onBackPressed()
+        val intent = Intent(this, MainActivity::class.java)
+        startActivity(intent)
+        finish()
     }
 }
 

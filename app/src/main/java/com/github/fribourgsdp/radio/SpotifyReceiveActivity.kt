@@ -7,7 +7,7 @@ import android.widget.Button
 import androidx.appcompat.app.AppCompatActivity
 import com.spotify.sdk.android.auth.AuthorizationResponse
 
-class SpotifyReceiveActivity : AppCompatActivity() {
+class SpotifyReceiveActivity : MyAppCompatActivity() {
 
     private lateinit var ACCESS_TOKEN: String
 
@@ -23,6 +23,13 @@ class SpotifyReceiveActivity : AppCompatActivity() {
             startActivity(intent)
         }
 
+    }
+
+    override fun onBackPressed() {
+        super.onBackPressed()
+        val intent = Intent(this, UserProfileActivity::class.java)
+        startActivity(intent)
+        finish()
     }
 
     companion object {

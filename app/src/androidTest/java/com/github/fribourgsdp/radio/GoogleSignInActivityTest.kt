@@ -4,6 +4,7 @@ import android.content.Context
 import android.content.Intent
 import androidx.test.core.app.ActivityScenario
 import androidx.test.core.app.ApplicationProvider
+import androidx.test.espresso.Espresso
 import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.action.ViewActions.click
 import androidx.test.espresso.assertion.ViewAssertions
@@ -170,6 +171,22 @@ class GoogleSignInActivityTest {
             )
         }
         firebaseAuth.signOut()
+    }
+
+    @Test
+    fun backPressedGoesToUserSettings() {
+        val context: Context = ApplicationProvider.getApplicationContext()
+        val intent = Intent(context, GoogleSignInActivity::class.java)
+        ActivityScenario.launch<GoogleSignInActivity>(intent).use {
+            Espresso.pressBack()
+            Intents.intended(
+                Matchers.allOf(
+                    IntentMatchers.hasComponent(UserProfileActivity::class.java.name),
+                )
+            )
+        }
+
+
     }
 
 

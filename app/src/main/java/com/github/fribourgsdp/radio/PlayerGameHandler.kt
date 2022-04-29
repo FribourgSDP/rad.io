@@ -1,9 +1,11 @@
 package com.github.fribourgsdp.radio
 
+import android.content.Intent
+import android.util.Log
 import com.google.firebase.firestore.DocumentSnapshot
 
 class PlayerGameHandler(
-    private val gameID: Long,
+    val gameID: Long,
     private val view: GameView,
     db: Database = FirestoreDatabase()
 ): GameHandler(view, db), GameView.OnPickListener {
@@ -16,8 +18,9 @@ class PlayerGameHandler(
 
     override fun handleSnapshot(snapshot: DocumentSnapshot?) {
         if (snapshot != null && snapshot.exists()) {
+            val gameStillValid = snapshot.getBoolean("validity")!!
             val scores = snapshot.get("scores") as HashMap<String, Long>
-            if (snapshot.getBoolean("finished")!!) {
+            if (snapshot.getBoolean("finished")!! || !gameStillValid) {
                 view.gameOver(scores)
                 return
             }
@@ -34,23 +37,8 @@ class PlayerGameHandler(
             // It's not null when there is one.
             songToGuess = snapshot.getString("current_song")
 
-            if (view.checkPlayer(singerName)) {
-                if (songToGuess == null) {
-                    val choices = snapshot.get("song_choices")!! as ArrayList<String>
-                    view.chooseSong(choices, this)
-                }
 
-            } else {
-                if (songToGuess != null) {
-                    // The singer picked a song so the player can guess
-                    view.displayGuessInput()
-                } else {
-                    // The singer is till picking, so the player waits
-                    view.displayWaitOnSinger(singerName)
-                }
-
-
-            }
+            updateViewForPlayer(snapshot, singerName)
 
         } else {
             view.displayError("An error occurred")
@@ -86,6 +74,50 @@ class PlayerGameHandler(
                 view.displayError("An error occurred")
             }
     }
+
+    private fun displayLyrics(snapshot: DocumentSnapshot){
+        val lyricsHashMap =
+            snapshot.get("song_choices_lyrics")!! as Map<String, String>
+        val lyrics = lyricsHashMap[songToGuess!!]
+        view.displayLyrics(lyrics!!)
+    }
+
+    private fun chooseSong(snapshot: DocumentSnapshot){
+        val choices = snapshot.get("song_choices")!! as ArrayList<String>
+        view.chooseSong(choices, this)
+    }
+
+    private fun updateViewForPlayer(snapshot: DocumentSnapshot, singerName : String){
+        if (view.checkPlayer(singerName)) {
+            if (songToGuess == null) {
+                chooseSong(snapshot)
+            } else{
+                displayLyrics(snapshot)
+            }
+        } else {
+            if (songToGuess != null) {
+                // The singer picked a song so the player can guess
+                view.displayGuessInput()
+
+            } else {
+                // The singer is till picking, so the player waits
+                view.displayWaitOnSinger(singerName)
+            }
+        }
+    }
+
+    fun disableGame() {
+        db.disableGame(gameID)
+    }
+
+    fun removeUserFromLobby(user: User) {
+        db.removeUserFromLobby(gameID, user)
+    }
+
+    fun removePlayerFromGame(user: User) {
+        db.removePlayerFromGame(gameID, user)
+    }
+
 
 
 }

@@ -18,7 +18,7 @@ const val PLAYLIST_INFO_ERROR = "---An error occurred while fetching the playlis
 
 var TOKEN: String? = null
 
-class ImportSpotifyPlaylistsActivity : AppCompatActivity() {
+class ImportSpotifyPlaylistsActivity : MyAppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 

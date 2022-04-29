@@ -219,7 +219,8 @@ class FirestoreDatabase(var refMake: FirestoreRef) : Database {
             "private" to settings.isPrivate,
             "players" to hashMapOf<String, String>(),
             "permissions" to hashMapOf<String, Boolean>(),
-            "launched" to false
+            "launched" to false,
+            "validity" to true
         )
 
         return db.collection("lobby").document(id.toString())
@@ -263,7 +264,7 @@ class FirestoreDatabase(var refMake: FirestoreRef) : Database {
                 throw IllegalArgumentException("Document $id not found.")
             }
 
-            val mapIdToName = snapshot.get("players")!! as HashMap<String, String>
+            val mapIdToName = snapshot.getPlayers()
             if (mapIdToName.containsKey(user.id)) {
                 // A user with the same id was already added
                 throw IllegalArgumentException("id: ${user.id} is already in the database")
@@ -273,10 +274,117 @@ class FirestoreDatabase(var refMake: FirestoreRef) : Database {
 
             transaction.update(docRef, "players", mapIdToName)
 
-            val playerPermissions = snapshot.get("permissions")!! as HashMap<String, Boolean>
+            val playerPermissions = snapshot.getPermissions()
             playerPermissions[user.id] = hasMicPermissions
 
             transaction.update(docRef, "permissions", playerPermissions)
+
+            // Success
+            null
+        }
+    }
+
+    override fun removeUserFromLobby(id: Long, user: User) : Task<Void> {
+        val docRef = db.collection("lobby").document(id.toString())
+
+        return db.runTransaction { transaction ->
+            val snapshot = transaction.get(docRef)
+
+            if (!snapshot.exists()) {
+                throw IllegalArgumentException("Document $id not found.")
+            }
+
+            val mapIdToName = snapshot.get("players")!! as HashMap<String, String>
+            if (!mapIdToName.containsKey(user.id)) {
+                // A user with the same id was already added
+                throw IllegalArgumentException("id: ${user.id} is not in the database")
+            }
+
+            mapIdToName.remove(user.id)
+
+            transaction.update(docRef, "players", mapIdToName)
+
+            val playerPermissions = snapshot.get("permissions")!! as HashMap<String, Boolean>
+            playerPermissions.remove(user.id)
+
+            transaction.update(docRef, "permissions", playerPermissions)
+
+            // Success
+            null
+        }
+    }
+
+    override fun disableGame(id: Long): Task<Void> {
+        val docRef = db.collection("games").document(id.toString())
+
+        return db.runTransaction { transaction ->
+            val snapshot = transaction.get(docRef)
+
+            if (!snapshot.exists()) {
+                throw IllegalArgumentException("Document $id not found.")
+            }
+
+            transaction.update(docRef, "validity", false)
+
+            // Success
+            null
+        }
+    }
+
+    override fun disableLobby(gameID: Long): Task<Void> {
+        val docRef = db.collection("lobby").document(gameID.toString())
+
+        return db.runTransaction { transaction ->
+            val snapshot = transaction.get(docRef)
+
+            if (!snapshot.exists()) {
+                throw IllegalArgumentException("Document $gameID not found.")
+            }
+
+            transaction.update(docRef, "validity", false)
+
+            // Success
+            null
+        }
+    }
+
+    override fun removePlayerFromGame(gameID: Long, user: User): Task<Void> {
+        val docRef = db.collection("games_metadata").document(gameID.toString())
+
+        return db.runTransaction { transaction ->
+            val snapshot = transaction.get(docRef)
+
+            if (!snapshot.exists()) {
+                throw IllegalArgumentException("Document $gameID not found.")
+            }
+
+            val playerDoneMap = snapshot.get("player_done_map")!! as HashMap<String, Boolean>
+            val playerFoundMap = snapshot.get("player_found_map")!! as HashMap<String, Boolean>
+            playerDoneMap.remove(user.id)
+            playerFoundMap.remove(user.id)
+
+            transaction.update(docRef, "player_done_map", playerDoneMap)
+            transaction.update(docRef, "player_found_map", playerFoundMap)
+
+            // Success
+            null
+        }
+    }
+
+    override fun makeSingerDone(gameID: Long, singerId: String): Task<Void> {
+        val docRef = db.collection("game_metadata").document(gameID.toString())
+
+        return db.runTransaction { transaction ->
+            val snapshot = transaction.get(docRef)
+
+            if (!snapshot.exists()) {
+                throw IllegalArgumentException("Document $gameID not found.")
+            }
+
+            val playerDoneMap = snapshot.get("player_done_map")!! as HashMap<String, Boolean>
+            playerDoneMap[singerId] = true
+
+            transaction.update(docRef, "player_done_map", playerDoneMap)
 
             // Success
             null
@@ -293,7 +401,7 @@ class FirestoreDatabase(var refMake: FirestoreRef) : Database {
                 throw IllegalArgumentException("Document $id not found.")
             }
 
-            val playerPermissions = snapshot.get("permissions")!! as HashMap<String, Boolean>
+            val playerPermissions = snapshot.getPermissions()
             playerPermissions[user.id] = newPermissions
 
             transaction.update(docRef, "permissions", playerPermissions)
@@ -312,7 +420,9 @@ class FirestoreDatabase(var refMake: FirestoreRef) : Database {
                     "current_song" to "",
                     "singer" to "",
                     "song_choices" to ArrayList<String>(),
-                    "scores" to HashMap<String, Int>()
+                    "scores" to HashMap<String, Int>(),
+                    "validity" to true,
+                    "song_choices_lyrics" to HashMap<String, String>(),
                 )
             )
     }
@@ -357,11 +467,11 @@ class FirestoreDatabase(var refMake: FirestoreRef) : Database {
             }
 
             // Set the player to done
-            val updatedDoneMap = snapshot.get("player_done_map")!! as HashMap<String, Boolean>
+            val updatedDoneMap = snapshot.getPlayerDoneMap()
             updatedDoneMap[playerID] = true
 
             // Set if the player has found or not
-            val updatedFoundMap = snapshot.get("player_found_map")!! as HashMap<String, Boolean>
+            val updatedFoundMap = snapshot.getPlayerFoundMap()
             updatedFoundMap[playerID] = hasFound
 
 
@@ -371,7 +481,7 @@ class FirestoreDatabase(var refMake: FirestoreRef) : Database {
                 updatedFoundMap.count { (_, hasFound) -> hasFound }
             )
 
-            val updatedScoreMap = snapshot.get("scores_of_round")!! as HashMap<String, Int>
+            val updatedScoreMap = snapshot.getScoresOfRound<Int>()
             updatedScoreMap[playerID] = points
 
             // Update on database
@@ -399,15 +509,16 @@ class FirestoreDatabase(var refMake: FirestoreRef) : Database {
             }
 
             // reset done map
-            val updatedDoneMap = snapshot.get("player_done_map")!! as HashMap<String, Boolean>
-            updatedDoneMap.replaceAll { k, _ -> k == singer}
+         
+            val updatedDoneMap = snapshot.getPlayerDoneMap()
+            updatedDoneMap.replaceAll { _, _ -> false}
 
             // reset found map
-            val updatedFoundMap = snapshot.get("player_found_map")!! as HashMap<String, Boolean>
+            val updatedFoundMap = snapshot.getPlayerFoundMap()
             updatedFoundMap.replaceAll { _, _ -> false}
 
             // reset scores of round
-            val scoresOfRound = snapshot.get("scores_of_round")!! as HashMap<String, Long>
+            val scoresOfRound = snapshot.getScoresOfRound<Long>()
             scoresOfRound.replaceAll { _, _ -> 0L}
 
             // Update on database

@@ -3,7 +3,7 @@
     package="com.github.fribourgsdp.radio">
 
     <uses-permission android:name="android.permission.INTERNET" />
-    <uses-permission android:name="android.permission.RECORD_AUDIO"/>
+    <uses-permission android:name="android.permission.RECORD_AUDIO" />
     <uses-permission android:name="android.permission.MODIFY_AUDIO_SETTINGS" />
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
@@ -28,6 +28,7 @@
         </activity>
         <activity
             android:name=".GameActivity"
+            android:launchMode= "singleInstance"
             android:exported="false" />
         <activity
             android:name=".VoiceOverIPActivity"

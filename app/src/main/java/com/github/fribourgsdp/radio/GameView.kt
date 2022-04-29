@@ -64,6 +64,11 @@ interface GameView {
     fun gameOver(finalScores: Map<String, Long>)
 
     /**
+     * Displays the given [String] in the dedicated TextView
+     */
+    fun displayLyrics(lyrics : String)
+
+    /**
      * An interface creating listeners able to handle songs pick in a [GameView].
      */
     interface OnPickListener {
@@ -72,4 +77,5 @@ interface GameView {
          */
         fun onPick(song: String)
     }
+
 }

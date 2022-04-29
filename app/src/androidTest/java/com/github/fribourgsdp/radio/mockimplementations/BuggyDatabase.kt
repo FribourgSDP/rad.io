@@ -108,4 +108,24 @@ class BuggyDatabase : Database {
         TODO("Not yet implemented")
     }
 
+    override fun removeUserFromLobby(id: Long, user: User): Task<Void> {
+        TODO("Not yet implemented")
+    }
+
+    override fun disableGame(id: Long): Task<Void> {
+        TODO("Not yet implemented")
+    }
+
+    override fun disableLobby(gameID: Long): Task<Void> {
+        TODO("Not yet implemented")
+    }
+
+    override fun removePlayerFromGame(gameID: Long, user: User): Task<Void> {
+        TODO("Not yet implemented")
+    }
+
+    override fun makeSingerDone(gameID: Long, singerName: String): Task<Void> {
+        TODO("Not yet implemented")
+    }
+
 }
