@@ -1,6 +1,6 @@
 package com.github.fribourgsdp.radio
 
-interface GameView {
+interface GameView: Timer.DeadlineHandler {
     /**
      * Make the user of the view pick a song from the given [choices].
      * The pick is handler by the [listener].

@@ -4,12 +4,17 @@ import android.content.ContentValues
 import android.util.Log
 import com.google.android.gms.tasks.Task
 import com.google.android.gms.tasks.Tasks
+import com.google.firebase.Timestamp
 import com.google.firebase.firestore.DocumentReference
 import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.firestore.EventListener
 import java.lang.Exception
+import java.util.*
+import kotlin.collections.ArrayList
+import kotlin.collections.HashMap
+import kotlin.math.round
 
 /**
  * This class serves to make possible the dependency injection with mockito. We mock the
@@ -412,7 +417,6 @@ class FirestoreDatabase(var refMake: FirestoreRef) : Database {
                 hashMapOf(
                     "finished" to false,
                     "current_round" to 0L,
-                    "current_song" to "",
                     "singer" to "",
                     "song_choices" to ArrayList<String>(),
                     "scores" to HashMap<String, Int>(),
@@ -451,6 +455,18 @@ class FirestoreDatabase(var refMake: FirestoreRef) : Database {
             .update(updatesMap)
     }
 
+    override fun updateCurrentSongOfGame(id: Long, songName: String): Task<Void> {
+        val roundDeadline = Date()
+        roundDeadline.time += ROUND_TIME_IN_MILLIS
+
+        val songUpdateMap = hashMapOf(
+            "current_song" to songName,
+            "round_deadline" to Timestamp(roundDeadline)
+        )
+
+        return updateGame(id, songUpdateMap)
+    }
+
     override fun playerEndTurn(gameID: Long, playerID: String, hasFound: Boolean): Task<Void> {
         val docRef = db.collection("games_metadata").document(gameID.toString())
 
@@ -470,11 +486,11 @@ class FirestoreDatabase(var refMake: FirestoreRef) : Database {
             updatedFoundMap[playerID] = hasFound
 
 
-            // Count the number of players that found the answer and compute the points
-            val points = Game.computeScore(
+            // Count the number of players that found the answer and compute the points if the player found
+            val points = if (hasFound) Game.computeScore(
                 // The position of the player:
                 updatedFoundMap.count { (_, hasFound) -> hasFound }
-            )
+            ) else 0
 
             val updatedScoreMap = snapshot.getScoresOfRound<Int>()
             updatedScoreMap[playerID] = points
@@ -532,6 +548,11 @@ class FirestoreDatabase(var refMake: FirestoreRef) : Database {
     private fun listenUpdate(collectionPath : String, id: Long, listener: EventListener<DocumentSnapshot>){
         db.collection(collectionPath).document(id.toString())
             .addSnapshotListener(listener)
+    }
+
+    companion object {
+        // Here it's 45 seconds in milliseconds
+        private const val ROUND_TIME_IN_MILLIS = 45_000L
     }
 
 

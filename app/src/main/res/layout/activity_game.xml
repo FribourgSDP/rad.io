@@ -35,6 +35,12 @@
             android:textAlignment="center"
             android:textSize="20sp" />
 
+        <ProgressBar
+            android:id="@+id/roundProgressBar"
+            style="?android:attr/progressBarStyleHorizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
         <EditText
             android:id="@+id/songGuessEditText"
             android:layout_width="match_parent"
