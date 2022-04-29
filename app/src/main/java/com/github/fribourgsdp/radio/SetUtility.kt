@@ -16,8 +16,8 @@ object SetUtility {
         items.forEach{ i : E -> addToSet(set, i)}
     }
 
-    fun <E : Nameable> getNamedFromSet(set : MutableSet<E>, name: String) : E {
-        val filteredSet = set.filter { nameable -> nameable.name == name }
+    fun <E : Nameable> getNamedFromSet(set : MutableSet<E>, nameable: E) : E {
+        val filteredSet = set.filter { value -> value == nameable }
         if (filteredSet.isEmpty()) {
             throw NoSuchElementException()
         } else {
