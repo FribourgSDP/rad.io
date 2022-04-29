@@ -132,6 +132,19 @@ class PlayerGameHandler(
     fun disableGame() {
         db.disableGame(gameID)
     }
+<<<<<<< HEAD
+=======
+
+    fun removeUserFromLobby(user: User) {
+        db.removeUserFromLobby(gameID, user)
+    }
+
+    fun removePlayerFromGame(user: User) {
+        db.removePlayerFromGame(gameID, user)
+    }
+
+
+>>>>>>> origin/master
 
     fun removeUserFromLobby(user: User) {
         db.removeUserFromLobby(gameID, user)
