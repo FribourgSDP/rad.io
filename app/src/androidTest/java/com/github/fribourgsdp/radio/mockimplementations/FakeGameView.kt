@@ -2,10 +2,12 @@ package com.github.fribourgsdp.radio.mockimplementations
 
 import android.view.View
 import com.github.fribourgsdp.radio.GameView
+import java.util.*
+import kotlin.collections.HashMap
 
 class FakeGameView(private val playerID: String = ""): GameView {
 
-    var flag = false
+    var lyricsDisplayed = false
 
     var singer = ""
     var round = 0L
@@ -21,6 +23,9 @@ class FakeGameView(private val playerID: String = ""): GameView {
     var scores: Map<String, Long> = HashMap()
 
     var gameOver = false
+
+    var timerRunning = false
+    var timerDeadline: Date? = null
 
     override fun chooseSong(choices: List<String>, listener: GameView.OnPickListener) {
         listener.onPick(choices[0])
@@ -70,8 +75,17 @@ class FakeGameView(private val playerID: String = ""): GameView {
         gameOver = true
     }
 
+    override fun startTimer(deadline: Date) {
+        timerRunning = true
+        timerDeadline = deadline
+    }
+
+    override fun stopTimer() {
+        timerRunning = false
+    }
+
     override fun displayLyrics(lyrics: String) {
-        flag = true
+        lyricsDisplayed = true
     }
 
 }

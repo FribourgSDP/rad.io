@@ -3,11 +3,13 @@ package com.github.fribourgsdp.radio
 import android.view.View
 import com.github.fribourgsdp.radio.mockimplementations.FakeGameView
 import com.google.android.gms.tasks.Tasks
+import com.google.firebase.Timestamp
 import com.google.firebase.firestore.DocumentSnapshot
 import org.junit.Assert.*
 import org.junit.Before
 import org.junit.Test
 import org.mockito.Mockito.*
+import java.util.*
 
 
 class PlayerGameHandlerTest {
@@ -22,6 +24,7 @@ class PlayerGameHandlerTest {
         "singer0" to 100L,
         "singer1" to 85L
     )
+    private val deadline = Date(1998_000L)
 
     @Before
     fun setup() {
@@ -33,6 +36,8 @@ class PlayerGameHandlerTest {
         `when`(mockSnapshot.getString("current_song")).thenReturn(null)
         `when`(mockSnapshot.get("scores")).thenReturn(scores)
         `when`(mockSnapshot.getBoolean("finished")).thenReturn(false)
+        `when`(mockSnapshot.getTimestamp("round_deadline")).thenReturn(Timestamp(deadline))
+        `when`(mockSnapshot.getBoolean("validity")).thenReturn(true)
 
     }
 
@@ -71,19 +76,12 @@ class PlayerGameHandlerTest {
 
     @Test
     fun callDisplayLyricsOnSnapshot(){
-        val view = FakeGameView("")
+        val view = FakeGameView(singer)
         val handler = PlayerGameHandler(0, view)
-        val mockSnapshot2 = mock(DocumentSnapshot::class.java)
-        `when`(mockSnapshot2.getString("singer")).thenReturn("")
-        `when`(mockSnapshot2.exists()).thenReturn(true)
-        `when`(mockSnapshot2.getLong("current_round")).thenReturn(round)
-        `when`(mockSnapshot2.get("song_choices")).thenReturn(listOfSongs)
-        `when`(mockSnapshot2.get("song_choices_lyrics")).thenReturn(hashMapOf("Momentum" to "Lorem Ipsum"))
-        `when`(mockSnapshot2.getString("current_song")).thenReturn("Momentum")
-        `when`(mockSnapshot2.get("scores")).thenReturn(scores)
-        `when`(mockSnapshot2.getBoolean("finished")).thenReturn(false)
-        handler.handleSnapshot(mockSnapshot2)
-        assertEquals(view.flag, true)
+        `when`(mockSnapshot.getString("current_song")).thenReturn("Momentum")
+        `when`(mockSnapshot.get("song_choices_lyrics")).thenReturn(hashMapOf("Momentum" to "Lorem Ipsum"))
+        handler.handleSnapshot(mockSnapshot)
+        assertTrue(view.lyricsDisplayed)
     }
 
     @Test
@@ -309,6 +307,67 @@ class PlayerGameHandlerTest {
         handler.handleSnapshot(mockSnapshot)
 
         assertTrue(view.gameOver)
+    }
+
+    @Test
+    fun timerLaunchedWhenGuessing() {
+        val view = FakeGameView("Not singer")
+        val handler = PlayerGameHandler(0, view)
+        `when`(mockSnapshot.getString("current_song")).thenReturn(song)
+
+        handler.handleSnapshot(mockSnapshot)
+
+        assertTrue(view.timerRunning)
+        assertEquals(deadline, view.timerDeadline)
+    }
+
+    @Test
+    fun timerStoppedOnGoodGuess() {
+        val view = FakeGameView("Not Singer")
+        // Say the view started the timer to see the difference
+        view.startTimer(deadline)
+
+        val db = mock(Database::class.java)
+        `when`(db.playerEndTurn(anyLong(), anyString(), anyBoolean()))
+            .thenReturn(Tasks.forResult(null))
+
+        `when`(mockSnapshot.getString("current_song")).thenReturn(song)
+
+        val handler = PlayerGameHandler(0, view, db)
+
+        // Update song to guess
+        handler.handleSnapshot(mockSnapshot)
+
+        // Check it
+        handler.handleGuess(song, "")
+
+        // Wait for the task of the database to execute
+        Thread.sleep(1)
+
+        assertFalse(view.timerRunning)
+    }
+
+    @Test
+    fun hideErrorOnTimeout() {
+        val view = FakeGameView("Not Singer")
+        val db = mock(Database::class.java)
+        `when`(db.playerEndTurn(anyLong(), anyString(), anyBoolean()))
+            .thenReturn(Tasks.forResult(null))
+
+        `when`(mockSnapshot.getString("current_song")).thenReturn(song)
+
+        val handler = PlayerGameHandler(0, view, db)
+
+        // Update song to guess
+        handler.handleSnapshot(mockSnapshot)
+
+        // Check it
+        handler.handleGuess("", "", true)
+
+        // Wait for the task of the database to execute
+        Thread.sleep(1)
+
+        assertEquals(View.GONE, view.errorVisibility)
     }
 
 }

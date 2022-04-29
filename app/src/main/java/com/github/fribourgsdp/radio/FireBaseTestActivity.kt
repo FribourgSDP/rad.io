@@ -1,6 +1,7 @@
 package com.github.fribourgsdp.radio
 
 import android.content.ContentValues
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.widget.TextView
@@ -137,6 +138,13 @@ class FireBaseTestActivity : MyAppCompatActivity() {
         }*/
 
          */
+    }
+
+    override fun onBackPressed() {
+        super.onBackPressed()
+        val intent = Intent(this, MainActivity::class.java)
+        startActivity(intent)
+        finish()
     }
 }
 

@@ -25,6 +25,13 @@ class SpotifyReceiveActivity : MyAppCompatActivity() {
 
     }
 
+    override fun onBackPressed() {
+        super.onBackPressed()
+        val intent = Intent(this, UserProfileActivity::class.java)
+        startActivity(intent)
+        finish()
+    }
+
     companion object {
         fun handleSpotifyResponse(intent: Intent?): String {
             if (intent != null){
