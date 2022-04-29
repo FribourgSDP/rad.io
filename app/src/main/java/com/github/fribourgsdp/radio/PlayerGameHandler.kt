@@ -1,10 +1,11 @@
 package com.github.fribourgsdp.radio
 
+import android.content.Intent
 import android.util.Log
 import com.google.firebase.firestore.DocumentSnapshot
 
 class PlayerGameHandler(
-    private val gameID: Long,
+    val gameID: Long,
     private val view: GameView,
     db: Database = FirestoreDatabase()
 ): GameHandler(view, db), GameView.OnPickListener {
@@ -17,8 +18,9 @@ class PlayerGameHandler(
 
     override fun handleSnapshot(snapshot: DocumentSnapshot?) {
         if (snapshot != null && snapshot.exists()) {
+            val gameStillValid = snapshot.getBoolean("validity")!!
             val scores = snapshot.get("scores") as HashMap<String, Long>
-            if (snapshot.getBoolean("finished")!!) {
+            if (snapshot.getBoolean("finished")!! || !gameStillValid) {
                 view.gameOver(scores)
                 return
             }
@@ -34,6 +36,7 @@ class PlayerGameHandler(
             // Get the picked song
             // It's not null when there is one.
             songToGuess = snapshot.getString("current_song")
+
 
             updateViewForPlayer(snapshot, singerName)
 
@@ -102,6 +105,19 @@ class PlayerGameHandler(
             }
         }
     }
+
+    fun disableGame() {
+        db.disableGame(gameID)
+    }
+
+    fun removeUserFromLobby(user: User) {
+        db.removeUserFromLobby(gameID, user)
+    }
+
+    fun removePlayerFromGame(user: User) {
+        db.removePlayerFromGame(gameID, user)
+    }
+
 
 
 }

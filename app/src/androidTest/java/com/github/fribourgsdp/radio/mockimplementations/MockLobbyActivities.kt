@@ -16,8 +16,8 @@ class WorkingLobbyActivity : LobbyActivity() {
         User.setFSGetter(MockFileSystem.MockFSGetter)
         val testUser = User("the best player")
         testUser.id = "123456789"
-        super.onCreate(savedInstanceState)
         testUser.save(this)
+        super.onCreate(savedInstanceState)
     }
 
     override fun initDatabase(): Database {

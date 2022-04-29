@@ -1,5 +1,6 @@
 package com.github.fribourgsdp.radio
 
+import android.app.Activity
 import android.app.Dialog
 import android.content.Intent
 import android.os.Bundle
@@ -37,6 +38,7 @@ open class GameActivity : AppCompatActivity(), GameView {
 
     private lateinit var mapIdToName: HashMap<String, String>
     protected lateinit var voiceChannel: VoiceIpEngineDecorator
+    lateinit var playerGameHandler: PlayerGameHandler
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -56,7 +58,7 @@ open class GameActivity : AppCompatActivity(), GameView {
             val hostGameHandler = HostGameHandler(game, this)
             hostGameHandler.linkToDatabase()
         }
-        val playerGameHandler = PlayerGameHandler(gameUid, this)
+        playerGameHandler = PlayerGameHandler(gameUid, this)
 
         // On submit make the player game handler handle the guess
         songGuessSubmitButton.setOnClickListener {
@@ -152,6 +154,21 @@ open class GameActivity : AppCompatActivity(), GameView {
         startActivity(intent)
     }
 
+    private fun returnToMainMenu() {
+
+        if (isHost) {
+            playerGameHandler.disableGame()
+        }
+        else {
+            playerGameHandler.removeUserFromLobby(user)
+            playerGameHandler.removePlayerFromGame(user)
+        }
+        val intent = Intent(this, MainActivity::class.java)
+        startActivity(intent)
+        finish()
+
+    }
+
     private fun initViews() {
         currentRoundTextView = findViewById(R.id.currentRoundView)
         singerTextView = findViewById(R.id.singerTextView)
@@ -190,6 +207,17 @@ open class GameActivity : AppCompatActivity(), GameView {
         voiceChannel.joinChannel(voiceChannel.getToken(userId, gameUid.toString()), gameUid.toString(), "", userId)
     }
 
+    override fun onBackPressed() {
+        val warningDisplay = QuitGameOrLobbyDialog(this)
+        warningDisplay.show(supportFragmentManager, "warningForQuittingLobby")
+        supportFragmentManager
+            .setFragmentResultListener("quitRequest", this) { _, bundle ->
+                val hasQuit = bundle.getBoolean("hasQuit")
+                if (hasQuit) {
+                    returnToMainMenu()
+                }
+            }
+    }
     override fun displayLyrics(lyrics : String) {
         showLyricsButton.visibility = View.VISIBLE
         showLyricsButton.setOnClickListener { displayLyrics(lyrics) }

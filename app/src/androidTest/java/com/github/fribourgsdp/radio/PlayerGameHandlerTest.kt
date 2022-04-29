@@ -33,6 +33,7 @@ class PlayerGameHandlerTest {
         `when`(mockSnapshot.getString("current_song")).thenReturn(null)
         `when`(mockSnapshot.get("scores")).thenReturn(scores)
         `when`(mockSnapshot.getBoolean("finished")).thenReturn(false)
+        `when`(mockSnapshot.getBoolean("validity")).thenReturn(true)
 
     }
 
@@ -82,6 +83,7 @@ class PlayerGameHandlerTest {
         `when`(mockSnapshot2.getString("current_song")).thenReturn("Momentum")
         `when`(mockSnapshot2.get("scores")).thenReturn(scores)
         `when`(mockSnapshot2.getBoolean("finished")).thenReturn(false)
+        `when`(mockSnapshot2.getBoolean("validity")).thenReturn(true)
         handler.handleSnapshot(mockSnapshot2)
         assertEquals(view.flag, true)
     }
