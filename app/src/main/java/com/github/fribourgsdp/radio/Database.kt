@@ -149,13 +149,33 @@ interface Database {
      */
     fun resetGameMetadata(gameID: Long, singer: String): Task<Void>
 
+    /**
+     * Removes [user] from lobby with [id] on the database.
+     * @return a task void so we know the user was correctly removed.
+     */
     fun removeUserFromLobby(id: Long, user: User): Task<Void>
 
+    /**
+     * Disable game with [id] on the database: set validity to false.
+     * @return a task void so we know the lobby was correctly disabled.
+     */
     fun disableGame(id: Long): Task<Void>
 
+    /**
+     * Disable lobby with [id] on the database: set validity to false.
+     * @return a task void so we know the lobby was correctly disabled.
+     */
     fun disableLobby(gameID: Long): Task<Void>
 
+    /**
+     * Removes [user] from game with [id] on the database.
+     * @return a task void so we know the user was correctly removed.
+     */
     fun removePlayerFromGame(gameID: Long, user: User): Task<Void>
 
+    /**
+     * Make player with name [singerName] done in game [gameID]
+     * @return a task void so we know the singer was correctly added to the players done map in the database.
+     */
     fun makeSingerDone(gameID: Long, singerName: String): Task<Void>
 }
