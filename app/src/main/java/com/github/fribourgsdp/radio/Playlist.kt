@@ -1,5 +1,10 @@
 package com.github.fribourgsdp.radio
 
+import android.content.ContentValues
+import android.util.Log
+import com.google.android.gms.tasks.Task
+import com.google.android.gms.tasks.Tasks
+import kotlinx.serialization.Contextual
 import kotlinx.serialization.Serializable
 
 @Serializable
@@ -14,9 +19,13 @@ import kotlinx.serialization.Serializable
  * @property genre genre of the playlist
  * @constructor creates a Playlist with the given name and genre
  */
+
 data class Playlist (override var name: String, var genre: Genre) : Nameable {
     private val songs: MutableSet<Song> = mutableSetOf()
+
     var id : String = ""
+    var savedOnline = false
+    var savedLocally = true
     constructor(name: String, set: Set<Song>, genre: Genre) : this(name, genre) {
         this.addSongs(set)
     }
@@ -91,6 +100,27 @@ data class Playlist (override var name: String, var genre: Genre) : Nameable {
         return SetUtility.getNamedFromSet(songs, Song(name, artist))
     }
 
+    fun transformToOnline(db : Database = FirestoreDatabase()): Task<Void> {
+        val songTask =  db.generateSongIds(songs.size).continueWith {songIdRange ->
+            for ((i, song) in songs.withIndex()) {
+                song.id = (songIdRange.result.first + i).toString()
+            }
+        }
+        val playlistId =  db.generatePlaylistId().addOnSuccessListener { l ->
+            id = l.toString()
+        }
+        return Tasks.whenAll(songTask,playlistId)
+    }
+
+    fun saveOnline(db : Database = FirestoreDatabase()): Task<Void>{
+        for( song in songs){
+            db.registerSong(song)
+        }
+        savedOnline = true
+        return db.registerPlaylist(this)
+    }
+
+
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
         if (javaClass != other?.javaClass) return false
@@ -105,4 +135,6 @@ data class Playlist (override var name: String, var genre: Genre) : Nameable {
     override fun hashCode(): Int {
         return name.hashCode()
     }
+
+
 }

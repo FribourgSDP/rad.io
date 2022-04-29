@@ -86,4 +86,7 @@
     <string name="warningMessageQuitGameOrLobby">Attention, en cliquant sur continuer, vous serez retiré du lobby. Si vous êtes l\'hôte vous mettrez fin à la partie.</string>
     <string name="warningMessageQuitAddPlaylist">Voulez vous retourner au menu d\'utilisateur? Toutes les modifications ne seront pas sauvegardées.</string>
     <string name="validateMessageQuitAddPlaylist">Supprimer la playlist et retourner au profil</string>
+    <string name="saveOnlineQuestionText">Voulez-vous sauvez votre playlist en ligne?</string>
+    <string name="yes">oui</string>
+    <string name="no">non</string>
 </resources>

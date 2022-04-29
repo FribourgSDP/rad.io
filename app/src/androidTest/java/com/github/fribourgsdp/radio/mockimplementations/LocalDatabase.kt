@@ -48,6 +48,10 @@ class LocalDatabase : Database {
         return Tasks.forResult(EXPECTED_UID)
     }
 
+    override fun generateSongIds(number: Int): Task<Pair<Long, Long>> {
+        TODO("Not yet implemented")
+    }
+
     override fun generateUserId(): Task<Long> {
         return Tasks.forResult(EXPECTED_USER_UID)
     }

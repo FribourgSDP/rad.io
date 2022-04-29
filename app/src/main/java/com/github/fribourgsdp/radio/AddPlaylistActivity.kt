@@ -1,7 +1,9 @@
 package com.github.fribourgsdp.radio
 
+import android.content.ContentValues
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.widget.ArrayAdapter
 import android.widget.EditText
@@ -11,10 +13,12 @@ import androidx.appcompat.app.AppCompatActivity
 import com.google.android.gms.tasks.Tasks
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.google.android.gms.tasks.Task
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.json.Json
 
-class AddPlaylistActivity : MyAppCompatActivity() {
+class AddPlaylistActivity : MyAppCompatActivity(), SavePlaylistOnlinePickerDialog.OnPickListener {
+
     private val listSongs = ArrayList<Song>()
     private var listNames = ArrayList<String>()
     private lateinit var listAdapter: SongAdapter
@@ -81,6 +85,7 @@ class AddPlaylistActivity : MyAppCompatActivity() {
      */
     fun createPlaylist(view : View) {
         val playlistName : String = findViewById<EditText>(R.id.newPlaylistName).text.toString()
+
         when {
             playlistName.isEmpty() -> {
                 displayError(R.string.playlist_has_no_name)
@@ -89,15 +94,14 @@ class AddPlaylistActivity : MyAppCompatActivity() {
                 displayError(R.string.playlist_is_empty)
             }
             else -> {
-                val intent = Intent(this@AddPlaylistActivity, UserProfileActivity::class.java)
-                val playlist = Playlist(playlistName, listSongs.toSet(), Genre.NONE)
-                val genre : Genre = genreSpinner.selectedItem as Genre
-                playlist.genre = genre
-                user.addPlaylist(playlist)
-                user.save(this)
-                startActivity(intent)
+                val savePlaylistOnlinePicker = SavePlaylistOnlinePickerDialog(this)
+                savePlaylistOnlinePicker.show(supportFragmentManager, "SavePlaylistOnlinePicker")
             }
         }
+
+
+
+
     }
 
     /**
@@ -112,6 +116,24 @@ class AddPlaylistActivity : MyAppCompatActivity() {
             val playlist : Playlist = Json.decodeFromString(serializedPlaylist!!)
             listSongs.addAll(playlist.getSongs())
             findViewById<EditText>(R.id.newPlaylistName).setText(playlist.name)
+        }
+    }
+
+
+    override fun onPick(online: Boolean) {
+        val playlistName : String = findViewById<EditText>(R.id.newPlaylistName).text.toString()
+        val genre : Genre = genreSpinner.selectedItem as Genre
+        val playlist = Playlist(playlistName,listSongs.toSet(),genre)
+        val playlistTask = if (online) playlist.transformToOnline().addOnSuccessListener {
+            playlist.saveOnline()
+        } else Tasks.forResult(playlist)
+
+
+        playlistTask.addOnSuccessListener {
+            user.addPlaylist(playlist)
+            user.save(this)
+            val intent = Intent(this@AddPlaylistActivity, UserProfileActivity::class.java)
+            startActivity(intent)
         }
     }
 
@@ -144,6 +166,7 @@ class AddPlaylistActivity : MyAppCompatActivity() {
         else {
             val warningDialog = QuitAddPlaylistDialog(this)
             warningDialog.show(supportFragmentManager, "warningForQuittingAddPlaylist")
+
         }
     }
 }

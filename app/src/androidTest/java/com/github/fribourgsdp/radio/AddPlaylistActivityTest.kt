@@ -18,6 +18,7 @@ import androidx.test.espresso.contrib.RecyclerViewActions
 import androidx.test.espresso.intent.Intents
 import androidx.test.espresso.intent.matcher.IntentMatchers
 import androidx.test.espresso.intent.matcher.IntentMatchers.*
+ import androidx.test.espresso.matcher.RootMatchers
 import androidx.test.espresso.matcher.RootMatchers.isDialog
 import androidx.test.espresso.matcher.ViewMatchers
 import androidx.test.espresso.matcher.ViewMatchers.isDisplayed
@@ -107,6 +108,13 @@ class AddPlaylistActivityTest {
         onView(withId(R.id.confirmBtn))
             .perform(ViewActions.click())
 
+        //check that a popup has spawned and click on saveOffline
+        onView(ViewMatchers.withText(R.string.saveOnlineQuestionText)) // Look for the dialog => use its title
+            .inRoot(RootMatchers.isDialog()) // check that it's indeed in a dialog
+            .check(ViewAssertions.matches(ViewMatchers.isDisplayed()));
+
+        onView(withId(R.id.saveOnlinePlaylistNo))
+            .perform(ViewActions.click())
         Intents.intended(
             allOf(
                 hasComponent(UserProfileActivity::class.java.name)

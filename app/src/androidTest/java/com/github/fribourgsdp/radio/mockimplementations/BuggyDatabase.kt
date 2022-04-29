@@ -36,6 +36,10 @@ class BuggyDatabase : Database {
         return Tasks.forException(Exception("Error"))
     }
 
+    override fun generateSongIds(number: Int): Task<Pair<Long, Long>> {
+        return Tasks.forException(Exception("Error"))
+    }
+
     override fun generateUserId(): Task<Long> {
         return Tasks.forException(Exception("Error"))
     }
