@@ -40,7 +40,6 @@ open class GameActivity : AppCompatActivity(), GameView, Timer.Listener {
 
     private lateinit var mapIdToName: HashMap<String, String>
     protected lateinit var voiceChannel: VoiceIpEngineDecorator
-    lateinit var playerGameHandler: PlayerGameHandler
 
     private lateinit var playerGameHandler: PlayerGameHandler
 
