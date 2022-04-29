@@ -10,8 +10,6 @@ class PlayerGameHandler(
     db: Database = FirestoreDatabase()
 ): GameHandler(view, db), GameView.OnPickListener {
 
-    val database = db
-
     private var songToGuess: String? = null
 
     override fun linkToDatabase() {
@@ -106,6 +104,18 @@ class PlayerGameHandler(
                 view.displayWaitOnSinger(singerName)
             }
         }
+    }
+
+    fun disableGame() {
+        db.disableGame(gameID)
+    }
+
+    fun removeUserFromLobby(user: User) {
+        db.removeUserFromLobby(gameID, user)
+    }
+
+    fun removePlayerFromGame(user: User) {
+        db.removePlayerFromGame(gameID, user)
     }
 
 

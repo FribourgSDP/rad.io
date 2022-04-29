@@ -157,11 +157,11 @@ open class GameActivity : AppCompatActivity(), GameView {
     private fun returnToMainMenu() {
 
         if (isHost) {
-            playerGameHandler.database.disableGame(playerGameHandler.gameID)
+            playerGameHandler.disableGame()
         }
         else {
-            playerGameHandler.database.removeUserFromLobby(playerGameHandler.gameID, user)
-            playerGameHandler.database.removePlayerFromGame(playerGameHandler.gameID, user)
+            playerGameHandler.removeUserFromLobby(user)
+            playerGameHandler.removePlayerFromGame(user)
         }
         val intent = Intent(this, MainActivity::class.java)
         startActivity(intent)
