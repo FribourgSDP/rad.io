@@ -4,6 +4,7 @@ import android.Manifest
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Bundle
+import android.util.Log
 import android.view.KeyEvent
 import android.view.View
 import android.view.inputmethod.EditorInfo
@@ -13,6 +14,7 @@ import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.core.widget.addTextChangedListener
+import androidx.fragment.app.DialogFragment
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 
@@ -27,6 +29,8 @@ open class JoinGameActivity : MyAppCompatActivity() {
     private lateinit var idInput: EditText
     private lateinit var joinButton : Button
     private lateinit var joinErrorView : TextView
+    private lateinit var joinWithQRCodeButton : Button
+    private lateinit var qrCodeScan: DialogFragment
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -35,6 +39,7 @@ open class JoinGameActivity : MyAppCompatActivity() {
 
         idInput = findViewById(R.id.gameToJoinID)
         joinButton = findViewById(R.id.joinGameButton)
+        joinWithQRCodeButton = findViewById(R.id.joinWithQRCode)
         joinErrorView = findViewById(R.id.joinErrorView)
 
         idInput.addTextChangedListener {
@@ -53,11 +58,23 @@ open class JoinGameActivity : MyAppCompatActivity() {
             }
             false
         }
-
+        initJoinWithQRCode()
     }
 
     open fun initDatabase(): Database {
         return FirestoreDatabase()
+    }
+
+    private fun initJoinWithQRCode(){
+        qrCodeScan = JoinWithQRCodeFragment(this, this)
+        joinWithQRCodeButton.setOnClickListener{
+            qrCodeScan.show(supportFragmentManager, "qrCodeForJoiningGame")
+            supportFragmentManager
+                .setFragmentResultListener("idRequest", this) { _, bundle ->
+                    val id = bundle.getLong("id")
+                    connectToLobby(id)
+                }
+        }
     }
 
     private fun connectToLobby(id: Long) {

@@ -89,4 +89,14 @@
     <string name="saveOnlineQuestionText">Voulez-vous sauvez votre playlist en ligne?</string>
     <string name="yes">oui</string>
     <string name="no">non</string>
+
+
+    <string name="qr_code">qr_code</string>
+    <string name="enter_your_info">Enter your info</string>
+    <string name="cancel_qr_code">Cancel</string>
+    <string name="generate_qr_code">Generate QR Code</string>
+    <string name="toggle_flash">Toggle Flash</string>
+    <string name="action_settings">Settings</string>
+    <string name="scanned_data">Scanned Data</string>
+    <string name="join_with_qr_code">Join With QR Code</string>
 </resources>
