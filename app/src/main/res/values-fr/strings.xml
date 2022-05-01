@@ -89,4 +89,5 @@
     <string name="saveOnlineQuestionText">Voulez-vous sauvez votre playlist en ligne?</string>
     <string name="yes">oui</string>
     <string name="no">non</string>
+    <string name="musixmatch_logo">Musixmatch logo</string>
 </resources>
