@@ -228,8 +228,42 @@ class FirestoreDatabase(var refMake: FirestoreRef) : Database {
             "validity" to true
         )
 
-        return db.collection("lobby").document(id.toString())
-            .set(gameData)
+        val collection = db.collection("lobby")
+        val lobbyRef = collection.document(id.toString())
+
+        // get the public lobbies only if the game is public
+        val publicLobbiesRef = if (settings.isPrivate) null else collection.document("public")
+
+        return db.runTransaction { transaction ->
+            val lobbySnapshot = transaction.get(lobbyRef)
+            val publicLobbiesSnapshot = publicLobbiesRef?.let { transaction.get(it) }
+
+            if (!lobbySnapshot.exists()) {
+                throw IllegalArgumentException("Document $id not found.")
+            }
+
+            // If the game is public (the snapshot not null), but we can't find the public snapshot:
+            // throw an exception
+            if (publicLobbiesSnapshot != null && !publicLobbiesSnapshot.exists()) {
+                throw IllegalArgumentException("The public lobbies could not be reached.")
+            }
+
+            transaction.set(lobbyRef, gameData)
+
+            if (publicLobbiesRef != null) {
+                transaction.update(
+                    publicLobbiesRef, id.toString(),
+                    hashMapOf(
+                        "name" to settings.name,
+                        "host" to settings.hostName
+                    )
+                )
+            }
+
+            // Success
+            null
+        }
+
 
     }
 
