@@ -19,160 +19,155 @@ const val QUERY_ARTIST_FIELD = "q_artist"
 const val SORT_CONDITION = "s_artist_rating=desc"
 
 interface LyricsGetter{
-    fun getLyrics(
-        songName: String,
-        artistName: String = "",
-        client: OkHttpClient = OkHttpClient(),
-        parser: JSONParser = JSONStandardParser()
-    ): CompletableFuture<String>
+    fun getLyrics(songName: String,artistName: String = "",client: OkHttpClient = OkHttpClient(),parser: JSONParser = JSONStandardParser()): CompletableFuture<String>
     fun getSongID(songName: String, artistName: String, client: OkHttpClient = OkHttpClient(), parser : JSONParser = JSONStandardParser()) : CompletableFuture<Int>
+    fun markSongName(lyrics : String, name : String) : String
 }
 /**
  * Tool to get lyrics from a given song name and artist using Musixmatch API.
  * API Call doc : https://stackoverflow.com/questions/45219379/how-to-make-an-api-request-in-kotlin
  */
 object MusixmatchLyricsGetter : LyricsGetter {
-        const val LYRICS_NOT_FOUND = "---No lyrics were found for this song.---"
+    const val LYRICS_NOT_FOUND = "---No lyrics were found for this song.---"
 
-        class LyricsNotFoundException(val reason : String = LYRICS_NOT_FOUND) : Exception()
+    class LyricsNotFoundException(val reason : String = LYRICS_NOT_FOUND) : Exception()
 
-        /**
-         * Asks Musixmatch and retrieves the lyrics of a song.
-         * The song name and artist name can be empty or incomplete, the server can still find it.
-         * @param songName The name of the queried song
-         * @param artistName The name of the artist of this song
-         * @param client The HTTP Client used for connection
-         * @param parser The JSON parser used to parse response
-         */
-        override fun getLyrics(
-            songName: String,
-            artistName: String,
-            client: OkHttpClient,
-            parser: JSONParser
-        ): CompletableFuture<String> {
-//            return CompletableFuture.completedFuture("If you feel little chance make a stance")
-            Log.println(Log.ASSERT, "*", "LYRICS GETTER CALL !!!!")
-            val future = CompletableFuture<String>()
-            val trackIDFuture = getSongID(songName, artistName, client)
-            val trackID: Int
-            try {
-                trackID = trackIDFuture.get()
-            } catch (e: Throwable) {
-                future.completeExceptionally(LyricsNotFoundException())
-                return future
-            }
-            val url = "$BASE_URL$TRACK_LYRICS_GET?$TRACK_ID_FIELD=$trackID&$API_KEY_FIELD=$API_KEY"
-
-            val request = Request.Builder().url(url).build()
-            client.newCall(request).enqueue(GetLyricsCallback(future, parser))
-            return future.thenApply { s -> cleanLyrics(s) }
-        }
-
-        /**
-         * Asks Musixmatch to get the ID of a song and returns it.
-         * @param songName The name of the queried song
-         * @param artistName The name of the artist of this song
-         * @param client The HTTP Client used for connection
-         * @param parser The JSON parser used to parse response
-         * @return The ID of the searched song
-         */
-        override fun getSongID(songName: String, artistName: String, client: OkHttpClient, parser : JSONParser) : CompletableFuture<Int> {
-            //API needed : 24
-            val future = CompletableFuture<Int>()
-            val url = "$BASE_URL$TRACK_SEARCH?$QUERY_TRACK_FIELD=$songName&$QUERY_ARTIST_FIELD=$artistName&$API_KEY_FIELD=$API_KEY&$SORT_CONDITION"
-
-            val request = Request.Builder().url(url).build()
-            client.newCall(request).enqueue(GetSongIDCallback(future, parser))
+    /**
+     * Asks Musixmatch and retrieves the lyrics of a song.
+     * The song name and artist name can be empty or incomplete, the server can still find it.
+     * @param songName The name of the queried song
+     * @param artistName The name of the artist of this song
+     * @param client The HTTP Client used for connection
+     * @param parser The JSON parser used to parse response
+     */
+    override fun getLyrics(
+        songName: String,
+        artistName: String,
+        client: OkHttpClient,
+        parser: JSONParser
+    ): CompletableFuture<String> {
+        Log.println(Log.ASSERT, "*", "LYRICS GETTER CALL !!!!")
+        val future = CompletableFuture<String>()
+        val trackIDFuture = getSongID(songName, artistName, client)
+        val trackID: Int
+        try {
+            trackID = trackIDFuture.get()
+        } catch (e: Throwable) {
+            future.completeExceptionally(LyricsNotFoundException())
             return future
         }
+        val url = "$BASE_URL$TRACK_LYRICS_GET?$TRACK_ID_FIELD=$trackID&$API_KEY_FIELD=$API_KEY"
 
-        private class GetLyricsCallback(private val future : CompletableFuture<String>, private val parser : JSONParser) : Callback {
-            override fun onFailure(call: Call, e: IOException) {
-                future.completeExceptionally(e)
-            }
+        val request = Request.Builder().url(url).build()
+        client.newCall(request).enqueue(GetLyricsCallback(future, parser))
+        return future.thenApply { s -> cleanLyrics(s) }
+    }
 
-            override fun onResponse(call: Call, response: Response) {
-                val parsedResponseString = response.body()?.string()
-                val parsedResponse = parser.parse(parsedResponseString)
-                val lyrics : String?
-                if(parsedResponse == null){
+    /**
+     * Asks Musixmatch to get the ID of a song and returns it.
+     * @param songName The name of the queried song
+     * @param artistName The name of the artist of this song
+     * @param client The HTTP Client used for connection
+     * @param parser The JSON parser used to parse response
+     * @return The ID of the searched song
+     */
+    override fun getSongID(songName: String, artistName: String, client: OkHttpClient, parser : JSONParser) : CompletableFuture<Int> {
+        //API needed : 24
+        val future = CompletableFuture<Int>()
+        val url = "$BASE_URL$TRACK_SEARCH?$QUERY_TRACK_FIELD=$songName&$QUERY_ARTIST_FIELD=$artistName&$API_KEY_FIELD=$API_KEY&$SORT_CONDITION"
+
+        val request = Request.Builder().url(url).build()
+        client.newCall(request).enqueue(GetSongIDCallback(future, parser))
+        return future
+    }
+
+    private class GetLyricsCallback(private val future : CompletableFuture<String>, private val parser : JSONParser) : Callback {
+        override fun onFailure(call: Call, e: IOException) {
+            future.completeExceptionally(e)
+        }
+
+        override fun onResponse(call: Call, response: Response) {
+            val parsedResponseString = response.body()?.string()
+            val parsedResponse = parser.parse(parsedResponseString)
+            val lyrics : String?
+            if(parsedResponse == null){
+                future.completeExceptionally(LyricsNotFoundException())
+            } else {
+                val status = parsedResponse.getJSONObject("message").getJSONObject("header").getInt("status_code")
+                if (status == 404) {
                     future.completeExceptionally(LyricsNotFoundException())
                 } else {
-                    val status = parsedResponse.getJSONObject("message").getJSONObject("header").getInt("status_code")
-                    if (status == 404) {
+                    lyrics = parsedResponse
+                        .getJSONObject("message")
+                        .getJSONObject("body")
+                        .getJSONObject("lyrics")
+                        .getString("lyrics_body")
+                    if (lyrics?.isEmpty() == true) {
                         future.completeExceptionally(LyricsNotFoundException())
                     } else {
-                        lyrics = parsedResponse
-                            .getJSONObject("message")
-                            .getJSONObject("body")
-                            .getJSONObject("lyrics")
-                            .getString("lyrics_body")
-                        if (lyrics?.isEmpty() == true) {
-                            future.completeExceptionally(LyricsNotFoundException())
-                        } else {
-                            future.complete(lyrics)
-                        }
+                        future.complete(lyrics)
                     }
                 }
             }
         }
+    }
 
-        private class GetSongIDCallback(private val future : CompletableFuture<Int>, private val parser : JSONParser) : Callback {
-            override fun onFailure(call: Call, e: IOException) {
-                future.completeExceptionally(e)
-            }
-
-            override fun onResponse(call: Call, response: Response) {
-                val parsedResponse = parser.parse(response.body()?.string())
-                if(parsedResponse == null){
-                    future.completeExceptionally(Exception("Error parsing response"))
-                }
-                val trackList = try {
-                    parsedResponse
-                        ?.getJSONObject("message")
-                        ?.getJSONObject("body")
-                        ?.getJSONArray("track_list")
-                } catch (e : Exception){
-                    JSONArray()
-                }
-                if(trackList?.length() == 0){
-                    future.completeExceptionally(LyricsNotFoundException())
-                } else {
-                    val firstTrackID = trackList
-                        ?.getJSONObject(0)
-                        ?.getJSONObject("track")
-                        ?.getInt("track_id")
-                    future.complete(firstTrackID)
-                }
-            }
+    private class GetSongIDCallback(private val future : CompletableFuture<Int>, private val parser : JSONParser) : Callback {
+        override fun onFailure(call: Call, e: IOException) {
+            future.completeExceptionally(e)
         }
 
-        /**
-         * Transforms the lyrics by removing its 4 last lines. Indeed, the lyrics we get from Musixmatch contain a useless mention "These lyrics are not for commercial use, ..." .
-         * The mention to Musixmatch will be displayed elsewhere, like in the activity displaying the lyrics.
-         */
-        private fun cleanLyrics(lyrics : String) : String{
-            if(lyrics == LYRICS_NOT_FOUND) {
-                return lyrics
+        override fun onResponse(call: Call, response: Response) {
+            val parsedResponse = parser.parse(response.body()?.string())
+            if(parsedResponse == null){
+                future.completeExceptionally(Exception("Error parsing response"))
             }
-            val allLines = lyrics.split("\n")
-            val onlyLyricsLines = allLines.subList(0, allLines.size-4)
-            val sj = StringJoiner("\n")
-            onlyLyricsLines.forEach { e -> sj.add(e) }
-            return sj.toString()
+            val trackList = try {
+                parsedResponse
+                    ?.getJSONObject("message")
+                    ?.getJSONObject("body")
+                    ?.getJSONArray("track_list")
+            } catch (e : Exception){
+                JSONArray()
+            }
+            if(trackList?.length() == 0){
+                future.completeExceptionally(LyricsNotFoundException())
+            } else {
+                val firstTrackID = trackList
+                    ?.getJSONObject(0)
+                    ?.getJSONObject("track")
+                    ?.getInt("track_id")
+                future.complete(firstTrackID)
+            }
         }
+    }
 
-        /**
-         * Translates lyrics to HTML format crossing out the name of the song.
-         * @param lyrics The lyrics to transform
-         * @param name The name of the song to cross
-         */
-        fun markSongName(lyrics : String, name : String) : String{
-            return if (name.isEmpty()){
-                lyrics
-            } else
-                lyrics
-                    .replace(name, "<strike>${name[0].uppercase() + name.lowercase().substring(1)}</strike>", ignoreCase = true)
-                    .replace("\n", "<br>")
+    /**
+     * Transforms the lyrics by removing its 4 last lines. Indeed, the lyrics we get from Musixmatch contain a useless mention "These lyrics are not for commercial use, ..." .
+     * The mention to Musixmatch will be displayed elsewhere, like in the activity displaying the lyrics.
+     */
+    private fun cleanLyrics(lyrics : String) : String{
+        if(lyrics == LYRICS_NOT_FOUND) {
+            return lyrics
         }
+        val allLines = lyrics.split("\n")
+        val onlyLyricsLines = allLines.subList(0, allLines.size-4)
+        val sj = StringJoiner("\n")
+        onlyLyricsLines.forEach { e -> sj.add(e) }
+        return sj.toString()
+    }
+
+    /**
+     * Translates lyrics to HTML format crossing out the name of the song.
+     * @param lyrics The lyrics to transform
+     * @param name The name of the song to cross
+     */
+    override fun markSongName(lyrics : String, name : String) : String{
+        return if (name.isEmpty()){
+            lyrics
+        } else
+            lyrics
+                .replace(name, "<strike>${name[0].uppercase() + name.lowercase().substring(1)}</strike>", ignoreCase = true)
+                .replace("\n", "<br>")
+    }
 }

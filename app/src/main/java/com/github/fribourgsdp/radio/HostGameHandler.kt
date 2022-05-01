@@ -6,7 +6,7 @@ import com.google.firebase.firestore.FieldValue
 import java.lang.IllegalStateException
 import kotlin.streams.toList
 
-class HostGameHandler(private val game: Game, private val view: GameView, db: Database = FirestoreDatabase()): GameHandler(view, db) {
+class HostGameHandler(private val game: Game, private val view: GameView, db: Database = FirestoreDatabase(), private val lyricsGetter: LyricsGetter = MusixmatchLyricsGetter): GameHandler(view, db) {
     private var latestSingerId: String? = null
 
     override fun handleSnapshot(snapshot: DocumentSnapshot?) {
@@ -73,7 +73,7 @@ class HostGameHandler(private val game: Game, private val view: GameView, db: Da
         game.getChoices(3).stream()
             .forEach { song ->
                 nextChoices.add(song.name)
-                nextChoicesLyrics[song.name] = song.lyrics
+                nextChoicesLyrics[song.name] = lyricsGetter.markSongName(song.lyrics, song.name)
             }
 
         var nextUser = ""

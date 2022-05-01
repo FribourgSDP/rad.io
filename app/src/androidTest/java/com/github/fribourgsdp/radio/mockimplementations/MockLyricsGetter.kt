@@ -30,4 +30,8 @@ object MockLyricsGetter : LyricsGetter{
     ): CompletableFuture<Int> {
         throw NotImplementedError()
     }
+
+    override fun markSongName(lyrics: String, name: String): String {
+        TODO("Not yet implemented")
+    }
 }
