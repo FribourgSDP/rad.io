@@ -17,12 +17,14 @@ import io.agora.rtc.IRtcEngineEventHandler
 import org.mockito.Mockito
 
 class MockJoinWithQRCodeFragment(ctx: Context, activity: Activity) : JoinWithQRCodeFragment(ctx, activity) {
+
+    private var join = false
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         rootView= inflater.inflate(R.layout.fragment_join_with_qr_code, container, false)
 
         cancelButton  = rootView.findViewById(R.id.cancel_button)
         cancelButton.setOnClickListener{
-            //setFragmentResult("idRequest", bundleOf("id" to 1001L))
+            action()
             dismiss()
         }
 
@@ -31,6 +33,15 @@ class MockJoinWithQRCodeFragment(ctx: Context, activity: Activity) : JoinWithQRC
 
 
         return rootView
+    }
+
+    private fun action(){
+        if (join == true){
+            setFragmentResult("idRequest", bundleOf("id" to 1001L))
+        }
+    }
+    fun setJoin(){
+        join = true
     }
 
     override fun initializeView(){

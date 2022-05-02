@@ -54,3 +54,22 @@ class QRCodeJoinGameActivity : JoinGameActivity() {
         return MockJoinWithQRCodeFragment(this, this)
     }
 }
+
+class QRCodeJoinGameActivityJoin : JoinGameActivity() {
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        val context : Context = mock(Context::class.java)
+        User.setFSGetter(MockFileSystem.MockFSGetter)
+        User("The second best player").save(context)
+    }
+
+    override fun initDatabase(): Database {
+        return LocalDatabase()
+    }
+
+    override fun createQRCodeFragment() : DialogFragment {
+        val mock = MockJoinWithQRCodeFragment(this, this)
+        mock.setJoin()
+        return mock
+    }
+}
