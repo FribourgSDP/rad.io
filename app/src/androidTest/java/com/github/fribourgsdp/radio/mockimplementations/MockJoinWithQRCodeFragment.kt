@@ -37,7 +37,7 @@ class MockJoinWithQRCodeFragment(ctx: Context, activity: Activity) : JoinWithQRC
 
     private fun action(){
         if (join == true){
-            setFragmentResult("idRequest", bundleOf("id" to 1001L))
+            actOnScannedData("1001")
         }
     }
     fun setJoin(){

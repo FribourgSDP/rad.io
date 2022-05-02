@@ -79,13 +79,17 @@ open class JoinWithQRCodeFragment(val ctx: Context, val activity: Activity): Dia
                 // method is called when camera scans the
                 // qr code and the data from qr code is
                 // stored in data in string format.
-                scannedTV.setText(data)
-                if(checkScanFormat(data)){
-                    setFragmentResult("idRequest", bundleOf("id" to data.toLong()))
-                    dismiss()
-                }
+                actOnScannedData(data)
 
             }
+        }
+    }
+
+    protected fun actOnScannedData(data :String){
+        scannedTV.setText(data)
+        if(checkScanFormat(data)){
+            setFragmentResult("idRequest", bundleOf("id" to data.toLong()))
+            dismiss()
         }
     }
 
