@@ -72,12 +72,14 @@ open class JoinGameActivity : MyAppCompatActivity() {
     private fun initJoinWithQRCode(){
         qrCodeScan = createQRCodeFragment()
         joinWithQRCodeButton.setOnClickListener{
-            qrCodeScan.show(supportFragmentManager, "qrCodeForJoiningGame")
+            /**qrCodeScan.show(supportFragmentManager, "qrCodeForJoiningGame")
             supportFragmentManager
                 .setFragmentResultListener("idRequest", this) { _, bundle ->
                     val id = bundle.getLong("id")
                     connectToLobby(id)
-                }
+                }*/
+            val a = 1;
+            val b = a+1;
         }
     }
 
