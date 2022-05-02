@@ -34,16 +34,8 @@ object MusixmatchLyricsGetter : LyricsGetter {
     const val BACKEND_ERROR_PLACEHOLDER = ""
 
     abstract class LyricsGetterException(val default : String) : Exception()
-    class NoLyricsFoundForThisSong : LyricsGetterException(LYRICS_NOT_FOUND){
-        init {
-            Log.println(Log.ASSERT, "**", "USE NO_LYRICS ERROR")
-        }
-    }
-    class BackendError : LyricsGetterException(""){
-        init {
-            Log.println(Log.ASSERT, "**", "USE BACKEND ERROR")
-        }
-    }
+    class NoLyricsFoundForThisSong : LyricsGetterException(LYRICS_NOT_FOUND)
+    class BackendError : LyricsGetterException("")
 
     /**
      * Asks Musixmatch and retrieves the lyrics of a song.
@@ -59,13 +51,11 @@ object MusixmatchLyricsGetter : LyricsGetter {
         client: OkHttpClient,
         parser: JSONParser
     ): CompletableFuture<String> {
-//            return CompletableFuture.completedFuture("If you feel little chance make a stance")
-        Log.println(Log.ASSERT, "*", "LYRICS GETTER CALL !!!!")
+//        Log.println(Log.ASSERT, "*", "LYRICS GETTER CALL !!!!")
         val future = CompletableFuture<String>()
         val trackIDFuture = getSongID(songName, artistName, client)
         trackIDFuture.handle { trackID, e1 ->
             if (e1 != null) {
-                Log.println(Log.ASSERT, "#", "complete with ${e1.javaClass.name}")
                 future.complete((e1 as LyricsGetterException).default)
             } else {
                 val url = "$BASE_URL$TRACK_LYRICS_GET?$TRACK_ID_FIELD=$trackID&$API_KEY_FIELD=$API_KEY"
@@ -74,7 +64,6 @@ object MusixmatchLyricsGetter : LyricsGetter {
                 client.newCall(request).enqueue(GetLyricsCallback(future2, parser))
                 future2.whenComplete { s, e2 ->
                     if (e2 != null) {
-                        Log.println(Log.ASSERT, "##", "complete with ${e2.javaClass.name}")
                         future.complete((e2 as LyricsGetterException).default)
                     } else {
                         future.complete(cleanLyrics(s))
@@ -167,7 +156,6 @@ object MusixmatchLyricsGetter : LyricsGetter {
      * The mention to Musixmatch will be displayed elsewhere, like in the activity displaying the lyrics.
      */
     private fun cleanLyrics(lyrics : String) : String{
-        Log.println(Log.ASSERT, "*", "cleaning lyrics ${lyrics}!")
         if(lyrics == LYRICS_NOT_FOUND || lyrics == "") {
             return lyrics
         }
