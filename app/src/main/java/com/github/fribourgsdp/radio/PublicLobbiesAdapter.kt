@@ -11,10 +11,12 @@ import androidx.recyclerview.widget.RecyclerView
 class PublicLobbiesAdapter(private val context: Context, private val db: Database = FirestoreDatabase()): RecyclerView.Adapter<PublicLobbiesAdapter.ViewHolder>() {
     private var lobbies: List<LobbyData>? = null
     private var listener: OnPickListener? = null
+    private var lastSortedKey = LobbyDataKeys.ID
 
     init {
         db.getPublicLobbies().addOnSuccessListener {
             lobbies = it
+            sortBy(lastSortedKey)
 
             // update the whole list
             notifyDataSetChanged()
@@ -25,6 +27,7 @@ class PublicLobbiesAdapter(private val context: Context, private val db: Databas
         // init update listener
         db.listenToPublicLobbiesUpdate { value, _ ->
             lobbies = value
+            sortBy(lastSortedKey)
 
             // update the whole list
             notifyDataSetChanged()
@@ -45,6 +48,8 @@ class PublicLobbiesAdapter(private val context: Context, private val db: Databas
     }
 
     fun sortBy(key: LobbyDataKeys) {
+        lastSortedKey = key
+        
         lobbies = when (key) {
             LobbyDataKeys.ID -> lobbies?.sortedBy { it.id }
             LobbyDataKeys.NAME -> lobbies?.sortedBy { it.name }
