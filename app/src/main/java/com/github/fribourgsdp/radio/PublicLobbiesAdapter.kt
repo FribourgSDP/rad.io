@@ -45,7 +45,7 @@ class PublicLobbiesAdapter(private val context: Context, private val db: Databas
     }
 
     fun sortBy(key: LobbyDataKeys) {
-        when (key) {
+        lobbies = when (key) {
             LobbyDataKeys.ID -> lobbies?.sortedBy { it.id }
             LobbyDataKeys.NAME -> lobbies?.sortedBy { it.name }
             LobbyDataKeys.HOSTNAME -> lobbies?.sortedBy { it.hostName }
