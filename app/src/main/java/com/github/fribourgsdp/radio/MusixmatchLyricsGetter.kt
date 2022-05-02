@@ -93,16 +93,12 @@ object MusixmatchLyricsGetter : LyricsGetter {
         override fun onResponse(call: Call, response: Response) {
             val parsedResponseString = response.body()?.string()
             val parsedResponse = parser.parse(parsedResponseString)
-            val lyrics : String?
+            var lyrics : String?
             if(parsedResponse == null){
                 future.completeExceptionally(BackendError())
             } else {
                 val status = parsedResponse.getJSONObject("message").getJSONObject("header").getInt("status_code")
-                if (status == 404) {
-                    future.completeExceptionally(NoLyricsFoundForThisSong())
-                } else if(status >= 400){
-                    future.completeExceptionally(BackendError())
-                } else {
+                checkStatus(status, future) {
                     lyrics = parsedResponse
                         .getJSONObject("message")
                         .getJSONObject("body")
@@ -129,11 +125,7 @@ object MusixmatchLyricsGetter : LyricsGetter {
                 future.completeExceptionally(BackendError())
             } else{
                 val status = parsedResponse.getJSONObject("message").getJSONObject("header").getInt("status_code")
-                if (status == 404) {
-                    future.completeExceptionally(NoLyricsFoundForThisSong())
-                } else if(status >= 400) {
-                    future.completeExceptionally(BackendError())
-                } else {
+                checkStatus(status, future) {
                     val trackList = parsedResponse
                         .getJSONObject("message")
                         .getJSONObject("body")
@@ -179,5 +171,25 @@ object MusixmatchLyricsGetter : LyricsGetter {
             lyrics
                 .replace(name, "<strike>${name[0].uppercase() + name.lowercase().substring(1)}</strike>", ignoreCase = true)
                 .replace("\n", "<br>")
+    }
+
+    /**
+     * If status is 404, it means this song will never have lyrics.
+     * If status is not 404 but still of the form 4xx or 5xx, this request could have encountered an error, and another request could work
+     * Else if no problem execute function.
+     */
+    private fun <T> checkStatus(
+        status: Int,
+        future: CompletableFuture<T>,
+        function: () -> Boolean, ) {
+        when {
+            status == 404 -> {
+                future.completeExceptionally(NoLyricsFoundForThisSong())
+            }
+            status >= 400 -> {
+                future.completeExceptionally(BackendError())
+            }
+            else -> function.invoke()
+        }
     }
 }
