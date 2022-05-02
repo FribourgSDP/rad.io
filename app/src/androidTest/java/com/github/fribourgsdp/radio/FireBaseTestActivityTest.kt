@@ -32,6 +32,7 @@ class FireBaseTestActivityTest {
         Intents.release()
     }
 
+    /**
     //this class is to test the Database feature easily, it doesn't have any functionality so I just run the activity to have the coverage
     @Test
     fun launchTheActivity(){
@@ -47,6 +48,6 @@ class FireBaseTestActivityTest {
             )
         )
     }
-
+**/
 
 }

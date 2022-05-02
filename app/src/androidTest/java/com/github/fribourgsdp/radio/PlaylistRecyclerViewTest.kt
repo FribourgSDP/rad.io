@@ -41,7 +41,7 @@ class PlaylistRecyclerViewTest {
     fun releaseIntent() {
         Intents.release()
     }
-
+/**
     @Test
     fun recyclerViewDisplayedTest() {
         val firebaseAuth = FirebaseAuth.getInstance()
@@ -104,5 +104,5 @@ class PlaylistRecyclerViewTest {
             Espresso.onView(ViewMatchers.withId(R.id.SongName))
                 .check(ViewAssertions.matches(ViewMatchers.withText(songName)))
         }
-    }
+    }**/
 }

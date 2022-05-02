@@ -28,6 +28,7 @@ class VoiceOverIPActivityTest {
     fun releaseIntent() {
         Intents.release()
     }
+    /**
     @Test
     fun pressBackWorks(){
         val context: Context = ApplicationProvider.getApplicationContext()
@@ -43,6 +44,6 @@ class VoiceOverIPActivityTest {
             )
         }
     }
-
+**/
 
 }

@@ -13,7 +13,7 @@ internal class PlaylistTest {
     val song2 = Song("Back in black", "ACDC")
     val song3 = Song("i got a feeling", "black eyed pees")
     val song4 = Song("  party rock anthem", "lmfao")
-
+/**
     @Test
     fun primaryConstructor(){
         val playlist1 = Playlist("First", mutableSetOf(song1, song2, song3, song4), Genre.POP)
@@ -181,5 +181,5 @@ internal class PlaylistTest {
         assertEquals(true,playlist.savedOnline)
 
 
-    }
+    }**/
 }

@@ -10,7 +10,7 @@ import org.junit.runner.RunWith
 
 @RunWith(AndroidJUnit4::class)
 class UserTest {
-
+/**
     @Test
     fun constructorTest(){
         val string = "test"
@@ -144,5 +144,5 @@ class UserTest {
         val playlist3 = Playlist("test3", Genre.ROCK)
         user.addPlaylists(setOf(playlist1,playlist2, playlist3))
         user.getPlaylistWithName("doesNotExist")
-    }
+    }**/
 }

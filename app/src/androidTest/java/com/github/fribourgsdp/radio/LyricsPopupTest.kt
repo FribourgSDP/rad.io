@@ -16,7 +16,7 @@ import org.junit.runner.RunWith
 
 @RunWith(AndroidJUnit4::class)
 class LyricsPopupTest {
-
+/**
     @Test
     fun testCorrectTextIsDisplayed(){
         with(launchFragment(
@@ -40,5 +40,5 @@ class LyricsPopupTest {
                 .check(doesNotExist())
         }
     }
-
+**/
 }

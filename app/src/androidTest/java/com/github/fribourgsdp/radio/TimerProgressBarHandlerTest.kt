@@ -31,7 +31,7 @@ class TimerProgressBarHandlerTest {
         // Stop the timer in case it was still running
         handler.stopTimer()
     }
-
+/**
     @Test
     fun initWorksCorrectly() {
         assertEquals(0, handler.progressBar.progress)
@@ -58,7 +58,7 @@ class TimerProgressBarHandlerTest {
         assertEquals(View.INVISIBLE, handler.progressBar.visibility)
         assertFalse(handler.timer.isRunning)
     }
-
+**/
     private class MockTimerListener: Timer.Listener {
         override fun onUpdate(timeInSeconds: Long) {
             // DO NOTHING

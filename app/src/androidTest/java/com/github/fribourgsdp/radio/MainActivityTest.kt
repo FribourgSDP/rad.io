@@ -46,6 +46,7 @@ class MainActivityTest {
     fun releaseIntent() {
         Intents.release()
     }
+    /**
     @Test
     fun playButtonStartsGameSettings() {
         val playButton = Espresso.onView(withId(R.id.playButton))
@@ -89,5 +90,5 @@ class MainActivityTest {
         Espresso.pressBack()
         val newContext: Context = ApplicationProvider.getApplicationContext()
         assertEquals(ctx, newContext)
-    }
+    }**/
 }

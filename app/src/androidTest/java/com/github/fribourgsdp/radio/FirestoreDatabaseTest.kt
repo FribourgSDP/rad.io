@@ -55,6 +55,7 @@ class FirestoreDatabaseTest {
         `when`(mockFirestoreRef.getPlaylistRef((anyString()))).thenReturn(mockDocumentReference)
 
     }
+    /**
     @Test
     fun registeringUserAndFetchingItWorks(){
 
@@ -121,6 +122,6 @@ class FirestoreDatabaseTest {
         val lobbyId = 123456789L
         val result = Tasks.withTimeout(db.modifyUserMicPermissions(lobbyId, user, true), 10, TimeUnit.SECONDS)
         assertEquals(null, Tasks.await(result))
-    }
+    }**/
 
 }

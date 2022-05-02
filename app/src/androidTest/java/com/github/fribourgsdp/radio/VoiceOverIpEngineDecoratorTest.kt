@@ -30,7 +30,7 @@ class VoiceOverIpEngineDecoratorTest {
     fun releaseIntent() {
         Intents.release()
     }
-
+/**
     @Test
     fun initMockRtcEngine() {
         val context: Context = ApplicationProvider.getApplicationContext()
@@ -68,11 +68,7 @@ class VoiceOverIpEngineDecoratorTest {
             testEngineDecorator.mute(testImageButton)
 
         }
-
-
-
-
-    }
+    }*/
 
 }
 

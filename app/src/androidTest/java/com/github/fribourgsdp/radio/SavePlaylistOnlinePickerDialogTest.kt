@@ -17,6 +17,7 @@ class SavePlaylistOnlinePickerDialogTest {
             picked = online
         }
     }
+    /**
 
     @Test
     fun saveOnlineReturnTrueInListener(){
@@ -45,7 +46,7 @@ class SavePlaylistOnlinePickerDialogTest {
             assertFalse(picked)
         }
     }
-
+**/
 
 
 }

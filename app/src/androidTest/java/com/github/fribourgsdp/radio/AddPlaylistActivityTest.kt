@@ -46,6 +46,8 @@ class AddPlaylistActivityTest {
         Intents.release()
     }
 
+    /**
+
     @Test
     fun testSongWithNoName(){
         onView(withId(R.id.addSongToPlaylistArtistName))
@@ -359,5 +361,5 @@ class AddPlaylistActivityTest {
         closeSoftKeyboard()
         onView(withId(R.id.addSongToPlaylistBtn))
             .perform(ViewActions.click())
-    }
+    }**/
 }

@@ -33,6 +33,8 @@ class MyIRtcEngineEventHandlerTest {
     fun releaseIntent() {
         Intents.release()
     }
+
+    /**
     @Test
     fun existingUserSpeak(){
         val context: Context = ApplicationProvider.getApplicationContext()
@@ -88,6 +90,6 @@ class MyIRtcEngineEventHandlerTest {
 
 
     }
-
+**/
 
 }
