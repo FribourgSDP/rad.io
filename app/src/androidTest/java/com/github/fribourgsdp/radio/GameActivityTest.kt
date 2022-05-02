@@ -221,7 +221,6 @@ class GameActivityTest {
 
             // Check that the scores are displayed with the correct data and in the correct order
             onView(withId(R.id.scoresRecyclerView))
-            onView(withId(R.id.scoresRecyclerView))
                 .check(matches(allOf(
                     atPosition(0, R.id.nameScoreTextView, withText("singer2")),
                     atPosition(0, R.id.scoreTextView, withText("100")),
