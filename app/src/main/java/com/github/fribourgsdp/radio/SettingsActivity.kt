@@ -21,11 +21,10 @@ class SettingsActivity : MyAppCompatActivity() {
         setContentView(R.layout.activity_settings)
         saveSettingsButton = findViewById(R.id.approveButton)
 
-        Settings.loadOrDefault(this).addOnSuccessListener { settings ->
-            this.settings = settings
-            settingsBuilder = SettingsBuilder(settings)
-            initLanguageSpinner(settings.getLanguage())
-        }
+        val settings = Settings.loadOrDefault(this)
+        this.settings = settings
+        settingsBuilder = SettingsBuilder(settings)
+        initLanguageSpinner(settings.getLanguage())
 
         initSaveSettingsButton()
 
