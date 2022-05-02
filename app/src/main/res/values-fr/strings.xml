@@ -91,5 +91,7 @@
     <string name="no">non</string>
     <string name="id">Id</string>
     <string name="name">Nom</string>
-    <string name="hostname">Nom de l'hôte</string>
+    <string name="hostname">Nom de l\'hôte</string>
+    <string name="sort_by">Trier par:</string>
+    <string name="public_lobbies">Lobbies public:</string>
 </resources>
