@@ -47,9 +47,12 @@ class PublicLobbiesAdapter(private val context: Context, private val db: Databas
         return lobbies?.size ?: 0
     }
 
+    /**
+     * Sort the values in the [adapter][PublicLobbiesAdapter] by the given [key].
+     */
     fun sortBy(key: LobbyDataKeys) {
         lastSortedKey = key
-        
+
         lobbies = when (key) {
             LobbyDataKeys.ID -> lobbies?.sortedBy { it.id }
             LobbyDataKeys.NAME -> lobbies?.sortedBy { it.name }
@@ -61,6 +64,9 @@ class PublicLobbiesAdapter(private val context: Context, private val db: Databas
         }
     }
 
+    /**
+     * Set the [listener][l].
+     */
     fun setOnPickListener(l: OnPickListener) {
         listener = l
     }
@@ -79,7 +85,14 @@ class PublicLobbiesAdapter(private val context: Context, private val db: Databas
         }
     }
 
-    public fun interface OnPickListener {
+    /**
+     * An interface creating listeners able to handle a pick of lobby.
+     */
+    fun interface OnPickListener {
+        /**
+         * Execute an action when a lobby is picked.
+         * @param lobbyId the [id][Long] of the picked lobby.
+         */
         fun onPick(lobbyId: Long)
     }
 }
