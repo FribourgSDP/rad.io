@@ -1,5 +1,7 @@
 package com.github.fribourgsdp.radio
 
+import com.github.fribourgsdp.radio.MusixmatchLyricsGetter.BACKEND_ERROR_PLACEHOLDER
+import com.github.fribourgsdp.radio.MusixmatchLyricsGetter.LYRICS_NOT_FOUND
 import okhttp3.*
 import org.json.JSONObject
 import org.junit.Assert.*
@@ -34,11 +36,10 @@ class MusixmatchLyricsGetterTest {
         val lyricsFuture = MusixmatchLyricsGetter.getLyrics("fsdgfdgdfgdfgdfg", "weoir hpfasdsfno", MockOkHttpClient())
         checkLyricsNotFound(lyricsFuture)
     }
-    @Test(expected = ExecutionException::class)
+    @Test
     fun getLyricsFailingHTTPClientTest(){
         val f = MusixmatchLyricsGetter.getLyrics("rouge", "sardou", SemiFailingHTTPClient())
-        val lyrics = f.get()
-        println(lyrics)
+        assertEquals(f.get(), BACKEND_ERROR_PLACEHOLDER)
     }
     @Test(expected = Exception::class)
     fun getSongIDFailingHTTPClientTest(){
@@ -238,7 +239,7 @@ class MusixmatchLyricsGetterTest {
     }
 
     private fun checkLyricsNotFound(lyricsFuture : CompletableFuture<String>){
-        assertTrue(lyricsFuture.isCompletedExceptionally)
+        assertTrue(lyricsFuture.get() == LYRICS_NOT_FOUND)
         try {
             lyricsFuture.get()
         } catch (e : ExecutionException){
@@ -246,7 +247,7 @@ class MusixmatchLyricsGetterTest {
         }
     }
     private fun checkBackendError(lyricsFuture : CompletableFuture<String>){
-        assertTrue(lyricsFuture.isCompletedExceptionally)
+        assertTrue(lyricsFuture.get() == BACKEND_ERROR_PLACEHOLDER)
         try {
             lyricsFuture.get()
         } catch (e : ExecutionException){

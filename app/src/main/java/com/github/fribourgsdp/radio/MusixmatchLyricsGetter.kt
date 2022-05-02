@@ -31,6 +31,7 @@ interface LyricsGetter{
  */
 object MusixmatchLyricsGetter : LyricsGetter {
     const val LYRICS_NOT_FOUND = "---No lyrics were found for this song.---"
+    const val BACKEND_ERROR_PLACEHOLDER = ""
 
     abstract class LyricsGetterException(val default : String) : Exception()
     class NoLyricsFoundForThisSong : LyricsGetterException(LYRICS_NOT_FOUND){
@@ -62,21 +63,26 @@ object MusixmatchLyricsGetter : LyricsGetter {
         Log.println(Log.ASSERT, "*", "LYRICS GETTER CALL !!!!")
         val future = CompletableFuture<String>()
         val trackIDFuture = getSongID(songName, artistName, client)
-        val trackID: Int
-        try {
-            trackID = trackIDFuture.get()
-        } catch (e: Throwable) {
-            Log.println(Log.ASSERT, "*", e.javaClass.name)
-            future.completeExceptionally(NoLyricsFoundForThisSong())
-            return future
+        trackIDFuture.handle { trackID, e1 ->
+            if (e1 != null) {
+                Log.println(Log.ASSERT, "#", "complete with ${e1.javaClass.name}")
+                future.complete((e1 as LyricsGetterException).default)
+            } else {
+                val url = "$BASE_URL$TRACK_LYRICS_GET?$TRACK_ID_FIELD=$trackID&$API_KEY_FIELD=$API_KEY"
+                val request = Request.Builder().url(url).build()
+                val future2 = CompletableFuture<String>()
+                client.newCall(request).enqueue(GetLyricsCallback(future2, parser))
+                future2.whenComplete { s, e2 ->
+                    if (e2 != null) {
+                        Log.println(Log.ASSERT, "##", "complete with ${e2.javaClass.name}")
+                        future.complete((e2 as LyricsGetterException).default)
+                    } else {
+                        future.complete(cleanLyrics(s))
+                    }
+                }
+            }
         }
-        val url = "$BASE_URL$TRACK_LYRICS_GET?$TRACK_ID_FIELD=$trackID&$API_KEY_FIELD=$API_KEY"
-
-        val request = Request.Builder().url(url).build()
-        client.newCall(request).enqueue(GetLyricsCallback(future, parser))
         return future
-            .exceptionally { e -> (e as LyricsGetterException).default}
-            .thenApply { s -> cleanLyrics(s) }
     }
 
     /**
@@ -99,7 +105,7 @@ object MusixmatchLyricsGetter : LyricsGetter {
 
     private class GetLyricsCallback(private val future : CompletableFuture<String>, private val parser : JSONParser) : Callback {
         override fun onFailure(call: Call, e: IOException) {
-            future.completeExceptionally(e)
+            future.completeExceptionally(BackendError())
         }
 
         override fun onResponse(call: Call, response: Response) {
@@ -128,7 +134,7 @@ object MusixmatchLyricsGetter : LyricsGetter {
 
     private class GetSongIDCallback(private val future : CompletableFuture<Int>, private val parser : JSONParser) : Callback {
         override fun onFailure(call: Call, e: IOException) {
-            future.completeExceptionally(e)
+            future.completeExceptionally(BackendError())
         }
 
         override fun onResponse(call: Call, response: Response) {
@@ -161,7 +167,8 @@ object MusixmatchLyricsGetter : LyricsGetter {
      * The mention to Musixmatch will be displayed elsewhere, like in the activity displaying the lyrics.
      */
     private fun cleanLyrics(lyrics : String) : String{
-        if(lyrics == LYRICS_NOT_FOUND) {
+        Log.println(Log.ASSERT, "*", "cleaning lyrics ${lyrics}!")
+        if(lyrics == LYRICS_NOT_FOUND || lyrics == "") {
             return lyrics
         }
         val allLines = lyrics.split("\n")
