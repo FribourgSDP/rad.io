@@ -103,8 +103,8 @@ class WorkingJoinGameActivityTest {
     fun cancelScanQRCodeWork(){
 
         val context: Context = ApplicationProvider.getApplicationContext()
-        val intent = Intent(context, WorkingJoinGameActivity::class.java)
-        ActivityScenario.launch<WorkingJoinGameActivity>(intent).use { scenario ->
+        val intent = Intent(context, QRCodeJoinGameActivity::class.java)
+        ActivityScenario.launch<QRCodeJoinGameActivity>(intent).use { scenario ->
             ViewActions.closeSoftKeyboard()
             val joinQRCodeButton = Espresso.onView(ViewMatchers.withId(R.id.joinWithQRCode))
             joinQRCodeButton.perform(ViewActions.click())

@@ -25,8 +25,8 @@ import androidx.fragment.app.setFragmentResult
 open class JoinWithQRCodeFragment(val ctx: Context, val activity: Activity): DialogFragment() {
 
     protected lateinit var rootView : View
-    private lateinit var camera: ScannerLiveView
-    private lateinit var scannedTV: TextView
+    protected lateinit var camera: ScannerLiveView
+    protected lateinit var scannedTV: TextView
     protected lateinit var cancelButton : Button
 
     override fun onCreateView(inflater: LayoutInflater,container: ViewGroup?,savedInstanceState: Bundle?): View {
@@ -55,7 +55,7 @@ open class JoinWithQRCodeFragment(val ctx: Context, val activity: Activity): Dia
 
 
 
-    protected fun initializeView(){
+    protected open fun initializeView(){
         // initialize scannerLiveview and textview.
         scannedTV = rootView.findViewById(R.id.idTVscanned)
         camera = rootView.findViewById<View>(R.id.camview) as ScannerLiveView

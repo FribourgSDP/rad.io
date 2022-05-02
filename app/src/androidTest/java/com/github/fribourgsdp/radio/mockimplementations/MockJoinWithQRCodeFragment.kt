@@ -12,6 +12,9 @@ import androidx.core.os.bundleOf
 import androidx.fragment.app.setFragmentResult
 import com.github.fribourgsdp.radio.JoinWithQRCodeFragment
 import com.github.fribourgsdp.radio.R
+import eu.livotov.labs.android.camview.ScannerLiveView
+import io.agora.rtc.IRtcEngineEventHandler
+import org.mockito.Mockito
 
 class MockJoinWithQRCodeFragment(ctx: Context, activity: Activity) : JoinWithQRCodeFragment(ctx, activity) {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
@@ -19,7 +22,7 @@ class MockJoinWithQRCodeFragment(ctx: Context, activity: Activity) : JoinWithQRC
 
         cancelButton  = rootView.findViewById(R.id.cancel_button)
         cancelButton.setOnClickListener{
-            setFragmentResult("idRequest", bundleOf("id" to 1001L))
+            //setFragmentResult("idRequest", bundleOf("id" to 1001L))
             dismiss()
         }
 
@@ -30,4 +33,15 @@ class MockJoinWithQRCodeFragment(ctx: Context, activity: Activity) : JoinWithQRC
         return rootView
     }
 
+    override fun initializeView(){
+        // initialize scannerLiveview and textview.
+        scannedTV = rootView.findViewById(R.id.idTVscanned)
+        camera = makeMockScannerLiveView()
+            }
+
+}
+
+fun makeMockScannerLiveView(): ScannerLiveView{
+    val scannerLiveView = Mockito.mock(ScannerLiveView::class.java)
+    return scannerLiveView
 }
