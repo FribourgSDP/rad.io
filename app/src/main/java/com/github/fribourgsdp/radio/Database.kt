@@ -90,6 +90,12 @@ interface Database {
      */
     fun addUserToLobby(id: Long, user: User, hasMicPermissions: Boolean) : Task<Void>
 
+    fun getPublicLobbies(): Task<List<LobbyData>>
+
+    fun removeLobbyFromPublic(id: Long): Task<Void>
+
+    fun listenToPublicLobbiesUpdate(listener: EventListener<List<LobbyData>>)
+
     /**
      * Modify [user]'s permission in [id]'th lobby with [newPermissions] microphone permissions.
      * @return a task void  so that we know if the [user] was correctly added to the lobby [id].

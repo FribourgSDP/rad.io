@@ -10,6 +10,7 @@ import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.firestore.EventListener
+import com.google.firebase.firestore.FieldValue
 import java.lang.Exception
 import java.util.*
 import kotlin.collections.ArrayList
@@ -323,6 +324,28 @@ class FirestoreDatabase(var refMake: FirestoreRef) : Database {
         }
     }
 
+    override fun getPublicLobbies(): Task<List<LobbyData>> {
+        return db.collection("lobby").document("public").get().continueWith { snapshot ->
+            if (snapshot.result == null || !snapshot.result.exists()) {
+                throw Exception("Could not fetch public lobbies")
+            }
+
+            createListLobbyDataFromRawData(snapshot.result.data)
+        }
+    }
+
+    override fun removeLobbyFromPublic(id: Long): Task<Void> {
+        return db.collection("lobby").document("public")
+            .update(id.toString(), FieldValue.delete())
+    }
+
+    override fun listenToPublicLobbiesUpdate(listener: EventListener<List<LobbyData>>) {
+        db.collection("lobby").document("public").addSnapshotListener { snapshot, error ->
+            val value = snapshot?.let{ createListLobbyDataFromRawData(it.data) }
+            listener.onEvent(value, error)
+        }
+    }
+
     override fun removeUserFromLobby(id: Long, user: User) : Task<Void> {
         val docRef = db.collection("lobby").document(id.toString())
 
@@ -587,6 +610,12 @@ class FirestoreDatabase(var refMake: FirestoreRef) : Database {
     private fun listenUpdate(collectionPath : String, id: Long, listener: EventListener<DocumentSnapshot>){
         db.collection(collectionPath).document(id.toString())
             .addSnapshotListener(listener)
+    }
+
+    private fun createListLobbyDataFromRawData(data: Map<String, Any>?): List<LobbyData> {
+        return data?.let {
+            (it as Map<Long, Map<String, String>>).entries.map { (id, data) -> LobbyData(id, data["name"]!!, data["host"]!!) }
+        } ?: ArrayList()
     }
 
     companion object {
