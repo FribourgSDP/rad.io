@@ -111,6 +111,9 @@
             android:name=".mockimplementations.BuggyJoinGameActivity"
             android:exported="false" />
         <activity
+            android:name=".mockimplementations.QRCodeJoinGameActivity"
+            android:exported="false" />
+        <activity
             android:name=".mockimplementations.MockGameActivity"
             android:exported="false" />
         <activity

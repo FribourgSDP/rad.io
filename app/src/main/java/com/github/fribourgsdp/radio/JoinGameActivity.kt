@@ -65,8 +65,12 @@ open class JoinGameActivity : MyAppCompatActivity() {
         return FirestoreDatabase()
     }
 
+    open protected fun createQRCodeFragment() : DialogFragment{
+        return JoinWithQRCodeFragment(this, this)
+    }
+
     private fun initJoinWithQRCode(){
-        qrCodeScan = JoinWithQRCodeFragment(this, this)
+        qrCodeScan = createQRCodeFragment()
         joinWithQRCodeButton.setOnClickListener{
             qrCodeScan.show(supportFragmentManager, "qrCodeForJoiningGame")
             supportFragmentManager

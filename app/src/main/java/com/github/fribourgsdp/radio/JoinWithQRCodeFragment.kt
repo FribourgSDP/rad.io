@@ -22,12 +22,12 @@ import eu.livotov.labs.android.camview.ScannerLiveView
 import eu.livotov.labs.android.camview.scanner.decoder.zxing.ZXDecoder
 import androidx.fragment.app.setFragmentResult
 
-class JoinWithQRCodeFragment(val ctx: Context, val activity: Activity): DialogFragment() {
+open class JoinWithQRCodeFragment(val ctx: Context, val activity: Activity): DialogFragment() {
 
-    private lateinit var rootView : View
+    protected lateinit var rootView : View
     private lateinit var camera: ScannerLiveView
     private lateinit var scannedTV: TextView
-    private lateinit var cancelButton : Button
+    protected lateinit var cancelButton : Button
 
     override fun onCreateView(inflater: LayoutInflater,container: ViewGroup?,savedInstanceState: Bundle?): View {
         rootView= inflater.inflate(R.layout.fragment_join_with_qr_code, container, false)
@@ -55,7 +55,7 @@ class JoinWithQRCodeFragment(val ctx: Context, val activity: Activity): DialogFr
 
 
 
-    private fun initializeView(){
+    protected fun initializeView(){
         // initialize scannerLiveview and textview.
         scannedTV = rootView.findViewById(R.id.idTVscanned)
         camera = rootView.findViewById<View>(R.id.camview) as ScannerLiveView
