@@ -54,6 +54,7 @@ class GameActivityTest {
         ActivityScenario.launch<MockGameActivity>(testIntent).use { _ ->
             Espresso.pressBack()
             onView(withId(R.id.cancelQuitGameOrLobby))
+                .inRoot(isDialog())
                 .perform(ViewActions.click())
         }
     }
@@ -64,6 +65,7 @@ class GameActivityTest {
         ActivityScenario.launch<MockGameActivity>(testIntent).use { _ ->
             Espresso.pressBack()
             Espresso.onView(withId(R.id.validateQuitGameOrLobby))
+                .inRoot(isDialog())
                 .perform(ViewActions.click())
         }
     }
