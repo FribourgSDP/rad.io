@@ -32,8 +32,17 @@ interface LyricsGetter{
 object MusixmatchLyricsGetter : LyricsGetter {
     const val LYRICS_NOT_FOUND = "---No lyrics were found for this song.---"
 
-    class NoLyricsFoundForThisSong : Exception()
-    class BackendError(val nTries : Int = 0) : Exception()
+    abstract class LyricsGetterException(val default : String) : Exception()
+    class NoLyricsFoundForThisSong : LyricsGetterException(LYRICS_NOT_FOUND){
+        init {
+            Log.println(Log.ASSERT, "**", "USE NO_LYRICS ERROR")
+        }
+    }
+    class BackendError : LyricsGetterException(""){
+        init {
+            Log.println(Log.ASSERT, "**", "USE BACKEND ERROR")
+        }
+    }
 
     /**
      * Asks Musixmatch and retrieves the lyrics of a song.
@@ -57,6 +66,7 @@ object MusixmatchLyricsGetter : LyricsGetter {
         try {
             trackID = trackIDFuture.get()
         } catch (e: Throwable) {
+            Log.println(Log.ASSERT, "*", e.javaClass.name)
             future.completeExceptionally(NoLyricsFoundForThisSong())
             return future
         }
@@ -64,7 +74,9 @@ object MusixmatchLyricsGetter : LyricsGetter {
 
         val request = Request.Builder().url(url).build()
         client.newCall(request).enqueue(GetLyricsCallback(future, parser))
-        return future.thenApply { s -> cleanLyrics(s) }
+        return future
+            .exceptionally { e -> (e as LyricsGetterException).default}
+            .thenApply { s -> cleanLyrics(s) }
     }
 
     /**

@@ -36,7 +36,7 @@ open class SongFragment : MyFragment(R.layout.fragment_song) {
 
     private fun fetchLyrics(lyricsGetter: LyricsGetter) {
         lyricsGetter.getLyrics(song.name, song.artist)
-            .exceptionally { "" }
+            .exceptionally { ""  }
             .thenAccept{f ->
                 currentLyrics = f
                 doSaveLyrics = true
