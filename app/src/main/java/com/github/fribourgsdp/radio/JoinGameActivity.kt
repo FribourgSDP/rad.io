@@ -7,12 +7,12 @@ import android.os.Bundle
 import android.view.KeyEvent
 import android.view.View
 import android.view.inputmethod.EditorInfo
-import android.widget.Button
-import android.widget.EditText
-import android.widget.TextView
+import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.core.widget.addTextChangedListener
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 
@@ -27,7 +27,8 @@ open class JoinGameActivity : MyAppCompatActivity() {
     private lateinit var idInput: EditText
     private lateinit var joinButton : Button
     private lateinit var joinErrorView : TextView
-
+    private lateinit var lobbiesRecyclerView: RecyclerView
+    private lateinit var spinner: Spinner
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -36,6 +37,8 @@ open class JoinGameActivity : MyAppCompatActivity() {
         idInput = findViewById(R.id.gameToJoinID)
         joinButton = findViewById(R.id.joinGameButton)
         joinErrorView = findViewById(R.id.joinErrorView)
+        lobbiesRecyclerView = findViewById(R.id.publicLobbiesRecyclerView)
+        spinner = findViewById(R.id.lobbySortSpinner)
 
         idInput.addTextChangedListener {
             joinButton.isEnabled = idInput.text.toString().trim().isNotEmpty()
@@ -53,6 +56,8 @@ open class JoinGameActivity : MyAppCompatActivity() {
             }
             false
         }
+
+        initPublicLobbiesDisplay()
 
     }
 
@@ -83,5 +88,34 @@ open class JoinGameActivity : MyAppCompatActivity() {
             joinErrorView.text = getString(R.string.lobby_not_found, id)
             joinErrorView.visibility = View.VISIBLE
         }
+    }
+
+    private fun initPublicLobbiesDisplay() {
+        // init the cards
+        lobbiesRecyclerView.layoutManager = LinearLayoutManager(this)
+        val adapter = PublicLobbiesAdapter(this).apply {
+            setOnPickListener { connectToLobby(it) }
+        }
+        lobbiesRecyclerView.adapter = adapter
+
+        // init the spinner
+        spinner.adapter = ArrayAdapter(this, android.R.layout.simple_spinner_item, LobbyDataKeys.values()).apply {
+            setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+        }
+        spinner.onItemSelectedListener = LobbySelector(adapter)
+    }
+
+    private class LobbySelector(private val publicLobbiesAdapter: PublicLobbiesAdapter): AdapterView.OnItemSelectedListener {
+        override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
+            val key = parent?.getItemAtPosition(position) as LobbyDataKeys?
+            if (key != null) {
+                publicLobbiesAdapter.sortBy(key)
+            }
+        }
+
+        override fun onNothingSelected(parent: AdapterView<*>?) {
+            // Do nothing
+        }
+
     }
 }
