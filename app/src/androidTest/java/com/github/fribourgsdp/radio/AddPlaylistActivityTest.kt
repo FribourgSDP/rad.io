@@ -297,6 +297,7 @@ class AddPlaylistActivityTest {
             .check(matches(isDisplayed()))
 
         onView(withId(R.id.validateQuitAddPlaylist))
+            .inRoot(isDialog())
             .perform(click())
 
         Intents.intended(
@@ -326,6 +327,7 @@ class AddPlaylistActivityTest {
             .check(matches(isDisplayed()))
 
         onView(withId(R.id.cancelQuitAddPlaylist))
+            .inRoot(isDialog())
             .perform(click())
 
         onView(withId(R.id.addSongToPlaylistSongName))

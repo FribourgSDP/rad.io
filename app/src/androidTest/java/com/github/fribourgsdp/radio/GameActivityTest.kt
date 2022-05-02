@@ -221,6 +221,7 @@ class GameActivityTest {
 
             // Check that the scores are displayed with the correct data and in the correct order
             onView(withId(R.id.scoresRecyclerView))
+            onView(withId(R.id.scoresRecyclerView))
                 .check(matches(allOf(
                     atPosition(0, R.id.nameScoreTextView, withText("singer2")),
                     atPosition(0, R.id.scoreTextView, withText("100")),
@@ -238,11 +239,13 @@ class GameActivityTest {
         ActivityScenario.launch<GameActivity>(testIntent).use { scenario ->
             scenario.onActivity {
                 it.displayLyrics("Lorem ipsum, dolor sit amet")
-//                assertTrue(it.supportFragmentManager.fragments.any{f -> f.tag == "lyricsPopup"})
             }
-            onView(withId(R.id.close_popup_button)).perform(ViewActions.click())
+            onView(withId(R.id.close_popup_button))
+                .inRoot(isDialog())
+                .perform(ViewActions.click())
             Thread.sleep(1)
-            onView(withId(R.id.showLyricsButton)).check(matches(isDisplayed()))
+            onView(withId(R.id.showLyricsButton))
+                .check(matches(isDisplayed()))
 
         }
     }
