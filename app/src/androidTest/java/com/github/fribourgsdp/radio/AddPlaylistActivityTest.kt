@@ -1,15 +1,9 @@
 package com.github.fribourgsdp.radio
 
 import android.content.Context
-import android.os.Bundle
-import android.view.View
-import androidx.fragment.app.testing.launchFragment
-import androidx.fragment.app.testing.launchFragmentInContainer
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.espresso.Espresso
 import androidx.test.espresso.Espresso.*
-import androidx.test.espresso.UiController
-import androidx.test.espresso.ViewAction
 import androidx.test.espresso.action.ViewActions
 import androidx.test.espresso.action.ViewActions.click
 import androidx.test.espresso.assertion.ViewAssertions
@@ -17,22 +11,19 @@ import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.contrib.RecyclerViewActions
 import androidx.test.espresso.intent.Intents
 import androidx.test.espresso.intent.matcher.IntentMatchers
-import androidx.test.espresso.intent.matcher.IntentMatchers.*
- import androidx.test.espresso.matcher.RootMatchers
+import androidx.test.espresso.intent.matcher.IntentMatchers.hasComponent
+import androidx.test.espresso.matcher.RootMatchers
 import androidx.test.espresso.matcher.RootMatchers.isDialog
 import androidx.test.espresso.matcher.ViewMatchers
 import androidx.test.espresso.matcher.ViewMatchers.isDisplayed
 import androidx.test.espresso.matcher.ViewMatchers.withId
 import androidx.test.ext.junit.rules.ActivityScenarioRule
 import androidx.test.ext.junit.runners.AndroidJUnit4
-
 import com.google.android.gms.tasks.Tasks
-import org.junit.After
-import org.junit.Assert.*
-import org.junit.Before
-import org.hamcrest.Matcher
 import org.hamcrest.Matchers
 import org.hamcrest.Matchers.*
+import org.junit.After
+import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -297,6 +288,7 @@ class AddPlaylistActivityTest {
             .check(matches(isDisplayed()))
 
         onView(withId(R.id.validateQuitAddPlaylist))
+            .inRoot(isDialog())
             .perform(click())
 
         Intents.intended(
@@ -326,6 +318,7 @@ class AddPlaylistActivityTest {
             .check(matches(isDisplayed()))
 
         onView(withId(R.id.cancelQuitAddPlaylist))
+            .inRoot(isDialog())
             .perform(click())
 
         onView(withId(R.id.addSongToPlaylistSongName))
