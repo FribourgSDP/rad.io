@@ -54,7 +54,7 @@ class MusixmatchLyricsGetterTest {
     @Test
     fun getLyricsMalformedResponse(){
         val lyricsFuture = MusixmatchLyricsGetter.getLyrics("rouge", "sardou", MockOkHttpClient(), NullJSONParser())
-        checkLyricsNotFound(lyricsFuture)
+        checkBackendError(lyricsFuture)
     }
     @Test
     fun emptyLyrics(){
@@ -242,7 +242,15 @@ class MusixmatchLyricsGetterTest {
         try {
             lyricsFuture.get()
         } catch (e : ExecutionException){
-            assertTrue("FAILED : message was ${e.message} \n instead of com.github.fribourgsdp.radio.MusixmatchLyricsGetter\$LyricsNotFoundException", e.message == "com.github.fribourgsdp.radio.MusixmatchLyricsGetter\$LyricsNotFoundException")
+            assertTrue("FAILED : message was ${e.message} \n instead of com.github.fribourgsdp.radio.MusixmatchLyricsGetter\$NoLyricsFoundForThisSong", e.message == "com.github.fribourgsdp.radio.MusixmatchLyricsGetter\$NoLyricsFoundForThisSong")
+        }
+    }
+    private fun checkBackendError(lyricsFuture : CompletableFuture<String>){
+        assertTrue(lyricsFuture.isCompletedExceptionally)
+        try {
+            lyricsFuture.get()
+        } catch (e : ExecutionException){
+            assertTrue("FAILED : message was ${e.message} \n instead of com.github.fribourgsdp.radio.MusixmatchLyricsGetter\$BackendError", e.message == "com.github.fribourgsdp.radio.MusixmatchLyricsGetter\$BackendError")
         }
     }
 

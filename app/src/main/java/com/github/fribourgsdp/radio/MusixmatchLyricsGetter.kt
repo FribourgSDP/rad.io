@@ -2,7 +2,6 @@ package com.github.fribourgsdp.radio
 
 import android.util.Log
 import okhttp3.*
-import org.json.JSONArray
 import java.io.IOException
 import java.util.*
 import java.util.concurrent.CompletableFuture
@@ -34,7 +33,7 @@ object MusixmatchLyricsGetter : LyricsGetter {
     const val LYRICS_NOT_FOUND = "---No lyrics were found for this song.---"
 
     class NoLyricsFoundForThisSong : Exception()
-    class MusixmatchError : Exception()
+    class BackendError(val nTries : Int = 0) : Exception()
 
     /**
      * Asks Musixmatch and retrieves the lyrics of a song.
@@ -96,11 +95,13 @@ object MusixmatchLyricsGetter : LyricsGetter {
             val parsedResponse = parser.parse(parsedResponseString)
             val lyrics : String?
             if(parsedResponse == null){
-                future.completeExceptionally(MusixmatchError())
+                future.completeExceptionally(BackendError())
             } else {
                 val status = parsedResponse.getJSONObject("message").getJSONObject("header").getInt("status_code")
                 if (status == 404) {
                     future.completeExceptionally(NoLyricsFoundForThisSong())
+                } else if(status >= 400){
+                    future.completeExceptionally(BackendError())
                 } else {
                     lyrics = parsedResponse
                         .getJSONObject("message")
@@ -125,24 +126,28 @@ object MusixmatchLyricsGetter : LyricsGetter {
         override fun onResponse(call: Call, response: Response) {
             val parsedResponse = parser.parse(response.body()?.string())
             if(parsedResponse == null){
-                future.completeExceptionally(MusixmatchError())
-            }
-            val trackList = try {
-                parsedResponse
-                    ?.getJSONObject("message")
-                    ?.getJSONObject("body")
-                    ?.getJSONArray("track_list")
-            } catch (e : Exception){
-                JSONArray()
-            }
-            if(trackList?.length() == 0){
-                future.completeExceptionally(NoLyricsFoundForThisSong())
-            } else {
-                val firstTrackID = trackList
-                    ?.getJSONObject(0)
-                    ?.getJSONObject("track")
-                    ?.getInt("track_id")
-                future.complete(firstTrackID)
+                future.completeExceptionally(BackendError())
+            } else{
+                val status = parsedResponse.getJSONObject("message").getJSONObject("header").getInt("status_code")
+                if (status == 404) {
+                    future.completeExceptionally(NoLyricsFoundForThisSong())
+                } else if(status >= 400) {
+                    future.completeExceptionally(BackendError())
+                } else {
+                    val trackList = parsedResponse
+                        .getJSONObject("message")
+                        .getJSONObject("body")
+                        .getJSONArray("track_list")
+                    if (trackList.length() == 0) {
+                        future.completeExceptionally(NoLyricsFoundForThisSong())
+                    } else {
+                        val firstTrackID = trackList
+                            .getJSONObject(0)
+                            ?.getJSONObject("track")
+                            ?.getInt("track_id")
+                        future.complete(firstTrackID)
+                    }
+                }
             }
         }
     }
