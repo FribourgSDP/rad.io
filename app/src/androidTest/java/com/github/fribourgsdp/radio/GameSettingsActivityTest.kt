@@ -33,6 +33,7 @@ import org.junit.runner.RunWith
  */
 @RunWith(AndroidJUnit4::class)
 class GameSettingsActivityTest {
+    /**
     @get:Rule
     var gameSettingsActivityRule = ActivityScenarioRule(MockGameSettingsActivity::class.java)
 
@@ -52,7 +53,7 @@ class GameSettingsActivityTest {
     fun releaseIntent() {
         Intents.release()
     }
-/**
+
     @Test
     fun intentWorksWithCorrectSettings() {
 

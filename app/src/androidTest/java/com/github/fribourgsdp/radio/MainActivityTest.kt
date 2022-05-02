@@ -30,6 +30,7 @@ import org.mockito.Mockito.*
  */
 @RunWith(AndroidJUnit4::class)
 class MainActivityTest {
+    /**
 
     private val ctx: Context = ApplicationProvider.getApplicationContext()
 
@@ -46,7 +47,7 @@ class MainActivityTest {
     fun releaseIntent() {
         Intents.release()
     }
-    /**
+
     @Test
     fun playButtonStartsGameSettings() {
         val playButton = Espresso.onView(withId(R.id.playButton))

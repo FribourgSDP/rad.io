@@ -29,7 +29,7 @@ import java.util.concurrent.TimeUnit
  */
 @RunWith(AndroidJUnit4::class)
 class GoogleSignInActivityTest {
-
+/**
     @Before
     fun initIntent() {
         Intents.init()
@@ -65,7 +65,7 @@ class GoogleSignInActivityTest {
             googleButton.perform(click())
         }
     }
-/**
+
     @Test
     fun firebaseAuthWithNewUser() {
 

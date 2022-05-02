@@ -28,6 +28,7 @@ import org.junit.runner.RunWith
  */
 @RunWith(AndroidJUnit4::class)
 class BuggyLobbyActivityTest {
+    /**
     @get:Rule
     var lobbyActivityRule = ActivityScenarioRule(BuggyLobbyActivity::class.java)
 
@@ -42,7 +43,7 @@ class BuggyLobbyActivityTest {
     fun releaseIntent() {
         Intents.release()
     }
-    /**
+
     @Test
     fun lobbyDisplayErrorWhenDBFails() {
         // Init views

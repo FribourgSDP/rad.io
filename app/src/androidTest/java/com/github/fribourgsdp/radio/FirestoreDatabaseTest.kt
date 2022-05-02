@@ -18,6 +18,7 @@ import java.util.*
 import kotlin.collections.HashMap
 
 class FirestoreDatabaseTest {
+    /**
     private val userNameTest = "BakerTest"
     private val userIdTest = "ID124Test"
 
@@ -55,7 +56,7 @@ class FirestoreDatabaseTest {
         `when`(mockFirestoreRef.getPlaylistRef((anyString()))).thenReturn(mockDocumentReference)
 
     }
-    /**
+
     @Test
     fun registeringUserAndFetchingItWorks(){
 

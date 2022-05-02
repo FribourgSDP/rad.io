@@ -23,6 +23,7 @@ import org.hamcrest.Matchers.*
 
 @RunWith(AndroidJUnit4::class)
 class SettingsActivityTest {
+    /**
   @get:Rule
     var settingsActivityRule = ActivityScenarioRule(SettingsActivity::class.java)
 
@@ -38,7 +39,7 @@ class SettingsActivityTest {
         Intents.release()
     }
 
-    /**
+
     @Test
     fun onBackPressedGoesToMainActivity() {
         Espresso.pressBack()

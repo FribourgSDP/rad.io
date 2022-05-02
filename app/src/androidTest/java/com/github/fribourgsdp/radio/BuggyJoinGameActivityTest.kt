@@ -21,13 +21,14 @@ import org.junit.runner.RunWith
  */
 @RunWith(AndroidJUnit4::class)
 class BuggyJoinGameActivityTest {
+    /**
     @get:Rule
     var gameSettingsActivityRule = ActivityScenarioRule(BuggyJoinGameActivity::class.java)
 
     private val ctx: Context = ApplicationProvider.getApplicationContext()
 
 
-    /**
+
     @Test
     fun errorDisplayedOnDBFail() {
         // Test values

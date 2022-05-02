@@ -13,8 +13,9 @@ import java.util.*
 
 
 class PlayerGameHandlerTest {
+    /**
     private lateinit var mockSnapshot: DocumentSnapshot
-
+/
     private val sleepingTime = 50L
     private val singer = "Singer"
     private val song = "A good song"
@@ -40,7 +41,7 @@ class PlayerGameHandlerTest {
         `when`(mockSnapshot.getBoolean("validity")).thenReturn(true)
 
     }
-/**
+
     @Test
     fun correctSingerUpdate() {
         val view = FakeGameView()

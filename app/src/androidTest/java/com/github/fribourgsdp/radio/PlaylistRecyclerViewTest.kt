@@ -31,7 +31,7 @@ import java.util.concurrent.TimeUnit
 
 @RunWith(AndroidJUnit4::class)
 class PlaylistRecyclerViewTest {
-
+/**
     @Before
     fun initIntent() {
         Intents.init()
@@ -41,7 +41,7 @@ class PlaylistRecyclerViewTest {
     fun releaseIntent() {
         Intents.release()
     }
-/**
+
     @Test
     fun recyclerViewDisplayedTest() {
         val firebaseAuth = FirebaseAuth.getInstance()

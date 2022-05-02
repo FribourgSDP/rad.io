@@ -23,6 +23,7 @@ import org.junit.runner.RunWith
  */
 @RunWith(AndroidJUnit4::class)
 class EndGameActivityTest{
+    /**
     private val ctx: Context = ApplicationProvider.getApplicationContext()
 
     @Before
@@ -34,7 +35,7 @@ class EndGameActivityTest{
     fun releaseIntent() {
         Intents.release()
     }
-/**
+
     @Test
     fun onBackPressedGoesToMainMenu() {
         val intent = Intent(ctx, EndGameActivity::class.java)

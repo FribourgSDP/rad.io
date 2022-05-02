@@ -10,6 +10,7 @@ import org.junit.Test
 import org.mockito.Mockito.*
 
 class HostGameHandlerTest {
+    /**
     private val sleepingTime = 50L
     private lateinit var mockSnapshot: DocumentSnapshot
 
@@ -33,7 +34,7 @@ class HostGameHandlerTest {
         `when`(mockSnapshot.get("player_found_map")).thenReturn(fakeGame.getAllPlayersId().associateWith { true })
         `when`(mockSnapshot.exists()).thenReturn(true)
     }
-/**
+
     @Test
     fun displayErrorOnDatabaseUpdateFailure() {
         val view = FakeGameView()

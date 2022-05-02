@@ -37,7 +37,7 @@ import org.junit.runner.RunWith
 
 @RunWith(AndroidJUnit4::class)
 class WorkingLobbyActivityTest {
-
+/**
     private val ctx: Context = ApplicationProvider.getApplicationContext()
 
     @Before
@@ -50,7 +50,7 @@ class WorkingLobbyActivityTest {
     fun releaseIntent() {
         Intents.release()
     }
-/**
+
     @Test
     fun pressingOnBackThenCancelStaysInLobby(){
         // Test values

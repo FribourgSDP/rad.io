@@ -34,7 +34,7 @@ import java.util.concurrent.TimeUnit
 
 @RunWith(AndroidJUnit4::class)
 class UserProfileActivityTest : TestCase() {
-
+/**
     private val ctx: Context = ApplicationProvider.getApplicationContext()
 
     @Before
@@ -46,7 +46,7 @@ class UserProfileActivityTest : TestCase() {
     fun releaseIntent() {
         Intents.release()
     }
-   /**
+
     @Test
     fun changingNameAndSavingChangesChangesUser(){
         val testName = "test"

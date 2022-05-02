@@ -23,7 +23,7 @@ import kotlin.concurrent.thread
 
 class MyIRtcEngineEventHandlerTest {
 
-
+/**
     @Before
     fun initIntent() {
         Intents.init()
@@ -34,7 +34,7 @@ class MyIRtcEngineEventHandlerTest {
         Intents.release()
     }
 
-    /**
+
     @Test
     fun existingUserSpeak(){
         val context: Context = ApplicationProvider.getApplicationContext()

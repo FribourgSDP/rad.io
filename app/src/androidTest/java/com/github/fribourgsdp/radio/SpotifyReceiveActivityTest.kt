@@ -21,6 +21,7 @@ import org.junit.Test
 
 
 class SpotifyReceiveActivityTest {
+    /**
     private val ctx: Context = ApplicationProvider.getApplicationContext()
 
     @Before
@@ -32,7 +33,7 @@ class SpotifyReceiveActivityTest {
     fun releaseIntent() {
         Intents.release()
     }
-    /**
+
     @Test
     fun nullSpotifyResponseReturnsError(){
         val intent: Intent? = null

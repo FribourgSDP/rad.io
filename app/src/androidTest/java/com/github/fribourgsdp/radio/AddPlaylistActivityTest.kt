@@ -31,7 +31,7 @@ import org.junit.runner.RunWith
 
 @RunWith(AndroidJUnit4::class)
 class AddPlaylistActivityTest {
-
+    /**
     @get:Rule
     var addPlaylistActivityRule = ActivityScenarioRule(AddPlaylistActivity::class.java)
     private val ctx: Context = ApplicationProvider.getApplicationContext()
@@ -46,7 +46,7 @@ class AddPlaylistActivityTest {
         Intents.release()
     }
 
-    /**
+
 
     @Test
     fun testSongWithNoName(){

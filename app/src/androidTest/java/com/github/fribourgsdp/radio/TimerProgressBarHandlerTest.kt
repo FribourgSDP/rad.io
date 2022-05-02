@@ -15,6 +15,7 @@ import java.util.*
  *
  */
 class TimerProgressBarHandlerTest {
+    /**
     private lateinit var handler: TimerProgressBarHandler
     private val ctx: Context = ApplicationProvider.getApplicationContext()
 
@@ -31,7 +32,7 @@ class TimerProgressBarHandlerTest {
         // Stop the timer in case it was still running
         handler.stopTimer()
     }
-/**
+
     @Test
     fun initWorksCorrectly() {
         assertEquals(0, handler.progressBar.progress)

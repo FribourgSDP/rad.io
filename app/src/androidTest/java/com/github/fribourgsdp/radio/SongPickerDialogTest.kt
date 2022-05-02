@@ -16,7 +16,7 @@ import org.junit.runner.RunWith
 
 @RunWith(AndroidJUnit4::class)
 class SongPickerDialogTest {
-
+/**
     private val listSongs = arrayListOf("Wesh alors", "Mamma Mia!", "La Bohème")
 
     /**
@@ -28,7 +28,7 @@ class SongPickerDialogTest {
             instantiate = { SongPickerDialog(choices, listener) }
         )
     }
-/**
+
     @Test
     fun songPickerWithCorrectSongs() {
         val uselessListener = object: GameView.OnPickListener {

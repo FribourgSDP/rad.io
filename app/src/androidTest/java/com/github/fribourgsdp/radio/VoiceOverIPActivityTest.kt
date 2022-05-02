@@ -15,7 +15,7 @@ import org.junit.Rule
 import org.junit.Test
 
 class VoiceOverIPActivityTest {
-
+/**
     @get:Rule var permissionRule: GrantPermissionRule = GrantPermissionRule.grant(android.Manifest.permission.RECORD_AUDIO)
 
 
@@ -28,7 +28,7 @@ class VoiceOverIPActivityTest {
     fun releaseIntent() {
         Intents.release()
     }
-    /**
+
     @Test
     fun pressBackWorks(){
         val context: Context = ApplicationProvider.getApplicationContext()

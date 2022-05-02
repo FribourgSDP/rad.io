@@ -31,6 +31,7 @@ import org.junit.Rule
 
 @RunWith(AndroidJUnit4::class)
 class GameActivityTest {
+    /**
     private val ctx: Context = ApplicationProvider.getApplicationContext()
 
     private val fakeGame = Game.Builder()
@@ -47,7 +48,7 @@ class GameActivityTest {
     fun releaseIntent() {
         Intents.release()
     }
-/**
+
     @Test
     fun onBackPressedThenCancelStays() {
         val testIntent = Intent(ctx, MockGameActivity::class.java)

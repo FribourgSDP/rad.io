@@ -26,7 +26,7 @@ import org.mockito.Mock
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 @RunWith(AndroidJUnit4ClassRunner::class)
 class SongFragmentTest {
-
+/**
     @Before
     fun initIntent() {
         Intents.init()
@@ -38,7 +38,7 @@ class SongFragmentTest {
         Intents.release()
     }
 
-    /**
+
     @Test
     fun songAttributesAreCorrect() {
         val bundle = Bundle()

@@ -20,7 +20,7 @@ import org.mockito.Mockito.*
 
 
 class VoiceOverIpEngineDecoratorTest {
-
+/**
     @Before
     fun initIntent() {
         Intents.init()
@@ -30,7 +30,7 @@ class VoiceOverIpEngineDecoratorTest {
     fun releaseIntent() {
         Intents.release()
     }
-/**
+
     @Test
     fun initMockRtcEngine() {
         val context: Context = ApplicationProvider.getApplicationContext()

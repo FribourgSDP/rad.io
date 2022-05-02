@@ -5,6 +5,7 @@ import org.junit.Test
 import org.junit.Assert.*
 
 class GameTest {
+    /**
     private val playlistTest = Playlist("Test",
         mutableSetOf(
             Song("colorado", "Milky Chance"),
@@ -32,7 +33,7 @@ class GameTest {
         .setNbRounds(nbRounds)
         .setPrivacy(isPrivate)
         .addUserId(otherId)
-/**
+
     @Test
     fun builderWorksCorrectlyWithCorrectArgs() {
         val game = gameBuilder.build()
