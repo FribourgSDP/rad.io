@@ -99,6 +99,9 @@ open class JoinGameActivity : MyAppCompatActivity() {
         }
         lobbiesRecyclerView.adapter = adapter
 
+        // set the context for LobbyDataKeys to use the values in string.xml
+        LobbyDataKeys.setContext(this)
+
         // init the spinner
         spinner.adapter = ArrayAdapter(this, android.R.layout.simple_spinner_item, LobbyDataKeys.values()).apply {
             setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
