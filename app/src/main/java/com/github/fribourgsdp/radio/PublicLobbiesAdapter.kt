@@ -9,10 +9,19 @@ import androidx.cardview.widget.CardView
 import androidx.recyclerview.widget.RecyclerView
 
 class PublicLobbiesAdapter(private val context: Context, private val db: Database = FirestoreDatabase()): RecyclerView.Adapter<PublicLobbiesAdapter.ViewHolder>() {
-    private var lobbies: List<LobbyData>? = db.getPublicLobbies().result
+    private var lobbies: List<LobbyData>? = null
     private var listener: OnPickListener? = null
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
+    init {
+        db.getPublicLobbies().addOnSuccessListener {
+            lobbies = it
+
+            // update the whole list
+            notifyDataSetChanged()
+        }.addOnFailureListener {
+            lobbies = null
+        }
+
         // init update listener
         db.listenToPublicLobbiesUpdate { value, _ ->
             lobbies = value
@@ -20,7 +29,9 @@ class PublicLobbiesAdapter(private val context: Context, private val db: Databas
             // update the whole list
             notifyDataSetChanged()
         }
+    }
 
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val itemView = LayoutInflater.from(parent.context).inflate(R.layout.card_lobby, parent, false)
         return ViewHolder(itemView)
     }
