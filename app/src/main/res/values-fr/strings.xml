@@ -42,7 +42,7 @@
     <string name="long_text_placeholder">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque convallis dignissim ipsum sit amet blandit. Maecenas a porta tellus, quis tincidunt sem. Nullam consequat pharetra lobortis. Pellentesque luctus, mi in bibendum viverra, felis erat feugiat magna, vel sagittis massa orci nec tortor. Interdum et malesuada fames ac ante ipsum primis in faucibus. Curabitur in turpis quis lacus congue imperdiet. Mauris eget lobortis nisi. Sed quis nulla pellentesque, faucibus nisi sed, porta purus. Nulla mattis, sapien quis vehicula ultrices, odio nibh tristique sapien, et ultrices orci felis in est. Praesent ut dignissim metus. </string>
     <string name="launch_game">Démarrer</string>
     <string name="join_game_text">Entre l\'id. de la partie que tu souhaites rejoindre !</string>
-    <string name="join_id_hint">000</string>
+    <string name="default_lobby_id">000</string>
     <string name="join_button_text">Rejoindre</string>
     <string name="join_fail_format">Impossible de rejoindre le salon %d.</string>
     <string name="lobby_not_found">Le salon %d est introuvable.</string>
@@ -89,4 +89,7 @@
     <string name="saveOnlineQuestionText">Voulez-vous sauvez votre playlist en ligne?</string>
     <string name="yes">oui</string>
     <string name="no">non</string>
+    <string name="id">Id</string>
+    <string name="name">Nom</string>
+    <string name="hostname">Nom de l'hôte</string>
 </resources>
