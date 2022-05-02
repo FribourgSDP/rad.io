@@ -94,6 +94,7 @@ open class JoinGameActivity : MyAppCompatActivity() {
         // init the cards
         lobbiesRecyclerView.layoutManager = LinearLayoutManager(this)
         val adapter = PublicLobbiesAdapter(this).apply {
+            sortBy(LobbyDataKeys.ID)
             setOnPickListener { connectToLobby(it) }
         }
         lobbiesRecyclerView.adapter = adapter
