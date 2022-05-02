@@ -19,19 +19,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Radio"
         android:usesCleartextTraffic="true">
-        <activity
-            android:name=".TestQrCodeRead"
-            android:exported="true" >
 
-            <intent-filter>
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
-
-        <activity
-            android:name=".TestQRCOodeCreateActivity"
-            android:exported="false" />
         <activity
             android:name=".EndGameActivity"
             android:exported="false"
