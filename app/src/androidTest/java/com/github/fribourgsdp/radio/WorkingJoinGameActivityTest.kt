@@ -105,6 +105,7 @@ class WorkingJoinGameActivityTest {
         val context: Context = ApplicationProvider.getApplicationContext()
         val intent = Intent(context, WorkingJoinGameActivity::class.java)
         ActivityScenario.launch<WorkingJoinGameActivity>(intent).use { scenario ->
+            Espresso.closeSoftKeyboard()
             val joinQRCodeButton = Espresso.onView(ViewMatchers.withId(R.id.joinWithQRCode))
             joinQRCodeButton.perform(ViewActions.click())
 /**
