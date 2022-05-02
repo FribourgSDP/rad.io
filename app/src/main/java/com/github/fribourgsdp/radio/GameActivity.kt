@@ -247,6 +247,7 @@ open class GameActivity : AppCompatActivity(), GameView, Timer.Listener {
             .setFragmentResultListener("quitRequest", this) { _, bundle ->
                 val hasQuit = bundle.getBoolean("hasQuit")
                 if (hasQuit) {
+                    playerGameHandler.hasQuit = true
                     returnToMainMenu()
                 }
             }
