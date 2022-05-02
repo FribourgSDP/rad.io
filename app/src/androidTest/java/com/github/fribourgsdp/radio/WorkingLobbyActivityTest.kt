@@ -6,9 +6,12 @@ import androidx.test.core.app.ActivityScenario
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.espresso.Espresso
 import androidx.test.espresso.action.ViewActions
+import androidx.test.espresso.assertion.ViewAssertions
 import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.intent.Intents
+import androidx.test.espresso.intent.matcher.IntentMatchers
 import androidx.test.espresso.matcher.RootMatchers.isDialog
+import androidx.test.espresso.matcher.ViewMatchers
 import androidx.test.espresso.matcher.ViewMatchers.*
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.github.fribourgsdp.radio.mockimplementations.LocalDatabase
@@ -16,6 +19,7 @@ import com.github.fribourgsdp.radio.mockimplementations.LyricsGettingWorkingLobb
 import com.github.fribourgsdp.radio.mockimplementations.WorkingLobbyActivity
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
+import org.hamcrest.Matchers
 import org.hamcrest.Matchers.not
 import org.junit.After
 import org.junit.Assert.assertTrue
@@ -207,5 +211,39 @@ class WorkingLobbyActivityTest {
             testHost = User.load(context)
             assertTrue(testHost.getPlaylists().any { p -> p.getSongs().any { s -> s.lyrics == lyrics } })
         }
+    }
+
+    @Test
+    fun createCorrectQrCode(){
+        // Test values
+        val testName = "Hello World!"
+        val testPlaylist = Playlist("Rap Playlist")
+        val testNbRounds = 20
+        val withHint = true
+        val private = true
+        val intent = Intent(ctx, WorkingLobbyActivity::class.java).apply {
+            putExtra(GAME_NAME_KEY, testName)
+            putExtra(GAME_PLAYLIST_KEY, Json.encodeToString(testPlaylist))
+            putExtra(GAME_NB_ROUNDS_KEY, testNbRounds)
+            putExtra(GAME_HINT_KEY, withHint)
+            putExtra(GAME_PRIVACY_KEY, private)
+            putExtra(GAME_IS_HOST_KEY, true)
+        }
+        ActivityScenario.launch<WorkingLobbyActivity>(intent).use { scenario ->
+
+
+            val displayQRCodeButton = Espresso.onView(withId(R.id.displayQRCodeButton))
+            displayQRCodeButton.perform(ViewActions.click())
+
+            Espresso.onView(withId(R.id.cancel_button))
+                .inRoot(isDialog())
+                .check(matches(isDisplayed()))
+
+            Espresso.onView(withId(R.id.cancel_button))
+                .inRoot(isDialog())
+                .perform(ViewActions.click())
+
+        }
+
     }
 }
