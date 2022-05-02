@@ -90,10 +90,22 @@ interface Database {
      */
     fun addUserToLobby(id: Long, user: User, hasMicPermissions: Boolean) : Task<Void>
 
+   /**
+    * Get a list of all public [LobbyData].
+    * @return a task loading the list of [LobbyData].
+    */
     fun getPublicLobbies(): Task<List<LobbyData>>
 
+   /**
+    * Remove the lobby [id] from the public lobbies.
+    * @return a task void so that we know if the lobby was correctly removed.
+    */
     fun removeLobbyFromPublic(id: Long): Task<Void>
 
+   /**
+    * Listen to the updates of the public lobbies.
+    * Executes the [listener] on every update.
+    */
     fun listenToPublicLobbiesUpdate(listener: EventListener<List<LobbyData>>)
 
     /**
