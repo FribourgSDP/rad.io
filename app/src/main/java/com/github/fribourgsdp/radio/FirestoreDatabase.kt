@@ -614,7 +614,7 @@ class FirestoreDatabase(var refMake: FirestoreRef) : Database {
 
     private fun createListLobbyDataFromRawData(data: Map<String, Any>?): List<LobbyData> {
         return data?.let {
-            (it as Map<Long, Map<String, String>>).entries.map { (id, data) -> LobbyData(id, data["name"]!!, data["host"]!!) }
+            (it as Map<String, Map<String, String>>).entries.map { (id, data) -> LobbyData(id.toLong(), data["name"]!!, data["host"]!!) }
         } ?: ArrayList()
     }
 
