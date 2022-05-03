@@ -76,6 +76,18 @@ class BuggyDatabase : Database {
         return Tasks.forException(Exception("Error"))
     }
 
+    override fun getPublicLobbies(): Task<List<LobbyData>> {
+        return Tasks.forException(Exception("No lobbies"))
+    }
+
+    override fun removeLobbyFromPublic(id: Long): Task<Void> {
+        TODO("Not yet implemented")
+    }
+
+    override fun listenToPublicLobbiesUpdate(listener: EventListener<List<LobbyData>>) {
+        TODO("Not yet implemented")
+    }
+
     override fun openGame(id: Long): Task<Void> {
         TODO("Not yet implemented")
     }
