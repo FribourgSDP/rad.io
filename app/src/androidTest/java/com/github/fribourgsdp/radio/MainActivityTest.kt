@@ -11,6 +11,7 @@ import androidx.test.espresso.intent.matcher.IntentMatchers
 import androidx.test.espresso.matcher.ViewMatchers.withId
 import androidx.test.ext.junit.rules.ActivityScenarioRule
 import androidx.test.ext.junit.runners.AndroidJUnit4
+import junit.framework.Assert.assertEquals
 import org.hamcrest.Matchers
 import org.junit.After
 import org.junit.Before
@@ -72,12 +73,6 @@ class MainActivityTest {
     }
 
     @Test
-    fun correctTransitionToDisplayLyricsActivity(){
-        Espresso.onView(withId(R.id.button)).perform(ViewActions.click())
-        Intents.intended(IntentMatchers.hasComponent(DisplayLyricsActivity::class.java.name))
-    }
-
-    @Test
     fun correctTransitionToUserProfile(){
         Espresso.onView(withId(R.id.profileButton)).perform(ViewActions.click())
         Intents.intended(IntentMatchers.hasComponent(UserProfileActivity::class.java.name))
@@ -87,5 +82,12 @@ class MainActivityTest {
     fun correctTransitionToVoiceOverIpActivity(){
         Espresso.onView(withId(R.id.VoiceOverIpButton)).perform(ViewActions.click())
         Intents.intended(IntentMatchers.hasComponent(VoiceOverIPActivity::class.java.name))
+    }
+
+    @Test
+    fun onBackPressedStaysOnMainActivity(){
+        Espresso.pressBack()
+        val newContext: Context = ApplicationProvider.getApplicationContext()
+        assertEquals(ctx, newContext)
     }
 }

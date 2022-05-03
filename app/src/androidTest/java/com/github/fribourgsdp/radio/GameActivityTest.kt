@@ -5,19 +5,26 @@ import android.content.Context
 import android.content.Intent
 import androidx.test.core.app.ActivityScenario
 import androidx.test.core.app.ApplicationProvider
+import androidx.test.espresso.Espresso
 import androidx.test.espresso.Espresso.onView
+import androidx.test.espresso.action.ViewActions
 import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.intent.Intents
+import androidx.test.espresso.intent.matcher.IntentMatchers
 import androidx.test.espresso.matcher.RootMatchers.isDialog
 import androidx.test.espresso.matcher.ViewMatchers.*
 import androidx.test.ext.junit.runners.AndroidJUnit4
+import com.github.fribourgsdp.radio.mockimplementations.MockGameActivity
+import com.github.fribourgsdp.radio.utils.CustomMatchers.Companion.atPosition
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
+import org.hamcrest.Matchers.allOf
 import org.hamcrest.Matchers.not
 import org.junit.After
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
+
 
 @RunWith(AndroidJUnit4::class)
 class GameActivityTest {
@@ -39,6 +46,28 @@ class GameActivityTest {
     }
 
     @Test
+    fun onBackPressedThenCancelStays() {
+        val testIntent = Intent(ctx, MockGameActivity::class.java)
+        ActivityScenario.launch<MockGameActivity>(testIntent).use { _ ->
+            Espresso.pressBack()
+            onView(withId(R.id.cancelQuitGameOrLobby))
+                .inRoot(isDialog())
+                .perform(ViewActions.click())
+        }
+    }
+
+    @Test
+    fun onBackPressedThenContinueGoesToMain() {
+        val testIntent = Intent(ctx, MockGameActivity::class.java)
+        ActivityScenario.launch<MockGameActivity>(testIntent).use { _ ->
+            Espresso.pressBack()
+            Espresso.onView(withId(R.id.validateQuitGameOrLobby))
+                .inRoot(isDialog())
+                .perform(ViewActions.click())
+        }
+    }
+
+    @Test
     fun singerUpdatedCorrectly() {
         // Test values
         val singerName = "Singer"
@@ -46,8 +75,8 @@ class GameActivityTest {
         // Init views
         val singerTextView = onView(withId(R.id.singerTextView))
 
-        val testIntent = Intent(ctx, GameActivity::class.java)
-        ActivityScenario.launch<GameActivity>(testIntent).use { scenario ->
+        val testIntent = Intent(ctx, MockGameActivity::class.java)
+        ActivityScenario.launch<MockGameActivity>(testIntent).use { scenario ->
             scenario.onActivity {
                 it.updateSinger(singerName)
             }
@@ -64,8 +93,8 @@ class GameActivityTest {
         // Init views
         val currentRoundTextView = onView(withId(R.id.currentRoundView))
 
-        val testIntent = Intent(ctx, GameActivity::class.java)
-        ActivityScenario.launch<GameActivity>(testIntent).use { scenario ->
+        val testIntent = Intent(ctx, MockGameActivity::class.java)
+        ActivityScenario.launch<MockGameActivity>(testIntent).use { scenario ->
             scenario.onActivity {
                 it.updateRound(currentRound)
             }
@@ -84,12 +113,12 @@ class GameActivityTest {
         val songGuessEditText = onView(withId(R.id.songGuessEditText))
         val songGuessSubmitButton = onView(withId(R.id.songGuessSubmitButton))
 
-        val testIntent = Intent(ctx, GameActivity::class.java).apply {
+        val testIntent = Intent(ctx, MockGameActivity::class.java).apply {
             putExtra(GAME_IS_HOST_KEY, true)
             putExtra(GAME_KEY, Json.encodeToString(fakeGame))
         }
 
-        ActivityScenario.launch<GameActivity>(testIntent).use { scenario ->
+        ActivityScenario.launch<MockGameActivity>(testIntent).use { scenario ->
             scenario.onActivity {
                 it.displaySong(songName)
             }
@@ -108,8 +137,8 @@ class GameActivityTest {
         val songGuessEditText = onView(withId(R.id.songGuessEditText))
         val songGuessSubmitButton = onView(withId(R.id.songGuessSubmitButton))
 
-        val testIntent = Intent(ctx, GameActivity::class.java)
-        ActivityScenario.launch<GameActivity>(testIntent).use { scenario ->
+        val testIntent = Intent(ctx, MockGameActivity::class.java)
+        ActivityScenario.launch<MockGameActivity>(testIntent).use { scenario ->
             scenario.onActivity {
                 it.displayGuessInput()
             }
@@ -128,8 +157,8 @@ class GameActivityTest {
         // Init views
         val errorOrFailureTextView = onView(withId(R.id.errorOrFailureTextView))
 
-        val testIntent = Intent(ctx, GameActivity::class.java)
-        ActivityScenario.launch<GameActivity>(testIntent).use { scenario ->
+        val testIntent = Intent(ctx, MockGameActivity::class.java)
+        ActivityScenario.launch<MockGameActivity>(testIntent).use { scenario ->
             scenario.onActivity {
                 it.displayError(errorMessage)
             }
@@ -144,8 +173,8 @@ class GameActivityTest {
         // Init views
         val errorOrFailureTextView = onView(withId(R.id.errorOrFailureTextView))
 
-        val testIntent = Intent(ctx, GameActivity::class.java)
-        ActivityScenario.launch<GameActivity>(testIntent).use { scenario ->
+        val testIntent = Intent(ctx, MockGameActivity::class.java)
+        ActivityScenario.launch<MockGameActivity>(testIntent).use { scenario ->
             scenario.onActivity {
                 it.hideError()
             }
@@ -157,8 +186,8 @@ class GameActivityTest {
     fun songPickerDisplayedOnChoose() {
         val listSongs = arrayListOf("Song0", "Song1", "Song2")
 
-        val testIntent = Intent(ctx, GameActivity::class.java)
-        ActivityScenario.launch<GameActivity>(testIntent).use { scenario ->
+        val testIntent = Intent(ctx, MockGameActivity::class.java)
+        ActivityScenario.launch<MockGameActivity>(testIntent).use { scenario ->
             scenario.onActivity {
                 it.chooseSong(listSongs,
                     object: GameView.OnPickListener {
@@ -172,6 +201,74 @@ class GameActivityTest {
             onView(withText(R.string.pick_a_song)) // Look for the dialog => use its title
                 .inRoot(isDialog()) // check that it's indeed in a dialog
                 .check(matches(isDisplayed()));
+        }
+    }
+
+    @Test
+    fun scoresDisplayedCorrectly() {
+        val scores = hashMapOf(
+            "singer0" to 85L,
+            "singer1" to 70L,
+            "singer2" to 100L
+        )
+
+        val testIntent = Intent(ctx, GameActivity::class.java)
+        ActivityScenario.launch<GameActivity>(testIntent).use { scenario ->
+            scenario.onActivity {
+                it.displayPlayerScores(scores)
+            }
+
+            // Check that the scores are displayed with the correct data and in the correct order
+            onView(withId(R.id.scoresRecyclerView))
+                .check(matches(allOf(
+                    atPosition(0, R.id.nameScoreTextView, withText("singer2")),
+                    atPosition(0, R.id.scoreTextView, withText("100")),
+                    atPosition(1, R.id.nameScoreTextView, withText("singer0")),
+                    atPosition(1, R.id.scoreTextView, withText("85")),
+                    atPosition(2, R.id.nameScoreTextView, withText("singer1")),
+                    atPosition(2, R.id.scoreTextView, withText("70"))
+                )))
+        }
+    }
+
+    @Test
+    fun testDisplayLyrics(){
+        val testIntent = Intent(ctx, GameActivity::class.java)
+        ActivityScenario.launch<GameActivity>(testIntent).use { scenario ->
+            scenario.onActivity {
+                it.displayLyrics("Lorem ipsum, dolor sit amet")
+            }
+            onView(withId(R.id.close_popup_button))
+                .inRoot(isDialog())
+                .perform(ViewActions.click())
+            Thread.sleep(1)
+            onView(withId(R.id.showLyricsButton))
+                .check(matches(isDisplayed()))
+
+        }
+    }
+
+    @Test
+    fun goToEndGameActivityOnGameOver() {
+        val scores = hashMapOf(
+            "singer0" to 85L,
+            "singer1" to 70L,
+            "singer2" to 100L
+        )
+
+        val testIntent = Intent(ctx, GameActivity::class.java)
+        ActivityScenario.launch<GameActivity>(testIntent).use { scenario ->
+            scenario.onActivity {
+                it.gameOver(scores)
+            }
+
+            Intents.intended(
+                allOf(
+                    IntentMatchers.hasComponent(EndGameActivity::class.java.name),
+                    IntentMatchers.hasExtra(SCORES_KEY, ArrayList(scores.toList())),
+                    IntentMatchers.toPackage("com.github.fribourgsdp.radio")
+                )
+            )
         }
     }
 }

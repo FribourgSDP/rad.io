@@ -3,11 +3,13 @@ package com.github.fribourgsdp.radio
 import android.content.Context
 import android.view.KeyEvent
 import androidx.test.core.app.ApplicationProvider
+import androidx.test.espresso.Espresso
 import androidx.test.espresso.Espresso.closeSoftKeyboard
 import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.action.ViewActions
 import androidx.test.espresso.assertion.ViewAssertions
 import androidx.test.espresso.intent.Intents
+import androidx.test.espresso.intent.matcher.IntentMatchers
 import androidx.test.espresso.intent.matcher.IntentMatchers.*
 import androidx.test.espresso.matcher.ViewMatchers
 import androidx.test.espresso.matcher.ViewMatchers.withId
@@ -16,6 +18,7 @@ import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.github.fribourgsdp.radio.mockimplementations.MockGameSettingsActivity
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
+import org.hamcrest.Matchers
 import org.hamcrest.Matchers.allOf
 import org.junit.After
 import org.junit.Before
@@ -98,7 +101,6 @@ class GameSettingsActivityTest {
             allOf(
                 toPackage("com.github.fribourgsdp.radio"),
                 hasComponent(LobbyActivity::class.java.name),
-                hasExtraWithKey(GAME_HOST_KEY),
                 hasExtra(GAME_NAME_KEY, testName),
                 hasExtra(GAME_PLAYLIST_KEY, Json.encodeToString(testPlaylist)),
                 hasExtra(GAME_NB_ROUNDS_KEY, testNbRounds),
@@ -130,12 +132,12 @@ class GameSettingsActivityTest {
         Intents.intended(
             allOf(
                 hasComponent(LobbyActivity::class.java.name),
-                hasExtraWithKey(GAME_HOST_KEY),
                 hasExtra(GAME_NAME_KEY, ctx.getString(R.string.default_game_name)),
                 hasExtra(GAME_PLAYLIST_KEY, Json.encodeToString(testPlaylist)),
                 hasExtra(GAME_NB_ROUNDS_KEY, ctx.getString(R.string.default_game_nb_rounds).toInt()),
                 hasExtra(GAME_HINT_KEY, false),
                 hasExtra(GAME_PRIVACY_KEY, false),
+                hasExtra(GAME_IS_HOST_KEY, true),
                 toPackage("com.github.fribourgsdp.radio")
             )
         )
@@ -231,5 +233,15 @@ class GameSettingsActivityTest {
             )
         )
 
+    }
+
+    @Test
+    fun pressBackReturnsToMainActivity() {
+        Espresso.pressBack()
+        Intents.intended(
+            Matchers.allOf(
+                IntentMatchers.hasComponent(MainActivity::class.java.name)
+            )
+        )
     }
 }

@@ -1,8 +1,11 @@
 package com.github.fribourgsdp.radio
 
+import com.google.android.gms.tasks.Tasks
 import org.junit.Test
 
 import org.junit.Assert.*
+import org.mockito.Mockito
+import org.mockito.Mockito.*
 
 internal class PlaylistTest {
 
@@ -50,7 +53,7 @@ internal class PlaylistTest {
         val testerSet = mutableSetOf(song1, song2, song3, song4)
         val playlist1 = Playlist("First", testerSet, Genre.POP)
         val songSet = playlist1.getSongs()
-        assertTrue(testerSet !== songSet)
+        assertFalse(testerSet === songSet)
         assertTrue(playlist1.getSongs().contains(Song("colorado", "Milky Chance")))
     }
 
@@ -122,5 +125,61 @@ internal class PlaylistTest {
         assertEquals(4, playlistAddedTo.getSongs().size)
         assertTrue(playlistAddedTo.getSongs().contains(song1))
         assertTrue(playlistAddedTo.getSongs().contains(song2))
+    }
+
+    @Test
+    fun getPlaylistWithNameWorks(){
+        val testerSet = mutableSetOf(song1, song2, song3, song4)
+        val playlist = Playlist("First", testerSet, Genre.POP)
+        assertEquals(song1, playlist.getSong(song1.name, song1.artist))
+    }
+
+    @Test(expected = NoSuchElementException::class)
+    fun getNonExistingPlaylistWithNameThrowsException(){
+        val testerSet = mutableSetOf(song1, song2, song3, song4)
+        val playlist = Playlist("First", testerSet, Genre.POP)
+        playlist.getSong("unknown", "any")
+    }
+
+
+    @Test
+    fun transformOnlineWorks(){
+        val songSet = mutableSetOf<Song>(song1,song2,song3,song4)
+        val mockDB = mock(Database::class.java)
+        `when`(mockDB.generateSongIds(anyInt())).thenReturn(Tasks.forResult(Pair(0,songSet.size.toLong())))
+        `when`(mockDB.generatePlaylistId()).thenReturn(Tasks.forResult(0))
+        val playlist = Playlist("Test",songSet,Genre.NONE)
+        Tasks.await(playlist.transformToOnline(mockDB))
+        assertEquals("0",playlist.id)
+        val songs = playlist.getSongs().toList()
+        assertEquals("0",songs[0].id)
+        assertEquals("1",songs[1].id)
+        assertEquals("2",songs[2].id)
+        assertEquals("3",songs[3].id)
+    }
+
+    //this is usefull in order to be able to use any() from mockito
+    private fun <T> any(): T {
+        Mockito.any<T>()
+        return uninitialized()
+    }
+    private fun <T> uninitialized(): T = null as T
+
+    @Test
+    fun saveOnlineWorks(){
+        val songSet = mutableSetOf<Song>(song1,song2,song3,song4)
+        val mockDB = mock(Database::class.java)
+        `when`(mockDB.generateSongIds(anyInt())).thenReturn(Tasks.forResult(Pair(0,songSet.size.toLong())))
+        `when`(mockDB.generatePlaylistId()).thenReturn(Tasks.forResult(0))
+        `when`(mockDB.registerSong(any<Song>())).thenReturn(Tasks.forResult(null))
+        `when`(mockDB.registerPlaylist(any())).thenReturn(Tasks.forResult(null))
+
+
+        val playlist = Playlist("Test",songSet,Genre.NONE)
+        Tasks.await(playlist.transformToOnline(mockDB))
+        playlist.saveOnline()
+        assertEquals(true,playlist.savedOnline)
+
+
     }
 }

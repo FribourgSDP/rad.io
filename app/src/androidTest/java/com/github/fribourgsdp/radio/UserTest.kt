@@ -123,4 +123,26 @@ class UserTest {
     fun getSpotifyPlaylistUidWhenNonExistent(){
         assertEquals(null, User("testUser", 0).getSpotifyPlaylistUId("none"))
     }
+
+    @Test
+    fun getPlaylistWithNameWorks(){
+        val user = User("user", 0)
+        val playlistName = "test2"
+        val playlist1 = Playlist("test", Genre.ROCK)
+        val playlist2 = Playlist(playlistName, Genre.ROCK)
+        val playlist3 = Playlist("test3", Genre.ROCK)
+        user.addPlaylists(setOf(playlist1,playlist2, playlist3))
+        assertEquals(playlist2, user.getPlaylistWithName(playlistName))
+    }
+
+    @Test(expected = NoSuchElementException::class)
+    fun getNonExistingPlaylistWithNameThrowsException(){
+        val user = User("user", 0)
+        val playlistName = "test2"
+        val playlist1 = Playlist("test", Genre.ROCK)
+        val playlist2 = Playlist(playlistName, Genre.ROCK)
+        val playlist3 = Playlist("test3", Genre.ROCK)
+        user.addPlaylists(setOf(playlist1,playlist2, playlist3))
+        user.getPlaylistWithName("doesNotExist")
+    }
 }
