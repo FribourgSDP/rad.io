@@ -143,6 +143,29 @@ class WorkingJoinGameActivityTest {
         }
     }
 
+    @Test
+    fun joinFailLobbyWithScanQRCodeWork(){
+
+        val context: Context = ApplicationProvider.getApplicationContext()
+        val intent = Intent(context, QRCodeJoinGameActivityJoinFail::class.java)
+        ActivityScenario.launch<QRCodeJoinGameActivityJoinFail>(intent).use { scenario ->
+            val displayQRCodeButton = Espresso.onView(ViewMatchers.withId(R.id.joinWithQRCode))
+            displayQRCodeButton.perform(ViewActions.click())
+
+            Espresso.onView(ViewMatchers.withId(R.id.cancel_button))
+                .inRoot(RootMatchers.isDialog())
+                .perform(ViewActions.click())
+
+            Espresso.onView(ViewMatchers.withId(R.id.cancel_button))
+                .inRoot(RootMatchers.isDialog())
+                .check(ViewAssertions.matches(ViewMatchers.isDisplayed()))
+
+
+
+
+        }
+    }
+
 
 
 }

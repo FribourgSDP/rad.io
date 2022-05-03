@@ -117,6 +117,9 @@
             android:name=".mockimplementations.QRCodeJoinGameActivityJoin"
             android:exported="false" />
         <activity
+            android:name=".mockimplementations.QRCodeJoinGameActivityJoinFail"
+            android:exported="false" />
+        <activity
             android:name=".mockimplementations.MockGameActivity"
             android:exported="false" />
         <activity

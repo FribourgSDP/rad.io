@@ -20,16 +20,19 @@ class MockJoinWithQRCodeFragment(ctx: Context, activity: Activity) : JoinWithQRC
 
 
     private var join = false
-
+    private var data  = "1001"
     fun setJoin(){
         join = true
+    }
+    fun setData(s : String){
+        data = s
     }
     fun changeCancelButton(){
 
         if(join){
             cancelButton = rootView.findViewById(R.id.cancel_button)
             cancelButton.setOnClickListener{
-                actOnScannedData("1001")
+                actOnScannedData(data)
                 dismiss()
             }
         }
@@ -37,9 +40,9 @@ class MockJoinWithQRCodeFragment(ctx: Context, activity: Activity) : JoinWithQRC
 
 
 
-    override fun initializeView(){
+    override fun initializeCamera(){
         // initialize scannerLiveview and textview.
-        scannedTV = rootView.findViewById(R.id.idTVscanned)
+
         camera = makeMockScannerLiveView()
         changeCancelButton()
     }

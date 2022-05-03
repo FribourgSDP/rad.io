@@ -45,7 +45,8 @@ open class JoinWithQRCodeFragment(val ctx: Context, val activity: Activity): Dia
         cancelButton.setOnClickListener{
             dismiss()
         }
-        initializeView()
+        scannedTV = rootView.findViewById(R.id.idTVscanned)
+        initializeCamera()
 
         return rootView
     }
@@ -53,9 +54,8 @@ open class JoinWithQRCodeFragment(val ctx: Context, val activity: Activity): Dia
 
 
 
-    protected open fun initializeView(){
-        // initialize scannerLiveview and textview.
-        scannedTV = rootView.findViewById(R.id.idTVscanned)
+    protected open fun initializeCamera(){
+        // initialize scannerLiveview
         camera = rootView.findViewById<View>(R.id.camview) as ScannerLiveView
         camera.scannerViewEventListener = object : ScannerLiveView.ScannerViewEventListener {
             override fun onScannerStarted(scanner: ScannerLiveView) {
