@@ -65,7 +65,7 @@ open class JoinGameActivity : MyAppCompatActivity() {
         return FirestoreDatabase()
     }
 
-    open protected fun createQRCodeFragment() : DialogFragment{
+    protected open fun createQRCodeFragment() : DialogFragment{
         return JoinWithQRCodeFragment(this, this)
     }
 
