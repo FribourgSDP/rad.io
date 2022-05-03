@@ -26,15 +26,13 @@ import androidx.fragment.app.setFragmentResult
 import com.google.zxing.WriterException
 
 
-class CreateQRCodeFragment(val ctx: Context, val lobbyId: Long ): DialogFragment() {
+class CreateQRCodeFragment(val ctx: Context, private val lobbyId: Long ): DialogFragment() {
     // variables for imageview, edittext,
     // button, bitmap and qrencoder.
     private lateinit var qrCodeIV: ImageView
     private lateinit var rootView : View
 
     private lateinit var cancelButton: Button
-    lateinit var bitmap: Bitmap
-    lateinit var qrgEncoder: QRGEncoder
 
     override fun onCreateView(inflater: LayoutInflater,container: ViewGroup?,savedInstanceState: Bundle?): View {
         rootView = inflater.inflate(R.layout.fragment_create_qr_code, container, false)
@@ -59,54 +57,41 @@ class CreateQRCodeFragment(val ctx: Context, val lobbyId: Long ): DialogFragment
 
     private fun generateQRCode(){
 
-        if (TextUtils.isEmpty(lobbyId.toString())) {
 
-            // if the edittext inputs are empty then execute
-            // this method showing a toast message.
-            Toast.makeText(
-                ctx,
-                "Enter some text to generate QR Code",
-                Toast.LENGTH_SHORT
-            ).show()
-        } else {
-            // below line is for getting
-            // the windowmanager service.
-            val manager = ctx.getSystemService(AppCompatActivity.WINDOW_SERVICE) as WindowManager
+        // below line is for getting
+        // the windowmanager service.
+        val manager = ctx.getSystemService(AppCompatActivity.WINDOW_SERVICE) as WindowManager
 
-            // initializing a variable for default display.
-            val display = manager.defaultDisplay
+        // initializing a variable for default display.
+        val display = manager.defaultDisplay
 
-            // creating a variable for point which
-            // is to be displayed in QR Code.
-            val point = Point()
-            display.getSize(point)
+        // creating a variable for point which
+        // is to be displayed in QR Code.
+        val point = Point()
+        display.getSize(point)
 
-            // getting width and
-            // height of a point
-            val width = point.x
-            val height = point.y
+        // getting width and
+        // height of a point
+        val width = point.x
+        val height = point.y
 
-            // generating dimension from width and height.
-            var dimen = if (width < height) width else height
-            dimen = dimen * 3 / 4
+        // generating dimension from width and height.
+        var dimen = if (width < height) width else height
+        dimen = dimen * 3 / 4
 
-            // setting this dimensions inside our qr code
-            // encoder to generate our qr code.
-            qrgEncoder =
-                QRGEncoder(lobbyId.toString(), null, QRGContents.Type.TEXT, dimen)
-            try {
-                // getting our qrcode in the form of bitmap.
-                bitmap = qrgEncoder.encodeAsBitmap()
-                // the bitmap is set inside our image
-                // view using .setimagebitmap method.
-                qrCodeIV.setImageBitmap(bitmap)
-            } catch (e: WriterException) {
-                // this method is called for
-                // exception handling.
-                Log.e("Tag", e.toString())
-            }
+        // setting this dimensions inside our qr code
+        // encoder to generate our qr code.
+        val qrgEncoder = QRGEncoder(lobbyId.toString(), null, QRGContents.Type.TEXT, dimen)
+        try {
+            // getting our qrcode in the form of bitmap.
+            val bitmap = qrgEncoder.encodeAsBitmap()
+            // the bitmap is set inside our image
+            // view using .setimagebitmap method.
+            qrCodeIV.setImageBitmap(bitmap)
+        } catch (e: WriterException) {
+            // this method is called for
+            // exception handling.
+            Log.e("Tag", e.toString())
         }
-
     }
-
 }
