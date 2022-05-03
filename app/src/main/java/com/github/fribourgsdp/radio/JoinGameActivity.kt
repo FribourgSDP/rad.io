@@ -93,7 +93,7 @@ open class JoinGameActivity : MyAppCompatActivity() {
     private fun initPublicLobbiesDisplay() {
         // init the cards
         lobbiesRecyclerView.layoutManager = LinearLayoutManager(this)
-        val adapter = PublicLobbiesAdapter(this).apply {
+        val adapter = PublicLobbiesAdapter(this, this.db).apply {
             setOnPickListener { connectToLobby(it) }
         }
         lobbiesRecyclerView.adapter = adapter
