@@ -160,9 +160,6 @@ class WorkingJoinGameActivityTest {
                 .inRoot(RootMatchers.isDialog())
                 .check(ViewAssertions.matches(ViewMatchers.isDisplayed()))
 
-
-
-
         }
     }
 

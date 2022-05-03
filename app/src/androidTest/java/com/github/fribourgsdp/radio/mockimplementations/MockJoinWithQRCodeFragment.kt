@@ -33,7 +33,6 @@ class MockJoinWithQRCodeFragment(ctx: Context, activity: Activity) : JoinWithQRC
             cancelButton = rootView.findViewById(R.id.cancel_button)
             cancelButton.setOnClickListener{
                 actOnScannedData(data)
-                dismiss()
             }
         }
     }
