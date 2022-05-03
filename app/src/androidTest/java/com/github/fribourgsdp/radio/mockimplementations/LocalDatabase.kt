@@ -13,9 +13,9 @@ class LocalDatabase : Database {
     private val playlistMap: MutableMap<String, Playlist> = mutableMapOf()
 
     val lobbies = arrayListOf(
-        LobbyData(1, "a", "z"),
+        LobbyData(1, "c", "z"),
         LobbyData(2, "b", "x"),
-        LobbyData(3, "c", "y")
+        LobbyData(3, "a", "y")
     )
     private var lobbiesListener: EventListener<List<LobbyData>>? = null
 
