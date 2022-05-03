@@ -66,31 +66,31 @@ open class UserProfileActivity : MyAppCompatActivity() {
             MyFragment.beginTransaction<UserPlaylistsFragment>(supportFragmentManager, bundle)
         }
 
-            launchSpotifyButton.setOnClickListener {
-                authenticateUser()
+        launchSpotifyButton.setOnClickListener {
+            authenticateUser()
+        }
+
+
+
+        saveChangeButton.setOnClickListener {
+            updateUser()
+        }
+
+        homeButton.setOnClickListener {
+            startActivity(Intent(this, MainActivity::class.java))
+            finish()
+        }
+
+
+        googleSignInButton.setOnClickListener {
+            if (signedIn) {
+                firebaseAuth.signOut()
+                googleSignInButton.setText(getString(R.string.sign_in_message))
+                signedIn = false
+
+            } else {
+                startActivity(Intent(this, GoogleSignInActivity::class.java))
             }
-
-
-
-            saveChangeButton.setOnClickListener {
-                updateUser()
-            }
-
-            homeButton.setOnClickListener {
-                startActivity(Intent(this, MainActivity::class.java))
-                finish()
-            }
-
-
-            googleSignInButton.setOnClickListener {
-                if (signedIn) {
-                    firebaseAuth.signOut()
-                    googleSignInButton.setText(getString(R.string.sign_in_message))
-                    signedIn = false
-
-                } else {
-                    startActivity(Intent(this, GoogleSignInActivity::class.java))
-                }
 
 
 
@@ -125,6 +125,9 @@ open class UserProfileActivity : MyAppCompatActivity() {
         usernameInitialText.text = user.initial.uppercaseChar().toString()
     }
 
+    /**
+     * This does the authetication to spotify
+     */
     private fun authenticateUser() {
         AuthorizationClient.openLoginInBrowser(this, buildRequest())
     }
