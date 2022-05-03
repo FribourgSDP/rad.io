@@ -8,7 +8,7 @@ import android.widget.TextView
 import androidx.cardview.widget.CardView
 import androidx.recyclerview.widget.RecyclerView
 
-class PublicLobbiesAdapter(private val context: Context, private val db: Database = FirestoreDatabase()): RecyclerView.Adapter<PublicLobbiesAdapter.ViewHolder>() {
+class PublicLobbiesAdapter(private val context: Context, private val db: Database): RecyclerView.Adapter<PublicLobbiesAdapter.ViewHolder>() {
     private var lobbies: List<LobbyData>? = null
     private var listener: OnPickListener? = null
     private var lastSortedKey = LobbyDataKeys.ID
