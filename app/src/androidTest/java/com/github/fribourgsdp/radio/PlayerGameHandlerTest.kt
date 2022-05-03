@@ -256,7 +256,7 @@ class PlayerGameHandlerTest {
         handler.onPick(song)
 
         // Wait for the task of the database to execute
-        Thread.sleep(1)
+        Thread.sleep(5)
 
         assertEquals(View.VISIBLE, view.songVisibility)
         assertEquals(song, view.song)
