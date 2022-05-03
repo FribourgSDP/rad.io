@@ -8,6 +8,8 @@ import androidx.test.espresso.action.ViewActions.click
 import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.intent.Intents
 import androidx.test.espresso.intent.matcher.IntentMatchers
+import androidx.test.espresso.matcher.RootMatchers
+import androidx.test.espresso.matcher.RootMatchers.isTouchable
 import androidx.test.espresso.matcher.ViewMatchers.*
 import androidx.test.ext.junit.rules.ActivityScenarioRule
 import androidx.test.ext.junit.runners.AndroidJUnit4
@@ -61,7 +63,7 @@ class WorkingJoinGameActivityTest {
 
         joinButton.check(matches(isEnabled()))
 
-        joinButton.perform(ViewActions.click())
+        joinButton.perform(click())
 
         Intents.intended(
             allOf(
@@ -99,6 +101,7 @@ class WorkingJoinGameActivityTest {
             .perform(click())
         // click on sort value
         onView(withText(ctx.getString(R.string.name)))
+            .inRoot(isTouchable())
             .perform(click());
 
         checkLobbiesDisplay(lobbies)
@@ -111,6 +114,7 @@ class WorkingJoinGameActivityTest {
             .perform(click())
         // click on sort value
         onView(withText(ctx.getString(R.string.hostname)))
+            .inRoot(isTouchable())
             .perform(click());
 
         checkLobbiesDisplay(lobbies)
@@ -123,6 +127,7 @@ class WorkingJoinGameActivityTest {
             .perform(click())
         // click on sort value
         onView(withText(ctx.getString(R.string.id)))
+            .inRoot(isTouchable())
             .perform(click());
 
         checkLobbiesDisplay(lobbies)
