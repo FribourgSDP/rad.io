@@ -2,18 +2,19 @@ package com.github.fribourgsdp.radio
 
 import android.content.Context
 import androidx.test.core.app.ApplicationProvider
-import androidx.test.espresso.Espresso.*
+import androidx.test.espresso.Espresso.closeSoftKeyboard
+import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.action.ViewActions
-import androidx.test.espresso.assertion.ViewAssertions
+import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.intent.Intents
 import androidx.test.espresso.intent.matcher.IntentMatchers
-import androidx.test.espresso.matcher.ViewMatchers
+import androidx.test.espresso.matcher.ViewMatchers.*
 import androidx.test.ext.junit.rules.ActivityScenarioRule
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.github.fribourgsdp.radio.mockimplementations.LocalDatabase
 import com.github.fribourgsdp.radio.mockimplementations.WorkingJoinGameActivity
 import com.github.fribourgsdp.radio.utils.CustomMatchers.Companion.atPosition
-import org.hamcrest.Matchers
+import org.hamcrest.Matchers.allOf
 import org.junit.After
 import org.junit.Before
 import org.junit.Rule
@@ -48,29 +49,21 @@ class WorkingJoinGameActivityTest {
         // Test values => this one cannot exist, so it won't look in the database
         val testUID = 1001L
 
-        val joinButton = Espresso.onView(ViewMatchers.withId(R.id.joinGameButton))
+        val joinButton = onView(withId(R.id.joinGameButton))
 
-        joinButton.check(
-            ViewAssertions.matches(
-                ViewMatchers.isNotEnabled()
-            )
-        )
+        joinButton.check(matches(isNotEnabled()))
 
-        Espresso.onView(ViewMatchers.withId(R.id.gameToJoinID))
+        onView(withId(R.id.gameToJoinID))
             .perform(ViewActions.typeText(testUID.toString()))
 
-        Espresso.closeSoftKeyboard()
+        closeSoftKeyboard()
 
-        joinButton.check(
-            ViewAssertions.matches(
-                ViewMatchers.isEnabled()
-            )
-        )
+        joinButton.check(matches(isEnabled()))
 
         joinButton.perform(ViewActions.click())
 
         Intents.intended(
-            Matchers.allOf(
+            allOf(
                 IntentMatchers.toPackage("com.github.fribourgsdp.radio"),
                 IntentMatchers.hasComponent(LobbyActivity::class.java.name),
                 IntentMatchers.hasExtra(GAME_HOST_NAME_KEY, LocalDatabase.EXPECTED_SETTINGS.hostName),
@@ -91,48 +84,48 @@ class WorkingJoinGameActivityTest {
         val lobbies = ArrayList(WorkingJoinGameActivity.testDatabase.lobbies)
 
         // Check that the scores are displayed with the correct data and in the correct order
-        onView(ViewMatchers.withId(R.id.publicLobbiesRecyclerView))
+        onView(withId(R.id.publicLobbiesRecyclerView))
             .check(
-                ViewAssertions.matches(
-                    Matchers.allOf(
+                matches(
+                    allOf(
                         // First lobby
                         atPosition(
                             0, R.id.lobbyIdTextView,
-                            ViewMatchers.withText("${lobbies[0].id}")
+                            withText("${lobbies[0].id}")
                         ),
                         atPosition(
                             0, R.id.lobbyNameTextView,
-                            ViewMatchers.withText(ctx.getString(R.string.game_name_format, lobbies[0].name))
+                            withText(ctx.getString(R.string.game_name_format, lobbies[0].name))
                         ),
                         atPosition(
                             0, R.id.lobbyHostNameTextView,
-                            ViewMatchers.withText(ctx.getString(R.string.host_name_format, lobbies[0].hostName))
+                            withText(ctx.getString(R.string.host_name_format, lobbies[0].hostName))
                         ),
                         // Second lobby
                         atPosition(
                             1, R.id.lobbyIdTextView,
-                            ViewMatchers.withText("${lobbies[1].id}")
+                            withText("${lobbies[1].id}")
                         ),
                         atPosition(
                             1, R.id.lobbyNameTextView,
-                            ViewMatchers.withText(ctx.getString(R.string.game_name_format, lobbies[1].name))
+                            withText(ctx.getString(R.string.game_name_format, lobbies[1].name))
                         ),
                         atPosition(
                             1, R.id.lobbyHostNameTextView,
-                            ViewMatchers.withText(ctx.getString(R.string.host_name_format, lobbies[1].hostName))
+                            withText(ctx.getString(R.string.host_name_format, lobbies[1].hostName))
                         ),
                         // Third lobby
                         atPosition(
                             2, R.id.lobbyIdTextView,
-                            ViewMatchers.withText("${lobbies[2].id}")
+                            withText("${lobbies[2].id}")
                         ),
                         atPosition(
                             2, R.id.lobbyNameTextView,
-                            ViewMatchers.withText(ctx.getString(R.string.game_name_format, lobbies[2].name))
+                            withText(ctx.getString(R.string.game_name_format, lobbies[2].name))
                         ),
                         atPosition(
                             2, R.id.lobbyHostNameTextView,
-                            ViewMatchers.withText(ctx.getString(R.string.host_name_format, lobbies[2].hostName))
+                            withText(ctx.getString(R.string.host_name_format, lobbies[2].hostName))
                         ),
                     )
                 )
