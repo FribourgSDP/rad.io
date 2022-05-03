@@ -1,6 +1,5 @@
 package com.github.fribourgsdp.radio.mockimplementations
 
-import com.coloros.ocs.base.task.Tasks.forResult
 import com.github.fribourgsdp.radio.*
 import com.google.android.gms.tasks.Task
 import com.google.android.gms.tasks.Tasks
