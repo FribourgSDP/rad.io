@@ -69,7 +69,7 @@ class QRCodeJoinGameActivityJoin : JoinGameActivity() {
 
     override fun createQRCodeFragment() : DialogFragment {
         val mock = MockJoinWithQRCodeFragment(this, this)
-        mock.changeCancelButton()
+        mock.setJoin()
         return mock
     }
 }
