@@ -100,9 +100,9 @@ class WorkingJoinGameActivityTest {
         onView(withId(R.id.lobbySortSpinner))
             .perform(click())
         // click on sort value
-        onView(withText(ctx.getString(R.string.name)))
+        onData(allOf(`is`(instanceOf(LobbyDataKeys::class.java)),`is`(LobbyDataKeys.NAME)))
             .inRoot(isTouchable())
-            .perform(click());
+            .perform(click())
 
         checkLobbiesDisplay(lobbies)
 
@@ -113,9 +113,9 @@ class WorkingJoinGameActivityTest {
         onView(withId(R.id.lobbySortSpinner))
             .perform(click())
         // click on sort value
-        onView(withText(ctx.getString(R.string.hostname)))
+        onData(allOf(`is`(instanceOf(LobbyDataKeys::class.java)),`is`(LobbyDataKeys.HOSTNAME)))
             .inRoot(isTouchable())
-            .perform(click());
+            .perform(click())
 
         checkLobbiesDisplay(lobbies)
 
@@ -126,9 +126,9 @@ class WorkingJoinGameActivityTest {
         onView(withId(R.id.lobbySortSpinner))
             .perform(click())
         // click on sort value
-        onView(withText(ctx.getString(R.string.id)))
+        onData(allOf(`is`(instanceOf(LobbyDataKeys::class.java)),`is`(LobbyDataKeys.ID)))
             .inRoot(isTouchable())
-            .perform(click());
+            .perform(click())
 
         checkLobbiesDisplay(lobbies)
     }
