@@ -13,31 +13,3 @@ class MockGameActivity : GameActivity() {
     }
 }
 
-
-fun makeMockRtcEngine() : RtcEngine {
-    val mockEngine = Mockito.mock(RtcEngine::class.java)
-    Mockito.`when`(
-        mockEngine.joinChannel(
-            Mockito.any(),
-            Mockito.any(),
-            Mockito.any(),
-            Mockito.anyInt()
-        )
-    ).thenReturn(0)
-    Mockito.`when`(
-        mockEngine.enableAudioVolumeIndication(
-            Mockito.anyInt(),
-            Mockito.anyInt(),
-            Mockito.anyBoolean()
-        )
-    ).thenReturn(0)
-    Mockito.`when`(mockEngine.setAudioProfile(Mockito.anyInt(), Mockito.anyInt())).thenReturn(0)
-    Mockito.`when`(mockEngine.leaveChannel()).thenReturn(0)
-    Mockito.`when`(mockEngine.muteLocalAudioStream(Mockito.anyBoolean())).thenReturn(0)
-    return mockEngine
-}
-
-fun makeMockIRtcEngineEventHandler() : IRtcEngineEventHandler {
-    val iRtcEngineEventHandler = Mockito.mock(IRtcEngineEventHandler::class.java)
-    return iRtcEngineEventHandler
-}
