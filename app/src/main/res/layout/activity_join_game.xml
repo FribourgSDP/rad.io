@@ -45,6 +45,16 @@
 
 
     <Button
+        android:id="@+id/joinWithQRCode"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="20dp"
+        android:text="@string/join_with_qr_code"
+        app:layout_constraintBottom_toTopOf="@+id/joinGameButton"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <Button
         android:id="@+id/joinGameButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

@@ -19,7 +19,7 @@ class SettingsTest {
         val companion = Settings.Companion
         val settings = Settings(Language.FRENCH)
         settings.save(ctx)
-        val settings2 = companion.loadOrDefault(ctx).getResult()
+        val settings2 = companion.loadOrDefault(ctx)
         Assert.assertEquals(Language.FRENCH, settings2.getLanguage())
     }
 
