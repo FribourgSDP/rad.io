@@ -94,6 +94,9 @@ open class PlaylistSongsFragment : MyFragment(R.layout.fragment_playlist_display
             playlist = user.getPlaylistWithName(playlistName) ?: Playlist("")
             songs = playlist.getSongs().toList()
             initializeRecyclerView()
+            if(playlist.savedOnline){
+                saveOnlineButton.visibility = View.INVISIBLE
+            }
         }.addOnSuccessListener {
             if(playlist.savedOnline && !playlist.savedLocally){
                db.getPlaylist(playlist.id).addOnSuccessListener {
