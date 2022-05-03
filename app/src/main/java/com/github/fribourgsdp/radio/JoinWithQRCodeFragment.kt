@@ -47,8 +47,6 @@ open class JoinWithQRCodeFragment(val ctx: Context, val activity: Activity): Dia
         }
         initializeView()
 
-
-
         return rootView
     }
 
@@ -138,7 +136,7 @@ open class JoinWithQRCodeFragment(val ctx: Context, val activity: Activity): Dia
     }
 
 
-    private fun requestPermission() {
+    protected open fun requestPermission() {
         // this method is to request
         // the runtime permission.
         val PERMISSION_REQUEST_CODE = 200

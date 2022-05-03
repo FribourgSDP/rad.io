@@ -18,37 +18,27 @@ import org.mockito.Mockito
 
 class MockJoinWithQRCodeFragment(ctx: Context, activity: Activity) : JoinWithQRCodeFragment(ctx, activity) {
 
-    private var join = false
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
-        rootView= inflater.inflate(R.layout.fragment_join_with_qr_code, container, false)
 
-        cancelButton  = rootView.findViewById(R.id.cancel_button)
+
+    fun changeCancelButton(){
+        cancelButton = rootView.findViewById(R.id.cancel_button)
         cancelButton.setOnClickListener{
-            action()
+            actOnScannedData("1001")
             dismiss()
         }
-
-
-        initializeView()
-
-
-        return rootView
     }
 
-    private fun action(){
-        if (join == true){
-            actOnScannedData("1001")
-        }
-    }
-    fun setJoin(){
-        join = true
-    }
+
 
     override fun initializeView(){
         // initialize scannerLiveview and textview.
         scannedTV = rootView.findViewById(R.id.idTVscanned)
         camera = makeMockScannerLiveView()
-            }
+    }
+
+    override fun requestPermission() {
+
+    }
 
 }
 
