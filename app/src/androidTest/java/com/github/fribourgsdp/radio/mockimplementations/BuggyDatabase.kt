@@ -85,7 +85,7 @@ class BuggyDatabase : Database {
     }
 
     override fun listenToPublicLobbiesUpdate(listener: EventListener<List<LobbyData>>) {
-        TODO("Not yet implemented")
+        
     }
 
     override fun openGame(id: Long): Task<Void> {
