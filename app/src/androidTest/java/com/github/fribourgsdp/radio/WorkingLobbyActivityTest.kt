@@ -216,6 +216,9 @@ class WorkingLobbyActivityTest {
                 .inRoot(isDialog())
                 .perform(ViewActions.click())
 
+            Espresso.onView(withId(R.id.cancel_button))
+                .check(ViewAssertions.doesNotExist())
+
         }
 
     }

@@ -4,16 +4,13 @@ import android.Manifest
 import android.app.Activity
 import android.content.Context
 import android.content.pm.PackageManager
-import android.graphics.Bitmap
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
-import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
-import androidmads.library.qrgenearator.QRGEncoder
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.core.os.bundleOf
@@ -150,10 +147,10 @@ open class JoinWithQRCodeFragment(val ctx: Context, val activity: Activity): Dia
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
         // this method is called when user
         // allows the permission to use camera.
-        if (grantResults.size > 0) {
-            val cameraaccepted = grantResults[0] == PackageManager.PERMISSION_GRANTED
-            val vibrateaccepted = grantResults[1] == PackageManager.PERMISSION_GRANTED
-            if (cameraaccepted && vibrateaccepted) {
+        if (grantResults.isNotEmpty()) {
+            val cameraAccepted = grantResults[0] == PackageManager.PERMISSION_GRANTED
+            val vibrateAccepted = grantResults[1] == PackageManager.PERMISSION_GRANTED
+            if (cameraAccepted && vibrateAccepted) {
                 Toast.makeText(ctx, "Permission granted..", Toast.LENGTH_SHORT).show()
             } else {
                 Toast.makeText(ctx,"Permission Denined \n You cannot use app without providing permission",Toast.LENGTH_SHORT).show()

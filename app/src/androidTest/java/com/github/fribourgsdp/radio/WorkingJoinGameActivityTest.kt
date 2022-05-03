@@ -116,6 +116,9 @@ class WorkingJoinGameActivityTest {
             Espresso.onView(ViewMatchers.withId(R.id.cancel_button))
                 .inRoot(RootMatchers.isDialog())
                 .perform(ViewActions.click())
+
+            Espresso.onView(ViewMatchers.withId(R.id.cancel_button))
+                .check(ViewAssertions.doesNotExist())
         }
     }
 
