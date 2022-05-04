@@ -97,4 +97,6 @@
     <string name="join_with_qr_code">Rejoindre avec un code QR</string>
     <string name="enable_microphone">Activer Microphone</string>
     <string name="display_qr_code">Afficher QR Code</string>
+    <string name="spotify_linked">associé</string>
+    <string name="spotify_unlinked">dissocié</string>
 </resources>
