@@ -98,6 +98,10 @@
     <string name="display_qr_code">Display QR Code</string>
     <string name="spotify_linked">linked</string>
     <string name="spotify_unlinked">unlinked</string>
+    <string name="MergeImportDismissPlaylistText">Do you want to merge, import or dismiss the playlist stored online?</string>
+    <string name="mergePlaylist">Merge</string>
+    <string name="importPlaylist">import</string>
+    <string name="dismissOnlinePlaylist">dismiss online playlist</string>
 
 
 </resources>
