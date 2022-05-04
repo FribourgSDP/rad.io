@@ -58,7 +58,7 @@ open class UserProfileActivity : MyAppCompatActivity() {
 
             usernameField.setText(user.name)
             usernameInitialText.text = user.initial.uppercaseChar().toString()
-            spotifyStatusText.apply { text = if (user.linkedSpotify) "linked" else "unlinked" }
+            spotifyStatusText.apply { text = if (user.linkedSpotify) getString(R.string.spotify_linked) else getString(R.string.spotify_unlinked) }
             userIcon.colorFilter = PorterDuffColorFilter(user.color, PorterDuff.Mode.ADD)
             //initialise playlists recycler view fragment
             val bundle = Bundle()
