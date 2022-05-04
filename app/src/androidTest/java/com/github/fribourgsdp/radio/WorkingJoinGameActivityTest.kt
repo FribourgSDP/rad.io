@@ -8,7 +8,6 @@ import androidx.test.espresso.action.ViewActions.click
 import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.intent.Intents
 import androidx.test.espresso.intent.matcher.IntentMatchers
-import androidx.test.espresso.matcher.RootMatchers
 import androidx.test.espresso.matcher.RootMatchers.isTouchable
 import androidx.test.espresso.matcher.ViewMatchers.*
 import androidx.test.ext.junit.rules.ActivityScenarioRule
@@ -16,6 +15,7 @@ import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.github.fribourgsdp.radio.mockimplementations.LocalDatabase
 import com.github.fribourgsdp.radio.mockimplementations.WorkingJoinGameActivity
 import com.github.fribourgsdp.radio.utils.CustomMatchers.Companion.atPosition
+import org.hamcrest.Matchers
 import org.hamcrest.Matchers.*
 import org.junit.After
 import org.junit.Before
@@ -66,20 +66,20 @@ class WorkingJoinGameActivityTest {
         joinButton.perform(click())
 
         Intents.intended(
-            allOf(
+            Matchers.allOf(
                 IntentMatchers.toPackage("com.github.fribourgsdp.radio"),
                 IntentMatchers.hasComponent(LobbyActivity::class.java.name),
                 IntentMatchers.hasExtra(GAME_HOST_NAME_KEY, LocalDatabase.EXPECTED_SETTINGS.hostName),
                 IntentMatchers.hasExtra(GAME_NAME_KEY, LocalDatabase.EXPECTED_SETTINGS.name),
-                IntentMatchers.hasExtra(GAME_PLAYLIST_NAME_KEY, LocalDatabase.EXPECTED_SETTINGS.playlistName),
+                IntentMatchers.hasExtra(GAME_PLAYLIST_NAME_KEY,LocalDatabase.EXPECTED_SETTINGS.playlistName),
                 IntentMatchers.hasExtra(GAME_NB_ROUNDS_KEY, LocalDatabase.EXPECTED_SETTINGS.nbRounds),
                 IntentMatchers.hasExtra(GAME_HINT_KEY, LocalDatabase.EXPECTED_SETTINGS.withHint),
                 IntentMatchers.hasExtra(GAME_PRIVACY_KEY, LocalDatabase.EXPECTED_SETTINGS.isPrivate),
                 IntentMatchers.hasExtra(GAME_IS_HOST_KEY, false),
                 IntentMatchers.hasExtra(GAME_UID_KEY, testUID)
-
             )
         )
+        
     }
 
     @Test

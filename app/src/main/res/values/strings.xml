@@ -93,5 +93,13 @@
     <string name="hostname">Host name</string>
     <string name="sort_by">Sort by:</string>
     <string name="public_lobbies">Public Lobbies:</string>
+    <string name="qr_code">qr_code</string>
+    <string name="cancel_qr_code">Cancel</string>
+    <string name="scanned_data">Scanned Data</string>
+    <string name="join_with_qr_code">Join With QR Code</string>
+    <string name="enable_microphone">Enable Microphone</string>
+    <string name="display_qr_code">Display QR Code</string>
+
+
 </resources>
 

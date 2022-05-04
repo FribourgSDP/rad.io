@@ -7,7 +7,9 @@
     <uses-permission android:name="android.permission.MODIFY_AUDIO_SETTINGS" />
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
-    <uses-permission android:name="android.permission.BLUETOOTH" />
+    <uses-permission android:name="android.permission.BLUETOOTH" /> <!-- Permission for camera -->
+    <uses-permission android:name="android.permission.CAMERA" /> <!-- Permission to vibrate -->
+    <uses-permission android:name="android.permission.VIBRATE" />
 
     <application
         android:allowBackup="true"
@@ -17,6 +19,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Radio"
         android:usesCleartextTraffic="true">
+
         <activity
             android:name=".EndGameActivity"
             android:exported="false"
@@ -106,6 +109,15 @@
             android:exported="false" />
         <activity
             android:name=".mockimplementations.BuggyJoinGameActivity"
+            android:exported="false" />
+        <activity
+            android:name=".mockimplementations.QRCodeJoinGameActivity"
+            android:exported="false" />
+        <activity
+            android:name=".mockimplementations.QRCodeJoinGameActivityJoin"
+            android:exported="false" />
+        <activity
+            android:name=".mockimplementations.QRCodeJoinGameActivityJoinFail"
             android:exported="false" />
         <activity
             android:name=".mockimplementations.MockGameActivity"
