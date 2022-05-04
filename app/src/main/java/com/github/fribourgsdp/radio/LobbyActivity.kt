@@ -5,10 +5,12 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.widget.*
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import androidx.fragment.app.DialogFragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import kotlinx.serialization.decodeFromString
@@ -47,6 +49,9 @@ open class LobbyActivity : MyAppCompatActivity(){
 
     private lateinit var launchGameButton: Button
     private lateinit var askForPermissionsButton: Button
+    private lateinit var displayQRCodeButton: Button
+
+    private lateinit var qrCodeDisplay: DialogFragment
 
     private var layoutManager:RecyclerView.LayoutManager? = null
     private var layoutAdapter:RecyclerLobbyAdapter? = null
@@ -68,6 +73,7 @@ open class LobbyActivity : MyAppCompatActivity(){
             initLobbyAsHost()
         } else {
             initLobbyAsPlayer()
+            initQRCode()
         }
     }
 
@@ -76,6 +82,7 @@ open class LobbyActivity : MyAppCompatActivity(){
             gameLobbyId = uid
             uuidTextView.text = getString(R.string.uid_text_format, uid)
             linkToDatabase(uid)
+            initQRCode()
 
             // Setup the launch button for hosts
             launchGameButton.setOnClickListener {
@@ -173,6 +180,7 @@ open class LobbyActivity : MyAppCompatActivity(){
     private fun initButtons() {
         launchGameButton = findViewById(R.id.launchGameButton)
         askForPermissionsButton = findViewById(R.id.micPermissionsButton)
+        displayQRCodeButton = findViewById(R.id.displayQRCodeButton)
         if (!isHost) {
             launchGameButton.visibility = View.INVISIBLE
         }
@@ -185,6 +193,14 @@ open class LobbyActivity : MyAppCompatActivity(){
                 ActivityCompat.requestPermissions(this, arrayOf(Manifest.permission.RECORD_AUDIO), PERMISSION_REQ_ID_RECORD_AUDIO)
             }
         }
+    }
+
+    private fun initQRCode(){
+        qrCodeDisplay = CreateQRCodeFragment(this, gameLobbyId)
+        displayQRCodeButton.setOnClickListener{
+            qrCodeDisplay.show(supportFragmentManager, "qrCodeForJoiningGame")
+        }
+
     }
 
     private fun updateTextViews() {

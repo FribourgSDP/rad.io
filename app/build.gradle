@@ -81,13 +81,15 @@ dependencies {
     // Also declare the dependency for the Google Play services library and specify its version
     implementation 'com.google.android.gms:play-services-auth:20.1.0'
 
-
+    implementation 'androidmads.library.qrgenearator:QRGenearator:1.0.3'
+    implementation ('eu.livotov.labs.android:CAMView:2.0.1@aar') {transitive=true}
 
     //for firebase
     implementation 'com.google.firebase:firebase-analytics-ktx'
     implementation 'com.google.firebase:firebase-auth-ktx'
     implementation 'com.google.firebase:firebase-firestore-ktx'
     implementation platform('com.google.firebase:firebase-bom:29.2.0')
+    implementation 'androidx.legacy:legacy-support-v4:1.0.0'
 
     //for fragments
     def fragment_version = "1.4.1"

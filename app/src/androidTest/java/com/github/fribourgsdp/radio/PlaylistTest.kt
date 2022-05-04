@@ -151,11 +151,12 @@ internal class PlaylistTest {
         val playlist = Playlist("Test",songSet,Genre.NONE)
         Tasks.await(playlist.transformToOnline(mockDB))
         assertEquals("0",playlist.id)
-        val songs = playlist.getSongs().toList()
-        assertEquals("0",songs[0].id)
-        assertEquals("1",songs[1].id)
-        assertEquals("2",songs[2].id)
-        assertEquals("3",songs[3].id)
+        val songs = playlist.getSongs()
+        assertEquals(1,songs.filter { it.id == "0" }.size)
+        assertEquals(1,songs.filter { it.id == "1" }.size)
+        assertEquals(1,songs.filter { it.id == "2" }.size)
+        assertEquals(1,songs.filter { it.id == "3" }.size)
+
     }
 
     //this is usefull in order to be able to use any() from mockito
