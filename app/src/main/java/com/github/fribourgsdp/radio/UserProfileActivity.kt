@@ -28,7 +28,7 @@ const val SCOPES = "playlist-read-private,playlist-read-collaborative"
 const val RECREATE_USER = "com.github.fribourgsdp.radio.avoidRecreatingUser"
 const val USER_DATA = "com.github.fribourgsdp.radio.USER_DATA"
 
-open class UserProfileActivity : MyAppCompatActivity() {
+open class UserProfileActivity : MyAppCompatActivity(), MergeDismissImportPlaylistDialog.OnPickListener {
     private lateinit var user : User
     private lateinit var usernameField : EditText
     private lateinit var usernameInitialText : TextView
@@ -53,9 +53,7 @@ open class UserProfileActivity : MyAppCompatActivity() {
 
         User.loadOrDefault(this).addOnSuccessListener { u ->
             user = u
-
             checkUser()
-
             usernameField.setText(user.name)
             usernameInitialText.text = user.initial.uppercaseChar().toString()
             spotifyStatusText.apply { text = if (user.linkedSpotify) getString(R.string.spotify_linked) else getString(R.string.spotify_unlinked) }
@@ -69,8 +67,6 @@ open class UserProfileActivity : MyAppCompatActivity() {
         launchSpotifyButton.setOnClickListener {
             authenticateUser()
         }
-
-
 
         saveChangeButton.setOnClickListener {
             updateUser()
@@ -91,8 +87,6 @@ open class UserProfileActivity : MyAppCompatActivity() {
             } else {
                 startActivity(Intent(this, GoogleSignInActivity::class.java))
             }
-
-
 
         }
         findViewById<FloatingActionButton>(R.id.addPlaylistButton).setOnClickListener{startActivity(Intent(this, AddPlaylistActivity::class.java))}
@@ -157,6 +151,7 @@ open class UserProfileActivity : MyAppCompatActivity() {
         }
     }
 
+
     override fun onBackPressed() {
         super.onBackPressed()
         val intent = Intent(this, MainActivity::class.java)
@@ -172,5 +167,23 @@ open class UserProfileActivity : MyAppCompatActivity() {
                 .setShowDialog(true)
                 .build()
         }
+    }
+
+    override fun onPick(choice: MergeDismissImportPlaylistDialog.Choice) {
+        when (choice){
+            MergeDismissImportPlaylistDialog.Choice.MERGE -> mergePlaylist()
+            MergeDismissImportPlaylistDialog.Choice.IMPORT -> importPlaylist()
+            MergeDismissImportPlaylistDialog.Choice.DISMISS_ONLINE -> dismissOnlinePlaylist()
+        }
+    }
+
+    private fun mergePlaylist(){
+
+    }
+    private fun importPlaylist(){
+
+    }
+    private fun dismissOnlinePlaylist(){
+
     }
 }
