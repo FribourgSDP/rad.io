@@ -3,11 +3,12 @@ package com.github.fribourgsdp.radio
 import android.util.Log
 import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.FieldValue
+import com.google.firebase.firestore.ListenerRegistration
 import java.lang.IllegalStateException
-import kotlin.streams.toList
 
 class HostGameHandler(private val game: Game, private val view: GameView, db: Database = FirestoreDatabase()): GameHandler(view, db) {
     private var latestSingerId: String? = null
+    private var snapshotListenerRegistration: ListenerRegistration? = null
 
     override fun handleSnapshot(snapshot: DocumentSnapshot?) {
         Log.println(Log.ASSERT, "*", "HANDLE SNAPSHOT Host")
@@ -60,7 +61,11 @@ class HostGameHandler(private val game: Game, private val view: GameView, db: Da
     }
 
     override fun linkToDatabase() {
-        db.listenToGameMetadataUpdate(game.id, executeOnUpdate())
+        snapshotListenerRegistration = db.listenToGameMetadataUpdate(game.id, executeOnUpdate())
+    }
+
+    override fun unlinkFromDatabase() {
+        snapshotListenerRegistration?.remove()
     }
 
     private fun createUpdatesMap(playerIdsOnDatabase: Set<String>): Map<String, Any> {

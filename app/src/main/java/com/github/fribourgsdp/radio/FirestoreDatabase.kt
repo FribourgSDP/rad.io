@@ -10,11 +10,11 @@ import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.firestore.EventListener
+import com.google.firebase.firestore.ListenerRegistration
 import java.lang.Exception
 import java.util.*
 import kotlin.collections.ArrayList
 import kotlin.collections.HashMap
-import kotlin.math.round
 
 /**
  * This class serves to make possible the dependency injection with mockito. We mock the
@@ -233,8 +233,8 @@ class FirestoreDatabase(var refMake: FirestoreRef) : Database {
 
     }
 
-    override fun listenToLobbyUpdate(id: Long, listener: EventListener<DocumentSnapshot>) {
-        listenUpdate("lobby", id, listener)
+    override fun listenToLobbyUpdate(id: Long, listener: EventListener<DocumentSnapshot>): ListenerRegistration {
+        return listenUpdate("lobby", id, listener)
     }
 
     override fun getGameSettingsFromLobby(id: Long) :Task<Game.Settings> {
@@ -447,12 +447,12 @@ class FirestoreDatabase(var refMake: FirestoreRef) : Database {
             .update("launched", true)
     }
 
-    override fun listenToGameUpdate(id: Long, listener: EventListener<DocumentSnapshot>) {
-        listenUpdate("games", id, listener)
+    override fun listenToGameUpdate(id: Long, listener: EventListener<DocumentSnapshot>): ListenerRegistration {
+        return listenUpdate("games", id, listener)
     }
 
-    override fun listenToGameMetadataUpdate(id: Long, listener: EventListener<DocumentSnapshot>) {
-        listenUpdate("games_metadata", id, listener)
+    override fun listenToGameMetadataUpdate(id: Long, listener: EventListener<DocumentSnapshot>): ListenerRegistration {
+        return listenUpdate("games_metadata", id, listener)
     }
 
     override fun updateGame(id: Long, updatesMap: Map<String, Any>): Task<Void> {
@@ -550,8 +550,8 @@ class FirestoreDatabase(var refMake: FirestoreRef) : Database {
         }
     }
 
-    private fun listenUpdate(collectionPath : String, id: Long, listener: EventListener<DocumentSnapshot>){
-        db.collection(collectionPath).document(id.toString())
+    private fun listenUpdate(collectionPath : String, id: Long, listener: EventListener<DocumentSnapshot>): ListenerRegistration{
+        return db.collection(collectionPath).document(id.toString())
             .addSnapshotListener(listener)
     }
 

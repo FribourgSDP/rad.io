@@ -26,4 +26,9 @@ abstract class GameHandler(private val view: GameView, protected val db: Databas
         }
     }
 
+    /**
+     * Unlink the [GameHandler] to the [Database]
+     */
+    abstract fun unlinkFromDatabase()
+
 }

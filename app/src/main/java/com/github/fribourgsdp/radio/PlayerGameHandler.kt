@@ -1,8 +1,7 @@
 package com.github.fribourgsdp.radio
 
-import android.content.Intent
-import android.util.Log
 import com.google.firebase.firestore.DocumentSnapshot
+import com.google.firebase.firestore.ListenerRegistration
 
 class PlayerGameHandler(
     private val gameID: Long,
@@ -11,9 +10,14 @@ class PlayerGameHandler(
 ): GameHandler(view, db), GameView.OnPickListener {
 
     private var songToGuess: String? = null
+    private var snapshotListenerRegistration: ListenerRegistration? = null
 
     override fun linkToDatabase() {
-        db.listenToGameUpdate(gameID, executeOnUpdate())
+        snapshotListenerRegistration = db.listenToGameUpdate(gameID, executeOnUpdate())
+    }
+
+    override fun unlinkFromDatabase() {
+        snapshotListenerRegistration?.remove()
     }
 
     override fun handleSnapshot(snapshot: DocumentSnapshot?) {

@@ -42,6 +42,7 @@ open class GameActivity : AppCompatActivity(), GameView, Timer.Listener {
     protected lateinit var voiceChannel: VoiceIpEngineDecorator
 
     private lateinit var playerGameHandler: PlayerGameHandler
+    private var hostGameHandler: HostGameHandler? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -58,8 +59,8 @@ open class GameActivity : AppCompatActivity(), GameView, Timer.Listener {
 
         if (isHost) {
             val game = Json.decodeFromString(intent.getStringExtra(GAME_KEY)!!) as Game
-            val hostGameHandler = HostGameHandler(game, this)
-            hostGameHandler.linkToDatabase()
+            hostGameHandler = HostGameHandler(game, this)
+            hostGameHandler?.linkToDatabase()
         }
 
         playerGameHandler = PlayerGameHandler(gameUid, this)
@@ -247,6 +248,8 @@ open class GameActivity : AppCompatActivity(), GameView, Timer.Listener {
             .setFragmentResultListener("quitRequest", this) { _, bundle ->
                 val hasQuit = bundle.getBoolean("hasQuit")
                 if (hasQuit) {
+                    hostGameHandler?.unlinkFromDatabase()
+                    playerGameHandler.unlinkFromDatabase()
                     returnToMainMenu()
                 }
             }

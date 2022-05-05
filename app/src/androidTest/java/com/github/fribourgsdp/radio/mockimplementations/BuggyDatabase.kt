@@ -5,6 +5,7 @@ import com.google.android.gms.tasks.Task
 import com.google.android.gms.tasks.Tasks
 import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.EventListener
+import com.google.firebase.firestore.ListenerRegistration
 
 class BuggyDatabase : Database {
     //TODO("use the exception that will be created")
@@ -56,8 +57,10 @@ class BuggyDatabase : Database {
         return Tasks.forException(Exception("Error"))
     }
 
-    override fun listenToLobbyUpdate(id: Long, listener: EventListener<DocumentSnapshot>) {
+    override fun listenToLobbyUpdate(id: Long, listener: EventListener<DocumentSnapshot>): ListenerRegistration {
+        return ListenerRegistration {
 
+        }
     }
 
     override fun getGameSettingsFromLobby(id: Long): Task<Game.Settings> {
@@ -88,11 +91,13 @@ class BuggyDatabase : Database {
         TODO("Not yet implemented")
     }
 
-    override fun listenToGameUpdate(id: Long, listener: EventListener<DocumentSnapshot>) {
-        TODO("Not yet implemented")
+    override fun listenToGameUpdate(id: Long, listener: EventListener<DocumentSnapshot>): ListenerRegistration {
+        return ListenerRegistration {
+
+        }
     }
 
-    override fun listenToGameMetadataUpdate(id: Long, listener: EventListener<DocumentSnapshot>) {
+    override fun listenToGameMetadataUpdate(id: Long, listener: EventListener<DocumentSnapshot>): ListenerRegistration {
         TODO("Not yet implemented")
     }
 

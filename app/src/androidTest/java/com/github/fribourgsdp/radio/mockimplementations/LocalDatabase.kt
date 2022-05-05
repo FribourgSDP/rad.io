@@ -5,6 +5,7 @@ import com.google.android.gms.tasks.Task
 import com.google.android.gms.tasks.Tasks
 import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.EventListener
+import com.google.firebase.firestore.ListenerRegistration
 
 class LocalDatabase : Database {
     private val userMap: MutableMap<String, User> = mutableMapOf()
@@ -68,8 +69,10 @@ class LocalDatabase : Database {
         return Tasks.forResult(null)
     }
 
-    override fun listenToLobbyUpdate(id: Long, listener: EventListener<DocumentSnapshot>) {
-        return
+    override fun listenToLobbyUpdate(id: Long, listener: EventListener<DocumentSnapshot>): ListenerRegistration {
+        return ListenerRegistration {
+
+        }
     }
 
     override fun getGameSettingsFromLobby(id: Long): Task<Game.Settings> {
@@ -96,11 +99,11 @@ class LocalDatabase : Database {
         TODO("Not yet implemented")
     }
 
-    override fun listenToGameUpdate(id: Long, listener: EventListener<DocumentSnapshot>) {
+    override fun listenToGameUpdate(id: Long, listener: EventListener<DocumentSnapshot>): ListenerRegistration {
         TODO("Not yet implemented")
     }
 
-    override fun listenToGameMetadataUpdate(id: Long, listener: EventListener<DocumentSnapshot>) {
+    override fun listenToGameMetadataUpdate(id: Long, listener: EventListener<DocumentSnapshot>): ListenerRegistration {
         TODO("Not yet implemented")
     }
 

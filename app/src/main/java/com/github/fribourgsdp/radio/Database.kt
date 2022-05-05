@@ -3,6 +3,7 @@ package com.github.fribourgsdp.radio
 import com.google.android.gms.tasks.Task
 import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.EventListener
+import com.google.firebase.firestore.ListenerRegistration
 
 interface Database {
 
@@ -76,9 +77,9 @@ interface Database {
      * Listen to the updates of the lobby with [id].
      * Executes the [listener] on every update.
      */
-    fun listenToLobbyUpdate(id: Long, listener: EventListener<DocumentSnapshot>)
+    fun listenToLobbyUpdate(id: Long, listener: EventListener<DocumentSnapshot>): ListenerRegistration
 
-    /**
+ /**
      * Get the [Game.Settings] of the lobby [id]
      * @return a task loading the [Game.Settings] of the lobby [id].
      */
@@ -118,15 +119,15 @@ interface Database {
      * Listen to the updates of the game with [id].
      * Executes the [listener] on every update.
      */
-    fun listenToGameUpdate(id: Long, listener: EventListener<DocumentSnapshot>)
+    fun listenToGameUpdate(id: Long, listener: EventListener<DocumentSnapshot>): ListenerRegistration
 
-    /**
+ /**
      * Listen to the updates of the metadata of game with [id].
      * Executes the [listener] on every update.
      */
-    fun listenToGameMetadataUpdate(id: Long, listener: EventListener<DocumentSnapshot>)
+    fun listenToGameMetadataUpdate(id: Long, listener: EventListener<DocumentSnapshot>): ListenerRegistration
 
-    /**
+ /**
      * Update the game [id] with the values in the [updatesMap].
      * @return a task void so that we know if the game was correctly updated.
      */
