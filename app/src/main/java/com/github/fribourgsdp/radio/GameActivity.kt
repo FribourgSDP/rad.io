@@ -4,6 +4,7 @@ import android.app.Activity
 import android.app.Dialog
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.*
 import android.view.inputmethod.EditorInfo
 import android.widget.*
@@ -79,6 +80,28 @@ open class GameActivity : AppCompatActivity(), GameView, Timer.Listener {
 
         playerGameHandler.linkToDatabase()
 
+    }
+
+    override fun onResume() {
+        super.onResume()
+        if (launched) {
+            Log.e("ResumeLaunch", "in resumed and launch")
+            val intent = Intent(this, MainActivity::class.java)
+            startActivity(intent)
+            finish()
+            return
+        }
+    }
+
+    override fun onRestart() {
+        super.onRestart()
+        if (launched) {
+            Log.e("ResumeLaunch", "in resumed and launch")
+            val intent = Intent(this, MainActivity::class.java)
+            startActivity(intent)
+            finish()
+            return
+        }
     }
 
     override fun onDestroy() {
