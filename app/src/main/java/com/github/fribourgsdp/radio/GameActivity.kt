@@ -159,6 +159,8 @@ open class GameActivity : AppCompatActivity(), GameView, Timer.Listener {
     }
 
     override fun gameOver(finalScores: Map<String, Long>) {
+        playerGameHandler.unlinkFromDatabase()
+        hostGameHandler?.unlinkFromDatabase()
         val intent = Intent(this, EndGameActivity::class.java).apply {
             putExtra(SCORES_KEY,
                 // Replace ids by names and put in an ArrayList to make it Serializable
@@ -177,6 +179,9 @@ open class GameActivity : AppCompatActivity(), GameView, Timer.Listener {
             playerGameHandler.removeUserFromLobby(user)
             playerGameHandler.removePlayerFromGame(user)
         }
+
+        hostGameHandler?.unlinkFromDatabase()
+        playerGameHandler.unlinkFromDatabase()
         //finish()
         val intent = Intent(this, MainActivity::class.java)
         startActivity(intent)
@@ -248,8 +253,6 @@ open class GameActivity : AppCompatActivity(), GameView, Timer.Listener {
             .setFragmentResultListener("quitRequest", this) { _, bundle ->
                 val hasQuit = bundle.getBoolean("hasQuit")
                 if (hasQuit) {
-                    hostGameHandler?.unlinkFromDatabase()
-                    playerGameHandler.unlinkFromDatabase()
                     returnToMainMenu()
                 }
             }

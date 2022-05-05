@@ -166,7 +166,6 @@ class AddPlaylistActivity : MyAppCompatActivity(), SavePlaylistOnlinePickerDialo
         else {
             val warningDialog = QuitAddPlaylistDialog(this)
             warningDialog.show(supportFragmentManager, "warningForQuittingAddPlaylist")
-
         }
     }
 }
