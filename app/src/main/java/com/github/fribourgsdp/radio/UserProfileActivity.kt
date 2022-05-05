@@ -28,7 +28,7 @@ const val SCOPES = "playlist-read-private,playlist-read-collaborative"
 const val RECREATE_USER = "com.github.fribourgsdp.radio.avoidRecreatingUser"
 const val USER_DATA = "com.github.fribourgsdp.radio.USER_DATA"
 
-open class UserProfileActivity : MyAppCompatActivity(), MergeDismissImportPlaylistDialog.OnPickListener {
+open class UserProfileActivity : MyAppCompatActivity(),KeepOrDismissPlaylistDialog.OnPickListener, MergeDismissImportPlaylistDialog.OnPickListener {
     private lateinit var user : User
     private lateinit var usernameField : EditText
     private lateinit var usernameInitialText : TextView
@@ -80,11 +80,12 @@ open class UserProfileActivity : MyAppCompatActivity(), MergeDismissImportPlayli
 
         googleSignInButton.setOnClickListener {
             if (signedIn) {
+                signOut()
                 firebaseAuth.signOut()
                 googleSignInButton.setText(getString(R.string.sign_in_message))
                 signedIn = false
-
             } else {
+                signIn()
                 startActivity(Intent(this, GoogleSignInActivity::class.java))
             }
 
@@ -177,6 +178,19 @@ open class UserProfileActivity : MyAppCompatActivity(), MergeDismissImportPlayli
         }
     }
 
+    override fun onPick(choice: KeepOrDismissPlaylistDialog.Choice) {
+        when (choice){
+            KeepOrDismissPlaylistDialog.Choice.KEEP -> keepPlaylist()
+            KeepOrDismissPlaylistDialog.Choice.DISMISS -> deletePlaylist()
+        }
+    }
+
+    private fun keepPlaylist(){
+
+    }
+    private fun deletePlaylist(){
+
+    }
     private fun mergePlaylist(){
 
     }
@@ -186,4 +200,14 @@ open class UserProfileActivity : MyAppCompatActivity(), MergeDismissImportPlayli
     private fun dismissOnlinePlaylist(){
 
     }
+
+    private fun signIn(){
+
+    }
+
+    private fun signOut(){
+
+    }
+
+
 }
