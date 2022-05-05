@@ -30,7 +30,7 @@ interface LyricsGetter{
  * API Call doc : https://stackoverflow.com/questions/45219379/how-to-make-an-api-request-in-kotlin
  */
 object MusixmatchLyricsGetter : LyricsGetter {
-    const val LYRICS_NOT_FOUND = "---No lyrics were found for this song.---"
+    const val LYRICS_NOT_FOUND = "---No lyrics were found for this song. Feel free to add yours !---"
     const val BACKEND_ERROR_PLACEHOLDER = ""
 
     abstract class LyricsGetterException(val default : String) : Exception()
