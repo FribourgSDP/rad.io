@@ -35,7 +35,7 @@ object MusixmatchLyricsGetter : LyricsGetter {
 
     abstract class LyricsGetterException(val default : String) : Exception()
     class NoLyricsFoundForThisSong : LyricsGetterException(LYRICS_NOT_FOUND)
-    class BackendError : LyricsGetterException("")
+    class BackendError : LyricsGetterException(BACKEND_ERROR_PLACEHOLDER)
 
     /**
      * Asks Musixmatch and retrieves the lyrics of a song.
