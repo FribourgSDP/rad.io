@@ -103,4 +103,7 @@
     <string name="mergePlaylist">combiner</string>
     <string name="importPlaylist">importer</string>
     <string name="dismissOnlinePlaylist">ignorer les playlists en ligne</string>
+    <string name="KeepPlaylistLocallyText">Voulez-vous garder les playlists associées à ce compte sur votre téléphone?</string>
+    <string name="keepPlaylist">Garder les playlists localement</string>
+    <string name="dismissPlaylist">Supprimer les playlists localement</string>
 </resources>
