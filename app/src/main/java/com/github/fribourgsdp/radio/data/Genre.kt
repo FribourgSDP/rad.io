@@ -1,4 +1,4 @@
-package com.github.fribourgsdp.radio
+package com.github.fribourgsdp.radio.data
 
 enum class Genre (private val genreName: String){
     NONE("No Specific Genre"),

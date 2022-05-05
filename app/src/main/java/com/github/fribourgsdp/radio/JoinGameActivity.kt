@@ -4,20 +4,16 @@ import android.Manifest
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Bundle
-import android.util.Log
 import android.view.KeyEvent
 import android.view.View
 import android.view.inputmethod.EditorInfo
 import android.widget.Button
 import android.widget.EditText
 import android.widget.TextView
-import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.DialogFragment
 import com.github.fribourgsdp.radio.data.User
-import kotlinx.serialization.encodeToString
-import kotlinx.serialization.json.Json
 
 const val GAME_UID_KEY = "com.github.fribourgsdp.radio.GAME_UID"
 const val GAME_HOST_NAME_KEY = "com.github.fribourgsdp.radio.GAME_HOST_NAME"

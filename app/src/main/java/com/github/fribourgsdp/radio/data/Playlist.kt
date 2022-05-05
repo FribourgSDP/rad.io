@@ -2,7 +2,6 @@ package com.github.fribourgsdp.radio.data
 
 import com.github.fribourgsdp.radio.Database
 import com.github.fribourgsdp.radio.FirestoreDatabase
-import com.github.fribourgsdp.radio.Genre
 import com.github.fribourgsdp.radio.SetUtility
 import com.google.android.gms.tasks.Task
 import com.google.android.gms.tasks.Tasks

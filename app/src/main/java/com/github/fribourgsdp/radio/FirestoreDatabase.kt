@@ -2,6 +2,7 @@ package com.github.fribourgsdp.radio
 
 import android.content.ContentValues
 import android.util.Log
+import com.github.fribourgsdp.radio.data.Genre
 import com.github.fribourgsdp.radio.data.Playlist
 import com.github.fribourgsdp.radio.data.Song
 import com.github.fribourgsdp.radio.data.User
@@ -55,7 +56,7 @@ class FirestoreDatabase(var refMake: FirestoreRef) : Database {
                 val playlistSet : MutableSet<Playlist> = mutableSetOf()
                 for(playlist in playlists){
 
-                    val pl = Playlist(playlist["playlistName"]!!,Genre.valueOf(playlist["genre"]!!))
+                    val pl = Playlist(playlist["playlistName"]!!, Genre.valueOf(playlist["genre"]!!))
                     pl.id = playlist["playlistId"]!!
                     pl.savedOnline = true
                     pl.savedLocally = false

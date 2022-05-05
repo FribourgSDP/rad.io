@@ -1,5 +1,6 @@
 package com.github.fribourgsdp.radio
 
+import com.github.fribourgsdp.radio.data.Genre
 import com.github.fribourgsdp.radio.data.Playlist
 import com.github.fribourgsdp.radio.data.Song
 import com.google.android.gms.tasks.Tasks
@@ -150,7 +151,7 @@ internal class PlaylistTest {
         val mockDB = mock(Database::class.java)
         `when`(mockDB.generateSongIds(anyInt())).thenReturn(Tasks.forResult(Pair(0,songSet.size.toLong())))
         `when`(mockDB.generatePlaylistId()).thenReturn(Tasks.forResult(0))
-        val playlist = Playlist("Test",songSet,Genre.NONE)
+        val playlist = Playlist("Test",songSet, Genre.NONE)
         Tasks.await(playlist.transformToOnline(mockDB))
         assertEquals("0",playlist.id)
         val songs = playlist.getSongs()
@@ -178,7 +179,7 @@ internal class PlaylistTest {
         `when`(mockDB.registerPlaylist(any())).thenReturn(Tasks.forResult(null))
 
 
-        val playlist = Playlist("Test",songSet,Genre.NONE)
+        val playlist = Playlist("Test",songSet, Genre.NONE)
         Tasks.await(playlist.transformToOnline(mockDB))
         playlist.saveOnline()
         assertEquals(true,playlist.savedOnline)

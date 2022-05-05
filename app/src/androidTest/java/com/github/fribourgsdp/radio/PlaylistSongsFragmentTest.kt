@@ -18,6 +18,7 @@ import androidx.test.espresso.Espresso.*
 import androidx.test.espresso.action.ViewActions
 import androidx.test.espresso.intent.matcher.IntentMatchers.hasComponent
 import androidx.test.espresso.matcher.ViewMatchers.*
+import com.github.fribourgsdp.radio.data.Genre
 import com.github.fribourgsdp.radio.data.Playlist
 import com.github.fribourgsdp.radio.data.Song
 import com.github.fribourgsdp.radio.data.User
@@ -124,7 +125,7 @@ class PlaylistSongsFragmentTest {
 
         bundle.putString(PLAYLIST_DATA, playlist.name)
 
-        val playlistUncomplete = Playlist(playlistName,Genre.NONE)
+        val playlistUncomplete = Playlist(playlistName, Genre.NONE)
         playlistUncomplete.savedOnline = true
         playlistUncomplete.savedLocally = false
         playlistUncomplete.id = "TEST"

@@ -3,6 +3,7 @@ package com.github.fribourgsdp.radio.mockimplementations
 import android.content.Context
 import android.os.Bundle
 import com.github.fribourgsdp.radio.*
+import com.github.fribourgsdp.radio.data.Genre
 import com.github.fribourgsdp.radio.data.Playlist
 import com.github.fribourgsdp.radio.data.Song
 import com.github.fribourgsdp.radio.data.User

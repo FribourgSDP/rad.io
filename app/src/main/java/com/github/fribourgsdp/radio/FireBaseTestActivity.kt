@@ -2,6 +2,7 @@ package com.github.fribourgsdp.radio
 
 import android.content.Intent
 import android.os.Bundle
+import com.github.fribourgsdp.radio.data.Genre
 import com.github.fribourgsdp.radio.data.Playlist
 import com.github.fribourgsdp.radio.data.Song
 import com.github.fribourgsdp.radio.data.User
@@ -32,7 +33,7 @@ class FireBaseTestActivity : MyAppCompatActivity() {
         val t2 = db.generateSongId().addOnSuccessListener { l ->
             song2.id = l.toString()
         }
-        var playlist = Playlist("TestPlaylist",Genre.FRENCH)
+        var playlist = Playlist("TestPlaylist", Genre.FRENCH)
         playlist.addSong(song1)
         playlist.addSong(song2)
         val t3 =  db.generatePlaylistId().addOnSuccessListener { l ->

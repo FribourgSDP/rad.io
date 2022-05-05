@@ -2,6 +2,7 @@ package com.github.fribourgsdp.radio
 
 import android.content.ContentValues
 import android.util.Log
+import com.github.fribourgsdp.radio.data.Genre
 import com.github.fribourgsdp.radio.data.Playlist
 import com.github.fribourgsdp.radio.data.Song
 import com.github.fribourgsdp.radio.data.User
@@ -54,7 +55,7 @@ class LocalDatabaseTest
         val db : Database = LocalDatabase()
         val song1 = Song("Hello","Adele","")
         val song2 = Song("World","NAthan","")
-        val playlist = Playlist("test",Genre.COUNTRY)
+        val playlist = Playlist("test", Genre.COUNTRY)
         playlist.addSong(song1)
         playlist.addSong(song2)
         db.registerPlaylist(playlist)

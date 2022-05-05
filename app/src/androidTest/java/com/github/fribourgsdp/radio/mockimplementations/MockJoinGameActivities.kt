@@ -5,9 +5,6 @@ import android.os.Bundle
 import androidx.fragment.app.DialogFragment
 import com.github.fribourgsdp.radio.Database
 import com.github.fribourgsdp.radio.JoinGameActivity
-import com.github.fribourgsdp.radio.JoinWithQRCodeFragment
-import com.github.fribourgsdp.radio.mockimplementations.BuggyDatabase
-import com.github.fribourgsdp.radio.mockimplementations.LocalDatabase
 import com.github.fribourgsdp.radio.data.User
 import org.mockito.Mockito.*
 

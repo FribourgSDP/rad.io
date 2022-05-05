@@ -1,5 +1,6 @@
 package com.github.fribourgsdp.radio
 
+import com.github.fribourgsdp.radio.data.Genre
 import com.github.fribourgsdp.radio.data.Playlist
 import com.github.fribourgsdp.radio.data.Song
 import com.github.fribourgsdp.radio.data.User
@@ -23,8 +24,8 @@ class FirestoreDatabaseTest {
     private val song3 = Song("song3","artist3","lyricsTest3","idTest3")
     private val invalidSong = Song("invalidSong","invalidArtist","invalidLyrics","")
 
-    private val playlist1 = Playlist("playlist1", setOf(song1,song2),Genre.FRENCH)
-    private val playlist2 = Playlist("playlist2", setOf(song1,song3),Genre.NONE)
+    private val playlist1 = Playlist("playlist1", setOf(song1,song2), Genre.FRENCH)
+    private val playlist2 = Playlist("playlist2", setOf(song1,song3), Genre.NONE)
 
     private val playlistListTest = arrayListOf(
         hashMapOf("playlistName" to playlist1.name,"playlistId" to playlist1.id, "genre" to playlist1.genre.toString()),

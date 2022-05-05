@@ -1,20 +1,14 @@
 package com.github.fribourgsdp.radio
 
-import android.content.ContentValues
-import android.content.Context
 import android.content.Intent
 import android.graphics.PorterDuff
 import android.graphics.PorterDuffColorFilter
 import android.os.Bundle
-import android.util.Log
 import android.widget.Button
 import android.widget.EditText
 import android.widget.ImageView
 import android.widget.TextView
-import androidx.appcompat.app.AppCompatActivity
-import androidx.fragment.app.Fragment
 import com.github.fribourgsdp.radio.data.User
-import com.google.android.gms.tasks.Tasks
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.firebase.auth.FirebaseAuth
 import com.spotify.sdk.android.auth.AuthorizationClient
