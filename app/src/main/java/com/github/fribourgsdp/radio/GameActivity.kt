@@ -177,9 +177,9 @@ open class GameActivity : AppCompatActivity(), GameView, Timer.Listener {
             playerGameHandler.removeUserFromLobby(user)
             playerGameHandler.removePlayerFromGame(user)
         }
+        finish()
         val intent = Intent(this, MainActivity::class.java)
         startActivity(intent)
-        finish()
 
     }
 
