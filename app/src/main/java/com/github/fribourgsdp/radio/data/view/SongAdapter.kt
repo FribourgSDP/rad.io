@@ -3,9 +3,9 @@ package com.github.fribourgsdp.radio.data.view
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import com.github.fribourgsdp.radio.OnClickListener
+import com.github.fribourgsdp.radio.util.OnClickListener
 import com.github.fribourgsdp.radio.R
-import com.github.fribourgsdp.radio.ViewHolder
+import com.github.fribourgsdp.radio.util.ViewHolder
 import com.github.fribourgsdp.radio.data.Song
 
 class SongAdapter(private val songList: List<Song>, private val listener: OnClickListener) :
