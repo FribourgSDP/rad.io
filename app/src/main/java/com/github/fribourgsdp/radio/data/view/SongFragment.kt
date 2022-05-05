@@ -8,7 +8,7 @@ import android.widget.EditText
 import android.widget.TextView
 import com.github.fribourgsdp.radio.LyricsGetter
 import com.github.fribourgsdp.radio.MusixmatchLyricsGetter
-import com.github.fribourgsdp.radio.MyFragment
+import com.github.fribourgsdp.radio.util.MyFragment
 import com.github.fribourgsdp.radio.R
 import com.github.fribourgsdp.radio.data.Playlist
 import com.github.fribourgsdp.radio.data.Song

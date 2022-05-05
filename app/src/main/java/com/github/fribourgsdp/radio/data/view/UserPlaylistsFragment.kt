@@ -5,7 +5,7 @@ import android.os.Bundle
 import android.view.View
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.github.fribourgsdp.radio.MyFragment
+import com.github.fribourgsdp.radio.util.MyFragment
 import com.github.fribourgsdp.radio.OnClickListener
 import com.github.fribourgsdp.radio.R
 import com.github.fribourgsdp.radio.data.Playlist
