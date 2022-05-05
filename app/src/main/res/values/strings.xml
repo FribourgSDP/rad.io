@@ -102,6 +102,9 @@
     <string name="mergePlaylist">Merge</string>
     <string name="importPlaylist">import</string>
     <string name="dismissOnlinePlaylist">dismiss online playlist</string>
+    <string name="KeepPlaylistLocallyText">Do you want to keep the playlist associated to this account on your phone?</string>
+    <string name="keepPlaylist">Keep playlist locally</string>
+    <string name="dismissPlaylist">Delete playlist locally</string>
 
 
 </resources>
