@@ -18,7 +18,7 @@ class KeepOrDismissPlaylistDialogTest {
     }
 
     @Test
-    fun saveOnlineReturnTrueInListener(){
+    fun keepReturnKeepsInListener(){
         picked = KeepOrDismissPlaylistDialog.Choice.DISMISS
         with(launchFragment (
             themeResId = R.style.Theme_Radio,
@@ -32,7 +32,7 @@ class KeepOrDismissPlaylistDialogTest {
     }
 
     @Test
-    fun notSaveOnlineReturnFalseInListener(){
+    fun dismissReturnsDismissInListener(){
         picked = KeepOrDismissPlaylistDialog.Choice.KEEP
         with(launchFragment (
             themeResId = R.style.Theme_Radio,
