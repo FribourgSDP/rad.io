@@ -11,7 +11,6 @@ class PlayerGameHandler(
 ): GameHandler(view, db), GameView.OnPickListener {
 
     private var songToGuess: String? = null
-    var hasQuit = false
 
     override fun linkToDatabase() {
         db.listenToGameUpdate(gameID, executeOnUpdate())
@@ -26,21 +25,21 @@ class PlayerGameHandler(
                 return
             }
 
-            else if (!hasQuit) {
-                val singerName = snapshot.getString("singer")!!
 
-                view.updateSinger(singerName)
-                view.updateRound(snapshot.getLong("current_round")!!)
+            val singerName = snapshot.getString("singer")!!
 
-                // update the score
-                view.displayPlayerScores(scores)
+            view.updateSinger(singerName)
+            view.updateRound(snapshot.getLong("current_round")!!)
 
-                // Get the picked song
-                // It's not null when there is one.
-                songToGuess = snapshot.getString("current_song")
+            // update the score
+            view.displayPlayerScores(scores)
 
-                updateViewForPlayer(snapshot, singerName)
-            }
+            // Get the picked song
+            // It's not null when there is one.
+            songToGuess = snapshot.getString("current_song")
+
+            updateViewForPlayer(snapshot, singerName)
+
 
         } else {
             view.displayError("An error occurred")
