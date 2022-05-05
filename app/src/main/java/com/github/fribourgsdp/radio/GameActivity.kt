@@ -106,8 +106,7 @@ open class GameActivity : AppCompatActivity(), GameView, Timer.Listener {
 
     override fun onDestroy() {
         super.onDestroy()
-        voiceChannel.leaveChannel()
-        RtcEngine.destroy()
+        unlinkAll()
     }
 
     override fun chooseSong(choices: List<String>, listener: GameView.OnPickListener) {
@@ -204,6 +203,7 @@ open class GameActivity : AppCompatActivity(), GameView, Timer.Listener {
         RtcEngine.destroy()
         playerGameHandler.unlinkFromDatabase()
         hostGameHandler?.unlinkFromDatabase()
+        stopTimer()
     }
 
     private fun returnToMainMenu() {
