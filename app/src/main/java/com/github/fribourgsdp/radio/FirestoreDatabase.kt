@@ -500,8 +500,27 @@ class FirestoreDatabase(var refMake: FirestoreRef) : Database {
     }
 
     override fun launchGame(id: Long): Task<Void> {
-        return db.collection("lobby").document(id.toString())
-            .update("launched", true)
+        val collection = db.collection("lobby")
+        val lobbyRef = collection.document(id.toString())
+        val publicRef = collection.document("public")
+        return db.runTransaction { transaction ->
+            val lobbySnapshot = transaction.get(lobbyRef)
+            val publicLobbiesSnapshot = transaction.get(publicRef)
+
+            if (!lobbySnapshot.exists()) {
+                throw IllegalArgumentException("Document $id not found.")
+            }
+
+            if (!publicLobbiesSnapshot.exists()) {
+                throw IllegalArgumentException("The public lobbies could not be reached.")
+            }
+
+            transaction.update(lobbyRef, "launched", true)
+            transaction.update(publicRef, "$id", FieldValue.delete())
+
+            // Success
+            null
+        }
     }
 
     override fun listenToGameUpdate(id: Long, listener: EventListener<DocumentSnapshot>) {
