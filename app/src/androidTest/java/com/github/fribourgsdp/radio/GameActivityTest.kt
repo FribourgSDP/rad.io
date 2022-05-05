@@ -16,6 +16,9 @@ import androidx.test.espresso.matcher.ViewMatchers.*
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.github.fribourgsdp.radio.data.Playlist
 import com.github.fribourgsdp.radio.data.User
+import com.github.fribourgsdp.radio.game.*
+import com.github.fribourgsdp.radio.game.prep.GAME_IS_HOST_KEY
+import com.github.fribourgsdp.radio.game.prep.GAME_KEY
 import com.github.fribourgsdp.radio.mockimplementations.MockGameActivity
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json

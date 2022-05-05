@@ -10,6 +10,8 @@ import androidx.test.espresso.intent.Intents
 import androidx.test.espresso.intent.matcher.IntentMatchers
 import androidx.test.espresso.matcher.ViewMatchers
 import androidx.test.ext.junit.runners.AndroidJUnit4
+import com.github.fribourgsdp.radio.game.EndGameActivity
+import com.github.fribourgsdp.radio.game.SCORES_KEY
 import com.github.fribourgsdp.radio.utils.CustomMatchers.Companion.atPosition
 import org.hamcrest.Matchers
 import org.junit.After

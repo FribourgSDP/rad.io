@@ -1,4 +1,4 @@
-package com.github.fribourgsdp.radio
+package com.github.fribourgsdp.radio.game.prep
 
 import android.Manifest
 import android.app.Activity
@@ -18,6 +18,7 @@ import androidx.fragment.app.DialogFragment
 import eu.livotov.labs.android.camview.ScannerLiveView
 import eu.livotov.labs.android.camview.scanner.decoder.zxing.ZXDecoder
 import androidx.fragment.app.setFragmentResult
+import com.github.fribourgsdp.radio.R
 
 open class JoinWithQRCodeFragment(val ctx: Context, val activity: Activity): DialogFragment() {
 

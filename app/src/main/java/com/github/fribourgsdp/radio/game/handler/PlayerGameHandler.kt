@@ -1,6 +1,9 @@
-package com.github.fribourgsdp.radio
+package com.github.fribourgsdp.radio.game.handler
 
+import com.github.fribourgsdp.radio.Database
+import com.github.fribourgsdp.radio.FirestoreDatabase
 import com.github.fribourgsdp.radio.data.User
+import com.github.fribourgsdp.radio.game.GameView
 import com.github.fribourgsdp.radio.util.NOT_THE_SAME
 import com.github.fribourgsdp.radio.util.StringComparisons
 import com.google.firebase.firestore.DocumentSnapshot

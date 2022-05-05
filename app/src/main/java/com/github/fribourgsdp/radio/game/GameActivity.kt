@@ -1,4 +1,4 @@
-package com.github.fribourgsdp.radio
+package com.github.fribourgsdp.radio.game
 
 import android.content.Intent
 import android.os.Bundle
@@ -8,7 +8,20 @@ import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.github.fribourgsdp.radio.*
+import com.github.fribourgsdp.radio.game.timer.Timer
 import com.github.fribourgsdp.radio.data.User
+import com.github.fribourgsdp.radio.game.handler.HostGameHandler
+import com.github.fribourgsdp.radio.game.handler.PlayerGameHandler
+import com.github.fribourgsdp.radio.game.prep.GAME_IS_HOST_KEY
+import com.github.fribourgsdp.radio.game.prep.GAME_KEY
+import com.github.fribourgsdp.radio.game.prep.GAME_UID_KEY
+import com.github.fribourgsdp.radio.game.prep.MAP_ID_NAME_KEY
+import com.github.fribourgsdp.radio.game.timer.TimerProgressBarHandler
+import com.github.fribourgsdp.radio.game.view.LyricsPopup
+import com.github.fribourgsdp.radio.game.view.QuitGameOrLobbyDialog
+import com.github.fribourgsdp.radio.game.view.ScoresAdapter
+import com.github.fribourgsdp.radio.game.view.SongPickerDialog
 import com.github.fribourgsdp.radio.voip.MyIRtcEngineEventHandler
 import com.github.fribourgsdp.radio.voip.VoiceIpEngineDecorator
 import io.agora.rtc.Constants
@@ -160,7 +173,8 @@ open class GameActivity : AppCompatActivity(), GameView, Timer.Listener {
 
     override fun gameOver(finalScores: Map<String, Long>) {
         val intent = Intent(this, EndGameActivity::class.java).apply {
-            putExtra(SCORES_KEY,
+            putExtra(
+                SCORES_KEY,
                 // Replace ids by names and put in an ArrayList to make it Serializable
                 ArrayList(finalScores.map { (id, score) -> Pair(mapIdToName[id] ?: id, score)})
             )

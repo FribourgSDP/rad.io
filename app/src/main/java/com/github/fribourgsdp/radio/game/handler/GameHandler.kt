@@ -1,5 +1,7 @@
-package com.github.fribourgsdp.radio
+package com.github.fribourgsdp.radio.game.handler
 
+import com.github.fribourgsdp.radio.Database
+import com.github.fribourgsdp.radio.game.GameView
 import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.EventListener
 

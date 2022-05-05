@@ -1,9 +1,12 @@
-package com.github.fribourgsdp.radio
+package com.github.fribourgsdp.radio.game
 
 import android.content.Intent
 import android.os.Bundle
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.github.fribourgsdp.radio.MainActivity
+import com.github.fribourgsdp.radio.R
+import com.github.fribourgsdp.radio.game.view.ScoresAdapter
 import com.github.fribourgsdp.radio.config.MyAppCompatActivity
 
 class EndGameActivity : MyAppCompatActivity() {

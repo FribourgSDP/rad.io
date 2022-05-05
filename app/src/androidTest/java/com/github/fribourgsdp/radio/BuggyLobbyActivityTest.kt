@@ -13,6 +13,9 @@ import androidx.test.ext.junit.rules.ActivityScenarioRule
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.github.fribourgsdp.radio.data.Playlist
 import com.github.fribourgsdp.radio.data.User
+import com.github.fribourgsdp.radio.game.prep.GAME_HOST_KEY
+import com.github.fribourgsdp.radio.game.prep.GAME_IS_HOST_KEY
+import com.github.fribourgsdp.radio.game.prep.GAME_PLAYLIST_KEY
 import com.github.fribourgsdp.radio.mockimplementations.BuggyLobbyActivity
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json

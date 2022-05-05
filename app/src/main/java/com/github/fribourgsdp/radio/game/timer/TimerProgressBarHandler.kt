@@ -1,4 +1,4 @@
-package com.github.fribourgsdp.radio
+package com.github.fribourgsdp.radio.game.timer
 
 import android.view.View
 import android.widget.ProgressBar
@@ -17,7 +17,8 @@ import java.util.*
  * @property timer the [timer] of the [handler][TimerProgressBarHandler].
  * @property progressBar the [progress bar][progressBar] of the [handler][TimerProgressBarHandler].
  */
-class TimerProgressBarHandler(val timer: Timer, val progressBar: ProgressBar, timerListener: Timer.Listener, private val currentTimeInMillis: () -> Long = System::currentTimeMillis): Timer.DeadlineHandler {
+class TimerProgressBarHandler(val timer: Timer, val progressBar: ProgressBar, timerListener: Timer.Listener, private val currentTimeInMillis: () -> Long = System::currentTimeMillis):
+    Timer.DeadlineHandler {
 
     init {
         timer.setListener(PROGRESS_REFRESH_RATE, timerListener)

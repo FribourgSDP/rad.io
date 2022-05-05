@@ -1,5 +1,6 @@
 package com.github.fribourgsdp.radio
 
+import com.github.fribourgsdp.radio.game.timer.Timer
 import org.junit.Assert.*
 import org.junit.Test
 import java.util.*
