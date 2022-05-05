@@ -1,10 +1,11 @@
-package com.github.fribourgsdp.radio
+package com.github.fribourgsdp.radio.game.view
 
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
+import com.github.fribourgsdp.radio.R
 
 class ScoresAdapter: RecyclerView.Adapter<ScoresAdapter.ViewHolder>() {
     private var scoresList: List<Pair<String, Long>> = ArrayList()

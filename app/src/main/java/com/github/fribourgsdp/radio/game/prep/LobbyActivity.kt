@@ -18,6 +18,7 @@ import com.github.fribourgsdp.radio.data.Song
 import com.github.fribourgsdp.radio.data.User
 import com.github.fribourgsdp.radio.game.Game
 import com.github.fribourgsdp.radio.game.GameActivity
+import com.github.fribourgsdp.radio.game.view.QuitGameOrLobbyDialog
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json

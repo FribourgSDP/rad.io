@@ -18,6 +18,10 @@ import com.github.fribourgsdp.radio.game.prep.GAME_KEY
 import com.github.fribourgsdp.radio.game.prep.GAME_UID_KEY
 import com.github.fribourgsdp.radio.game.prep.MAP_ID_NAME_KEY
 import com.github.fribourgsdp.radio.game.timer.TimerProgressBarHandler
+import com.github.fribourgsdp.radio.game.view.LyricsPopup
+import com.github.fribourgsdp.radio.game.view.QuitGameOrLobbyDialog
+import com.github.fribourgsdp.radio.game.view.ScoresAdapter
+import com.github.fribourgsdp.radio.game.view.SongPickerDialog
 import com.github.fribourgsdp.radio.voip.MyIRtcEngineEventHandler
 import com.github.fribourgsdp.radio.voip.VoiceIpEngineDecorator
 import io.agora.rtc.Constants

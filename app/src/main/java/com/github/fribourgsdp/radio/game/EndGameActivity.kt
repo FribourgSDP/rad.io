@@ -6,7 +6,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.github.fribourgsdp.radio.MainActivity
 import com.github.fribourgsdp.radio.R
-import com.github.fribourgsdp.radio.ScoresAdapter
+import com.github.fribourgsdp.radio.game.view.ScoresAdapter
 import com.github.fribourgsdp.radio.config.MyAppCompatActivity
 
 class EndGameActivity : MyAppCompatActivity() {
