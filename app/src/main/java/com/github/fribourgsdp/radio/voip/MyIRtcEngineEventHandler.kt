@@ -1,9 +1,10 @@
-package com.github.fribourgsdp.radio
+package com.github.fribourgsdp.radio.voip
 
 
 import android.annotation.SuppressLint
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
+import com.github.fribourgsdp.radio.R
 import io.agora.rtc.IRtcEngineEventHandler
 class MyIRtcEngineEventHandler (private val appCompatActivity: AppCompatActivity, private val mapHashToName : Map<Int,String>) :IRtcEngineEventHandler() {
     @SuppressLint("SetTextI18n")
