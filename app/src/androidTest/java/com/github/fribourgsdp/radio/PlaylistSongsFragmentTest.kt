@@ -22,6 +22,9 @@ import com.github.fribourgsdp.radio.data.Genre
 import com.github.fribourgsdp.radio.data.Playlist
 import com.github.fribourgsdp.radio.data.Song
 import com.github.fribourgsdp.radio.data.User
+import com.github.fribourgsdp.radio.data.view.AddPlaylistActivity
+import com.github.fribourgsdp.radio.data.view.PLAYLIST_DATA
+import com.github.fribourgsdp.radio.data.view.PlaylistSongsFragment
 import com.google.android.gms.tasks.Tasks
 import junit.framework.Assert.assertTrue
 import org.junit.Assert.assertEquals

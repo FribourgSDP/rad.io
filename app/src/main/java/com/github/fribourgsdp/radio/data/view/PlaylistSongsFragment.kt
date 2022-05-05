@@ -1,4 +1,4 @@
-package com.github.fribourgsdp.radio
+package com.github.fribourgsdp.radio.data.view
 
 import android.content.Intent
 import android.os.Bundle
@@ -7,6 +7,7 @@ import android.widget.Button
 import android.widget.TextView
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.github.fribourgsdp.radio.*
 import com.github.fribourgsdp.radio.data.Playlist
 import com.github.fribourgsdp.radio.data.Song
 import com.github.fribourgsdp.radio.data.User
@@ -16,9 +17,10 @@ import kotlinx.serialization.json.Json
 const val SONG_DATA = "com.github.fribourgsdp.radio.SONG_INNER_DATA"
 const val SONG_NAME_INDEX = 0
 const val SONG_ARTIST_INDEX = 1
-const val PLAYLIST_TO_MODIFY = "com.github.fribourgsdp.radio.PLAYLIST_TO_MODIFY"
+const val PLAYLIST_TO_MODIFY = "com.github.fribourgsdp.radio.data.view.PLAYLIST_TO_MODIFY"
 
-open class PlaylistSongsFragment : MyFragment(R.layout.fragment_playlist_display), OnClickListener, DatabaseHolder{
+open class PlaylistSongsFragment : MyFragment(R.layout.fragment_playlist_display), OnClickListener,
+    DatabaseHolder {
     private lateinit var playlist: Playlist
     private lateinit var songs: List<Song>
     private lateinit var playlistName: String

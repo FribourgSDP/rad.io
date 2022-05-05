@@ -1,7 +1,9 @@
-package com.github.fribourgsdp.radio
+package com.github.fribourgsdp.radio.data.view
 
 import android.os.Bundle
-import androidx.appcompat.app.AppCompatActivity
+import com.github.fribourgsdp.radio.MyAppCompatActivity
+import com.github.fribourgsdp.radio.MyFragment
+import com.github.fribourgsdp.radio.R
 
 class PlaylistsFragmentHolderActivity : MyAppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {

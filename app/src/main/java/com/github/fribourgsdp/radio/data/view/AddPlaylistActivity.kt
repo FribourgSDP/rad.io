@@ -1,4 +1,4 @@
-package com.github.fribourgsdp.radio
+package com.github.fribourgsdp.radio.data.view
 
 import android.content.Intent
 import android.os.Bundle
@@ -10,6 +10,9 @@ import android.widget.TextView
 import com.google.android.gms.tasks.Tasks
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.github.fribourgsdp.radio.MyAppCompatActivity
+import com.github.fribourgsdp.radio.OnClickListener
+import com.github.fribourgsdp.radio.R
 import com.github.fribourgsdp.radio.data.Genre
 import com.github.fribourgsdp.radio.data.Song
 import com.github.fribourgsdp.radio.data.Playlist
