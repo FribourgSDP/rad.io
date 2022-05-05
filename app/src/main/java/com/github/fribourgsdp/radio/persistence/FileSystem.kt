@@ -1,7 +1,6 @@
-package com.github.fribourgsdp.radio
+package com.github.fribourgsdp.radio.persistence
 
 import android.content.Context
-import kotlinx.serialization.Serializable
 
 interface FileSystem {
     /**
