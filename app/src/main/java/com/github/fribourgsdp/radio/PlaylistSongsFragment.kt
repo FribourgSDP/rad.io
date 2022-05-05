@@ -43,13 +43,6 @@ open class PlaylistSongsFragment : MyFragment(R.layout.fragment_playlist_display
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-       /* user = User.load(requireContext())
-        playlist = user.getPlaylistWithName(playlistName)
-       // if(playlist.savedOnline) FirestoreDatabase().getPlaylist(playlist.id).addOnSuccessListener { playlist = it }
-        songs = playlist.getSongs().toList()*/
-
-
-
         //sets listeners to 2 buttons
         editButton = requireView().findViewById(R.id.editButton)
         editButton.setOnClickListener {
@@ -65,7 +58,6 @@ open class PlaylistSongsFragment : MyFragment(R.layout.fragment_playlist_display
 
         deleteButton = requireView().findViewById(R.id.deleteButton)
         deleteButton.setOnClickListener{
-            //val user = Tasks.await()
             //removes playlist from user playlists
             user.removePlaylist(playlist)
             user.save(requireContext())
@@ -78,7 +70,6 @@ open class PlaylistSongsFragment : MyFragment(R.layout.fragment_playlist_display
                 playlist.saveOnline()
             }.addOnSuccessListener {
                 user.save(requireContext())
-                //context?.let { it1 -> user.save(it1) }
                 saveOnlineButton.visibility = View.INVISIBLE
             }
         }
@@ -90,17 +81,18 @@ open class PlaylistSongsFragment : MyFragment(R.layout.fragment_playlist_display
     private fun loadPlaylist(){
         User.loadOrDefault(requireContext()).addOnSuccessListener { l ->
             user = l
-
             playlist = user.getPlaylistWithName(playlistName) ?: Playlist("")
             songs = playlist.getSongs().toList()
             initializeRecyclerView()
+            if(playlist.savedOnline){
+                saveOnlineButton.visibility = View.INVISIBLE
+            }
         }.addOnSuccessListener {
-            if(playlist.savedOnline && !playlist.savedLocally){
+            if(!playlist.savedLocally){
                db.getPlaylist(playlist.id).addOnSuccessListener {
                     playlist = it
                     songs = playlist.getSongs().toList()
                     initializeRecyclerView()
-                    saveOnlineButton.visibility = View.INVISIBLE
                 }
             }
         }
