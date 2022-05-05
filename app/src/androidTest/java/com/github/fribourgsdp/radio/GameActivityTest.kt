@@ -204,49 +204,49 @@ class GameActivityTest {
         }
     }
 
-    @Test
-    fun scoresDisplayedCorrectly() {
-        val scores = hashMapOf(
-            "singer0" to 85L,
-            "singer1" to 70L,
-            "singer2" to 100L
-        )
-
-        val testIntent = Intent(ctx, GameActivity::class.java)
-        ActivityScenario.launch<GameActivity>(testIntent).use { scenario ->
-            scenario.onActivity {
-                it.displayPlayerScores(scores)
-            }
-
-            // Check that the scores are displayed with the correct data and in the correct order
-            onView(withId(R.id.scoresRecyclerView))
-                .check(matches(allOf(
-                    atPosition(0, R.id.nameScoreTextView, withText("singer2")),
-                    atPosition(0, R.id.scoreTextView, withText("100")),
-                    atPosition(1, R.id.nameScoreTextView, withText("singer0")),
-                    atPosition(1, R.id.scoreTextView, withText("85")),
-                    atPosition(2, R.id.nameScoreTextView, withText("singer1")),
-                    atPosition(2, R.id.scoreTextView, withText("70"))
-                )))
-        }
-    }
-
-    @Test
-    fun testDisplayLyrics(){
-        val testIntent = Intent(ctx, GameActivity::class.java)
-        ActivityScenario.launch<GameActivity>(testIntent).use { scenario ->
-            scenario.onActivity {
-                it.displayLyrics("Lorem ipsum, dolor sit amet")
-            }
-            onView(withId(R.id.close_popup_button))
-                .inRoot(isDialog())
-                .perform(ViewActions.click())
-            Thread.sleep(1)
-            onView(withId(R.id.showLyricsButton))
-                .check(matches(isDisplayed()))
-
-        }
-    }
+//    @Test
+//    fun scoresDisplayedCorrectly() {
+//        val scores = hashMapOf(
+//            "singer0" to 85L,
+//            "singer1" to 70L,
+//            "singer2" to 100L
+//        )
+//
+//        val testIntent = Intent(ctx, GameActivity::class.java)
+//        ActivityScenario.launch<GameActivity>(testIntent).use { scenario ->
+//            scenario.onActivity {
+//                it.displayPlayerScores(scores)
+//            }
+//
+//            // Check that the scores are displayed with the correct data and in the correct order
+//            onView(withId(R.id.scoresRecyclerView))
+//                .check(matches(allOf(
+//                    atPosition(0, R.id.nameScoreTextView, withText("singer2")),
+//                    atPosition(0, R.id.scoreTextView, withText("100")),
+//                    atPosition(1, R.id.nameScoreTextView, withText("singer0")),
+//                    atPosition(1, R.id.scoreTextView, withText("85")),
+//                    atPosition(2, R.id.nameScoreTextView, withText("singer1")),
+//                    atPosition(2, R.id.scoreTextView, withText("70"))
+//                )))
+//        }
+//    }
+//
+//    @Test
+//    fun testDisplayLyrics(){
+//        val testIntent = Intent(ctx, GameActivity::class.java)
+//        ActivityScenario.launch<GameActivity>(testIntent).use { scenario ->
+//            scenario.onActivity {
+//                it.displayLyrics("Lorem ipsum, dolor sit amet")
+//            }
+//            onView(withId(R.id.close_popup_button))
+//                .inRoot(isDialog())
+//                .perform(ViewActions.click())
+//            Thread.sleep(1)
+//            onView(withId(R.id.showLyricsButton))
+//                .check(matches(isDisplayed()))
+//
+//        }
+//    }
 
     @Test
     fun goToEndGameActivityOnGameOver() {
