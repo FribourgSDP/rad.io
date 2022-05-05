@@ -4,7 +4,7 @@ import android.content.Context
 import android.os.Bundle
 import androidx.fragment.app.DialogFragment
 import com.github.fribourgsdp.radio.Database
-import com.github.fribourgsdp.radio.JoinGameActivity
+import com.github.fribourgsdp.radio.game.prep.JoinGameActivity
 import com.github.fribourgsdp.radio.data.User
 import org.mockito.Mockito.*
 

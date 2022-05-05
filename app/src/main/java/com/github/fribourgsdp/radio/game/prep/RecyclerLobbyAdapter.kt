@@ -1,4 +1,4 @@
-package com.github.fribourgsdp.radio
+package com.github.fribourgsdp.radio.game.prep
 
 import android.view.LayoutInflater
 import android.view.View
@@ -6,6 +6,7 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
+import com.github.fribourgsdp.radio.R
 
 class RecyclerLobbyAdapter: RecyclerView.Adapter<RecyclerLobbyAdapter.LobbyListViewEntry>() {
 

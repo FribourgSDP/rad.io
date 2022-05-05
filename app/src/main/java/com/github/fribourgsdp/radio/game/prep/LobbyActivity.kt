@@ -1,4 +1,4 @@
-package com.github.fribourgsdp.radio
+package com.github.fribourgsdp.radio.game.prep
 
 import android.Manifest
 import android.content.Intent
@@ -11,6 +11,7 @@ import androidx.core.content.ContextCompat
 import androidx.fragment.app.DialogFragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.github.fribourgsdp.radio.*
 import com.github.fribourgsdp.radio.config.MyAppCompatActivity
 import com.github.fribourgsdp.radio.data.Playlist
 import com.github.fribourgsdp.radio.data.Song
@@ -58,7 +59,7 @@ open class LobbyActivity : MyAppCompatActivity(){
     private lateinit var qrCodeDisplay: DialogFragment
 
     private var layoutManager:RecyclerView.LayoutManager? = null
-    private var layoutAdapter:RecyclerLobbyAdapter? = null
+    private var layoutAdapter: RecyclerLobbyAdapter? = null
 
     protected lateinit var mapIdToName: HashMap<String, String>
 

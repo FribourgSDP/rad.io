@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".LobbyActivity">
+    tools:context=".game.prep.LobbyActivity">
 
     <TextView
         android:id="@+id/uuidText"

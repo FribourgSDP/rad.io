@@ -1,10 +1,12 @@
-package com.github.fribourgsdp.radio
+package com.github.fribourgsdp.radio.game.prep
 
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
 import android.widget.*
+import com.github.fribourgsdp.radio.MainActivity
+import com.github.fribourgsdp.radio.R
 import com.github.fribourgsdp.radio.data.Playlist
 import com.github.fribourgsdp.radio.data.User
 import kotlinx.serialization.encodeToString

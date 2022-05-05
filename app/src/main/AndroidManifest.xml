@@ -43,7 +43,7 @@
             android:name=".data.view.AddPlaylistActivity"
             android:exported="false" />
         <activity
-            android:name=".JoinGameActivity"
+            android:name=".game.prep.JoinGameActivity"
             android:exported="false" />
         <activity
             android:name=".SpotifyReceiveActivity"
@@ -65,7 +65,7 @@
             android:name=".ImportSpotifyPlaylistsActivity"
             android:exported="false" />
         <activity
-            android:name=".LobbyActivity"
+            android:name=".game.prep.LobbyActivity"
             android:exported="false" />
         <activity
             android:name=".data.view.UserProfileActivity"
@@ -78,7 +78,7 @@
             android:name=".config.SettingsActivity"
             android:exported="false" />
         <activity
-            android:name=".GameSettingsActivity"
+            android:name=".game.prep.GameSettingsActivity"
             android:exported="false" />
         <activity
             android:name=".GoogleSignInActivity"
