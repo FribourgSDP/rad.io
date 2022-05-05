@@ -1,5 +1,7 @@
 package com.github.fribourgsdp.radio
 
+import com.github.fribourgsdp.radio.data.Nameable
+
 object SetUtility {
     /**
      * Add an item to a set, after removing it if it was present

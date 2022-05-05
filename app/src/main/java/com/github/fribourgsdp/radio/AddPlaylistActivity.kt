@@ -1,19 +1,17 @@
 package com.github.fribourgsdp.radio
 
-import android.content.ContentValues
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import android.widget.ArrayAdapter
 import android.widget.EditText
 import android.widget.Spinner
 import android.widget.TextView
-import androidx.appcompat.app.AppCompatActivity
 import com.google.android.gms.tasks.Tasks
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.google.android.gms.tasks.Task
+import com.github.fribourgsdp.radio.data.Song
+import com.github.fribourgsdp.radio.data.Playlist
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.json.Json
 

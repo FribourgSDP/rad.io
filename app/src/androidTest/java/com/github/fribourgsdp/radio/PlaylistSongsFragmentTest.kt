@@ -10,29 +10,22 @@ import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.intent.Intents
 import androidx.test.espresso.matcher.ViewMatchers
 import androidx.test.internal.runner.junit4.AndroidJUnit4ClassRunner
-import kotlinx.serialization.encodeToString
-import kotlinx.serialization.json.Json
 import org.junit.FixMethodOrder
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.junit.runners.MethodSorters
 import androidx.test.espresso.Espresso.*
-import androidx.test.espresso.ViewAssertion
 import androidx.test.espresso.action.ViewActions
 import androidx.test.espresso.intent.matcher.IntentMatchers.hasComponent
 import androidx.test.espresso.matcher.ViewMatchers.*
-import com.github.fribourgsdp.radio.mockimplementations.BuggyDatabase
-import com.github.fribourgsdp.radio.utils.CustomMatchers
+import com.github.fribourgsdp.radio.data.Playlist
+import com.github.fribourgsdp.radio.data.Song
 import com.google.android.gms.tasks.Tasks
 import junit.framework.Assert.assertTrue
-import kotlinx.serialization.decodeFromString
-import org.hamcrest.Matchers.allOf
 import org.junit.Assert.assertEquals
-import org.junit.Before
 import org.mockito.Mockito
 import org.mockito.Mockito.`when`
 import org.mockito.Mockito.anyString
-import java.util.HashSet
 
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 @RunWith(AndroidJUnit4ClassRunner::class)

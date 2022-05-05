@@ -1,11 +1,9 @@
 package com.github.fribourgsdp.radio
 
-import android.content.ContentValues
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
-import android.widget.TextView
-import androidx.appcompat.app.AppCompatActivity
+import com.github.fribourgsdp.radio.data.Playlist
+import com.github.fribourgsdp.radio.data.Song
 import com.google.android.gms.tasks.Tasks
 
 class FireBaseTestActivity : MyAppCompatActivity() {

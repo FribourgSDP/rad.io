@@ -2,6 +2,8 @@ package com.github.fribourgsdp.radio
 
 import android.content.ContentValues
 import android.util.Log
+import com.github.fribourgsdp.radio.data.Playlist
+import com.github.fribourgsdp.radio.data.Song
 import com.google.android.gms.tasks.Task
 import com.google.android.gms.tasks.Tasks
 import com.google.firebase.Timestamp
@@ -14,7 +16,6 @@ import java.lang.Exception
 import java.util.*
 import kotlin.collections.ArrayList
 import kotlin.collections.HashMap
-import kotlin.math.round
 
 /**
  * This class serves to make possible the dependency injection with mockito. We mock the

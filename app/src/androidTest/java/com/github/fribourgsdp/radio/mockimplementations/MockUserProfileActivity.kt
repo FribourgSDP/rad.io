@@ -3,7 +3,8 @@ package com.github.fribourgsdp.radio.mockimplementations
 import android.content.Context
 import android.os.Bundle
 import com.github.fribourgsdp.radio.*
-import org.mockito.Mockito
+import com.github.fribourgsdp.radio.data.Playlist
+import com.github.fribourgsdp.radio.data.Song
 import org.mockito.Mockito.mock
 
 const val userName = "test"

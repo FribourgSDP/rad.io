@@ -3,6 +3,7 @@ package com.github.fribourgsdp.radio
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import com.github.fribourgsdp.radio.data.Song
 
 class SongAdapter(private val songList: List<Song>, private val listener: OnClickListener) :
     RecyclerView.Adapter<ViewHolder>(){

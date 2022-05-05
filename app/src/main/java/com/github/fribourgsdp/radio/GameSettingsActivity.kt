@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
 import android.widget.*
+import com.github.fribourgsdp.radio.data.Playlist
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 

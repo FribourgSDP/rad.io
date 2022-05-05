@@ -1,4 +1,4 @@
-package com.github.fribourgsdp.radio
+package com.github.fribourgsdp.radio.data
 
 import java.util.*
 import kotlinx.serialization.Serializable
@@ -18,7 +18,8 @@ import java.util.concurrent.CompletableFuture
  * @property artist the reformatted name of the artist of the song
  * @constructor creates a Song with the given name, artist name and possibly blank lyrics
  */
-class Song (private val rawName: String, private val rawArtist: String, var lyrics: String) : Nameable {
+class Song (private val rawName: String, private val rawArtist: String, var lyrics: String) :
+    Nameable {
     override var name: String = reformatName(rawName)
     var artist: String = reformatName(rawArtist)
     var id: String = ""

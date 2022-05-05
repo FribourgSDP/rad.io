@@ -5,23 +5,21 @@ import android.os.Bundle
 import androidx.fragment.app.testing.launchFragmentInContainer
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.espresso.Espresso
-import androidx.test.espresso.ViewAssertion
 import androidx.test.espresso.assertion.ViewAssertions
 import androidx.test.espresso.intent.Intents
 import androidx.test.espresso.matcher.ViewMatchers
 import androidx.test.internal.runner.junit4.AndroidJUnit4ClassRunner
+import com.github.fribourgsdp.radio.data.Playlist
+import com.github.fribourgsdp.radio.data.Song
 import com.github.fribourgsdp.radio.mockimplementations.MockFileSystem
 import com.github.fribourgsdp.radio.mockimplementations.MockLyricsGetter
 import com.github.fribourgsdp.radio.mockimplementations.MockSongFragment
-import kotlinx.serialization.encodeToString
-import kotlinx.serialization.json.Json
 import org.junit.After
 import org.junit.Before
 import org.junit.FixMethodOrder
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.junit.runners.MethodSorters
-import org.mockito.Mock
 
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 @RunWith(AndroidJUnit4ClassRunner::class)

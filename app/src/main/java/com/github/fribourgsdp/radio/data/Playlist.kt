@@ -1,10 +1,11 @@
-package com.github.fribourgsdp.radio
+package com.github.fribourgsdp.radio.data
 
-import android.content.ContentValues
-import android.util.Log
+import com.github.fribourgsdp.radio.Database
+import com.github.fribourgsdp.radio.FirestoreDatabase
+import com.github.fribourgsdp.radio.Genre
+import com.github.fribourgsdp.radio.SetUtility
 import com.google.android.gms.tasks.Task
 import com.google.android.gms.tasks.Tasks
-import kotlinx.serialization.Contextual
 import kotlinx.serialization.Serializable
 
 @Serializable

@@ -14,8 +14,8 @@ import androidx.test.espresso.intent.matcher.IntentMatchers
 import androidx.test.espresso.matcher.RootMatchers.isDialog
 import androidx.test.espresso.matcher.ViewMatchers.*
 import androidx.test.ext.junit.runners.AndroidJUnit4
+import com.github.fribourgsdp.radio.data.Playlist
 import com.github.fribourgsdp.radio.mockimplementations.MockGameActivity
-import com.github.fribourgsdp.radio.utils.CustomMatchers.Companion.atPosition
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 import org.hamcrest.Matchers.allOf

@@ -1,9 +1,8 @@
 package com.github.fribourgsdp.radio
 
-import android.content.ContentValues
-import android.util.Log
+import com.github.fribourgsdp.radio.data.Playlist
+import com.github.fribourgsdp.radio.data.Song
 import com.google.android.gms.tasks.Tasks
-import com.google.firebase.auth.ktx.userProfileChangeRequest
 import com.google.firebase.firestore.DocumentReference
 import com.google.firebase.firestore.DocumentSnapshot
 import org.junit.Test
@@ -13,9 +12,6 @@ import org.junit.Before
 import org.mockito.ArgumentMatchers.anyString
 import org.mockito.Mockito.*
 //import java.lang.Exception
-
-import java.util.*
-import kotlin.collections.HashMap
 
 class FirestoreDatabaseTest {
     private val userNameTest = "BakerTest"

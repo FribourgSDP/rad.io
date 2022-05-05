@@ -3,6 +3,7 @@ package com.github.fribourgsdp.radio
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import com.github.fribourgsdp.radio.data.Playlist
 
 class PlaylistAdapter(private val playlistList: List<Playlist>,
                       private val listener: OnClickListener) :

@@ -2,10 +2,9 @@ package com.github.fribourgsdp.radio
 
 import android.content.Context
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Log
-import com.google.android.gms.tasks.Tasks
+import com.github.fribourgsdp.radio.data.Playlist
+import com.github.fribourgsdp.radio.data.Song
 import okhttp3.*
 import org.json.JSONException
 import java.io.IOException

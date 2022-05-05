@@ -6,6 +6,8 @@ import android.text.TextWatcher
 import android.view.View
 import android.widget.EditText
 import android.widget.TextView
+import com.github.fribourgsdp.radio.data.Playlist
+import com.github.fribourgsdp.radio.data.Song
 
 open class SongFragment : MyFragment(R.layout.fragment_song) {
     private lateinit var initialLyrics : String
