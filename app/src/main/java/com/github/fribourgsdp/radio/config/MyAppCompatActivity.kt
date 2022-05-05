@@ -1,4 +1,4 @@
-package com.github.fribourgsdp.radio
+package com.github.fribourgsdp.radio.config
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity

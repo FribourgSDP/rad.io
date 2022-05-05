@@ -1,6 +1,5 @@
 package com.github.fribourgsdp.radio
 
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.content.pm.PackageManager
 import androidx.core.app.ActivityCompat
@@ -14,6 +13,7 @@ import RtcTokenBuilder.RtcTokenBuilder
 import android.annotation.SuppressLint
 import android.util.Log
 import android.widget.*
+import com.github.fribourgsdp.radio.config.MyAppCompatActivity
 import io.agora.rtc.Constants
 
 
