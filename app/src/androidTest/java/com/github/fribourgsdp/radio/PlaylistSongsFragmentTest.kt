@@ -20,6 +20,7 @@ import androidx.test.espresso.intent.matcher.IntentMatchers.hasComponent
 import androidx.test.espresso.matcher.ViewMatchers.*
 import com.github.fribourgsdp.radio.data.Playlist
 import com.github.fribourgsdp.radio.data.Song
+import com.github.fribourgsdp.radio.data.User
 import com.google.android.gms.tasks.Tasks
 import junit.framework.Assert.assertTrue
 import org.junit.Assert.assertEquals

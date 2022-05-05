@@ -13,6 +13,7 @@ import androidx.test.espresso.matcher.ViewMatchers.*
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.github.fribourgsdp.radio.data.Playlist
 import com.github.fribourgsdp.radio.data.Song
+import com.github.fribourgsdp.radio.data.User
 import com.github.fribourgsdp.radio.mockimplementations.LocalDatabase
 import com.github.fribourgsdp.radio.mockimplementations.LyricsGettingWorkingLobbyActivity
 import com.github.fribourgsdp.radio.mockimplementations.WorkingLobbyActivity

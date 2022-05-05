@@ -4,6 +4,7 @@ import android.content.Context
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.github.fribourgsdp.radio.data.Playlist
+import com.github.fribourgsdp.radio.data.User
 import org.junit.Assert.*
 import org.junit.Test
 import org.junit.runner.RunWith

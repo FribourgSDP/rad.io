@@ -12,6 +12,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.github.fribourgsdp.radio.data.Song
 import com.github.fribourgsdp.radio.data.Playlist
+import com.github.fribourgsdp.radio.data.User
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.json.Json
 

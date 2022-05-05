@@ -15,6 +15,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.DialogFragment
+import com.github.fribourgsdp.radio.data.User
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 

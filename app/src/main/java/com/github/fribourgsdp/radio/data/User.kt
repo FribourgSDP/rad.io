@@ -1,7 +1,11 @@
-package com.github.fribourgsdp.radio
+package com.github.fribourgsdp.radio.data
 
 
 import android.content.Context
+import com.github.fribourgsdp.radio.AppSpecificFileSystem
+import com.github.fribourgsdp.radio.FileSystem
+import com.github.fribourgsdp.radio.FirestoreDatabase
+import com.github.fribourgsdp.radio.SetUtility
 import com.github.fribourgsdp.radio.data.Playlist
 import com.github.fribourgsdp.radio.data.Song
 
@@ -46,7 +50,7 @@ data class User (var name: String, val color: Int) {
     companion object {
         const val USER_DATA_PATH = "user_data_file"
         private var fileSystemGetter: FileSystem.FileSystemGetter =
-            AppSpecificFileSystem.AppSpecificFSGetter
+            AppSpecificFileSystem
 
         /**
          * loads a user from the app-specific storage on the device.

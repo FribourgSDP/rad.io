@@ -12,6 +12,7 @@ import androidx.appcompat.app.AppCompatActivity
 //import com.github.fribourgsdp.radio.databinding.ActivityMainBinding
 
 import android.widget.ImageButton
+import com.github.fribourgsdp.radio.data.User
 
 class MainActivity : MyAppCompatActivity() {
     private val db = FirestoreDatabase()
