@@ -1,4 +1,4 @@
-package com.github.fribourgsdp.radio
+package com.github.fribourgsdp.radio.data.view
 
 import android.content.Intent
 import android.graphics.PorterDuff
@@ -8,6 +8,7 @@ import android.widget.Button
 import android.widget.EditText
 import android.widget.ImageView
 import android.widget.TextView
+import com.github.fribourgsdp.radio.*
 import com.github.fribourgsdp.radio.data.User
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.firebase.auth.FirebaseAuth
@@ -21,7 +22,7 @@ const val MY_CLIENT_ID = "9dc40237547f4ffaa41bf1e07ea0bba1"
 const val REDIRECT_URI = "com.github.fribourgsdp.radio://callback"
 const val SCOPES = "playlist-read-private,playlist-read-collaborative"
 const val RECREATE_USER = "com.github.fribourgsdp.radio.avoidRecreatingUser"
-const val USER_DATA = "com.github.fribourgsdp.radio.USER_DATA"
+const val USER_DATA = "com.github.fribourgsdp.radio.data.view.USER_DATA"
 
 open class UserProfileActivity : MyAppCompatActivity() {
     private lateinit var user : User

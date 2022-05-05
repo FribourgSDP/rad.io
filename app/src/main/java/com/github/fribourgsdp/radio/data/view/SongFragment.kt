@@ -1,4 +1,4 @@
-package com.github.fribourgsdp.radio
+package com.github.fribourgsdp.radio.data.view
 
 import android.os.Bundle
 import android.text.Editable
@@ -6,6 +6,10 @@ import android.text.TextWatcher
 import android.view.View
 import android.widget.EditText
 import android.widget.TextView
+import com.github.fribourgsdp.radio.LyricsGetter
+import com.github.fribourgsdp.radio.MusixmatchLyricsGetter
+import com.github.fribourgsdp.radio.MyFragment
+import com.github.fribourgsdp.radio.R
 import com.github.fribourgsdp.radio.data.Playlist
 import com.github.fribourgsdp.radio.data.Song
 import com.github.fribourgsdp.radio.data.User

@@ -37,10 +37,10 @@
             android:name=".VoiceOverIPActivity"
             android:exported="false" />
         <activity
-            android:name=".PlaylistsFragmentHolderActivity"
+            android:name=".data.view.PlaylistsFragmentHolderActivity"
             android:exported="false" />
         <activity
-            android:name=".AddPlaylistActivity"
+            android:name=".data.view.AddPlaylistActivity"
             android:exported="false" />
         <activity
             android:name=".JoinGameActivity"
@@ -68,7 +68,7 @@
             android:name=".LobbyActivity"
             android:exported="false" />
         <activity
-            android:name=".UserProfileActivity"
+            android:name=".data.view.UserProfileActivity"
             android:exported="false"
             android:launchMode="singleTop" />
         <activity

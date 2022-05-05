@@ -5,6 +5,7 @@ import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.action.ViewActions
 import androidx.test.espresso.matcher.RootMatchers
 import androidx.test.espresso.matcher.ViewMatchers.withId
+import com.github.fribourgsdp.radio.data.view.SavePlaylistOnlinePickerDialog
 import org.junit.Assert.assertFalse
 import org.junit.Assert.assertTrue
 import org.junit.Test
@@ -23,7 +24,7 @@ class SavePlaylistOnlinePickerDialogTest {
         picked = false
         with(launchFragment (
             themeResId = R.style.Theme_Radio,
-            instantiate = { SavePlaylistOnlinePickerDialog(testListener)}
+            instantiate = { SavePlaylistOnlinePickerDialog(testListener) }
                 )){
             onView(withId(R.id.saveOnlinePlaylistYes))
                 .inRoot(RootMatchers.isDialog())
@@ -37,7 +38,7 @@ class SavePlaylistOnlinePickerDialogTest {
         picked = true
         with(launchFragment (
             themeResId = R.style.Theme_Radio,
-            instantiate = { SavePlaylistOnlinePickerDialog(testListener)}
+            instantiate = { SavePlaylistOnlinePickerDialog(testListener) }
         )){
             onView(withId(R.id.saveOnlinePlaylistNo))
                 .inRoot(RootMatchers.isDialog())

@@ -13,6 +13,9 @@ import com.github.fribourgsdp.radio.data.Genre
 import com.github.fribourgsdp.radio.data.Playlist
 import com.github.fribourgsdp.radio.data.Song
 import com.github.fribourgsdp.radio.data.User
+import com.github.fribourgsdp.radio.data.view.PLAYLIST_DATA
+import com.github.fribourgsdp.radio.data.view.SONG_DATA
+import com.github.fribourgsdp.radio.data.view.SongFragment
 import com.github.fribourgsdp.radio.mockimplementations.MockFileSystem
 import com.github.fribourgsdp.radio.mockimplementations.MockLyricsGetter
 import com.github.fribourgsdp.radio.mockimplementations.MockSongFragment

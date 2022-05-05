@@ -4,7 +4,7 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.widget.Button
-import androidx.appcompat.app.AppCompatActivity
+import com.github.fribourgsdp.radio.data.view.UserProfileActivity
 import com.spotify.sdk.android.auth.AuthorizationResponse
 
 class SpotifyReceiveActivity : MyAppCompatActivity() {

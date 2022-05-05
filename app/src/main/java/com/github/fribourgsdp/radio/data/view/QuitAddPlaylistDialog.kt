@@ -1,4 +1,4 @@
-package com.github.fribourgsdp.radio
+package com.github.fribourgsdp.radio.data.view
 
 import android.content.Context
 import android.content.Intent
@@ -8,6 +8,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import androidx.fragment.app.DialogFragment
+import com.github.fribourgsdp.radio.R
 
 class QuitAddPlaylistDialog(val ctx: Context): DialogFragment() {
     private val buttons = ArrayList<Button>()

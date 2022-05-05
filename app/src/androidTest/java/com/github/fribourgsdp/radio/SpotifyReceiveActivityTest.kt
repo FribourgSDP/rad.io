@@ -10,13 +10,12 @@ import androidx.test.espresso.action.ViewActions
 import androidx.test.espresso.intent.Intents
 import androidx.test.espresso.intent.matcher.IntentMatchers
 import androidx.test.espresso.matcher.ViewMatchers
-import androidx.test.ext.junit.rules.ActivityScenarioRule
+import com.github.fribourgsdp.radio.data.view.UserProfileActivity
 import com.spotify.sdk.android.auth.AccountsQueryParameters
 import junit.framework.TestCase.assertEquals
 import org.hamcrest.Matchers
 import org.junit.After
 import org.junit.Before
-import org.junit.Rule
 import org.junit.Test
 
 

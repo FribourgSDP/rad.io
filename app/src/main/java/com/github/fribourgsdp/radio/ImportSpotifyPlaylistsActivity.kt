@@ -6,6 +6,7 @@ import android.os.Bundle
 import com.github.fribourgsdp.radio.data.Playlist
 import com.github.fribourgsdp.radio.data.Song
 import com.github.fribourgsdp.radio.data.User
+import com.github.fribourgsdp.radio.data.view.UserProfileActivity
 import okhttp3.*
 import org.json.JSONException
 import java.io.IOException

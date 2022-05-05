@@ -1,10 +1,13 @@
-package com.github.fribourgsdp.radio
+package com.github.fribourgsdp.radio.data.view
 
 import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.github.fribourgsdp.radio.MyFragment
+import com.github.fribourgsdp.radio.OnClickListener
+import com.github.fribourgsdp.radio.R
 import com.github.fribourgsdp.radio.data.Playlist
 import com.github.fribourgsdp.radio.data.User
 import kotlinx.serialization.decodeFromString
@@ -12,7 +15,8 @@ import kotlinx.serialization.json.Json
 
 const val PLAYLIST_DATA = "com.github.fribourgsdp.radio.PLAYLIST_INNER_DATA"
 
-class UserPlaylistsFragment : MyFragment(R.layout.fragment_user_playlists_display), OnClickListener{
+class UserPlaylistsFragment : MyFragment(R.layout.fragment_user_playlists_display),
+    OnClickListener {
     private lateinit var user: User
     private lateinit var userPlaylists: List<Playlist>
 
