@@ -5,7 +5,7 @@ import android.content.Context
 import com.github.fribourgsdp.radio.AppSpecificFileSystem
 import com.github.fribourgsdp.radio.FileSystem
 import com.github.fribourgsdp.radio.FirestoreDatabase
-import com.github.fribourgsdp.radio.SetUtility
+import com.github.fribourgsdp.radio.util.SetUtility
 
 import com.google.android.gms.tasks.Task
 import com.google.android.gms.tasks.Tasks
