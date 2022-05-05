@@ -2,24 +2,17 @@ package com.github.fribourgsdp.radio
 
 import android.content.Context
 import android.content.Intent
-import android.util.Log
-import android.widget.TextView
 import androidx.test.core.app.ActivityScenario
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.espresso.Espresso
 import androidx.test.espresso.assertion.ViewAssertions
 import androidx.test.espresso.intent.Intents
-import androidx.test.espresso.intent.matcher.IntentMatchers
 import androidx.test.espresso.matcher.ViewMatchers
-import androidx.test.rule.GrantPermissionRule
-import com.android.dex.Code
 import com.github.fribourgsdp.radio.mockimplementations.MockGameActivity
-import org.hamcrest.Matchers
+import com.github.fribourgsdp.radio.voip.MyIRtcEngineEventHandler
 import org.junit.After
 import org.junit.Before
-import org.junit.Rule
 import org.junit.Test
-import kotlin.concurrent.thread
 
 class MyIRtcEngineEventHandlerTest {
 
