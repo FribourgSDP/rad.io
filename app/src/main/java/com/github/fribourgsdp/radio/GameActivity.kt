@@ -23,6 +23,7 @@ const val SCORES_KEY = "com.github.fribourgsdp.radio.SCORES"
 open class GameActivity : AppCompatActivity(), GameView, Timer.Listener {
     private lateinit var user: User
     private var isHost: Boolean = false
+    private var launched = false
 
     private lateinit var currentRoundTextView : TextView
     private lateinit var singerTextView : TextView
@@ -46,6 +47,12 @@ open class GameActivity : AppCompatActivity(), GameView, Timer.Listener {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        if (launched) {
+            val intent = Intent(this, MainActivity::class.java)
+            startActivity(intent)
+            finish()
+            return
+        }
         setContentView(R.layout.activity_game)
         user = User.load(this)
         mapIdToName = intent.getSerializableExtra(MAP_ID_NAME_KEY)?.let {
@@ -159,8 +166,7 @@ open class GameActivity : AppCompatActivity(), GameView, Timer.Listener {
     }
 
     override fun gameOver(finalScores: Map<String, Long>) {
-        playerGameHandler.unlinkFromDatabase()
-        hostGameHandler?.unlinkFromDatabase()
+        unlinkAll()
         val intent = Intent(this, EndGameActivity::class.java).apply {
             putExtra(SCORES_KEY,
                 // Replace ids by names and put in an ArrayList to make it Serializable
@@ -168,6 +174,14 @@ open class GameActivity : AppCompatActivity(), GameView, Timer.Listener {
             )
         }
         startActivity(intent)
+    }
+
+    private fun unlinkAll() {
+        playerGameHandler.unlinkFromDatabase()
+        hostGameHandler?.unlinkFromDatabase()
+        voiceChannel.leaveChannel()
+        RtcEngine.destroy()
+
     }
 
     private fun returnToMainMenu() {
@@ -180,8 +194,7 @@ open class GameActivity : AppCompatActivity(), GameView, Timer.Listener {
             playerGameHandler.removePlayerFromGame(user)
         }
 
-        hostGameHandler?.unlinkFromDatabase()
-        playerGameHandler.unlinkFromDatabase()
+        unlinkAll()
         //finish()
         val intent = Intent(this, TransitionQuitGameActivity::class.java)
         startActivity(intent)
@@ -253,8 +266,7 @@ open class GameActivity : AppCompatActivity(), GameView, Timer.Listener {
             .setFragmentResultListener("quitRequest", this) { _, bundle ->
                 val hasQuit = bundle.getBoolean("hasQuit")
                 if (hasQuit) {
-                    voiceChannel.leaveChannel()
-                    RtcEngine.destroy()
+                    launched = true
                     returnToMainMenu()
                 }
             }
