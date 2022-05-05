@@ -1,10 +1,10 @@
 package com.github.fribourgsdp.radio
 
 import android.util.Log
+import com.github.fribourgsdp.radio.database.*
 import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.FieldValue
 import java.lang.IllegalStateException
-import kotlin.streams.toList
 
 class HostGameHandler(private val game: Game, private val view: GameView, db: Database = FirestoreDatabase()): GameHandler(view, db) {
     private var latestSingerId: String? = null

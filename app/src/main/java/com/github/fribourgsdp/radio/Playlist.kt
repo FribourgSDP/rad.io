@@ -1,10 +1,8 @@
 package com.github.fribourgsdp.radio
 
-import android.content.ContentValues
-import android.util.Log
+import com.github.fribourgsdp.radio.database.Database
 import com.google.android.gms.tasks.Task
 import com.google.android.gms.tasks.Tasks
-import kotlinx.serialization.Contextual
 import kotlinx.serialization.Serializable
 
 @Serializable

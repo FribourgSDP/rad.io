@@ -2,6 +2,7 @@ package com.github.fribourgsdp.radio
 
 import android.content.ContentValues
 import android.util.Log
+import com.github.fribourgsdp.radio.database.Database
 import com.github.fribourgsdp.radio.mockimplementations.LocalDatabase
 import com.google.android.gms.tasks.Tasks
 import org.junit.Test

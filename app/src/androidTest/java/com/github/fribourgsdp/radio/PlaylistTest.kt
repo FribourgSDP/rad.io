@@ -1,5 +1,6 @@
 package com.github.fribourgsdp.radio
 
+import com.github.fribourgsdp.radio.database.Database
 import com.google.android.gms.tasks.Tasks
 import org.junit.Test
 
