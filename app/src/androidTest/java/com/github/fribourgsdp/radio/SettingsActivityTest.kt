@@ -18,6 +18,7 @@ import androidx.test.espresso.matcher.ViewMatchers
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import org.junit.runner.RunWith
 import androidx.test.espresso.Espresso.onData
+import com.github.fribourgsdp.radio.config.SettingsActivity
 import org.hamcrest.Matchers.*
 
 

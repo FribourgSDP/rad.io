@@ -75,7 +75,7 @@
             android:name=".FireBaseTestActivity"
             android:exported="false" />
         <activity
-            android:name=".SettingsActivity"
+            android:name=".config.SettingsActivity"
             android:exported="false" />
         <activity
             android:name=".GameSettingsActivity"

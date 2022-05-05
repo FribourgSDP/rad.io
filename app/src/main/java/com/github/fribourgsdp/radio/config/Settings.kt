@@ -1,6 +1,7 @@
-package com.github.fribourgsdp.radio
+package com.github.fribourgsdp.radio.config
 
 import android.content.Context
+import com.github.fribourgsdp.radio.Language
 import com.github.fribourgsdp.radio.persistence.*
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.decodeFromString
@@ -44,7 +45,7 @@ class Settings(private var language : Language) {
         fs.write(path, Json.encodeToString(this))
     }
 
-    fun getLanguage(): Language{
+    fun getLanguage(): Language {
         return language
     }
 
