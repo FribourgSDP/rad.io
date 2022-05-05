@@ -6,6 +6,7 @@ object StarterPlaylists {
     val top100french = Playlist("Chanson française", FRENCH)
     val basicalBlindTest = Playlist("Basical blind test", NONE)
     val movieThemeSongs = Playlist("Movie theme songs", MOVIE)
+    val videoGames = Playlist("Video game songs", VIDEO_GAMES)
     init {
         top100french.addSongs(setOf(
             "Indochine" to "L\'aventurier",
@@ -350,6 +351,16 @@ object StarterPlaylists {
             "Pirate of the Caribbean" to "Hans Zimmer",
             "Mission Impossible" to "",
             "Indiana Jones" to "John Williams"
+        ).map{tuple -> Song(tuple.first, tuple.second)}.toSet())
+
+        videoGames.addSongs(setOf(
+            "The legend of Zelda" to "Kōji Kondō",
+            "The wind waker" to "Kōji Kondō",
+            "Mario" to "Kōji Kondō",
+            "Super Smash Bros : Brawl" to "",
+            "Still alive" to "Mike Morasky",
+            "Skyrim" to "",
+            "Wii sport" to "",
 
         ).map{tuple -> Song(tuple.first, tuple.second)}.toSet())
     }
