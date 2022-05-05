@@ -183,7 +183,7 @@ open class GameActivity : AppCompatActivity(), GameView, Timer.Listener {
         hostGameHandler?.unlinkFromDatabase()
         playerGameHandler.unlinkFromDatabase()
         //finish()
-        val intent = Intent(this, MainActivity::class.java)
+        val intent = Intent(this, TransitionQuitGameActivity::class.java)
         startActivity(intent)
 
     }

@@ -17,6 +17,7 @@ class MainActivity : MyAppCompatActivity() {
     private val db = FirestoreDatabase()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        Log.e("in main", "In main activity")
         setContentView(R.layout.activity_main)
 
         val voiceOverIpButton = findViewById<Button>(R.id.VoiceOverIpButton)
