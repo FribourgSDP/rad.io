@@ -184,6 +184,7 @@ open class GameActivity : AppCompatActivity(), GameView, Timer.Listener {
     }
 
     private fun returnToMainMenu() {
+        unlinkAll()
 
         if (isHost) {
             playerGameHandler.disableGame()
@@ -192,11 +193,9 @@ open class GameActivity : AppCompatActivity(), GameView, Timer.Listener {
             playerGameHandler.removeUserFromLobby(user)
             playerGameHandler.removePlayerFromGame(user)
         }
-
-        unlinkAll()
-        //finish()
         val intent = Intent(this, TransitionQuitGameActivity::class.java)
         startActivity(intent)
+        finish()
 
     }
 
