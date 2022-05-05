@@ -1,10 +1,10 @@
 package com.github.fribourgsdp.radio
 
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.github.fribourgsdp.radio.config.MyAppCompatActivity
 
 class EndGameActivity : MyAppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {

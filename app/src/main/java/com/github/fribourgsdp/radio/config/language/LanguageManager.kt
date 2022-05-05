@@ -1,4 +1,4 @@
-package com.github.fribourgsdp.radio
+package com.github.fribourgsdp.radio.config.language
 
 import android.content.Context
 import android.content.SharedPreferences

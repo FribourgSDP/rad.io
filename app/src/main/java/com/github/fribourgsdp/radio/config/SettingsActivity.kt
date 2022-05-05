@@ -1,9 +1,12 @@
-package com.github.fribourgsdp.radio
+package com.github.fribourgsdp.radio.config
 
 import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import android.widget.*
+import com.github.fribourgsdp.radio.*
+import com.github.fribourgsdp.radio.config.language.Language
+import com.github.fribourgsdp.radio.config.language.LanguageManager
 
 
 class SettingsActivity : MyAppCompatActivity() {
@@ -83,7 +86,7 @@ class SettingsActivity : MyAppCompatActivity() {
     private fun setLocale(language : String){
         val languageManager  = LanguageManager(this)
         languageManager.setLang(language)
-        val refresh = Intent(this,SettingsActivity::class.java)
+        val refresh = Intent(this, SettingsActivity::class.java)
         finish()
         startActivity(refresh)
     }

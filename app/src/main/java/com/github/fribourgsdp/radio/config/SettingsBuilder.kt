@@ -1,7 +1,6 @@
-package com.github.fribourgsdp.radio
+package com.github.fribourgsdp.radio.config
 
-import android.content.Context
-import io.agora.rtc.IRtcEngineEventHandler
+import com.github.fribourgsdp.radio.config.language.Language
 
 
 class SettingsBuilder {
@@ -11,12 +10,12 @@ class SettingsBuilder {
         language = settings.getLanguage()
     }
 
-    fun language(language : Language):  SettingsBuilder {
+    fun language(language : Language): SettingsBuilder {
         this.language = language
         return this
     }
 
-    fun build():  Settings {
+    fun build(): Settings {
         return Settings(language)
     }
 }

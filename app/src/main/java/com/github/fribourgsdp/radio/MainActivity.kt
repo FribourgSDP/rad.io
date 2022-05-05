@@ -9,6 +9,8 @@ import android.widget.Button
 //import com.github.fribourgsdp.radio.databinding.ActivityMainBinding
 
 import android.widget.ImageButton
+import com.github.fribourgsdp.radio.config.MyAppCompatActivity
+import com.github.fribourgsdp.radio.config.SettingsActivity
 import com.github.fribourgsdp.radio.data.User
 import com.github.fribourgsdp.radio.data.view.UserProfileActivity
 

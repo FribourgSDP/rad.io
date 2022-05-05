@@ -10,7 +10,7 @@ import android.widget.TextView
 import com.google.android.gms.tasks.Tasks
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.github.fribourgsdp.radio.MyAppCompatActivity
+import com.github.fribourgsdp.radio.config.MyAppCompatActivity
 import com.github.fribourgsdp.radio.util.OnClickListener
 import com.github.fribourgsdp.radio.R
 import com.github.fribourgsdp.radio.data.Genre
