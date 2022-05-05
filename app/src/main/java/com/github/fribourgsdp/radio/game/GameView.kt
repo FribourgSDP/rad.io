@@ -1,4 +1,6 @@
-package com.github.fribourgsdp.radio
+package com.github.fribourgsdp.radio.game
+
+import com.github.fribourgsdp.radio.Timer
 
 interface GameView: Timer.DeadlineHandler {
     /**

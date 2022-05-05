@@ -1,4 +1,4 @@
-package com.github.fribourgsdp.radio
+package com.github.fribourgsdp.radio.game
 
 import android.content.Intent
 import android.os.Bundle
@@ -8,6 +8,8 @@ import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.github.fribourgsdp.radio.*
+import com.github.fribourgsdp.radio.Timer
 import com.github.fribourgsdp.radio.data.User
 import com.github.fribourgsdp.radio.voip.MyIRtcEngineEventHandler
 import com.github.fribourgsdp.radio.voip.VoiceIpEngineDecorator
@@ -160,7 +162,8 @@ open class GameActivity : AppCompatActivity(), GameView, Timer.Listener {
 
     override fun gameOver(finalScores: Map<String, Long>) {
         val intent = Intent(this, EndGameActivity::class.java).apply {
-            putExtra(SCORES_KEY,
+            putExtra(
+                SCORES_KEY,
                 // Replace ids by names and put in an ArrayList to make it Serializable
                 ArrayList(finalScores.map { (id, score) -> Pair(mapIdToName[id] ?: id, score)})
             )

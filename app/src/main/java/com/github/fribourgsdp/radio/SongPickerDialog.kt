@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import androidx.fragment.app.DialogFragment
+import com.github.fribourgsdp.radio.game.GameView
 
 
 class SongPickerDialog(private val choices: List<String>, private val listener: GameView.OnPickListener): DialogFragment() {
