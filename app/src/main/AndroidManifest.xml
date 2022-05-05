@@ -31,6 +31,10 @@
             android:launchMode= "singleInstance"
             android:exported="false" />
         <activity
+            android:name=".TransitionQuitGameActivity"
+            android:launchMode= "singleInstance"
+            android:exported="false" />
+        <activity
             android:name=".VoiceOverIPActivity"
             android:exported="false" />
         <activity
