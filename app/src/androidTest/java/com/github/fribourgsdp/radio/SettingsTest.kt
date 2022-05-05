@@ -3,6 +3,7 @@ package com.github.fribourgsdp.radio
 import android.content.Context
 import androidx.test.core.app.ApplicationProvider
 import com.github.fribourgsdp.radio.config.Settings
+import com.github.fribourgsdp.radio.config.language.Language
 import org.junit.Assert
 import org.junit.Test
 

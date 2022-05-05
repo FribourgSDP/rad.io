@@ -1,6 +1,6 @@
 package com.github.fribourgsdp.radio.config
 
-import com.github.fribourgsdp.radio.Language
+import com.github.fribourgsdp.radio.config.language.Language
 
 
 class SettingsBuilder {

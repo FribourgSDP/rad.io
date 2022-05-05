@@ -19,6 +19,7 @@ import androidx.test.ext.junit.runners.AndroidJUnit4
 import org.junit.runner.RunWith
 import androidx.test.espresso.Espresso.onData
 import com.github.fribourgsdp.radio.config.SettingsActivity
+import com.github.fribourgsdp.radio.config.language.Language
 import org.hamcrest.Matchers.*
 
 

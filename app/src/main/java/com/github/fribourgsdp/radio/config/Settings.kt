@@ -1,7 +1,7 @@
 package com.github.fribourgsdp.radio.config
 
 import android.content.Context
-import com.github.fribourgsdp.radio.Language
+import com.github.fribourgsdp.radio.config.language.Language
 import com.github.fribourgsdp.radio.persistence.*
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.decodeFromString

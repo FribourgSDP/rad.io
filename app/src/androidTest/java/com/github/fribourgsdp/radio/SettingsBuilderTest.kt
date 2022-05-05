@@ -2,6 +2,7 @@ package com.github.fribourgsdp.radio
 
 import com.github.fribourgsdp.radio.config.Settings
 import com.github.fribourgsdp.radio.config.SettingsBuilder
+import com.github.fribourgsdp.radio.config.language.Language
 import org.junit.Assert
 import org.junit.Test
 

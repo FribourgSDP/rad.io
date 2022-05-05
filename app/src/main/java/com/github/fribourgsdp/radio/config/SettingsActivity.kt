@@ -5,6 +5,8 @@ import android.os.Bundle
 import android.view.View
 import android.widget.*
 import com.github.fribourgsdp.radio.*
+import com.github.fribourgsdp.radio.config.language.Language
+import com.github.fribourgsdp.radio.config.language.LanguageManager
 
 
 class SettingsActivity : MyAppCompatActivity() {
