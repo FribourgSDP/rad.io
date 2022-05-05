@@ -1,13 +1,10 @@
 package com.github.fribourgsdp.radio
 
 import android.content.Context
-import com.google.android.gms.tasks.Task
-import com.google.android.gms.tasks.Tasks
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
-import kotlin.random.Random
 
 @Serializable
 class Settings(private var language : Language) {
@@ -25,18 +22,16 @@ class Settings(private var language : Language) {
         }
 
 
-        fun loadOrDefault(context: Context) : Task<Settings> {
-            return try {
-                Tasks.forResult(load(context))
+        fun loadOrDefault(context: Context) : Settings {
+            return try { load(context)
             } catch (e: java.io.FileNotFoundException) {
                 createDefaultSettings()
             }
         }
 
 
-        fun createDefaultSettings(): Task<Settings> {
-            val settings  = Settings(Language.ENGLISH)
-            return Tasks.forResult(settings)
+        fun createDefaultSettings(): Settings {
+            return Settings(Language.ENGLISH)
         }
 
 

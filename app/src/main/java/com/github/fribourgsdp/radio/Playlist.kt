@@ -106,8 +106,8 @@ data class Playlist (override var name: String, var genre: Genre) : Nameable {
                 song.id = (songIdRange.result.first + i).toString()
             }
         }
-        val playlistId =  db.generatePlaylistId().addOnSuccessListener { l ->
-            id = l.toString()
+        val playlistId =  db.generatePlaylistId().continueWith{l ->
+            id = l.result.toString()
         }
         return Tasks.whenAll(songTask,playlistId)
     }
