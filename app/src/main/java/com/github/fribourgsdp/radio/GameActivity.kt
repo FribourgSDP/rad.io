@@ -177,11 +177,10 @@ open class GameActivity : AppCompatActivity(), GameView, Timer.Listener {
     }
 
     private fun unlinkAll() {
-        playerGameHandler.unlinkFromDatabase()
-        hostGameHandler?.unlinkFromDatabase()
         voiceChannel.leaveChannel()
         RtcEngine.destroy()
-
+        playerGameHandler.unlinkFromDatabase()
+        hostGameHandler?.unlinkFromDatabase()
     }
 
     private fun returnToMainMenu() {
