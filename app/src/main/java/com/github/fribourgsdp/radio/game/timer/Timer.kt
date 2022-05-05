@@ -1,4 +1,4 @@
-package com.github.fribourgsdp.radio
+package com.github.fribourgsdp.radio.game.timer
 import java.util.*
 import java.util.Timer as JavaTimer
 

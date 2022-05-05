@@ -5,6 +5,8 @@ import android.content.Context
 import android.view.View
 import android.widget.ProgressBar
 import androidx.test.core.app.ApplicationProvider
+import com.github.fribourgsdp.radio.game.timer.Timer
+import com.github.fribourgsdp.radio.game.timer.TimerProgressBarHandler
 import org.junit.After
 import org.junit.Before
 import org.junit.Test
