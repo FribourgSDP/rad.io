@@ -1,6 +1,6 @@
 package com.github.fribourgsdp.radio.mockimplementations
 
-import com.github.fribourgsdp.radio.JSONParser
+import com.github.fribourgsdp.radio.util.JSONParser
 import com.github.fribourgsdp.radio.LyricsGetter
 import okhttp3.OkHttpClient
 import java.util.concurrent.CompletableFuture

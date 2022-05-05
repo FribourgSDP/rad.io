@@ -1,5 +1,7 @@
 package com.github.fribourgsdp.radio
 
+import com.github.fribourgsdp.radio.util.JSONParser
+import com.github.fribourgsdp.radio.util.JSONStandardParser
 import okhttp3.*
 import org.json.JSONObject
 import org.junit.Assert.*

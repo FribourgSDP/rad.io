@@ -11,7 +11,7 @@ import com.google.android.gms.tasks.Tasks
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.github.fribourgsdp.radio.MyAppCompatActivity
-import com.github.fribourgsdp.radio.OnClickListener
+import com.github.fribourgsdp.radio.util.OnClickListener
 import com.github.fribourgsdp.radio.R
 import com.github.fribourgsdp.radio.data.Genre
 import com.github.fribourgsdp.radio.data.Song
@@ -46,7 +46,7 @@ class AddPlaylistActivity : MyAppCompatActivity(), SavePlaylistOnlinePickerDialo
         processIntent(intent)
 
         recyclerView = findViewById(R.id.list_playlist_creation)
-        listAdapter = SongAdapter(listSongs, object : OnClickListener{
+        listAdapter = SongAdapter(listSongs, object : OnClickListener {
             override fun onItemClick(position: Int) {
                 listSongs.removeAt(position)
                 listAdapter.notifyItemRemoved(position)

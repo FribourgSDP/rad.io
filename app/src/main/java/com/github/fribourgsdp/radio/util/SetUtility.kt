@@ -1,4 +1,4 @@
-package com.github.fribourgsdp.radio
+package com.github.fribourgsdp.radio.util
 
 import com.github.fribourgsdp.radio.data.Nameable
 
@@ -15,7 +15,7 @@ object SetUtility {
      * Add a collection of items to a set, after removing them if they were present
      */
     fun <E> addAllToSet(set : MutableSet<E>, items : Iterable<E>){
-        items.forEach{ i : E -> addToSet(set, i)}
+        items.forEach{ i : E -> addToSet(set, i) }
     }
 
     fun <E : Nameable> getNamedFromSet(set : MutableSet<E>, nameable: E) : E {

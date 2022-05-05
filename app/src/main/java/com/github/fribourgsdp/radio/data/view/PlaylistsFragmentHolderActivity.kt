@@ -2,7 +2,7 @@ package com.github.fribourgsdp.radio.data.view
 
 import android.os.Bundle
 import com.github.fribourgsdp.radio.MyAppCompatActivity
-import com.github.fribourgsdp.radio.MyFragment
+import com.github.fribourgsdp.radio.util.MyFragment
 import com.github.fribourgsdp.radio.R
 
 class PlaylistsFragmentHolderActivity : MyAppCompatActivity() {

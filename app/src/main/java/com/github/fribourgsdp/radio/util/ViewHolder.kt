@@ -1,4 +1,4 @@
-package com.github.fribourgsdp.radio
+package com.github.fribourgsdp.radio.util
 
 import android.view.View
 import android.widget.TextView

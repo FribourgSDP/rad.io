@@ -23,6 +23,7 @@ import com.github.fribourgsdp.radio.data.Genre
 import com.github.fribourgsdp.radio.data.User
 import com.github.fribourgsdp.radio.data.view.AddPlaylistActivity
 import com.github.fribourgsdp.radio.data.view.UserProfileActivity
+import com.github.fribourgsdp.radio.util.ViewHolder
 import com.google.android.gms.tasks.Tasks
 import org.hamcrest.Matchers
 import org.hamcrest.Matchers.*

@@ -7,6 +7,8 @@ import com.github.fribourgsdp.radio.data.Playlist
 import com.github.fribourgsdp.radio.data.Song
 import com.github.fribourgsdp.radio.data.User
 import com.github.fribourgsdp.radio.data.view.UserProfileActivity
+import com.github.fribourgsdp.radio.util.JSONParser
+import com.github.fribourgsdp.radio.util.JSONStandardParser
 import okhttp3.*
 import org.json.JSONException
 import java.io.IOException
