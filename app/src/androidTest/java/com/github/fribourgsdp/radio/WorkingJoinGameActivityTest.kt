@@ -15,7 +15,6 @@ import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.github.fribourgsdp.radio.mockimplementations.LocalDatabase
 import com.github.fribourgsdp.radio.mockimplementations.WorkingJoinGameActivity
 import com.github.fribourgsdp.radio.utils.CustomMatchers.Companion.atPosition
-import org.hamcrest.Matchers
 import org.hamcrest.Matchers.*
 import org.junit.After
 import org.junit.Before
@@ -66,7 +65,7 @@ class WorkingJoinGameActivityTest {
         joinButton.perform(click())
 
         Intents.intended(
-            Matchers.allOf(
+            allOf(
                 IntentMatchers.toPackage("com.github.fribourgsdp.radio"),
                 IntentMatchers.hasComponent(LobbyActivity::class.java.name),
                 IntentMatchers.hasExtra(GAME_HOST_NAME_KEY, LocalDatabase.EXPECTED_SETTINGS.hostName),
@@ -104,6 +103,9 @@ class WorkingJoinGameActivityTest {
             .inRoot(isTouchable())
             .perform(click())
 
+        // give the time to the ui to update
+        Thread.sleep(50L)
+
         checkLobbiesDisplay(lobbies)
 
         // Sort them by host name
@@ -117,6 +119,9 @@ class WorkingJoinGameActivityTest {
             .inRoot(isTouchable())
             .perform(click())
 
+        // give the time to the ui to update
+        Thread.sleep(50L)
+
         checkLobbiesDisplay(lobbies)
 
         // Sort them by id
@@ -129,6 +134,9 @@ class WorkingJoinGameActivityTest {
         onData(allOf(`is`(instanceOf(LobbyDataKeys::class.java)),`is`(LobbyDataKeys.ID)))
             .inRoot(isTouchable())
             .perform(click())
+
+        // give the time to the ui to update
+        Thread.sleep(50L)
 
         checkLobbiesDisplay(lobbies)
     }
