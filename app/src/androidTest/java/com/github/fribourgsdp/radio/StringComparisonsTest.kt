@@ -2,6 +2,7 @@ package com.github.fribourgsdp.radio
 
 import org.junit.Test
 import org.junit.Assert.*
+import com.github.fribourgsdp.radio.util.StringComparisons
 
 class StringComparisonsTest {
     @Test
