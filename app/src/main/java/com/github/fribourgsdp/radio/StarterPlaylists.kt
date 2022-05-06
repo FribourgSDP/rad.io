@@ -356,11 +356,25 @@ object StarterPlaylists {
         videoGames.addSongs(setOf(
             "The legend of Zelda" to "Kōji Kondō",
             "The wind waker" to "Kōji Kondō",
-            "Mario" to "Kōji Kondō",
+            "Super Mario Bros." to "Kōji Kondō",
             "Super Smash Bros : Brawl" to "",
             "Still alive" to "Mike Morasky",
-            "Skyrim" to "",
+            "Skyrim" to "Jeremy Soule",
             "Wii sport" to "",
+            "Starfox" to "Hajime Hirasawa",
+            "Doom" to "Robert Prince",
+            "Quake" to "Trent Reznor",
+            "Halo" to "Martin O\'Donnell and Michael Salvatori",
+            "Final fantasy 7" to "Nobuo Uematsu",
+            "Final fantasy" to "",
+            "Oblivion" to "Jeremy Soule",
+            "Silent Hill" to "Akira Yamaoka",
+            "Castlevania" to "Michiru Yamane",
+            "Pokemon" to "",
+            "Fallout 3" to "Inon Zur",
+            "Minecraft" to "C418,
+            "Tetris" to "",
+            "Among us" to "",
 
         ).map{tuple -> Song(tuple.first, tuple.second)}.toSet())
     }
