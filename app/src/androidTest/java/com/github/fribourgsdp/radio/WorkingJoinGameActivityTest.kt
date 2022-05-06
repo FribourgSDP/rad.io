@@ -89,7 +89,7 @@ class WorkingJoinGameActivityTest {
     }
 
     @Test
-    fun spinnerChoiceSortsLobbies() {
+    fun spinnerChoiceSortsLobbiesByName() {
         val lobbies = ArrayList(WorkingJoinGameActivity.testDatabase.lobbies)
 
         // Sort them by name
@@ -107,6 +107,11 @@ class WorkingJoinGameActivityTest {
         Thread.sleep(50L)
 
         checkLobbiesDisplay(lobbies)
+    }
+
+    @Test
+    fun spinnerChoiceSortsLobbiesByHostname() {
+        val lobbies = ArrayList(WorkingJoinGameActivity.testDatabase.lobbies)
 
         // Sort them by host name
         lobbies.sortBy { it.hostName }
@@ -116,22 +121,6 @@ class WorkingJoinGameActivityTest {
             .perform(click())
         // click on sort value
         onData(allOf(`is`(instanceOf(LobbyDataKeys::class.java)),`is`(LobbyDataKeys.HOSTNAME)))
-            .inRoot(isTouchable())
-            .perform(click())
-
-        // give the time to the ui to update
-        Thread.sleep(50L)
-
-        checkLobbiesDisplay(lobbies)
-
-        // Sort them by id
-        lobbies.sortBy { it.id }
-
-        // open the spinner
-        onView(withId(R.id.lobbySortSpinner))
-            .perform(click())
-        // click on sort value
-        onData(allOf(`is`(instanceOf(LobbyDataKeys::class.java)),`is`(LobbyDataKeys.ID)))
             .inRoot(isTouchable())
             .perform(click())
 
@@ -150,7 +139,7 @@ class WorkingJoinGameActivityTest {
                         // First lobby
                         atPosition(
                             0, R.id.lobbyIdTextView,
-                            withText("${expected[0].id}")
+                            withText(expected[0].id.toString())
                         ),
                         atPosition(
                             0, R.id.lobbyNameTextView,
@@ -163,7 +152,7 @@ class WorkingJoinGameActivityTest {
                         // Second lobby
                         atPosition(
                             1, R.id.lobbyIdTextView,
-                            withText("${expected[1].id}")
+                            withText(expected[1].id.toString())
                         ),
                         atPosition(
                             1, R.id.lobbyNameTextView,
@@ -176,7 +165,7 @@ class WorkingJoinGameActivityTest {
                         // Third lobby
                         atPosition(
                             2, R.id.lobbyIdTextView,
-                            withText("${expected[2].id}")
+                            withText(expected[2].id.toString())
                         ),
                         atPosition(
                             2, R.id.lobbyNameTextView,
