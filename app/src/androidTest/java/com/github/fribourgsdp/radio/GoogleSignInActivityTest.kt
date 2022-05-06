@@ -13,6 +13,7 @@ import androidx.test.espresso.intent.matcher.IntentMatchers
 import androidx.test.espresso.matcher.ViewMatchers
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.github.fribourgsdp.radio.data.view.UserProfileActivity
+import com.github.fribourgsdp.radio.external.google.GoogleSignInActivity
 import com.google.android.gms.tasks.Tasks
 import com.google.firebase.auth.*
 import org.hamcrest.Matchers
