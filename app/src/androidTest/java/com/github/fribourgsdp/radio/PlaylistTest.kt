@@ -3,6 +3,7 @@ package com.github.fribourgsdp.radio
 import com.github.fribourgsdp.radio.data.Genre
 import com.github.fribourgsdp.radio.data.Playlist
 import com.github.fribourgsdp.radio.data.Song
+import com.github.fribourgsdp.radio.database.Database
 import com.google.android.gms.tasks.Tasks
 import org.junit.Test
 
