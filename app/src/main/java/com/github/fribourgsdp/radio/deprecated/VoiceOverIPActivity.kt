@@ -1,4 +1,4 @@
-package com.github.fribourgsdp.radio
+package com.github.fribourgsdp.radio.deprecated
 
 import android.os.Bundle
 import android.content.pm.PackageManager
@@ -13,6 +13,8 @@ import RtcTokenBuilder.RtcTokenBuilder
 import android.annotation.SuppressLint
 import android.util.Log
 import android.widget.*
+import com.github.fribourgsdp.radio.MainActivity
+import com.github.fribourgsdp.radio.R
 import com.github.fribourgsdp.radio.config.MyAppCompatActivity
 import io.agora.rtc.Constants
 

@@ -8,6 +8,7 @@ import androidx.test.espresso.Espresso
 import androidx.test.espresso.intent.Intents
 import androidx.test.espresso.intent.matcher.IntentMatchers
 import androidx.test.rule.GrantPermissionRule
+import com.github.fribourgsdp.radio.deprecated.VoiceOverIPActivity
 import org.hamcrest.Matchers
 import org.junit.After
 import org.junit.Before
