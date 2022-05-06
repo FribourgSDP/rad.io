@@ -1,8 +1,9 @@
-package com.github.fribourgsdp.radio
+package com.github.fribourgsdp.radio.external.spotify
 
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import com.github.fribourgsdp.radio.R
 import com.github.fribourgsdp.radio.config.MyAppCompatActivity
 import com.github.fribourgsdp.radio.data.Playlist
 import com.github.fribourgsdp.radio.data.Song
