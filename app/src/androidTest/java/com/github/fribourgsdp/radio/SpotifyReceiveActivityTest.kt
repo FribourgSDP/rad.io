@@ -11,6 +11,8 @@ import androidx.test.espresso.intent.Intents
 import androidx.test.espresso.intent.matcher.IntentMatchers
 import androidx.test.espresso.matcher.ViewMatchers
 import com.github.fribourgsdp.radio.data.view.UserProfileActivity
+import com.github.fribourgsdp.radio.external.spotify.ImportSpotifyPlaylistsActivity
+import com.github.fribourgsdp.radio.external.spotify.SpotifyReceiveActivity
 import com.spotify.sdk.android.auth.AccountsQueryParameters
 import junit.framework.TestCase.assertEquals
 import org.hamcrest.Matchers
@@ -71,7 +73,7 @@ class SpotifyReceiveActivityTest {
 
     @Test
     fun clickingButtonSendsToGetPlaylistActivity(){
-        val intent = Intent(ctx,SpotifyReceiveActivity::class.java )
+        val intent = Intent(ctx, SpotifyReceiveActivity::class.java )
 
         ActivityScenario.launch<SpotifyReceiveActivity>(intent).use{ s ->
             val settingsButton = Espresso.onView(ViewMatchers.withId(R.id.importSpotifyPlaylistsButton))
@@ -89,7 +91,7 @@ class SpotifyReceiveActivityTest {
 
     @Test
     fun clickingBackGoesBackToUserProfileActivity() {
-        val intent = Intent(ctx,SpotifyReceiveActivity::class.java )
+        val intent = Intent(ctx, SpotifyReceiveActivity::class.java )
         ActivityScenario.launch<SpotifyReceiveActivity>(intent).use{
             Espresso.pressBack()
 

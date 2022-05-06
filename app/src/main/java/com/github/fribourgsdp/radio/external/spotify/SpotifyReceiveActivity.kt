@@ -1,9 +1,10 @@
-package com.github.fribourgsdp.radio
+package com.github.fribourgsdp.radio.external.spotify
 
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.widget.Button
+import com.github.fribourgsdp.radio.R
 import com.github.fribourgsdp.radio.config.MyAppCompatActivity
 import com.github.fribourgsdp.radio.data.view.UserProfileActivity
 import com.spotify.sdk.android.auth.AuthorizationResponse

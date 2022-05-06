@@ -1,5 +1,6 @@
 package com.github.fribourgsdp.radio
 
+import com.github.fribourgsdp.radio.external.musixmatch.MusixmatchLyricsGetter
 import com.github.fribourgsdp.radio.util.JSONParser
 import com.github.fribourgsdp.radio.util.JSONStandardParser
 import okhttp3.*
@@ -77,7 +78,7 @@ class MusixmatchLyricsGetterTest {
     @Test
     fun markSongWithNoName(){
         val lyrics = "Rouge,\nComme un soleil couchant de Méditerrannée\nRouge,\n..."
-        assertEquals(lyrics,MusixmatchLyricsGetter.markSongName(lyrics, ""))
+        assertEquals(lyrics, MusixmatchLyricsGetter.markSongName(lyrics, ""))
     }
     @Test
     fun emphasizeSongNameInLyrics(){
@@ -244,7 +245,7 @@ class MusixmatchLyricsGetterTest {
         try {
             lyricsFuture.get()
         } catch (e : ExecutionException){
-            assertTrue("FAILED : message was ${e.message} \n instead of com.github.fribourgsdp.radio.MusixmatchLyricsGetter\$LyricsNotFoundException", e.message == "com.github.fribourgsdp.radio.MusixmatchLyricsGetter\$LyricsNotFoundException")
+            assertTrue("FAILED : message was ${e.message} \n instead of com.github.fribourgsdp.radio.external.musixmatch.MusixmatchLyricsGetter\$LyricsNotFoundException", e.message == "com.github.fribourgsdp.radio.external.musixmatch.MusixmatchLyricsGetter\$LyricsNotFoundException")
         }
     }
 
