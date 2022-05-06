@@ -1,6 +1,6 @@
 package com.github.fribourgsdp.radio.data
 
-import com.github.fribourgsdp.radio.Database
+import com.github.fribourgsdp.radio.database.Database
 import com.github.fribourgsdp.radio.FirestoreDatabase
 import com.github.fribourgsdp.radio.util.SetUtility
 import com.google.android.gms.tasks.Task

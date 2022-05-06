@@ -13,7 +13,7 @@ import android.widget.TextView
 import androidx.core.content.ContextCompat
 import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.DialogFragment
-import com.github.fribourgsdp.radio.Database
+import com.github.fribourgsdp.radio.database.Database
 import com.github.fribourgsdp.radio.FirestoreDatabase
 import com.github.fribourgsdp.radio.R
 import com.github.fribourgsdp.radio.config.MyAppCompatActivity

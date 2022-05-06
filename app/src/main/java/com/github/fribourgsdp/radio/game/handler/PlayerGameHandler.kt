@@ -1,6 +1,6 @@
 package com.github.fribourgsdp.radio.game.handler
 
-import com.github.fribourgsdp.radio.Database
+import com.github.fribourgsdp.radio.database.Database
 import com.github.fribourgsdp.radio.FirestoreDatabase
 import com.github.fribourgsdp.radio.data.User
 import com.github.fribourgsdp.radio.game.GameView

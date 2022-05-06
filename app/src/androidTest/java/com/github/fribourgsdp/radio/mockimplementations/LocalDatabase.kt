@@ -1,9 +1,9 @@
 package com.github.fribourgsdp.radio.mockimplementations
 
-import com.github.fribourgsdp.radio.*
 import com.github.fribourgsdp.radio.data.Playlist
 import com.github.fribourgsdp.radio.data.Song
 import com.github.fribourgsdp.radio.data.User
+import com.github.fribourgsdp.radio.database.Database
 import com.github.fribourgsdp.radio.game.Game
 import com.google.android.gms.tasks.Task
 import com.google.android.gms.tasks.Tasks
