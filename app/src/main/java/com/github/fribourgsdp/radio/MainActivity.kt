@@ -13,6 +13,7 @@ import com.github.fribourgsdp.radio.config.MyAppCompatActivity
 import com.github.fribourgsdp.radio.config.SettingsActivity
 import com.github.fribourgsdp.radio.data.User
 import com.github.fribourgsdp.radio.data.view.UserProfileActivity
+import com.github.fribourgsdp.radio.deprecated.VoiceOverIPActivity
 import com.github.fribourgsdp.radio.game.prep.GameSettingsActivity
 import com.github.fribourgsdp.radio.game.prep.JoinGameActivity
 
@@ -23,7 +24,7 @@ class MainActivity : MyAppCompatActivity() {
         setContentView(R.layout.activity_main)
 
         val voiceOverIpButton = findViewById<Button>(R.id.VoiceOverIpButton)
-        voiceOverIpButton.setOnClickListener{startActivity(Intent(this,VoiceOverIPActivity::class.java))}
+        voiceOverIpButton.setOnClickListener{startActivity(Intent(this, VoiceOverIPActivity::class.java))}
 
         val playButton = findViewById<Button>(R.id.playButton)
         playButton.setOnClickListener {startActivity(Intent(this, GameSettingsActivity::class.java))}
