@@ -1,4 +1,4 @@
-package com.github.fribourgsdp.radio
+package com.github.fribourgsdp.radio.external.musixmatch
 
 import android.util.Log
 import com.github.fribourgsdp.radio.util.JSONParser

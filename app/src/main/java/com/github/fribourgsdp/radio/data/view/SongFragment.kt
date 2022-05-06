@@ -6,8 +6,8 @@ import android.text.TextWatcher
 import android.view.View
 import android.widget.EditText
 import android.widget.TextView
-import com.github.fribourgsdp.radio.LyricsGetter
-import com.github.fribourgsdp.radio.MusixmatchLyricsGetter
+import com.github.fribourgsdp.radio.external.musixmatch.LyricsGetter
+import com.github.fribourgsdp.radio.external.musixmatch.MusixmatchLyricsGetter
 import com.github.fribourgsdp.radio.util.MyFragment
 import com.github.fribourgsdp.radio.R
 import com.github.fribourgsdp.radio.data.Playlist
