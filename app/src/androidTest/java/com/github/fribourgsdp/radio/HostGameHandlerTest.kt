@@ -3,7 +3,6 @@ package com.github.fribourgsdp.radio
 import android.view.View
 import com.github.fribourgsdp.radio.data.Playlist
 import com.github.fribourgsdp.radio.data.User
-import com.github.fribourgsdp.radio.database.Database
 import com.github.fribourgsdp.radio.game.Game
 import com.github.fribourgsdp.radio.game.handler.HostGameHandler
 import com.github.fribourgsdp.radio.mockimplementations.FakeGameView

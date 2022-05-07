@@ -1,7 +1,6 @@
 package com.github.fribourgsdp.radio
 
 import android.view.View
-import com.github.fribourgsdp.radio.database.Database
 import com.github.fribourgsdp.radio.game.handler.PlayerGameHandler
 import com.github.fribourgsdp.radio.mockimplementations.FakeGameView
 import com.google.android.gms.tasks.Tasks

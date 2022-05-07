@@ -1,4 +1,4 @@
-package com.github.fribourgsdp.radio.database
+package com.github.fribourgsdp.radio
 
 import com.google.firebase.firestore.DocumentSnapshot
 
