@@ -11,14 +11,11 @@ import kotlinx.serialization.json.Json
 @Serializable
 class Settings(val language : Language) : SavesToFileSystem<Settings>(SETTINGS_DATA_PATH) {
 
-
-    companion object {
+    companion object : LoadsFromFileSystem<Settings>(){
         const val SETTINGS_DATA_PATH = "settings_data_file"
-        private var fileSystemGetter: FileSystem.FileSystemGetter =
-            AppSpecificFileSystem.AppSpecificFSGetter
+        override var defaultPath = SETTINGS_DATA_PATH
 
-
-        fun load(context: Context, path: String = SETTINGS_DATA_PATH) : Settings {
+        override fun load(context: Context, path: String) : Settings {
             val fs = fileSystemGetter.getFileSystem(context)
             return Json.decodeFromString(fs.read(path))
         }
@@ -33,12 +30,9 @@ class Settings(val language : Language) : SavesToFileSystem<Settings>(SETTINGS_D
         fun createDefaultSettings(): Settings {
             return Settings(Language.ENGLISH)
         }
-
-
     }
 
-
-    fun save(context: Context, path: String = SETTINGS_DATA_PATH){
+    override fun save(context: Context, path: String){
         val fs = fileSystemGetter.getFileSystem(context)
         fs.write(path, Json.encodeToString(this))
     }
