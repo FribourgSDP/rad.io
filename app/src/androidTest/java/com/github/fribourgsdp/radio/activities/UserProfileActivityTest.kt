@@ -1,4 +1,4 @@
-package com.github.fribourgsdp.radio
+package com.github.fribourgsdp.radio.activities
 
 
 import android.content.Context
@@ -15,6 +15,8 @@ import androidx.test.espresso.intent.matcher.IntentMatchers.hasComponent
 import androidx.test.espresso.matcher.ViewMatchers
 import androidx.test.espresso.matcher.ViewMatchers.withId
 import androidx.test.ext.junit.runners.AndroidJUnit4
+import com.github.fribourgsdp.radio.MainActivity
+import com.github.fribourgsdp.radio.R
 import com.github.fribourgsdp.radio.data.User
 import com.github.fribourgsdp.radio.data.view.MY_CLIENT_ID
 import com.github.fribourgsdp.radio.data.view.REDIRECT_URI

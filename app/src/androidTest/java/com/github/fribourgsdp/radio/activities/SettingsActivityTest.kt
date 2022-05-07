@@ -1,4 +1,4 @@
-package com.github.fribourgsdp.radio
+package com.github.fribourgsdp.radio.activities
 
 import android.content.Context
 import androidx.test.espresso.Espresso
@@ -18,6 +18,8 @@ import androidx.test.espresso.matcher.ViewMatchers
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import org.junit.runner.RunWith
 import androidx.test.espresso.Espresso.onData
+import com.github.fribourgsdp.radio.MainActivity
+import com.github.fribourgsdp.radio.R
 import com.github.fribourgsdp.radio.config.SettingsActivity
 import com.github.fribourgsdp.radio.config.language.Language
 import org.hamcrest.Matchers.*

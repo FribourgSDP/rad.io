@@ -1,4 +1,4 @@
-package com.github.fribourgsdp.radio
+package com.github.fribourgsdp.radio.activities
 
 import android.content.Context
 import androidx.test.core.app.ApplicationProvider
@@ -19,6 +19,7 @@ import androidx.test.espresso.matcher.ViewMatchers.isDisplayed
 import androidx.test.espresso.matcher.ViewMatchers.withId
 import androidx.test.ext.junit.rules.ActivityScenarioRule
 import androidx.test.ext.junit.runners.AndroidJUnit4
+import com.github.fribourgsdp.radio.R
 import com.github.fribourgsdp.radio.data.Genre
 import com.github.fribourgsdp.radio.data.User
 import com.github.fribourgsdp.radio.data.view.AddPlaylistActivity

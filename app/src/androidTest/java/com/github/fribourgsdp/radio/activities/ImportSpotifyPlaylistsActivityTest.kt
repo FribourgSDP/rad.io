@@ -1,4 +1,4 @@
-package com.github.fribourgsdp.radio
+package com.github.fribourgsdp.radio.activities
 
 import com.github.fribourgsdp.radio.data.Song
 import com.github.fribourgsdp.radio.external.spotify.ImportSpotifyPlaylistsActivity

@@ -1,4 +1,4 @@
-package com.github.fribourgsdp.radio
+package com.github.fribourgsdp.radio.activities
 
 import android.content.Context
 import android.view.KeyEvent
@@ -15,6 +15,8 @@ import androidx.test.espresso.matcher.ViewMatchers
 import androidx.test.espresso.matcher.ViewMatchers.withId
 import androidx.test.ext.junit.rules.ActivityScenarioRule
 import androidx.test.ext.junit.runners.AndroidJUnit4
+import com.github.fribourgsdp.radio.MainActivity
+import com.github.fribourgsdp.radio.R
 import com.github.fribourgsdp.radio.data.Playlist
 import com.github.fribourgsdp.radio.game.prep.*
 import com.github.fribourgsdp.radio.mockimplementations.MockGameSettingsActivity

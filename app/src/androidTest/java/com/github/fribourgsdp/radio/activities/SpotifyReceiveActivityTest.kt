@@ -1,4 +1,4 @@
-package com.github.fribourgsdp.radio
+package com.github.fribourgsdp.radio.activities
 
 import android.content.Context
 import android.content.Intent
@@ -10,6 +10,7 @@ import androidx.test.espresso.action.ViewActions
 import androidx.test.espresso.intent.Intents
 import androidx.test.espresso.intent.matcher.IntentMatchers
 import androidx.test.espresso.matcher.ViewMatchers
+import com.github.fribourgsdp.radio.R
 import com.github.fribourgsdp.radio.data.view.UserProfileActivity
 import com.github.fribourgsdp.radio.external.spotify.ImportSpotifyPlaylistsActivity
 import com.github.fribourgsdp.radio.external.spotify.SpotifyReceiveActivity

@@ -1,4 +1,4 @@
-package com.github.fribourgsdp.radio
+package com.github.fribourgsdp.radio.activities
 
 import android.content.Context
 import androidx.test.core.app.ApplicationProvider
@@ -8,6 +8,7 @@ import androidx.test.espresso.assertion.ViewAssertions
 import androidx.test.espresso.matcher.ViewMatchers
 import androidx.test.ext.junit.rules.ActivityScenarioRule
 import androidx.test.ext.junit.runners.AndroidJUnit4
+import com.github.fribourgsdp.radio.R
 import com.github.fribourgsdp.radio.mockimplementations.BuggyJoinGameActivity
 import org.junit.Rule
 import org.junit.Test

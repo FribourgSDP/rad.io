@@ -1,4 +1,4 @@
-package com.github.fribourgsdp.radio
+package com.github.fribourgsdp.radio.activities
 
 
 import android.content.Context
@@ -14,6 +14,7 @@ import androidx.test.espresso.intent.matcher.IntentMatchers
 import androidx.test.espresso.matcher.RootMatchers.isDialog
 import androidx.test.espresso.matcher.ViewMatchers.*
 import androidx.test.ext.junit.runners.AndroidJUnit4
+import com.github.fribourgsdp.radio.R
 import com.github.fribourgsdp.radio.data.Playlist
 import com.github.fribourgsdp.radio.data.User
 import com.github.fribourgsdp.radio.game.*

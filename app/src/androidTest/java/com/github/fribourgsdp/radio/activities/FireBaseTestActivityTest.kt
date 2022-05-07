@@ -1,4 +1,4 @@
-package com.github.fribourgsdp.radio
+package com.github.fribourgsdp.radio.activities
 
 import android.content.Context
 import androidx.test.core.app.ApplicationProvider
@@ -6,6 +6,7 @@ import androidx.test.espresso.Espresso
 import androidx.test.espresso.intent.Intents
 import androidx.test.espresso.intent.matcher.IntentMatchers
 import androidx.test.ext.junit.rules.ActivityScenarioRule
+import com.github.fribourgsdp.radio.MainActivity
 import com.github.fribourgsdp.radio.deprecated.FireBaseTestActivity
 import org.hamcrest.Matchers
 import org.junit.After

@@ -1,4 +1,4 @@
-package com.github.fribourgsdp.radio
+package com.github.fribourgsdp.radio.activities
 
 import android.content.Context
 import android.content.Intent
@@ -12,6 +12,7 @@ import androidx.test.espresso.intent.Intents
 import androidx.test.espresso.intent.matcher.IntentMatchers
 import androidx.test.espresso.matcher.ViewMatchers
 import androidx.test.ext.junit.runners.AndroidJUnit4
+import com.github.fribourgsdp.radio.R
 import com.github.fribourgsdp.radio.data.view.UserProfileActivity
 import com.github.fribourgsdp.radio.external.google.GoogleSignInActivity
 import com.google.android.gms.tasks.Tasks
