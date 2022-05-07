@@ -1,4 +1,4 @@
-package com.github.fribourgsdp.radio
+package com.github.fribourgsdp.radio.database
 
 import com.github.fribourgsdp.radio.data.*
 import com.github.fribourgsdp.radio.game.Game
