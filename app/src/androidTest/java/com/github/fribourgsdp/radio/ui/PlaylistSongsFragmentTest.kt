@@ -1,4 +1,4 @@
-package com.github.fribourgsdp.radio
+package com.github.fribourgsdp.radio.ui
 
 import android.content.Context
 import android.os.Bundle
@@ -18,6 +18,7 @@ import androidx.test.espresso.Espresso.*
 import androidx.test.espresso.action.ViewActions
 import androidx.test.espresso.intent.matcher.IntentMatchers.hasComponent
 import androidx.test.espresso.matcher.ViewMatchers.*
+import com.github.fribourgsdp.radio.R
 import com.github.fribourgsdp.radio.data.Genre
 import com.github.fribourgsdp.radio.data.Playlist
 import com.github.fribourgsdp.radio.data.Song

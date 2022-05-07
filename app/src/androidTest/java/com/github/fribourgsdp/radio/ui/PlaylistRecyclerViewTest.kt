@@ -1,4 +1,4 @@
-package com.github.fribourgsdp.radio
+package com.github.fribourgsdp.radio.ui
 
 import android.content.Context
 import android.content.Intent
@@ -13,6 +13,7 @@ import androidx.test.espresso.intent.Intents
 import androidx.test.espresso.matcher.ViewMatchers
 import androidx.test.espresso.matcher.ViewMatchers.*
 import androidx.test.ext.junit.runners.AndroidJUnit4
+import com.github.fribourgsdp.radio.R
 import com.github.fribourgsdp.radio.mockimplementations.MockUserProfileActivity
 import com.github.fribourgsdp.radio.mockimplementations.playListName
 import com.github.fribourgsdp.radio.mockimplementations.songName

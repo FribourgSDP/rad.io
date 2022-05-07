@@ -1,4 +1,4 @@
-package com.github.fribourgsdp.radio
+package com.github.fribourgsdp.radio.ui
 
 import org.junit.Assert.*
 import android.content.Context

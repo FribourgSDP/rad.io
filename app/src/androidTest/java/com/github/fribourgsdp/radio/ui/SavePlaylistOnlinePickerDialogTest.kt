@@ -1,10 +1,11 @@
-package com.github.fribourgsdp.radio
+package com.github.fribourgsdp.radio.ui
 
 import androidx.fragment.app.testing.launchFragment
 import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.action.ViewActions
 import androidx.test.espresso.matcher.RootMatchers
 import androidx.test.espresso.matcher.ViewMatchers.withId
+import com.github.fribourgsdp.radio.R
 import com.github.fribourgsdp.radio.data.view.SavePlaylistOnlinePickerDialog
 import org.junit.Assert.assertFalse
 import org.junit.Assert.assertTrue
