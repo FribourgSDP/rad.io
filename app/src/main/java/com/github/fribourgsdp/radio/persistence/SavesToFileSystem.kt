@@ -9,8 +9,7 @@ import kotlinx.serialization.Serializable
  * A class which extends this function should also extend the FileSystemLoader class
  * to get access to the fileSystemGetter.
  */
-abstract class SavesToFileSystem<T>(private val defaultPath: String) {
-
+abstract class SavesToFileSystem<T>(protected val defaultPath: String) {
 
     /**
      * saves a dataclass to the app-specific storage on the device.
