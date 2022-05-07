@@ -1,4 +1,4 @@
-package com.github.fribourgsdp.radio
+package com.github.fribourgsdp.radio.unit
 
 import com.github.fribourgsdp.radio.config.Settings
 import com.github.fribourgsdp.radio.config.SettingsBuilder
