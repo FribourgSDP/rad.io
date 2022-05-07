@@ -1,4 +1,4 @@
-package com.github.fribourgsdp.radio
+package com.github.fribourgsdp.radio.unit
 
 import android.view.View
 import com.github.fribourgsdp.radio.database.Database
