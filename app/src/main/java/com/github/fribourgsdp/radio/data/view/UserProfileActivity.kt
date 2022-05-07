@@ -11,7 +11,6 @@ import android.widget.TextView
 import com.github.fribourgsdp.radio.*
 import com.github.fribourgsdp.radio.config.MyAppCompatActivity
 import com.github.fribourgsdp.radio.data.User
-import com.github.fribourgsdp.radio.database.FirestoreDatabase
 import com.github.fribourgsdp.radio.external.google.GoogleSignInActivity
 import com.github.fribourgsdp.radio.util.MyFragment
 import com.google.android.material.floatingactionbutton.FloatingActionButton
