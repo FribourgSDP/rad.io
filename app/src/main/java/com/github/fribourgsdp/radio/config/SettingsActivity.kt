@@ -27,7 +27,7 @@ class SettingsActivity : MyAppCompatActivity() {
         val settings = Settings.loadOrDefault(this)
         this.settings = settings
         settingsBuilder = SettingsBuilder(settings)
-        initLanguageSpinner(settings.getLanguage())
+        initLanguageSpinner(settings.language)
 
         initSaveSettingsButton()
 

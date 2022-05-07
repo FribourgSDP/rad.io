@@ -12,7 +12,7 @@ class SettingsTest {
     @Test
     fun getCorrectLanguage(){
         val settings = Settings(Language.FRENCH)
-        Assert.assertEquals(Language.FRENCH, settings.getLanguage())
+        Assert.assertEquals(Language.FRENCH, settings.language)
     }
 
     @Test
@@ -22,7 +22,7 @@ class SettingsTest {
         val settings = Settings(Language.FRENCH)
         settings.save(ctx)
         val settings2 = companion.loadOrDefault(ctx)
-        Assert.assertEquals(Language.FRENCH, settings2.getLanguage())
+        Assert.assertEquals(Language.FRENCH, settings2.language)
     }
 
 
