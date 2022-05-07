@@ -1,7 +1,6 @@
 package com.github.fribourgsdp.radio.persistence
 
 import android.content.Context
-import com.github.fribourgsdp.radio.data.User
 
 /**
  * should be extended by the companion object of classes which use a filesystem
@@ -9,6 +8,7 @@ import com.github.fribourgsdp.radio.data.User
  */
 abstract class LoadsFromFileSystem<T : SavesToFileSystem<T>> {
     protected var fileSystemGetter: FileSystem.FileSystemGetter = AppSpecificFileSystem
+    protected open var defaultPath: String = "default"+this.toString()+"file"
 
     /**
      * changes the default app specific file system wrapper to a custom one
@@ -23,7 +23,7 @@ abstract class LoadsFromFileSystem<T : SavesToFileSystem<T>> {
     /**
      * loads a dataclass from the app-specific storage on the device.
      * There can only be a single datacalass stored on the device at per path
-     * which is written with [User].save().
+     * which is written with [SavesToFileSystem].save().
      * This function can be used from any activity of the app and retrieves the same data
      *
      * @param context the context to use for loading from a file (usually this in an activity)
@@ -34,4 +34,19 @@ abstract class LoadsFromFileSystem<T : SavesToFileSystem<T>> {
      * @return the dataclass saved on the device
      */
     abstract fun load(context: Context, path: String) : T
+
+    /**
+     * loads a dataclass from the app-specific storage on the device at the default path.
+     * There can only be a single dataclass instance stored on the device at this path
+     * which is written with [SavesToFileSystem].save().
+     * This function can be used from any activity of the app and retrieves the same data
+     *
+     * @param context the context to use for loading from a file (usually this in an activity)
+     * @throws java.io.FileNotFoundException
+     *
+     * @return the user saved on the device
+     */
+    fun load(context: Context): T {
+        return load(context, defaultPath)
+    }
 }

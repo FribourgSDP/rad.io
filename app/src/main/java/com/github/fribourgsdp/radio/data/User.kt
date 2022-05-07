@@ -30,7 +30,7 @@ import kotlinx.serialization.json.Json
  *
  * @constructor creates a User
  */
-data class User (var name: String, val color: Int) : SavesToFileSystem<User>() {
+data class User (var name: String, val color: Int) : SavesToFileSystem<User>(USER_DATA_PATH) {
     init {
         require(name.isNotEmpty() && name.isNotBlank())
     }
@@ -46,25 +46,11 @@ data class User (var name: String, val color: Int) : SavesToFileSystem<User>() {
 
     companion object : LoadsFromFileSystem<User>() {
         const val USER_DATA_PATH = "user_data_file"
+        override var defaultPath = USER_DATA_PATH
 
         override fun load(context: Context, path: String) : User {
             val fs = fileSystemGetter.getFileSystem(context)
             return Json.decodeFromString(fs.read(path))
-        }
-
-        /**
-         * loads a user from the app-specific storage on the device at the default path.
-         * There can only be a single User stored on the device at this path
-         * which is written with [User].save().
-         * This function can be used from any activity of the app and retrieves the same data
-         *
-         * @param context the context to use for loading from a file (usually this in an activity)
-         * @throws java.io.FileNotFoundException
-         *
-         * @return the user saved on the device
-         */
-        fun load(context: Context) : User {
-            return load(context, USER_DATA_PATH)
         }
 
         /**
@@ -110,17 +96,6 @@ data class User (var name: String, val color: Int) : SavesToFileSystem<User>() {
     override fun save(context: Context, path: String){
         val fs = fileSystemGetter.getFileSystem(context)
         fs.write(path, Json.encodeToString(this))
-    }
-
-    /**
-     * saves a user to the app-specific storage on the device at the default path.
-     * There can only be a single User stored on the device at the default path, so this can overwrite
-     * This function can be used from any activity of the app to save data accessible from anywhere
-     *
-     * @param context the context to use for saving to a file (usually this in an activity)
-     */
-    fun save(context: Context){
-        save(context, USER_DATA_PATH)
     }
 
     /**
