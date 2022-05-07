@@ -9,7 +9,7 @@ import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 
 @Serializable
-class Settings(val language : Language) : SavesToFileSystem<Settings>(SETTINGS_DATA_PATH) {
+data class Settings(val language : Language) : SavesToFileSystem<Settings>(SETTINGS_DATA_PATH) {
 
     companion object : LoadsFromFileSystem<Settings>(){
         const val SETTINGS_DATA_PATH = "settings_data_file"
