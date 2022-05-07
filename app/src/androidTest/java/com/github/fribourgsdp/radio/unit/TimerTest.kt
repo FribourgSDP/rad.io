@@ -1,4 +1,4 @@
-package com.github.fribourgsdp.radio
+package com.github.fribourgsdp.radio.unit
 
 import com.github.fribourgsdp.radio.game.timer.Timer
 import org.junit.Assert.*

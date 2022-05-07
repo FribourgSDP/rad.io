@@ -1,4 +1,4 @@
-package com.github.fribourgsdp.radio
+package com.github.fribourgsdp.radio.unit
 
 import com.github.fribourgsdp.radio.data.Song
 import org.junit.Test

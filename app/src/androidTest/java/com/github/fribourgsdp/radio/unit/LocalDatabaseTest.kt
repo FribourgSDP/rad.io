@@ -1,4 +1,4 @@
-package com.github.fribourgsdp.radio
+package com.github.fribourgsdp.radio.unit
 
 import android.content.ContentValues
 import android.util.Log

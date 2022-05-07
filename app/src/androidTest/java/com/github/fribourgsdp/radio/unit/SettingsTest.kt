@@ -1,4 +1,4 @@
-package com.github.fribourgsdp.radio
+package com.github.fribourgsdp.radio.unit
 
 import android.content.Context
 import androidx.test.core.app.ApplicationProvider
