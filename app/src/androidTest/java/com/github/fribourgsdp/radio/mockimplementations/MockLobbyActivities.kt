@@ -2,12 +2,12 @@ package com.github.fribourgsdp.radio.mockimplementations
 
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
-import androidx.core.content.ContextCompat.startActivity
-import com.github.fribourgsdp.radio.*
-import com.github.fribourgsdp.radio.mockimplementations.BuggyDatabase
-import com.github.fribourgsdp.radio.mockimplementations.LocalDatabase
-import kotlinx.serialization.decodeFromString
+import com.github.fribourgsdp.radio.data.Playlist
+import com.github.fribourgsdp.radio.data.Song
+import com.github.fribourgsdp.radio.data.User
+import com.github.fribourgsdp.radio.database.Database
+import com.github.fribourgsdp.radio.game.Game
+import com.github.fribourgsdp.radio.game.prep.*
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 

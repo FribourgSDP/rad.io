@@ -1,7 +1,7 @@
 package com.github.fribourgsdp.radio.mockimplementations
 
 import android.content.Context
-import com.github.fribourgsdp.radio.FileSystem
+import com.github.fribourgsdp.radio.persistence.FileSystem
 
 var data: String = ""
 

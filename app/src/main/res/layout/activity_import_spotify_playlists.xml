@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:backgroundTint="#168A25"
-    tools:context=".ImportSpotifyPlaylistsActivity">
+    tools:context=".external.spotify.ImportSpotifyPlaylistsActivity">
 
     <TextView
         android:id="@+id/loadingPlaylists"
