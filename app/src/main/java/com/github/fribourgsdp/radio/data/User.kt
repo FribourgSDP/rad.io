@@ -30,7 +30,7 @@ import kotlinx.serialization.json.Json
  *
  * @constructor creates a User
  */
-data class User (var name: String, val color: Int) {
+data class User (var name: String, val color: Int) : SavesToFileSystem<User>(USER_DATA_PATH) {
     init {
         require(name.isNotEmpty() && name.isNotBlank())
     }
@@ -44,25 +44,11 @@ data class User (var name: String, val color: Int) {
     var id : String = "def"
 
 
-    companion object {
+    companion object : LoadsFromFileSystem<User>() {
         const val USER_DATA_PATH = "user_data_file"
-        private var fileSystemGetter: FileSystem.FileSystemGetter =
-            AppSpecificFileSystem
+        override var defaultPath = USER_DATA_PATH
 
-        /**
-         * loads a user from the app-specific storage on the device.
-         * There can only be a single User stored on the device at the default path
-         * which is written with [User].save().
-         * This function can be used from any activity of the app and retrieves the same data
-         *
-         * @param context the context to use for loading from a file (usually this in an activity)
-         * @param path a specific path in app-specific storage if we don't want to use the default
-         *      user location
-         * @throws java.io.FileNotFoundException
-         *
-         * @return the user saved on the device
-         */
-        fun load(context: Context, path: String = USER_DATA_PATH) : User {
+        override fun load(context: Context, path: String) : User {
             val fs = fileSystemGetter.getFileSystem(context)
             return Json.decodeFromString(fs.read(path))
         }
@@ -79,7 +65,9 @@ data class User (var name: String, val color: Int) {
                 Tasks.forResult(load(context))
             } catch (e: java.io.FileNotFoundException) {
                 createDefaultUser()
-                //User("No User Found", User.generateColor())
+                    .addOnSuccessListener { user ->
+                    user.save(context)
+                }
             }
         }
 
@@ -104,28 +92,10 @@ data class User (var name: String, val color: Int) {
                 (Random.nextInt(100, 200) shl 16) or
                 (Random.nextInt(100, 200) shl 8) or
                 Random.nextInt(100, 200)
-
-        /**
-         * changes the default app specific file system wrapper to a custom one
-         * useful for tests
-         *
-         * @param fsg the [FileSystem.FileSystemGetter] to will replace the current implementation
-         */
-        fun setFSGetter(fsg: FileSystem.FileSystemGetter) {
-            fileSystemGetter = fsg
-        }
     }
 
-    /**
-     * saves a user to the app-specific storage on the device.
-     * There can only be a single User stored on the device at the default path, so this can overwrite
-     * This function can be used from any activity of the app to save data accessible from anywhere
-     *
-     * @param context the context to use for saving to a file (usually this in an activity)
-     * @param path a specific path in app-specific storage if we don't want to use the default
-     *      user location
-     */
-    fun save(context: Context, path: String = USER_DATA_PATH){
+
+    override fun save(context: Context, path: String){
         val fs = fileSystemGetter.getFileSystem(context)
         fs.write(path, Json.encodeToString(this))
     }
