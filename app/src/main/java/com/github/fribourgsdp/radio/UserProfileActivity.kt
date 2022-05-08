@@ -13,6 +13,7 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
+import com.google.android.gms.tasks.Task
 import com.google.android.gms.tasks.Tasks
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.firebase.auth.FirebaseAuth
@@ -51,6 +52,9 @@ open class UserProfileActivity : MyAppCompatActivity(),KeepOrDismissPlaylistDial
         setContentView(R.layout.activity_user_profile)
         instantiateViews()
 
+        val fromGoogle = intent.getBooleanExtra("FromGoogle",false)
+
+
         User.loadOrDefault(this).addOnSuccessListener { u ->
             user = u
             checkUser()
@@ -62,6 +66,10 @@ open class UserProfileActivity : MyAppCompatActivity(),KeepOrDismissPlaylistDial
             val bundle = Bundle()
             bundle.putString(USER_DATA, Json.encodeToString(user))
             MyFragment.beginTransaction<UserPlaylistsFragment>(supportFragmentManager, bundle)
+            if(fromGoogle/*comeFromGoogleSignIn*/){
+                //check if the connection was sucessful, if yes, do the afterSignInProcedure
+                afterSignInProcedure()
+            }
         }
 
         launchSpotifyButton.setOnClickListener {
@@ -69,9 +77,11 @@ open class UserProfileActivity : MyAppCompatActivity(),KeepOrDismissPlaylistDial
         }
 
         saveChangeButton.setOnClickListener {
+            //this behavior should change or the this button should diseapper
             updateUser()
         }
 
+        //this button should disappear
         homeButton.setOnClickListener {
             startActivity(Intent(this, MainActivity::class.java))
             finish()
@@ -81,11 +91,8 @@ open class UserProfileActivity : MyAppCompatActivity(),KeepOrDismissPlaylistDial
         googleSignInButton.setOnClickListener {
             if (signedIn) {
                 signOut()
-                firebaseAuth.signOut()
-                googleSignInButton.setText(getString(R.string.sign_in_message))
-                signedIn = false
             } else {
-                signIn()
+
                 startActivity(Intent(this, GoogleSignInActivity::class.java))
             }
 
@@ -109,13 +116,8 @@ open class UserProfileActivity : MyAppCompatActivity(),KeepOrDismissPlaylistDial
 
     private fun updateUser(){
         user.name = usernameField.text.toString()
-        val firebaseUser = firebaseAuth.currentUser
-        if(firebaseUser == null){
-            db.setUser(user.id,user)
-        }else{
-            db.setUser(firebaseUser.uid,user)
-        }
-
+        //at this point, the userId should be the firebaseUser.uid
+        db.setUser(user.id,user)
         user.save(this)
         usernameInitialText.text = user.initial.uppercaseChar().toString()
     }
@@ -175,6 +177,35 @@ open class UserProfileActivity : MyAppCompatActivity(),KeepOrDismissPlaylistDial
             MergeDismissImportPlaylistDialog.Choice.MERGE -> mergePlaylist()
             MergeDismissImportPlaylistDialog.Choice.IMPORT -> importPlaylist()
             MergeDismissImportPlaylistDialog.Choice.DISMISS_ONLINE -> dismissOnlinePlaylist()
+        }.addOnSuccessListener {
+            user.save(this)
+        }
+
+    }
+
+    private fun mergePlaylist() : Task<Unit>{
+        Log.w(ContentValues.TAG, "MERGE", )
+        return db.getUser(user.id).continueWith {
+            user.addPlaylists(it.result.getPlaylists())
+            user.isGoogleUser = true
+            user.name = it.result.name
+            db.setUser(user.id,user)
+        }
+    }
+    private fun importPlaylist() : Task<Unit>{
+        Log.w(ContentValues.TAG, "IMPORT", )
+        user.removePlaylists(user.getPlaylists())
+        return db.getUser(user.id).continueWith{
+            user = it.result
+            user.isGoogleUser = true
+        }
+    }
+
+    private fun dismissOnlinePlaylist() : Task<Unit>{
+        Log.w(ContentValues.TAG, "DISMISS", )
+        return db.getUser(user.id).continueWith{
+            user.name = it.result.name
+            user.isGoogleUser = true
         }
     }
 
@@ -182,30 +213,52 @@ open class UserProfileActivity : MyAppCompatActivity(),KeepOrDismissPlaylistDial
         when (choice){
             KeepOrDismissPlaylistDialog.Choice.KEEP -> keepPlaylist()
             KeepOrDismissPlaylistDialog.Choice.DISMISS -> deletePlaylist()
+        }.addOnSuccessListener{
+            User.createDefaultUser().continueWith {
+                user.name = it.result.name
+                user.id = it.result.id
+                user.isGoogleUser = false
+                user.save(this)
+            }
         }
-    }
-
-    private fun keepPlaylist(){
-
-    }
-    private fun deletePlaylist(){
-
-    }
-    private fun mergePlaylist(){
-
-    }
-    private fun importPlaylist(){
-
-    }
-    private fun dismissOnlinePlaylist(){
 
     }
 
-    private fun signIn(){
+    private fun keepPlaylist() : Task<Unit>{
+        Log.w(ContentValues.TAG, "KEEP", )
+        return Tasks.forResult(null)
+        //when keeping playlist, decide whether only those saved locally should be kept or all of them
+
+    }
+    private fun deletePlaylist() : Task<Unit> {
+        user.removePlaylists(user.getPlaylists())
+        Log.w(ContentValues.TAG, "DELETE", )
+        return Tasks.forResult(null)
+
+    }
+
+
+
+
+
+    //this should only happen on successful signIn,
+    private fun afterSignInProcedure(){
+        user.id = firebaseAuth.currentUser?.uid ?: user.id //MAYBE THROW AN ERROR INSTEAD
+        user.isGoogleUser = true
+        user.save(this)
+        val mergeDismissImportPlaylistPicker = MergeDismissImportPlaylistDialog(this)
+        mergeDismissImportPlaylistPicker.show(supportFragmentManager, "mergeDismissImportPlaylistPicker")
+
 
     }
 
     private fun signOut(){
+        val keepDismissDialogPicker = KeepOrDismissPlaylistDialog(this)
+        keepDismissDialogPicker.show(supportFragmentManager, "keepDismissDialogPicker")
+
+        firebaseAuth.signOut()
+        googleSignInButton.setText(getString(R.string.sign_in_message))
+        signedIn = false
 
     }
 
