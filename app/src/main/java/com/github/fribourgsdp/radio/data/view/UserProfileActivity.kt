@@ -15,6 +15,7 @@ import com.google.android.gms.tasks.Tasks
 import com.github.fribourgsdp.radio.*
 import com.github.fribourgsdp.radio.config.MyAppCompatActivity
 import com.github.fribourgsdp.radio.data.User
+import com.github.fribourgsdp.radio.database.DatabaseHolder
 import com.github.fribourgsdp.radio.database.FirestoreDatabase
 import com.github.fribourgsdp.radio.external.google.GoogleSignInActivity
 import com.github.fribourgsdp.radio.util.MyFragment
@@ -32,7 +33,7 @@ const val SCOPES = "playlist-read-private,playlist-read-collaborative"
 const val RECREATE_USER = "com.github.fribourgsdp.radio.avoidRecreatingUser"
 const val USER_DATA = "com.github.fribourgsdp.radio.data.view.USER_DATA"
 
-open class UserProfileActivity : MyAppCompatActivity(), KeepOrDismissPlaylistDialog.OnPickListener, MergeDismissImportPlaylistDialog.OnPickListener {
+open class UserProfileActivity : MyAppCompatActivity(), KeepOrDismissPlaylistDialog.OnPickListener, MergeDismissImportPlaylistDialog.OnPickListener, DatabaseHolder {
     private lateinit var user : User
     private lateinit var usernameField : EditText
     private lateinit var usernameInitialText : TextView
@@ -44,7 +45,7 @@ open class UserProfileActivity : MyAppCompatActivity(), KeepOrDismissPlaylistDia
     private lateinit var userIcon : ImageView
     private var signedIn : Boolean = false
 
-    private var db = FirestoreDatabase()
+    private var db = initializeDatabase()
 
 
     //firebase auth
