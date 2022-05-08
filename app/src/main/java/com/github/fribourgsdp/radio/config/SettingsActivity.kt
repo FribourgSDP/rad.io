@@ -9,7 +9,7 @@ import com.github.fribourgsdp.radio.config.language.Language
 import com.github.fribourgsdp.radio.config.language.LanguageManager
 
 
-class SettingsActivity : MyAppCompatActivity() {
+open class SettingsActivity : MyAppCompatActivity() {
 
 
     private lateinit var spinnerLanguage: Spinner
@@ -27,7 +27,7 @@ class SettingsActivity : MyAppCompatActivity() {
         val settings = Settings.loadOrDefault(this)
         this.settings = settings
         settingsBuilder = SettingsBuilder(settings)
-        initLanguageSpinner(settings.getLanguage())
+        initLanguageSpinner(settings.language)
 
         initSaveSettingsButton()
 

@@ -7,7 +7,7 @@ class SettingsBuilder {
     private lateinit var language : Language
 
     constructor(settings : Settings){
-        language = settings.getLanguage()
+        language = settings.language
     }
 
     fun language(language : Language): SettingsBuilder {

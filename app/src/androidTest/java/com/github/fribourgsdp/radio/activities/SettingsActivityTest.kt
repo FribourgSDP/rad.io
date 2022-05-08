@@ -22,13 +22,14 @@ import com.github.fribourgsdp.radio.MainActivity
 import com.github.fribourgsdp.radio.R
 import com.github.fribourgsdp.radio.config.SettingsActivity
 import com.github.fribourgsdp.radio.config.language.Language
+import com.github.fribourgsdp.radio.mockimplementations.MockSettingsActivity
 import org.hamcrest.Matchers.*
 
 
 @RunWith(AndroidJUnit4::class)
 class SettingsActivityTest {
   @get:Rule
-    var settingsActivityRule = ActivityScenarioRule(SettingsActivity::class.java)
+    var settingsActivityRule = ActivityScenarioRule(MockSettingsActivity::class.java)
 
     private val ctx: Context = ApplicationProvider.getApplicationContext()
 
@@ -56,8 +57,8 @@ class SettingsActivityTest {
     @Test
     fun saveSettingsWork() {
         val context: Context = ApplicationProvider.getApplicationContext()
-        val intent = Intent(context, SettingsActivity::class.java)
-        ActivityScenario.launch<SettingsActivity>(intent).use { scenario ->
+        val intent = Intent(context, MockSettingsActivity::class.java)
+        ActivityScenario.launch<MockSettingsActivity>(intent).use { scenario ->
 
             val spinnerId = Espresso.onView(ViewMatchers.withId(R.id.spinner_language))
 

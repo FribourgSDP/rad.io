@@ -9,45 +9,33 @@ import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 
 @Serializable
-class Settings(private var language : Language) {
+data class Settings(val language : Language) : SavesToFileSystem<Settings>(SETTINGS_DATA_PATH) {
 
-
-    companion object {
+    companion object : LoadsFromFileSystem<Settings>(){
         const val SETTINGS_DATA_PATH = "settings_data_file"
-        private var fileSystemGetter: FileSystem.FileSystemGetter =
-            AppSpecificFileSystem.AppSpecificFSGetter
+        override var defaultPath = SETTINGS_DATA_PATH
 
-
-        fun load(context: Context, path: String = SETTINGS_DATA_PATH) : Settings {
+        override fun load(context: Context, path: String) : Settings {
             val fs = fileSystemGetter.getFileSystem(context)
             return Json.decodeFromString(fs.read(path))
         }
 
-
         fun loadOrDefault(context: Context) : Settings {
             return try { load(context)
             } catch (e: java.io.FileNotFoundException) {
-                createDefaultSettings()
+                val defaultSettings = createDefaultSettings()
+                defaultSettings.save(context)
+                defaultSettings
             }
         }
-
 
         fun createDefaultSettings(): Settings {
             return Settings(Language.ENGLISH)
         }
-
-
     }
 
-
-    fun save(context: Context, path: String = SETTINGS_DATA_PATH){
+    override fun save(context: Context, path: String){
         val fs = fileSystemGetter.getFileSystem(context)
         fs.write(path, Json.encodeToString(this))
     }
-
-    fun getLanguage(): Language {
-        return language
-    }
-
-
 }
