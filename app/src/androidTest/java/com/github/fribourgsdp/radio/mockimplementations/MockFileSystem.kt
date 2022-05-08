@@ -3,16 +3,16 @@ package com.github.fribourgsdp.radio.mockimplementations
 import android.content.Context
 import com.github.fribourgsdp.radio.persistence.FileSystem
 
-var data: String = ""
+var data: HashMap<String, String> = HashMap()
 
 class MockFileSystem : FileSystem {
 
     override fun write(path: String, string: String) {
-        data = string
+        data[path] = string
     }
 
     override fun read(path: String): String {
-        return data
+        return data[path]!!
     }
 
     companion object MockFSGetter : FileSystem.FileSystemGetter {
@@ -21,7 +21,7 @@ class MockFileSystem : FileSystem {
         }
 
         fun wipeData() {
-            data = ""
+            data = HashMap()
         }
     }
 }
