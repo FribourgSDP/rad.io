@@ -1,17 +1,19 @@
-package com.github.fribourgsdp.radio
+package com.github.fribourgsdp.radio.ui
 
 import androidx.fragment.app.testing.launchFragment
 import androidx.test.espresso.Espresso
 import androidx.test.espresso.action.ViewActions
 import androidx.test.espresso.matcher.RootMatchers
 import androidx.test.espresso.matcher.ViewMatchers
+import com.github.fribourgsdp.radio.data.view.MergeDismissImportPlaylistDialog
+import com.github.fribourgsdp.radio.R
 import org.junit.Assert
 import org.junit.Test
 
 class MergeDismissImportPlaylistDialogTest {
 
     private var picked = MergeDismissImportPlaylistDialog.Choice.DISMISS_ONLINE
-    private val testListener = object: MergeDismissImportPlaylistDialog.OnPickListener{
+    private val testListener = object: MergeDismissImportPlaylistDialog.OnPickListener {
         override fun onPick(choice: MergeDismissImportPlaylistDialog.Choice){
             picked = choice
         }
@@ -22,7 +24,7 @@ class MergeDismissImportPlaylistDialogTest {
         picked = MergeDismissImportPlaylistDialog.Choice.DISMISS_ONLINE
         with(launchFragment (
             themeResId = R.style.Theme_Radio,
-            instantiate = { MergeDismissImportPlaylistDialog(testListener)}
+            instantiate = { MergeDismissImportPlaylistDialog(testListener) }
         )){
             Espresso.onView(ViewMatchers.withId(R.id.mergePlaylistButton))
                 .inRoot(RootMatchers.isDialog())
@@ -36,7 +38,7 @@ class MergeDismissImportPlaylistDialogTest {
         picked = MergeDismissImportPlaylistDialog.Choice.DISMISS_ONLINE
         with(launchFragment (
             themeResId = R.style.Theme_Radio,
-            instantiate = { MergeDismissImportPlaylistDialog(testListener)}
+            instantiate = { MergeDismissImportPlaylistDialog(testListener) }
         )){
             Espresso.onView(ViewMatchers.withId(R.id.importPlaylistButton))
                 .inRoot(RootMatchers.isDialog())
@@ -50,7 +52,7 @@ class MergeDismissImportPlaylistDialogTest {
         picked = MergeDismissImportPlaylistDialog.Choice.IMPORT
         with(launchFragment (
             themeResId = R.style.Theme_Radio,
-            instantiate = { MergeDismissImportPlaylistDialog(testListener)}
+            instantiate = { MergeDismissImportPlaylistDialog(testListener) }
         )){
             Espresso.onView(ViewMatchers.withId(R.id.dismissOnlineButton))
                 .inRoot(RootMatchers.isDialog())

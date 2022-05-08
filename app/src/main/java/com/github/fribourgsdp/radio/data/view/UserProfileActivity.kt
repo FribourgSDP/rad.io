@@ -32,7 +32,7 @@ const val SCOPES = "playlist-read-private,playlist-read-collaborative"
 const val RECREATE_USER = "com.github.fribourgsdp.radio.avoidRecreatingUser"
 const val USER_DATA = "com.github.fribourgsdp.radio.data.view.USER_DATA"
 
-open class UserProfileActivity : MyAppCompatActivity(),KeepOrDismissPlaylistDialog.OnPickListener, MergeDismissImportPlaylistDialog.OnPickListener {
+open class UserProfileActivity : MyAppCompatActivity(), KeepOrDismissPlaylistDialog.OnPickListener, MergeDismissImportPlaylistDialog.OnPickListener {
     private lateinit var user : User
     private lateinit var usernameField : EditText
     private lateinit var usernameInitialText : TextView
