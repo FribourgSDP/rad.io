@@ -65,7 +65,9 @@ data class User (var name: String, val color: Int) : SavesToFileSystem<User>(USE
                 Tasks.forResult(load(context))
             } catch (e: java.io.FileNotFoundException) {
                 createDefaultUser()
-                //User("No User Found", User.generateColor())
+                    .addOnSuccessListener { user ->
+                    user.save(context)
+                }
             }
         }
 
