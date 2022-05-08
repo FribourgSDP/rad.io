@@ -193,6 +193,7 @@ open class UserProfileActivity : MyAppCompatActivity(), KeepOrDismissPlaylistDia
             user.addPlaylists(it.result.getPlaylists())
             user.isGoogleUser = true
             user.name = it.result.name
+            user.id = it.result.id
             db.setUser(user.id,user)
         }
     }
