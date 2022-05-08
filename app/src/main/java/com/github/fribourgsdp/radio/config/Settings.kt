@@ -23,7 +23,9 @@ data class Settings(val language : Language) : SavesToFileSystem<Settings>(SETTI
         fun loadOrDefault(context: Context) : Settings {
             return try { load(context)
             } catch (e: java.io.FileNotFoundException) {
-                createDefaultSettings()
+                val defaultSettings = createDefaultSettings()
+                defaultSettings.save(context)
+                defaultSettings
             }
         }
 
