@@ -202,6 +202,8 @@ open class UserProfileActivity : MyAppCompatActivity(), KeepOrDismissPlaylistDia
         user.removePlaylists(user.getPlaylists())
         return db.getUser(user.id).continueWith{
             user = it.result
+            user.name = it.result.name
+            user.id = it.result.id
             user.isGoogleUser = true
         }
     }
@@ -210,6 +212,7 @@ open class UserProfileActivity : MyAppCompatActivity(), KeepOrDismissPlaylistDia
         Log.w(ContentValues.TAG, "DISMISS", )
         return db.getUser(user.id).continueWith{
             user.name = it.result.name
+            user.id = it.result.id
             user.isGoogleUser = true
         }
     }
