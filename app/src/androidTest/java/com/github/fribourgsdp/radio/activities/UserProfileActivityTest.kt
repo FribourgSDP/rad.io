@@ -9,19 +9,27 @@ import androidx.test.espresso.Espresso
 import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.action.ViewActions
 import androidx.test.espresso.action.ViewActions.click
+import androidx.test.espresso.assertion.ViewAssertions
 import androidx.test.espresso.intent.Intents
 import androidx.test.espresso.intent.matcher.IntentMatchers
 import androidx.test.espresso.intent.matcher.IntentMatchers.hasComponent
+import androidx.test.espresso.matcher.RootMatchers
 import androidx.test.espresso.matcher.ViewMatchers
 import androidx.test.espresso.matcher.ViewMatchers.withId
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.github.fribourgsdp.radio.MainActivity
 import com.github.fribourgsdp.radio.R
+import com.github.fribourgsdp.radio.data.Genre
+import com.github.fribourgsdp.radio.data.Playlist
+import com.github.fribourgsdp.radio.data.Song
 import com.github.fribourgsdp.radio.data.User
 import com.github.fribourgsdp.radio.data.view.MY_CLIENT_ID
+import com.github.fribourgsdp.radio.data.view.PlaylistSongsFragment
 import com.github.fribourgsdp.radio.data.view.REDIRECT_URI
 import com.github.fribourgsdp.radio.data.view.UserProfileActivity
+import com.github.fribourgsdp.radio.database.Database
 import com.github.fribourgsdp.radio.external.google.GoogleSignInActivity
+import com.github.fribourgsdp.radio.mockimplementations.MockUserProfileActivity
 import com.google.android.gms.tasks.Tasks
 import com.google.firebase.auth.FirebaseAuth
 import junit.framework.TestCase
@@ -34,7 +42,7 @@ import org.junit.Assert.*
 
 import org.junit.After
 import org.junit.Before
-
+import org.mockito.Mockito
 
 
 import java.util.concurrent.TimeUnit
@@ -160,4 +168,62 @@ class UserProfileActivityTest : TestCase() {
             )
         }
     }
+
+    @Test
+    fun mergePlaylistMergesPlaylist(){
+        val intent = Intent(ctx, MockUserProfileActivity::class.java)
+        intent.putExtra("FromGoogle",true)
+        ActivityScenario.launch<UserProfileActivity>(intent).use {
+
+            onView(ViewMatchers.withText(R.string.MergeImportDismissPlaylistText)) // Look for the dialog => use its title
+                .inRoot(RootMatchers.isDialog()) // check that it's indeed in a dialog
+                .check(ViewAssertions.matches(ViewMatchers.isDisplayed()));
+
+            onView(withId(R.id.mergePlaylistButton))
+                .perform(ViewActions.click())
+
+        }
+        var user = User.load(ctx)
+        assertEquals("onlineUserTest",user.name)
+        assertEquals("onlineUserTestId",user.id)
+        assertEquals(2,user.getPlaylists().size)
+    }
+
+    @Test
+    fun dismissPlaylistDismissedPlaylist(){
+
+            val intent = Intent(ctx, MockUserProfileActivity::class.java)
+            intent.putExtra("FromGoogle",true)
+            ActivityScenario.launch<UserProfileActivity>(intent).use {
+
+                onView(ViewMatchers.withText(R.string.MergeImportDismissPlaylistText)) // Look for the dialog => use its title
+                    .inRoot(RootMatchers.isDialog()) // check that it's indeed in a dialog
+                    .check(ViewAssertions.matches(ViewMatchers.isDisplayed()));
+
+                onView(withId(R.id.dismissOnlineButton))
+                    .perform(ViewActions.click())
+
+            }
+            var user = User.load(ctx)
+            assertEquals("test",user.name)
+            assertEquals("testId",user.id)
+            assertEquals(1,user.getPlaylists().size)
+            assertEquals("testTitle",user.getPlaylists().toList()[0].name)
+
+    }
+
+    @Test
+    fun importPlaylistImportsPlaylist(){
+
+    }
+
+
+
+
+
+
+
+
+
+
 }
