@@ -204,16 +204,34 @@ class UserProfileActivityTest : TestCase() {
                     .perform(ViewActions.click())
 
             }
-            var user = User.load(ctx)
-            assertEquals("test",user.name)
-            assertEquals("testId",user.id)
-            assertEquals(1,user.getPlaylists().size)
-            assertEquals("testTitle",user.getPlaylists().toList()[0].name)
+        var user = User.load(ctx)
+        assertEquals("onlineUserTest",user.name)
+        assertEquals("onlineUserTestId",user.id)
+        assertEquals(1,user.getPlaylists().size)
+        assertEquals("testTitle",user.getPlaylists().toList()[0].name)
+
 
     }
 
     @Test
     fun importPlaylistImportsPlaylist(){
+        val intent = Intent(ctx, MockUserProfileActivity::class.java)
+        intent.putExtra("FromGoogle",true)
+        ActivityScenario.launch<UserProfileActivity>(intent).use {
+
+            onView(ViewMatchers.withText(R.string.MergeImportDismissPlaylistText)) // Look for the dialog => use its title
+                .inRoot(RootMatchers.isDialog()) // check that it's indeed in a dialog
+                .check(ViewAssertions.matches(ViewMatchers.isDisplayed()));
+
+            onView(withId(R.id.importPlaylistButton))
+                .perform(ViewActions.click())
+
+        }
+        var user = User.load(ctx)
+        assertEquals("onlineUserTest",user.name)
+        assertEquals("onlineUserTestId",user.id)
+        assertEquals(1,user.getPlaylists().size)
+        assertEquals("TEST_PLAYLIST",user.getPlaylists().toList()[0].id)
 
     }
 
