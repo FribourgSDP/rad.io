@@ -39,6 +39,7 @@ data class User (var name: String, val color: Int) {
     var linkedSpotify: Boolean = false
     val initial get(): Char = name.elementAt(0)
     var id : String = "def"
+    var isGoogleUser = false
 
 
     companion object {
@@ -81,9 +82,9 @@ data class User (var name: String, val color: Int) {
         }
 
         /**
-         * Create a [User] with default settings. Note that this user doesn't have an [id]
+         * Create a [User] with default settings.
          *
-         * @return a default [User]
+         * @return a default [User] in task, as an id has to be generated
          */
         fun createDefaultUser(): Task<User> {
             return FirestoreDatabase().generateUserId().continueWith { id ->
