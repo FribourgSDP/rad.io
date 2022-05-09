@@ -27,11 +27,11 @@ interface LyricsGetter{
  * API Call doc : https://stackoverflow.com/questions/45219379/how-to-make-an-api-request-in-kotlin
  */
 object MusixmatchLyricsGetter : LyricsGetter {
-    const val LYRICS_NOT_FOUND = "---No lyrics were found for this song. Feel free to add yours !---"
+    const val LYRICS_NOT_FOUND_PLACEHOLDER = "---"
     const val BACKEND_ERROR_PLACEHOLDER = ""
 
     abstract class LyricsGetterException(val default : String) : Exception()
-    class NoLyricsFoundForThisSong : LyricsGetterException(LYRICS_NOT_FOUND)
+    class NoLyricsFoundForThisSong : LyricsGetterException(LYRICS_NOT_FOUND_PLACEHOLDER)
     class BackendError : LyricsGetterException(BACKEND_ERROR_PLACEHOLDER)
 
     /**
@@ -153,7 +153,7 @@ object MusixmatchLyricsGetter : LyricsGetter {
      * The mention to Musixmatch will be displayed elsewhere, like in the activity displaying the lyrics.
      */
     private fun cleanLyrics(lyrics : String) : String{
-        if(lyrics == LYRICS_NOT_FOUND || lyrics == "") {
+        if(lyrics == LYRICS_NOT_FOUND_PLACEHOLDER || lyrics == "") {
             return lyrics
         }
         val allLines = lyrics.split("\n")
