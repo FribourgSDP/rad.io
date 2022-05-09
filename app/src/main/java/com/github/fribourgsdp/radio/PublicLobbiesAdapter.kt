@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.cardview.widget.CardView
 import androidx.recyclerview.widget.RecyclerView
+import com.github.fribourgsdp.radio.database.Database
 
 class PublicLobbiesAdapter(private val context: Context, private val db: Database): RecyclerView.Adapter<PublicLobbiesAdapter.ViewHolder>() {
     private var lobbies: List<LobbyData>? = null

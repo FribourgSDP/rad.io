@@ -94,6 +94,7 @@
     <string name="hostname">Nom de l\'hôte</string>
     <string name="sort_by">Trier par:</string>
     <string name="public_lobbies">Lobbies public:</string>
+    <string name="musixmatch_logo">Musixmatch logo</string>
     <string name="qr_code">qr_code</string>
     <string name="cancel_qr_code">Quitter</string>
     <string name="scanned_data">données scannées</string>

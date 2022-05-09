@@ -1,11 +1,11 @@
 package com.github.fribourgsdp.radio.mockimplementations
 
-import com.github.fribourgsdp.radio.JSONParser
-import com.github.fribourgsdp.radio.LyricsGetter
+import com.github.fribourgsdp.radio.util.JSONParser
+import com.github.fribourgsdp.radio.external.musixmatch.LyricsGetter
 import okhttp3.OkHttpClient
 import java.util.concurrent.CompletableFuture
 
-object MockLyricsGetter : LyricsGetter{
+object MockLyricsGetter : LyricsGetter {
     val truckfightersLyrics = "If you feel, little chance, make a stance\n" +
             "Looking for, better days, let me say\n" +
             "Something's wrong, when you can't, let me go\n" +
@@ -29,5 +29,9 @@ object MockLyricsGetter : LyricsGetter{
         parser: JSONParser
     ): CompletableFuture<Int> {
         throw NotImplementedError()
+    }
+
+    override fun markSongName(lyrics: String, name: String): String {
+        TODO("Not yet implemented")
     }
 }

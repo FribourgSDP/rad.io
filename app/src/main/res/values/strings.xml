@@ -62,8 +62,8 @@
     <string name="artistLyricsDisplay">Artist :</string>
     <string name="songLyricsDisplay">Song :</string>
     <string name="welcome_to_google_signin">Welcome to Google SignIn</string>
-    <string name="your_spotify_playlists_are_loading">Your Spotify playlists are loading...!</string>
-    <string name="this_could_take_some_time">This could take some time...!</string>
+    <string name="your_spotify_playlists_are_loading">Your Spotify playlists are loading…!</string>
+    <string name="this_could_take_some_time">This could take some time…!</string>
     <string name="you_have_successfully_logged_into_spotify">You have successfully logged into Spotify!</string>
     <string name="import_my_spotify_playlists">Import my Spotify playlists</string>
     <string name="deletePlaylist">Delete</string>
@@ -93,13 +93,12 @@
     <string name="hostname">Host name</string>
     <string name="sort_by">Sort by:</string>
     <string name="public_lobbies">Public Lobbies:</string>
+    <string name="musixmatch_logo">Musixmatch logo</string>
     <string name="qr_code">qr_code</string>
     <string name="cancel_qr_code">Cancel</string>
     <string name="scanned_data">Scanned Data</string>
     <string name="join_with_qr_code">Join With QR Code</string>
     <string name="enable_microphone">Enable Microphone</string>
     <string name="display_qr_code">Display QR Code</string>
-
-
 </resources>
 

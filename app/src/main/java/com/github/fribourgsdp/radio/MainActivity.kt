@@ -2,16 +2,21 @@ package com.github.fribourgsdp.radio
 
 
 
-import android.content.ContentValues
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.widget.Button
-import androidx.appcompat.app.AppCompatActivity
 
 //import com.github.fribourgsdp.radio.databinding.ActivityMainBinding
 
 import android.widget.ImageButton
+import com.github.fribourgsdp.radio.config.MyAppCompatActivity
+import com.github.fribourgsdp.radio.config.SettingsActivity
+import com.github.fribourgsdp.radio.data.User
+import com.github.fribourgsdp.radio.data.view.UserProfileActivity
+import com.github.fribourgsdp.radio.database.FirestoreDatabase
+import com.github.fribourgsdp.radio.deprecated.VoiceOverIPActivity
+import com.github.fribourgsdp.radio.game.prep.GameSettingsActivity
+import com.github.fribourgsdp.radio.game.prep.JoinGameActivity
 
 class MainActivity : MyAppCompatActivity() {
     private val db = FirestoreDatabase()
@@ -20,7 +25,7 @@ class MainActivity : MyAppCompatActivity() {
         setContentView(R.layout.activity_main)
 
         val voiceOverIpButton = findViewById<Button>(R.id.VoiceOverIpButton)
-        voiceOverIpButton.setOnClickListener{startActivity(Intent(this,VoiceOverIPActivity::class.java))}
+        voiceOverIpButton.setOnClickListener{startActivity(Intent(this, VoiceOverIPActivity::class.java))}
 
         val playButton = findViewById<Button>(R.id.playButton)
         playButton.setOnClickListener {startActivity(Intent(this, GameSettingsActivity::class.java))}
