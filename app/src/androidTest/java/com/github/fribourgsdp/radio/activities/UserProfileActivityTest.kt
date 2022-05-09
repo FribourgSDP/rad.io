@@ -128,15 +128,12 @@ class UserProfileActivityTest : TestCase() {
 
     @Test
     fun clickOnGoogleButtonSendToGoogleSignInActivityTestOrLogoutCorrectly() {
-        val firebaseAuth = FirebaseAuth.getInstance()
-        val task = Tasks.withTimeout(firebaseAuth.signInWithEmailAndPassword("test@test.com", "test123!!!"),10, TimeUnit.SECONDS)
-        Tasks.await(task)
+
         val context: Context = ApplicationProvider.getApplicationContext()
-        val intent = Intent(context, UserProfileActivity::class.java)
+        val intent = Intent(context, MockUserProfileActivity::class.java)
         ActivityScenario.launch<UserProfileActivity>(intent).use { scenario ->
 
             val googleSignInButton = onView(withId(R.id.googleSignInButton))
-            googleSignInButton.perform(click())
             googleSignInButton.perform(click())
 
             Intents.intended(
