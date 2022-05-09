@@ -235,6 +235,7 @@ open class GameActivity : AppCompatActivity(), GameView, Timer.Listener {
         val userId = user.name.hashCode().absoluteValue
         voiceChannel.setAudioProfile(Constants.AUDIO_PROFILE_MUSIC_STANDARD, Constants.AUDIO_SCENARIO_CHATROOM_ENTERTAINMENT);
         voiceChannel.enableAudioVolumeIndication(200,3,true)
+        voiceChannel.setDefaultAudioRoutetoSpeakerphone(true)
         voiceChannel.joinChannel(voiceChannel.getToken(userId, gameUid.toString()), gameUid.toString(), "", userId)
     }
 
