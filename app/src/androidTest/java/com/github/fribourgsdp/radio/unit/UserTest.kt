@@ -39,6 +39,17 @@ class UserTest {
     }
 
     @Test
+    fun defaultUserHasStarterPlaylists(){
+        val userPlaylists = User.createDefaultUser().result.getPlaylists()
+        assertTrue(userPlaylists.contains(Playlist("Chanson française")))
+        assertTrue(userPlaylists.contains(Playlist("Basic blind test")))
+        assertTrue(userPlaylists.contains(Playlist("Movie theme songs")))
+        assertTrue(userPlaylists.contains(Playlist("Video game songs")))
+        assertTrue(userPlaylists.contains(Playlist("Classical music hits")))
+
+    }
+
+    @Test
     fun addPlaylistWorksAsExpected(){
         val string = "test"
         val user = User(string)
