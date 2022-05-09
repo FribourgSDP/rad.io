@@ -40,7 +40,6 @@ open class UserProfileActivity : MyAppCompatActivity(), KeepOrDismissPlaylistDia
     private lateinit var spotifyStatusText : TextView
     private lateinit var saveChangeButton : Button
     private lateinit var launchSpotifyButton : Button
-    private lateinit var homeButton : Button
     private lateinit var googleSignInButton : Button
     private lateinit var userIcon : ImageView
     private var signedIn : Boolean = false
@@ -85,11 +84,6 @@ open class UserProfileActivity : MyAppCompatActivity(), KeepOrDismissPlaylistDia
             updateUser()
         }
 
-        //this button should disappear
-        homeButton.setOnClickListener {
-            startActivity(Intent(this, MainActivity::class.java))
-            finish()
-        }
 
 
         googleSignInButton.setOnClickListener {
@@ -109,7 +103,6 @@ open class UserProfileActivity : MyAppCompatActivity(), KeepOrDismissPlaylistDia
         firebaseAuth = FirebaseAuth.getInstance()
         usernameField = findViewById(R.id.username)
         launchSpotifyButton = findViewById(R.id.launchSpotifyButton)
-        homeButton = findViewById(R.id.homeButton)
         saveChangeButton = findViewById(R.id.saveUserButton)
         usernameInitialText = findViewById(R.id.usernameInitial)
         spotifyStatusText = findViewById(R.id.spotifyStatus)
