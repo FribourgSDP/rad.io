@@ -43,7 +43,6 @@ open class SongFragment : MyFragment(R.layout.fragment_song) {
 
     private fun fetchLyrics(lyricsGetter: LyricsGetter) {
         lyricsGetter.getLyrics(song.name, song.artist)
-            .exceptionally { "" }
             .thenAccept{f ->
                 currentLyrics = f
                 doSaveLyrics = true
@@ -52,7 +51,12 @@ open class SongFragment : MyFragment(R.layout.fragment_song) {
     }
 
     private fun updateLyrics(lyricsEditText : EditText){
-        lyricsEditText.setText(currentLyrics)
+        if (currentLyrics == MusixmatchLyricsGetter.LYRICS_NOT_FOUND_PLACEHOLDER || currentLyrics.isEmpty()){
+            lyricsEditText.hint = resources.getString(R.string.add_your_lyrics)
+            lyricsEditText.setText("")
+        } else {
+            lyricsEditText.setText(currentLyrics)
+        }
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {

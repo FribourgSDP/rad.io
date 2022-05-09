@@ -101,4 +101,21 @@ class SongFragmentTest {
             .check(ViewAssertions.matches(
                 ViewMatchers.withText(MockLyricsGetter.truckfightersLyrics)))
     }
+    @Test
+    fun goodHintForSongWithoutLyrics(){
+        val bundle = Bundle()
+        val lyrics = ""
+        val playlist = Playlist("test", Genre.NONE)
+        val song = Song("test", "test", lyrics)
+        playlist.addSong(song)
+        val user = User("Test User")
+        user.addPlaylist(playlist)
+        val context: Context = ApplicationProvider.getApplicationContext()
+        user.save(context)
+        bundle.putString(PLAYLIST_DATA, playlist.name)
+        bundle.putStringArray(SONG_DATA, arrayOf(song.name, song.artist))
+        val scenario = launchFragmentInContainer<SongFragment>(bundle)
+        Espresso.onView(ViewMatchers.withId(R.id.editTextLyrics))
+            .check(ViewAssertions.matches(ViewMatchers.withHint(R.string.add_your_lyrics)))
+    }
 }

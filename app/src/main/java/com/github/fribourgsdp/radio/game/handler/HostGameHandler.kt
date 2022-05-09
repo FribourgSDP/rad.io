@@ -17,7 +17,6 @@ class HostGameHandler(private val game: Game, private val view: GameView, db: Da
     private var latestSingerId: String? = null
 
     override fun handleSnapshot(snapshot: DocumentSnapshot?) {
-        Log.println(Log.ASSERT, "*", "HANDLE SNAPSHOT Host")
         if (snapshot != null && snapshot.exists()) {
             val doneMap = snapshot.getPlayerDoneMap()
 

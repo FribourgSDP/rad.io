@@ -11,6 +11,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.github.fribourgsdp.radio.*
 import com.github.fribourgsdp.radio.game.timer.Timer
 import com.github.fribourgsdp.radio.data.User
+import com.github.fribourgsdp.radio.external.musixmatch.MusixmatchLyricsGetter.LYRICS_NOT_FOUND_PLACEHOLDER
 import com.github.fribourgsdp.radio.game.handler.HostGameHandler
 import com.github.fribourgsdp.radio.game.handler.PlayerGameHandler
 import com.github.fribourgsdp.radio.game.prep.GAME_IS_HOST_KEY
@@ -271,7 +272,8 @@ open class GameActivity : AppCompatActivity(), GameView, Timer.Listener {
     override fun displayLyrics(lyrics : String) {
         showLyricsButton.visibility = View.VISIBLE
         showLyricsButton.setOnClickListener { displayLyrics(lyrics) }
-        if(lyrics.isNotEmpty()) {
+        if(lyrics.isNotEmpty() && lyrics != LYRICS_NOT_FOUND_PLACEHOLDER) {
+
             val lyricsPopup = LyricsPopup(lyrics)
             lyricsPopup.show(supportFragmentManager, "lyricsPopup")
         }
