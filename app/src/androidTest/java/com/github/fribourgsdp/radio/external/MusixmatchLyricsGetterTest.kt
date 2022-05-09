@@ -1,10 +1,10 @@
 package com.github.fribourgsdp.radio.external
 
 import com.github.fribourgsdp.radio.external.musixmatch.MusixmatchLyricsGetter
+import com.github.fribourgsdp.radio.external.musixmatch.MusixmatchLyricsGetter.BACKEND_ERROR_PLACEHOLDER
+import com.github.fribourgsdp.radio.external.musixmatch.MusixmatchLyricsGetter.LYRICS_NOT_FOUND_PLACEHOLDER
 import com.github.fribourgsdp.radio.util.JSONParser
 import com.github.fribourgsdp.radio.util.JSONStandardParser
-import com.github.fribourgsdp.radio.MusixmatchLyricsGetter.BACKEND_ERROR_PLACEHOLDER
-import com.github.fribourgsdp.radio.MusixmatchLyricsGetter.LYRICS_NOT_FOUND
 import okhttp3.*
 import org.json.JSONObject
 import org.junit.Assert.*
@@ -242,7 +242,7 @@ class MusixmatchLyricsGetterTest {
     }
 
     private fun checkLyricsNotFound(lyricsFuture : CompletableFuture<String>){
-        assertTrue(lyricsFuture.get() == LYRICS_NOT_FOUND)
+        assertTrue(lyricsFuture.get() == LYRICS_NOT_FOUND_PLACEHOLDER)
         try {
             lyricsFuture.get()
         } catch (e : ExecutionException){
