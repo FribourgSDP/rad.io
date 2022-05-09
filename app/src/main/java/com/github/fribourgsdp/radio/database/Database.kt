@@ -1,6 +1,6 @@
 package com.github.fribourgsdp.radio.database
 
-import com.github.fribourgsdp.radio.LobbyData
+import com.github.fribourgsdp.radio.data.LobbyData
 import com.github.fribourgsdp.radio.data.*
 import com.github.fribourgsdp.radio.game.Game
 import com.google.android.gms.tasks.Task

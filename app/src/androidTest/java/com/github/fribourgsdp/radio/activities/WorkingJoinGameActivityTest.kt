@@ -12,8 +12,8 @@ import androidx.test.espresso.matcher.RootMatchers.isTouchable
 import androidx.test.espresso.matcher.ViewMatchers.*
 import androidx.test.ext.junit.rules.ActivityScenarioRule
 import androidx.test.ext.junit.runners.AndroidJUnit4
-import com.github.fribourgsdp.radio.LobbyData
-import com.github.fribourgsdp.radio.LobbyDataKeys
+import com.github.fribourgsdp.radio.data.LobbyData
+import com.github.fribourgsdp.radio.data.LobbyDataKeys
 import com.github.fribourgsdp.radio.R
 import com.github.fribourgsdp.radio.game.prep.*
 import com.github.fribourgsdp.radio.mockimplementations.*

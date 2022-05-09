@@ -1,6 +1,7 @@
-package com.github.fribourgsdp.radio
+package com.github.fribourgsdp.radio.data
 
 import android.content.Context
+import com.github.fribourgsdp.radio.R
 
 data class LobbyData(val id: Long, val name: String, val hostName: String)
 

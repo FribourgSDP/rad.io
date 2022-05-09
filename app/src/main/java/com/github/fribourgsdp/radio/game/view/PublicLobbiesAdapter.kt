@@ -1,4 +1,4 @@
-package com.github.fribourgsdp.radio
+package com.github.fribourgsdp.radio.game.view
 
 import android.content.Context
 import android.view.LayoutInflater
@@ -7,6 +7,9 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.cardview.widget.CardView
 import androidx.recyclerview.widget.RecyclerView
+import com.github.fribourgsdp.radio.data.LobbyData
+import com.github.fribourgsdp.radio.data.LobbyDataKeys
+import com.github.fribourgsdp.radio.R
 import com.github.fribourgsdp.radio.database.Database
 
 class PublicLobbiesAdapter(private val context: Context, private val db: Database): RecyclerView.Adapter<PublicLobbiesAdapter.ViewHolder>() {
