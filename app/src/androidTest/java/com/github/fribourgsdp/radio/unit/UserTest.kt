@@ -5,6 +5,7 @@ import androidx.test.core.app.ApplicationProvider
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.github.fribourgsdp.radio.data.Genre
 import com.github.fribourgsdp.radio.data.Playlist
+import com.github.fribourgsdp.radio.data.Song
 import com.github.fribourgsdp.radio.data.User
 import org.junit.Assert.*
 import org.junit.Test
@@ -48,7 +49,15 @@ class UserTest {
             assertTrue(userPlaylists.contains(Playlist("Video game songs")))
             assertTrue(userPlaylists.contains(Playlist("Classical music hits")))
         }
+    }
 
+    @Test
+    fun chansonFrancaisePlaylistHasGoodTitlesAndArtists(){
+        User.createDefaultUser().addOnSuccessListener { u ->
+            val chansonFrancaisePlaylist = u.getPlaylists().find { p -> p.name == "Chanson française" }!!
+            assertTrue(chansonFrancaisePlaylist.getSongs().contains(Song("Jacques Brel", "Les vieux")))
+            assertFalse(chansonFrancaisePlaylist.getSongs().contains(Song("Foule sentimentale", "Alain Souchon")))
+        }
     }
 
     @Test
