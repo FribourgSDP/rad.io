@@ -7,7 +7,9 @@
     <uses-permission android:name="android.permission.MODIFY_AUDIO_SETTINGS" />
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
-    <uses-permission android:name="android.permission.BLUETOOTH" />
+    <uses-permission android:name="android.permission.BLUETOOTH" /> <!-- Permission for camera -->
+    <uses-permission android:name="android.permission.CAMERA" /> <!-- Permission to vibrate -->
+    <uses-permission android:name="android.permission.VIBRATE" />
 
     <application
         android:allowBackup="true"
@@ -17,8 +19,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Radio"
         android:usesCleartextTraffic="true">
+
         <activity
-            android:name=".EndGameActivity"
+            android:name=".game.EndGameActivity"
             android:exported="false"
             android:parentActivityName=".MainActivity">
             <!-- The meta-data tag is required if you support API level 15 and lower -->
@@ -27,23 +30,23 @@
                 android:value=".MainActivity" />
         </activity>
         <activity
-            android:name=".GameActivity"
+            android:name=".game.GameActivity"
             android:launchMode= "singleInstance"
             android:exported="false" />
         <activity
-            android:name=".VoiceOverIPActivity"
+            android:name=".deprecated.VoiceOverIPActivity"
             android:exported="false" />
         <activity
-            android:name=".PlaylistsFragmentHolderActivity"
+            android:name=".data.view.PlaylistsFragmentHolderActivity"
             android:exported="false" />
         <activity
-            android:name=".AddPlaylistActivity"
+            android:name=".data.view.AddPlaylistActivity"
             android:exported="false" />
         <activity
-            android:name=".JoinGameActivity"
+            android:name=".game.prep.JoinGameActivity"
             android:exported="false" />
         <activity
-            android:name=".SpotifyReceiveActivity"
+            android:name=".external.spotify.SpotifyReceiveActivity"
             android:exported="true"
             android:label="@string/app_name"
             android:launchMode="singleTop">
@@ -59,26 +62,26 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".ImportSpotifyPlaylistsActivity"
+            android:name=".external.spotify.ImportSpotifyPlaylistsActivity"
             android:exported="false" />
         <activity
-            android:name=".LobbyActivity"
+            android:name=".game.prep.LobbyActivity"
             android:exported="false" />
         <activity
-            android:name=".UserProfileActivity"
+            android:name=".data.view.UserProfileActivity"
             android:exported="false"
             android:launchMode="singleTop" />
         <activity
-            android:name=".FireBaseTestActivity"
+            android:name=".deprecated.FireBaseTestActivity"
             android:exported="false" />
         <activity
-            android:name=".SettingsActivity"
+            android:name=".config.SettingsActivity"
             android:exported="false" />
         <activity
-            android:name=".GameSettingsActivity"
+            android:name=".game.prep.GameSettingsActivity"
             android:exported="false" />
         <activity
-            android:name=".GoogleSignInActivity"
+            android:name=".external.google.GoogleSignInActivity"
             android:exported="false" />
         <activity
             android:name=".MainActivity"
@@ -108,10 +111,22 @@
             android:name=".mockimplementations.BuggyJoinGameActivity"
             android:exported="false" />
         <activity
+            android:name=".mockimplementations.QRCodeJoinGameActivity"
+            android:exported="false" />
+        <activity
+            android:name=".mockimplementations.QRCodeJoinGameActivityJoin"
+            android:exported="false" />
+        <activity
+            android:name=".mockimplementations.QRCodeJoinGameActivityJoinFail"
+            android:exported="false" />
+        <activity
             android:name=".mockimplementations.MockGameActivity"
             android:exported="false" />
         <activity
             android:name=".mockimplementations.MockUserProfileActivity"
+            android:exported="false" />
+        <activity
+            android:name=".mockimplementations.MockSettingsActivity"
             android:exported="false" />
     </application>
 

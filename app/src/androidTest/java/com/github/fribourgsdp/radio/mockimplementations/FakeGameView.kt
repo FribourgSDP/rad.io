@@ -1,7 +1,7 @@
 package com.github.fribourgsdp.radio.mockimplementations
 
 import android.view.View
-import com.github.fribourgsdp.radio.GameView
+import com.github.fribourgsdp.radio.game.GameView
 import java.util.*
 import kotlin.collections.HashMap
 
