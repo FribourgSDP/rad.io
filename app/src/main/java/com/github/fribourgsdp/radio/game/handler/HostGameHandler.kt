@@ -1,22 +1,26 @@
 package com.github.fribourgsdp.radio.game.handler
 
 import android.util.Log
+import com.github.fribourgsdp.radio.*
 import com.github.fribourgsdp.radio.database.Database
 import com.github.fribourgsdp.radio.database.FirestoreDatabase
+import com.github.fribourgsdp.radio.external.musixmatch.LyricsGetter
+import com.github.fribourgsdp.radio.external.musixmatch.MusixmatchLyricsGetter
 import com.github.fribourgsdp.radio.game.Game
 import com.github.fribourgsdp.radio.game.GameView
+import com.github.fribourgsdp.radio.getPlayerDoneMap
+import com.github.fribourgsdp.radio.getPlayerFoundMap
+import com.github.fribourgsdp.radio.getScoresOfRound
 import com.github.fribourgsdp.radio.util.getPlayerDoneMap
 import com.github.fribourgsdp.radio.util.getPlayerFoundMap
 import com.github.fribourgsdp.radio.util.getScoresOfRound
 import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.FieldValue
-import java.lang.IllegalStateException
 
-class HostGameHandler(private val game: Game, private val view: GameView, db: Database = FirestoreDatabase()): GameHandler(view, db) {
+class HostGameHandler(private val game: Game, private val view: GameView, db: Database = FirestoreDatabase(), private val lyricsGetter: LyricsGetter = MusixmatchLyricsGetter): GameHandler(view, db) {
     private var latestSingerId: String? = null
 
     override fun handleSnapshot(snapshot: DocumentSnapshot?) {
-        Log.println(Log.ASSERT, "*", "HANDLE SNAPSHOT Host")
         if (snapshot != null && snapshot.exists()) {
             val doneMap = snapshot.getPlayerDoneMap()
 
@@ -79,7 +83,7 @@ class HostGameHandler(private val game: Game, private val view: GameView, db: Da
         game.getChoices(3).stream()
             .forEach { song ->
                 nextChoices.add(song.name)
-                nextChoicesLyrics[song.name] = song.lyrics
+                nextChoicesLyrics[song.name] = lyricsGetter.markSongName(song.lyrics, song.name)
             }
 
         var nextUser = ""

@@ -11,6 +11,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.github.fribourgsdp.radio.*
 import com.github.fribourgsdp.radio.game.timer.Timer
 import com.github.fribourgsdp.radio.data.User
+import com.github.fribourgsdp.radio.external.musixmatch.MusixmatchLyricsGetter.LYRICS_NOT_FOUND_PLACEHOLDER
 import com.github.fribourgsdp.radio.game.handler.HostGameHandler
 import com.github.fribourgsdp.radio.game.handler.PlayerGameHandler
 import com.github.fribourgsdp.radio.game.prep.GAME_IS_HOST_KEY
@@ -235,6 +236,7 @@ open class GameActivity : AppCompatActivity(), GameView, Timer.Listener {
         val userId = user.name.hashCode().absoluteValue
         voiceChannel.setAudioProfile(Constants.AUDIO_PROFILE_MUSIC_STANDARD, Constants.AUDIO_SCENARIO_CHATROOM_ENTERTAINMENT);
         voiceChannel.enableAudioVolumeIndication(200,3,true)
+        voiceChannel.setDefaultAudioRoutetoSpeakerphone(true)
         voiceChannel.joinChannel(voiceChannel.getToken(userId, gameUid.toString()), gameUid.toString(), "", userId)
     }
 
@@ -270,7 +272,10 @@ open class GameActivity : AppCompatActivity(), GameView, Timer.Listener {
     override fun displayLyrics(lyrics : String) {
         showLyricsButton.visibility = View.VISIBLE
         showLyricsButton.setOnClickListener { displayLyrics(lyrics) }
-        val lyricsPopup = LyricsPopup(lyrics)
-        lyricsPopup.show(supportFragmentManager, "lyricsPopup")
+        if(lyrics.isNotEmpty() && lyrics != LYRICS_NOT_FOUND_PLACEHOLDER) {
+
+            val lyricsPopup = LyricsPopup(lyrics)
+            lyricsPopup.show(supportFragmentManager, "lyricsPopup")
+        }
     }
 }
