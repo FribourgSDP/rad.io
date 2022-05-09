@@ -80,6 +80,7 @@ data class User (var name: String, val color: Int) : SavesToFileSystem<User>(USE
             return FirestoreDatabase().generateUserId().continueWith { id ->
                 val generatedUser = User("Guest", generateColor())
                 generatedUser.id = id.result.toString()
+                generatedUser.addPlaylists(StarterPlaylists.getStarterPlaylists())
                 generatedUser
             }
 

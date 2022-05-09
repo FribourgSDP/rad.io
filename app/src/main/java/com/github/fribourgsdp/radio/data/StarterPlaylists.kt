@@ -3,11 +3,11 @@ package com.github.fribourgsdp.radio.data
 import com.github.fribourgsdp.radio.data.Genre.*
 
 object StarterPlaylists {
-    val top100french = Playlist("Chanson française", FRENCH)
-    val basicalBlindTest = Playlist("Basical blind test", NONE)
-    val movieThemeSongs = Playlist("Movie theme songs", MOVIE)
-    val videoGames = Playlist("Video game songs", VIDEO_GAMES)
-    val classicalHits = Playlist("Classical music hits", CLASSICAL)
+    private val top100french = Playlist("Chanson française", FRENCH)
+    private val basicBlindTest = Playlist("Basic blind test", NONE)
+    private val movieThemeSongs = Playlist("Movie theme songs", MOVIE)
+    private val videoGames = Playlist("Video game songs", VIDEO_GAMES)
+    private val classicalHits = Playlist("Classical music hits", CLASSICAL)
     init {
         addArtistSongToPlaylist(top100french,
             "Indochine" to "L\'aventurier",
@@ -117,7 +117,7 @@ object StarterPlaylists {
         )
 
         addSongArtistToPlaylist(
-            basicalBlindTest,
+            basicBlindTest,
             "Rasputin" to "Boney M.",
             "September" to "Earth, Wind & Fire",
             "Sarà perché ti amo" to "Ricchi e Poveri",
@@ -441,5 +441,12 @@ object StarterPlaylists {
         songs.forEach {
             playlist.addSong(Song(it.first, it.second))
         }
+    }
+
+    /**
+     * Function to get attributes of this object, namely the playlist created above.
+     */
+    fun getStarterPlaylists() : Set<Playlist> {
+        return setOf(basicBlindTest, top100french, videoGames, classicalHits, movieThemeSongs)
     }
 }
