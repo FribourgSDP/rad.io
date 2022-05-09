@@ -236,6 +236,7 @@ open class GameActivity : AppCompatActivity(), GameView, Timer.Listener {
         val userId = user.name.hashCode().absoluteValue
         voiceChannel.setAudioProfile(Constants.AUDIO_PROFILE_MUSIC_STANDARD, Constants.AUDIO_SCENARIO_CHATROOM_ENTERTAINMENT);
         voiceChannel.enableAudioVolumeIndication(200,3,true)
+        voiceChannel.setDefaultAudioRoutetoSpeakerphone(true)
         voiceChannel.joinChannel(voiceChannel.getToken(userId, gameUid.toString()), gameUid.toString(), "", userId)
     }
 
@@ -272,6 +273,7 @@ open class GameActivity : AppCompatActivity(), GameView, Timer.Listener {
         showLyricsButton.visibility = View.VISIBLE
         showLyricsButton.setOnClickListener { displayLyrics(lyrics) }
         if(lyrics.isNotEmpty() && lyrics != LYRICS_NOT_FOUND_PLACEHOLDER) {
+
             val lyricsPopup = LyricsPopup(lyrics)
             lyricsPopup.show(supportFragmentManager, "lyricsPopup")
         }

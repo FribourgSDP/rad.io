@@ -18,9 +18,9 @@ const val QUERY_ARTIST_FIELD = "q_artist"
 const val SORT_CONDITION = "s_artist_rating=desc"
 
 interface LyricsGetter{
-    fun getLyrics(songName: String, artistName: String = "", client: OkHttpClient = OkHttpClient(), parser: JSONParser = JSONStandardParser()): CompletableFuture<String>
+    fun getLyrics(songName: String,artistName: String = "",client: OkHttpClient = OkHttpClient(),parser: JSONParser = JSONStandardParser()): CompletableFuture<String>
     fun getSongID(songName: String, artistName: String, client: OkHttpClient = OkHttpClient(), parser : JSONParser = JSONStandardParser()) : CompletableFuture<Int>
-    fun markSongName(lyrics: String, name: String): String
+    fun markSongName(lyrics : String, name : String) : String
 }
 /**
  * Tool to get lyrics from a given song name and artist using Musixmatch API.
@@ -33,7 +33,6 @@ object MusixmatchLyricsGetter : LyricsGetter {
     abstract class LyricsGetterException(val default : String) : Exception()
     class NoLyricsFoundForThisSong : LyricsGetterException(LYRICS_NOT_FOUND_PLACEHOLDER)
     class BackendError : LyricsGetterException(BACKEND_ERROR_PLACEHOLDER)
-
     /**
      * Asks Musixmatch and retrieves the lyrics of a song.
      * The song name and artist name can be empty or incomplete, the server can still find it.

@@ -1,5 +1,6 @@
 package com.github.fribourgsdp.radio.game.handler
 
+import android.util.Log
 import com.github.fribourgsdp.radio.database.Database
 import com.github.fribourgsdp.radio.database.FirestoreDatabase
 import com.github.fribourgsdp.radio.external.musixmatch.LyricsGetter

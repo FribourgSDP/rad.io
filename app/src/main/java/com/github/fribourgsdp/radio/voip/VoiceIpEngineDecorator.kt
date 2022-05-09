@@ -91,4 +91,9 @@ class VoiceIpEngineDecorator : java.io.Serializable {
             }
         }
     }
+
+    fun setDefaultAudioRoutetoSpeakerphone(b: Boolean) {
+        voiceChatEngine.setDefaultAudioRoutetoSpeakerphone(b)
+
+    }
 }
