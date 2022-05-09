@@ -1,6 +1,6 @@
-package com.github.fribourgsdp.radio
+package com.github.fribourgsdp.radio.data
 
-import com.github.fribourgsdp.radio.Genre.*
+import com.github.fribourgsdp.radio.data.Genre.*
 
 object StarterPlaylists {
     val top100french = Playlist("Chanson française", FRENCH)
@@ -372,7 +372,7 @@ object StarterPlaylists {
             "Castlevania" to "Michiru Yamane",
             "Pokemon" to "",
             "Fallout 3" to "Inon Zur",
-            "Minecraft" to "C418,
+            "Minecraft" to "C418",
             "Tetris" to "",
             "Among us" to "",
 
