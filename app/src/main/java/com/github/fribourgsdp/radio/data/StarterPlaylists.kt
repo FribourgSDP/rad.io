@@ -7,8 +7,9 @@ object StarterPlaylists {
     val basicalBlindTest = Playlist("Basical blind test", NONE)
     val movieThemeSongs = Playlist("Movie theme songs", MOVIE)
     val videoGames = Playlist("Video game songs", VIDEO_GAMES)
+    val classicalHits = Playlist("Classical music hits", CLASSICAL)
     init {
-        top100french.addSongs(setOf(
+        addArtistSongToPlaylist(top100french,
             "Indochine" to "L\'aventurier",
             "Jean-Jacques Goldman, Michael Jones" to "Je te donne",
             "Marc Lavoine" to  "Elle a les yeux revolver",
@@ -113,9 +114,10 @@ object StarterPlaylists {
             "France Gall" to "Si maman si",
             "Charles Trenet" to "Douce France",
             "Jacques Brel" to "Amsterdam"
-        ).map { tuple -> Song(tuple.second, tuple.first) }.toSet())
+        )
 
-        basicalBlindTest.addSongs(setOf(
+        addSongArtistToPlaylist(
+            basicalBlindTest,
             "Rasputin" to "Boney M.",
             "September" to "Earth, Wind & Fire",
             "Sarà perché ti amo" to "Ricchi e Poveri",
@@ -245,9 +247,10 @@ object StarterPlaylists {
             "Single Ladies" to "Beyoncé",
             "You Spin Me Round" to "Dead or Alive",
             "You Really Got Me" to "The Kinks"
-        ).map { tuple -> Song(tuple.first, tuple.second) }.toSet())
+        )
 
-        movieThemeSongs.addSongs(setOf(
+        addSongArtistToPlaylist(
+            movieThemeSongs,
             "E.T." to "Composer: John Williams",
             "Jurassic Park" to "John Williams",
             "Star Wars" to "John Williams",
@@ -351,9 +354,10 @@ object StarterPlaylists {
             "Pirate of the Caribbean" to "Hans Zimmer",
             "Mission Impossible" to "",
             "Indiana Jones" to "John Williams"
-        ).map{tuple -> Song(tuple.first, tuple.second)}.toSet())
+        )
 
-        videoGames.addSongs(setOf(
+        addSongArtistToPlaylist(
+            videoGames,
             "The legend of Zelda" to "Kōji Kondō",
             "The wind waker" to "Kōji Kondō",
             "Super Mario Bros." to "Kōji Kondō",
@@ -375,7 +379,33 @@ object StarterPlaylists {
             "Minecraft" to "C418",
             "Tetris" to "",
             "Among us" to "",
+            "The last of us" to "",
+            "Pokemon Red" to "",
+            "Pac man" to "",
+            "Sonic" to "",
+            "Civilization" to "Christopher Tin",
+        )
 
-        ).map{tuple -> Song(tuple.first, tuple.second)}.toSet())
+        addSongArtistToPlaylist(
+            classicalHits,
+            "Eine kleine Nachtmusik" to "Wolfgang Amadeus Mozart",
+            "Für Elise" to "Ludwig van Beethoven",
+            "9th symphony" to "Ludwig van Beethoven",
+            "5th symphony" to "Ludwig van Beethoven",
+            "Dies Irae" to "Giuseppe Verdi",
+            "Lacrimosa" to "Wolfgang Amadeus Mozart",
+
+        )
+    }
+
+    private fun addSongArtistToPlaylist(playlist: Playlist, vararg songs: Pair<String, String>) {
+        songs.forEach {
+            playlist.addSong(Song(it.first, it.second))
+        }
+    }
+    private fun addArtistSongToPlaylist(playlist: Playlist, vararg songs: Pair<String, String>) {
+        songs.forEach {
+            playlist.addSong(Song(it.first, it.second))
+        }
     }
 }
