@@ -271,7 +271,9 @@ open class GameActivity : AppCompatActivity(), GameView, Timer.Listener {
     override fun displayLyrics(lyrics : String) {
         showLyricsButton.visibility = View.VISIBLE
         showLyricsButton.setOnClickListener { displayLyrics(lyrics) }
-        val lyricsPopup = LyricsPopup(lyrics)
-        lyricsPopup.show(supportFragmentManager, "lyricsPopup")
+        if(lyrics.isNotEmpty()) {
+            val lyricsPopup = LyricsPopup(lyrics)
+            lyricsPopup.show(supportFragmentManager, "lyricsPopup")
+        }
     }
 }
