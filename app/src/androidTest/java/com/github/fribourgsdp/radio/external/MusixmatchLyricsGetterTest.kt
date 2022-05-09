@@ -79,7 +79,7 @@ class MusixmatchLyricsGetterTest {
     @Test
     fun markSongWithNoName(){
         val lyrics = "Rouge,\nComme un soleil couchant de Méditerrannée\nRouge,\n..."
-        assertEquals(lyrics,MusixmatchLyricsGetter.markSongName(lyrics, ""))
+        assertEquals(lyrics, MusixmatchLyricsGetter.markSongName(lyrics, ""))
     }
     @Test
     fun emphasizeSongNameInLyrics(){
