@@ -14,6 +14,7 @@ import androidx.test.espresso.matcher.RootMatchers
 import androidx.test.espresso.matcher.ViewMatchers
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.rule.GrantPermissionRule
+import com.github.fribourgsdp.radio.game.prep.LobbyActivity
 import com.github.fribourgsdp.radio.mockimplementations.QRCodeJoinGameActivity
 import com.github.fribourgsdp.radio.mockimplementations.QRCodeJoinGameActivityJoin
 import com.github.fribourgsdp.radio.mockimplementations.QRCodeJoinGameActivityJoinFail

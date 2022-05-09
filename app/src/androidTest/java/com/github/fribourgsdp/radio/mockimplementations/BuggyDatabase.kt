@@ -1,5 +1,6 @@
 package com.github.fribourgsdp.radio.mockimplementations
 
+import com.github.fribourgsdp.radio.LobbyData
 import com.github.fribourgsdp.radio.data.Playlist
 import com.github.fribourgsdp.radio.data.Song
 import com.github.fribourgsdp.radio.data.User
