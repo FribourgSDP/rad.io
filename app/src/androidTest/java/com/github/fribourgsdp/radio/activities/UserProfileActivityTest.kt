@@ -29,6 +29,7 @@ import com.github.fribourgsdp.radio.data.view.REDIRECT_URI
 import com.github.fribourgsdp.radio.data.view.UserProfileActivity
 import com.github.fribourgsdp.radio.database.Database
 import com.github.fribourgsdp.radio.external.google.GoogleSignInActivity
+import com.github.fribourgsdp.radio.mockimplementations.GoogleUserMockUserProfileActivity
 import com.github.fribourgsdp.radio.mockimplementations.MockUserProfileActivity
 import com.google.android.gms.tasks.Tasks
 import com.google.firebase.auth.FirebaseAuth
@@ -216,11 +217,11 @@ class UserProfileActivityTest : TestCase() {
 
     @Test
     fun deletePlaylistDeletesPlaylist(){
-        val intent = Intent(ctx, MockUserProfileActivity::class.java)
+        val intent = Intent(ctx, GoogleUserMockUserProfileActivity::class.java)
         val db = Mockito.mock(Database::class.java)
         `when`(db.generateUserId()).thenReturn(Tasks.forResult(1))
         User.database = db
-        ActivityScenario.launch<MockUserProfileActivity>(intent).use {
+        ActivityScenario.launch<GoogleUserMockUserProfileActivity>(intent).use {
              onView(withId(R.id.googleSignInButton)).
                     perform(click())
             onView(ViewMatchers.withText(R.string.KeepPlaylistLocallyText)) // Look for the dialog => use its title
@@ -238,13 +239,13 @@ class UserProfileActivityTest : TestCase() {
 
     @Test
     fun keepPlaylistKeepsPlaylist(){
-        val intent = Intent(ctx, MockUserProfileActivity::class.java)
+        val intent = Intent(ctx, GoogleUserMockUserProfileActivity::class.java)
 
         val db = Mockito.mock(Database::class.java)
         `when`(db.generateUserId()).thenReturn(Tasks.forResult(1))
         User.database = db
 
-        ActivityScenario.launch<MockUserProfileActivity>(intent).use {
+        ActivityScenario.launch<GoogleUserMockUserProfileActivity>(intent).use {
             onView(withId(R.id.googleSignInButton)).
             perform(click())
             onView(ViewMatchers.withText(R.string.KeepPlaylistLocallyText)) // Look for the dialog => use its title
