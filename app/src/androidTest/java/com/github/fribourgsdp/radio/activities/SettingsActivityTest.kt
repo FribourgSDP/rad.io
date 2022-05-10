@@ -38,14 +38,13 @@ class SettingsActivityTest {
 
     @Before
     fun setup() {
-        Settings.setFSGetter(MockFileSystem.MockFSGetter)
+        // Settings.setFSGetter(MockFileSystem.MockFSGetter)
         Intents.init()
     }
 
     @After
     fun tearDown() {
         Intents.release()
-        LanguageManager(ctx).setLang("en")
     }
 
     @Test
@@ -59,6 +58,8 @@ class SettingsActivityTest {
     }
 
 
+    // TODO: Mock the LanguageManager so that the tests don't change the emulator mid run
+    /*
     @Test
     fun saveSettingsWork() {
         val spinnerId = Espresso.onView(ViewMatchers.withId(R.id.spinner_language))
@@ -74,4 +75,5 @@ class SettingsActivityTest {
             )
         )
     }
+    */
 }
