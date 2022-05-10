@@ -99,5 +99,6 @@
     <string name="timerSelectTime">Select the duration players will have to guess.</string>
     <string name="timerMinutes">Minutes</string>
     <string name="timerSeconds">Seconds</string>
+    <string name="gameDurationFormat">Time singing: %d seconds </string>
 </resources>
 

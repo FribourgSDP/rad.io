@@ -57,6 +57,7 @@ open class LobbyActivity : MyAppCompatActivity(){
     private lateinit var nbRoundsTextView : TextView
     private lateinit var withHintTextView : TextView
     private lateinit var privateTextView  : TextView
+    private lateinit var singerDurationTextView : TextView
 
     private lateinit var launchGameButton: Button
     private lateinit var askForPermissionsButton: Button
@@ -177,6 +178,7 @@ open class LobbyActivity : MyAppCompatActivity(){
         withHintTextView = findViewById(R.id.withHintText)
         privateTextView  = findViewById(R.id.privateText)
         privateTextView  = findViewById(R.id.privateText)
+        singerDurationTextView = findViewById(R.id.singerDurationLobbyText)
         layoutManager = LinearLayoutManager(this)
         val recyclerView = findViewById<RecyclerView>(R.id.lobbyRecyclerView)
         recyclerView.layoutManager = layoutManager
@@ -222,6 +224,7 @@ open class LobbyActivity : MyAppCompatActivity(){
         nbRoundsTextView.text = getString(R.string.number_of_rounds_format, nbRounds)
         withHintTextView.text = getString(R.string.hints_enabled_format, withHint)
         privateTextView.text  = getString(R.string.private_format, isPrivate)
+        singerDurationTextView.text = getString(R.string.gameDurationFormat, gameDuration)
     }
 
     private fun linkToDatabase(uid: Long) {

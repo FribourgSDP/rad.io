@@ -100,4 +100,5 @@
     <string name="timerSelectTime">Choissisez la durée durant laquelle les joueurs pourront deviner.</string>
     <string name="timerMinutes">Minutes</string>
     <string name="timerSeconds">Secondes</string>
+    <string name="gameDurationFormat">Durée du chanteur: %d secondes </string>
 </resources>
