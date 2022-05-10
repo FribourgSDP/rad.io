@@ -57,21 +57,17 @@ class SettingsActivityTest {
 
     @Test
     fun saveSettingsWork() {
-        val context: Context = ApplicationProvider.getApplicationContext()
-        val intent = Intent(context, MockSettingsActivity::class.java)
-        ActivityScenario.launch<MockSettingsActivity>(intent).use { scenario ->
+        val spinnerId = Espresso.onView(ViewMatchers.withId(R.id.spinner_language))
 
-            val spinnerId = Espresso.onView(ViewMatchers.withId(R.id.spinner_language))
+        spinnerId.perform(ViewActions.click())
+        onData(allOf(`is`(instanceOf(Language::class.java)),`is`(Language.FRENCH)))
+            .perform(ViewActions.click())
 
-            spinnerId.perform(ViewActions.click())
-            onData(allOf(`is`(instanceOf(Language::class.java)),`is`(Language.FRENCH))).perform(ViewActions.click())
-            Intents.intended(
-                allOf(
-                    IntentMatchers.hasComponent(SettingsActivity::class.java.name),
-                    IntentMatchers.toPackage("com.github.fribourgsdp.radio")
-                )
+        Intents.intended(
+            allOf(
+                IntentMatchers.hasComponent(SettingsActivity::class.java.name),
+                IntentMatchers.toPackage("com.github.fribourgsdp.radio")
             )
-
-        }
+        )
     }
 }
