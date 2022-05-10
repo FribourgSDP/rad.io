@@ -465,9 +465,11 @@ class FirestoreDatabase(var refMake: FirestoreRef) : Database {
             .update(updatesMap)
     }
 
-    override fun updateCurrentSongOfGame(id: Long, songName: String): Task<Void> {
+    override fun updateCurrentSongOfGame(id: Long, songName: String, incrementBy: Long?): Task<Void> {
+        var timeToAdd: Long?
+        timeToAdd = incrementBy ?: ROUND_TIME_IN_MILLIS
         val roundDeadline = Date()
-        roundDeadline.time += ROUND_TIME_IN_MILLIS
+        roundDeadline.time += timeToAdd
 
         val songUpdateMap = hashMapOf(
             "current_song" to songName,
