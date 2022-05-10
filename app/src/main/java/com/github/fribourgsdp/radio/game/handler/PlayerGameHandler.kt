@@ -1,6 +1,8 @@
 package com.github.fribourgsdp.radio.game.handler
 
+import android.content.Context
 import android.util.Log
+import com.github.fribourgsdp.radio.R
 import com.github.fribourgsdp.radio.database.Database
 import com.github.fribourgsdp.radio.database.FirestoreDatabase
 import com.github.fribourgsdp.radio.data.User
@@ -10,10 +12,11 @@ import com.github.fribourgsdp.radio.util.StringComparisons
 import com.google.firebase.firestore.DocumentSnapshot
 
 class PlayerGameHandler(
+    private val ctx: Context,
     private val gameID: Long,
     private val view: GameView,
     db: Database = FirestoreDatabase()
-): GameHandler(view, db), GameView.OnPickListener {
+): GameHandler(ctx, view, db), GameView.OnPickListener {
 
     private var songToGuess: String? = null
 
@@ -47,7 +50,7 @@ class PlayerGameHandler(
 
         } else {
             Log.e("PlayerGameHandler Error", "Snapshot error")
-            view.displayError("An error occurred")
+            view.displayError(ctx.getString(R.string.game_error))
         }
     }
 
@@ -56,7 +59,7 @@ class PlayerGameHandler(
 
         if (timeout) {
             db.playerEndTurn(gameID, userId, false).addOnFailureListener {
-                view.displayError("An error occurred")
+                view.displayError(ctx.getString(R.string.game_error))
             }
 
             // Hide the error if a wrong guess was made
@@ -80,7 +83,7 @@ class PlayerGameHandler(
 
             db.playerEndTurn(gameID, userId, true).addOnFailureListener {
                     Log.e("PlayerGameHandler Error", "In end turn: ${it.message}", it)
-                    view.displayError("An error occurred")
+                    view.displayError(ctx.getString(R.string.game_error))
                 }
         }
     }
@@ -92,7 +95,7 @@ class PlayerGameHandler(
             }
             .addOnFailureListener {
                 Log.e("PlayerGameHandler Error", "onPick: ${it.message}", it)
-                view.displayError("An error occurred")
+                view.displayError(ctx.getString(R.string.game_error))
             }
     }
 

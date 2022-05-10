@@ -73,11 +73,11 @@ open class GameActivity : AppCompatActivity(), GameView, Timer.Listener {
 
         if (isHost) {
             val game = Json.decodeFromString(intent.getStringExtra(GAME_KEY)!!) as Game
-            val hostGameHandler = HostGameHandler(game, this)
+            val hostGameHandler = HostGameHandler(this, game, this)
             hostGameHandler.linkToDatabase()
         }
 
-        playerGameHandler = PlayerGameHandler(gameUid, this)
+        playerGameHandler = PlayerGameHandler(this, gameUid, this)
 
         // On submit make the player game handler handle the guess
         songGuessSubmitButton.setOnClickListener {

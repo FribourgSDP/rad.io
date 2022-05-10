@@ -1,6 +1,8 @@
 package com.github.fribourgsdp.radio.game.handler
 
+import android.content.Context
 import android.util.Log
+import com.github.fribourgsdp.radio.R
 import com.github.fribourgsdp.radio.database.Database
 import com.github.fribourgsdp.radio.database.FirestoreDatabase
 import com.github.fribourgsdp.radio.external.musixmatch.LyricsGetter
@@ -13,7 +15,13 @@ import com.github.fribourgsdp.radio.getScoresOfRound
 import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.FieldValue
 
-class HostGameHandler(private val game: Game, private val view: GameView, db: Database = FirestoreDatabase(), private val lyricsGetter: LyricsGetter = MusixmatchLyricsGetter): GameHandler(view, db) {
+class HostGameHandler(
+    private val ctx: Context,
+    private val game: Game,
+    private val view: GameView,
+    db: Database = FirestoreDatabase(),
+    private val lyricsGetter: LyricsGetter = MusixmatchLyricsGetter
+): GameHandler(ctx, view, db) {
     private var latestSingerId: String? = null
 
     override fun handleSnapshot(snapshot: DocumentSnapshot?) {
@@ -54,17 +62,17 @@ class HostGameHandler(private val game: Game, private val view: GameView, db: Da
                         latestSingerId!!
                     ).addOnFailureListener {
                         Log.e("HostGameHandler Error", "Metadata reset: ${it.message}", it)
-                        view.displayError("An error occurred.")
+                        view.displayError(ctx.getString(R.string.game_error))
                     }
                 }.addOnFailureListener {
                     Log.e("HostGameHandler Error", "Game update: ${it.message}", it)
-                    view.displayError("An error occurred.")
+                    view.displayError(ctx.getString(R.string.game_error))
                 }
             }
 
         } else {
             Log.e("HostGameHandler Error", "Snapshot error")
-            view.displayError("An error occurred.")
+            view.displayError(ctx.getString(R.string.game_error))
         }
     }
 

@@ -1,6 +1,9 @@
 package com.github.fribourgsdp.radio.unit
 
+import android.content.Context
 import android.view.View
+import androidx.test.core.app.ApplicationProvider
+import com.github.fribourgsdp.radio.R
 import com.github.fribourgsdp.radio.data.Playlist
 import com.github.fribourgsdp.radio.data.User
 import com.github.fribourgsdp.radio.database.Database
@@ -15,6 +18,8 @@ import org.junit.Test
 import org.mockito.Mockito.*
 
 class HostGameHandlerTest {
+    private val ctx: Context = ApplicationProvider.getApplicationContext()
+
     private val sleepingTime = 50L
     private lateinit var mockSnapshot: DocumentSnapshot
 
@@ -46,14 +51,14 @@ class HostGameHandlerTest {
         `when`(db.updateGame(anyLong(), anyMap()))
             .thenReturn(Tasks.forException(Exception()))
 
-        val handler = HostGameHandler(fakeGame, view, db)
+        val handler = HostGameHandler(ctx, fakeGame, view, db)
 
         handler.handleSnapshot(mockSnapshot)
 
         // Wait for the task of the database to execute
         Thread.sleep(sleepingTime)
 
-        assertEquals("An error occurred.", view.error)
+        assertEquals(ctx.getString(R.string.game_error), view.error)
         assertEquals(View.VISIBLE, view.errorVisibility)
     }
 
@@ -66,14 +71,14 @@ class HostGameHandlerTest {
         `when`(db.resetGameMetadata(anyLong(), anyString()))
             .thenReturn(Tasks.forException(Exception()))
 
-        val handler = HostGameHandler(fakeGame, view, db)
+        val handler = HostGameHandler(ctx, fakeGame, view, db)
 
         handler.handleSnapshot(mockSnapshot)
 
         // Wait for the task of the database to execute
         Thread.sleep(sleepingTime)
 
-        assertEquals("An error occurred.", view.error)
+        assertEquals(ctx.getString(R.string.game_error), view.error)
         assertEquals(View.VISIBLE, view.errorVisibility)
     }
 
@@ -81,11 +86,11 @@ class HostGameHandlerTest {
     fun displayErrorOnNullSnapshot() {
         val view = FakeGameView()
 
-        val handler = HostGameHandler(fakeGame, view)
+        val handler = HostGameHandler(ctx, fakeGame, view)
 
         handler.handleSnapshot(null)
 
-        assertEquals("An error occurred.", view.error)
+        assertEquals(ctx.getString(R.string.game_error), view.error)
         assertEquals(View.VISIBLE, view.errorVisibility)
     }
 
@@ -95,11 +100,11 @@ class HostGameHandlerTest {
 
         val view = FakeGameView()
 
-        val handler = HostGameHandler(fakeGame, view)
+        val handler = HostGameHandler(ctx, fakeGame, view)
 
         handler.handleSnapshot(mockSnapshot)
 
-        assertEquals("An error occurred.", view.error)
+        assertEquals(ctx.getString(R.string.game_error), view.error)
         assertEquals(View.VISIBLE, view.errorVisibility)
     }
 }
