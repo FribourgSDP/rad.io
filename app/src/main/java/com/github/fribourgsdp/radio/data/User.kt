@@ -76,11 +76,13 @@ data class User (var name: String, val color: Int) : SavesToFileSystem<User>(USE
          *
          * @return a default [User]
          */
-        fun createDefaultUser(): Task<User> {
+        fun createDefaultUser(context : Context? = null): Task<User> {
             return FirestoreDatabase().generateUserId().continueWith { id ->
                 val generatedUser = User("Guest", generateColor())
                 generatedUser.id = id.result.toString()
-                generatedUser.addPlaylists(StarterPlaylists.getStarterPlaylists())
+                if(context != null) {
+                    generatedUser.addPlaylists(StarterPlaylists.getStarterPlaylists(context))
+                }
                 generatedUser
             }
 
