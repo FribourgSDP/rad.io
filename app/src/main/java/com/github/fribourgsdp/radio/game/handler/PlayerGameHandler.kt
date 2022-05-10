@@ -1,5 +1,6 @@
 package com.github.fribourgsdp.radio.game.handler
 
+import android.util.Log
 import com.github.fribourgsdp.radio.database.Database
 import com.github.fribourgsdp.radio.database.FirestoreDatabase
 import com.github.fribourgsdp.radio.data.User
@@ -45,6 +46,7 @@ class PlayerGameHandler(
             updateViewForPlayer(snapshot, singerName)
 
         } else {
+            Log.e("PlayerGameHandler Error", "Snapshot error")
             view.displayError("An error occurred")
         }
     }
@@ -77,6 +79,7 @@ class PlayerGameHandler(
             view.hideError()
 
             db.playerEndTurn(gameID, userId, true).addOnFailureListener {
+                    Log.e("PlayerGameHandler Error", "In end turn: ${it.message}", it)
                     view.displayError("An error occurred")
                 }
         }
@@ -88,6 +91,7 @@ class PlayerGameHandler(
                 view.displaySong(song)
             }
             .addOnFailureListener {
+                Log.e("PlayerGameHandler Error", "onPick: ${it.message}", it)
                 view.displayError("An error occurred")
             }
     }

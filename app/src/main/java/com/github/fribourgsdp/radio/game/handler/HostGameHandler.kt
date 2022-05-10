@@ -53,14 +53,17 @@ class HostGameHandler(private val game: Game, private val view: GameView, db: Da
                         game.id,
                         latestSingerId!!
                     ).addOnFailureListener {
+                        Log.e("HostGameHandler Error", "Metadata reset: ${it.message}", it)
                         view.displayError("An error occurred.")
                     }
                 }.addOnFailureListener {
+                    Log.e("HostGameHandler Error", "Game update: ${it.message}", it)
                     view.displayError("An error occurred.")
                 }
             }
 
         } else {
+            Log.e("HostGameHandler Error", "Snapshot error")
             view.displayError("An error occurred.")
         }
     }
