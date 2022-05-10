@@ -64,7 +64,7 @@ open class GameActivity : AppCompatActivity(), GameView, Timer.Listener {
             it as HashMap<String, String>
         } ?: HashMap()
         isHost = intent.getBooleanExtra(GAME_IS_HOST_KEY, false)
-        gameDuration = intent.getLongExtra(GAME_DURATION_KEY, 45)
+        gameDuration = intent.getLongExtra(GAME_DURATION_KEY, DEFAULT_GAME_DURATION)
         initViews()
 
         val gameUid = intent.getLongExtra(GAME_UID_KEY, -1L)

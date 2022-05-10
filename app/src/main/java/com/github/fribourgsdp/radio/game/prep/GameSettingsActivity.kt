@@ -24,6 +24,8 @@ const val GAME_PRIVACY_KEY = "com.github.fribourgsdp.radio.GAME_PRIVACY"
 const val GAME_IS_HOST_KEY = "com.github.fribourgsdp.radio.GAME_IS_HOST"
 const val GAME_DURATION_KEY = "com.github.fribourgsdp.radio.GAME_DURATION"
 
+const val DEFAULT_GAME_DURATION = 45L;
+
 open class GameSettingsActivity : AppCompatActivity() {
     private lateinit var host: User
 
@@ -43,7 +45,7 @@ open class GameSettingsActivity : AppCompatActivity() {
 
     private lateinit var selectedPlaylist: Playlist
 
-    private var gameTimeDuration = 45
+    private var gameTimeDuration = DEFAULT_GAME_DURATION
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -88,11 +90,11 @@ open class GameSettingsActivity : AppCompatActivity() {
                 setPrefix(R.string.timerMinutes)
                 setSuffix(R.string.timerSeconds)
                 setThemeColor(R.color.purple_200)
-                setPreselectedTime(TimeValue(0, 45))
+                setPreselectedTime(TimeValue(0, DEFAULT_GAME_DURATION.toInt()))
                 setSelectableTimeRange(TimeRange(TimeValue(0, 5), TimeValue(2, 0)))
             }.build().apply {
                 setListener { minute, second ->
-                    gameTimeDuration = 60*minute + second
+                    gameTimeDuration = (60*minute + second).toLong()
                     timerTextView.text = gameTimeDuration.toString() + "s"
                 }
             }.show(supportFragmentManager, "TimerSettings")
