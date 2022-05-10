@@ -24,6 +24,7 @@ class MockUserProfileActivity : UserProfileActivity() {
         User.setFSGetter(MockFileSystem.MockFSGetter)
         val user = User(userName, 0)
         user.id = userId
+        user.isGoogleUser = true
         val playlist1 = Playlist(playListName, Genre.ROCK)
         val song = Song(songName, "artist")
         playlist1.addSong(song)
@@ -32,8 +33,8 @@ class MockUserProfileActivity : UserProfileActivity() {
         super.onCreate(savedInstanceState)
     }
 
-    override fun checkUser() {
-    }
+   /* override fun checkUser() {
+    }*/
     //get and set user
     override fun initializeDatabase(): Database {
         val db = Mockito.mock(Database::class.java)
