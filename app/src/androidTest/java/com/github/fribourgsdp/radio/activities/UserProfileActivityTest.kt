@@ -106,25 +106,6 @@ class UserProfileActivityTest : TestCase() {
 
     }
 
-    @Test
-    fun homeButtonTest() {
-        val context: Context = ApplicationProvider.getApplicationContext()
-
-        val intent = Intent(context, UserProfileActivity::class.java)
-        ActivityScenario.launch<UserProfileActivity>(intent).use { scenario ->
-
-            val googleSignInButton = Espresso.onView(ViewMatchers.withId(R.id.homeButton))
-            googleSignInButton.perform(click())
-
-            Intents.intended(
-                Matchers.allOf(
-                    IntentMatchers.hasComponent(MainActivity::class.java.name),
-                    IntentMatchers.toPackage("com.github.fribourgsdp.radio")
-                )
-            )
-        }
-
-    }
 
     @Test
     fun clickOnGoogleButtonSendToGoogleSignInActivityTestOrLogoutCorrectly() {
