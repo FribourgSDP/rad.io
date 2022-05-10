@@ -1,6 +1,7 @@
 package com.github.fribourgsdp.radio.game.handler
 
 import android.content.Context
+import android.util.Log
 import com.github.fribourgsdp.radio.R
 import com.github.fribourgsdp.radio.database.Database
 import com.github.fribourgsdp.radio.game.GameView
@@ -22,6 +23,7 @@ abstract class GameHandler(private val ctx: Context, private val view: GameView,
     protected fun executeOnUpdate(): EventListener<DocumentSnapshot> {
         return EventListener<DocumentSnapshot> { snapshot, e ->
             if (e != null) {
+                Log.e("GameHandler Error", "In listener: ${e.message}", e)
                 view.displayError(ctx.getString(R.string.game_error))
             }
 
