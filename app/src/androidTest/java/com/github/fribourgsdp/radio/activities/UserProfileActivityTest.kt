@@ -43,6 +43,7 @@ import org.junit.Assert.*
 import org.junit.After
 import org.junit.Before
 import org.mockito.Mockito
+import org.mockito.Mockito.`when`
 
 
 import java.util.concurrent.TimeUnit
@@ -205,11 +206,59 @@ class UserProfileActivityTest : TestCase() {
                 .perform(ViewActions.click())
 
         }
-        var user = User.load(ctx)
+        val user = User.load(ctx)
         assertEquals("onlineUserTest",user.name)
         assertEquals("onlineUserTestId",user.id)
         assertEquals(1,user.getPlaylists().size)
         assertEquals("TEST_PLAYLIST",user.getPlaylists().toList()[0].id)
+
+    }
+
+    @Test
+    fun deletePlaylistDeletesPlaylist(){
+        val intent = Intent(ctx, MockUserProfileActivity::class.java)
+        val db = Mockito.mock(Database::class.java)
+        `when`(db.generateUserId()).thenReturn(Tasks.forResult(1))
+        User.database = db
+        ActivityScenario.launch<MockUserProfileActivity>(intent).use {
+             onView(withId(R.id.googleSignInButton)).
+                    perform(click())
+            onView(ViewMatchers.withText(R.string.KeepPlaylistLocallyText)) // Look for the dialog => use its title
+                .inRoot(RootMatchers.isDialog()) // check that it's indeed in a dialog
+                .check(ViewAssertions.matches(ViewMatchers.isDisplayed()));
+
+            onView(withId(R.id.dismissPlaylistButton))
+                .perform(ViewActions.click())
+        }
+        val user = User.load(ctx)
+        assertFalse(user.isGoogleUser)
+        assertEquals("Guest",user.name)
+        assertEquals("1",user.id)
+    }
+
+    @Test
+    fun keepPlaylistKeepsPlaylist(){
+        val intent = Intent(ctx, MockUserProfileActivity::class.java)
+
+        val db = Mockito.mock(Database::class.java)
+        `when`(db.generateUserId()).thenReturn(Tasks.forResult(1))
+        User.database = db
+
+        ActivityScenario.launch<MockUserProfileActivity>(intent).use {
+            onView(withId(R.id.googleSignInButton)).
+            perform(click())
+            onView(ViewMatchers.withText(R.string.KeepPlaylistLocallyText)) // Look for the dialog => use its title
+                .inRoot(RootMatchers.isDialog()) // check that it's indeed in a dialog
+                .check(ViewAssertions.matches(ViewMatchers.isDisplayed()));
+
+            onView(withId(R.id.keepPlaylistButton))
+                .perform(ViewActions.click())
+
+        }
+        val user = User.load(ctx)
+        assertFalse(user.isGoogleUser)
+        assertEquals("Guest",user.name)
+        assertEquals("1",user.id)
 
     }
 
