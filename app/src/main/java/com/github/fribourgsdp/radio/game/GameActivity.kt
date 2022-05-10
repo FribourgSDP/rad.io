@@ -14,10 +14,7 @@ import com.github.fribourgsdp.radio.data.User
 import com.github.fribourgsdp.radio.external.musixmatch.MusixmatchLyricsGetter.LYRICS_NOT_FOUND_PLACEHOLDER
 import com.github.fribourgsdp.radio.game.handler.HostGameHandler
 import com.github.fribourgsdp.radio.game.handler.PlayerGameHandler
-import com.github.fribourgsdp.radio.game.prep.GAME_IS_HOST_KEY
-import com.github.fribourgsdp.radio.game.prep.GAME_KEY
-import com.github.fribourgsdp.radio.game.prep.GAME_UID_KEY
-import com.github.fribourgsdp.radio.game.prep.MAP_ID_NAME_KEY
+import com.github.fribourgsdp.radio.game.prep.*
 import com.github.fribourgsdp.radio.game.timer.TimerProgressBarHandler
 import com.github.fribourgsdp.radio.game.view.LyricsPopup
 import com.github.fribourgsdp.radio.game.view.QuitGameOrLobbyDialog
@@ -38,6 +35,7 @@ const val SCORES_KEY = "com.github.fribourgsdp.radio.SCORES"
 open class GameActivity : AppCompatActivity(), GameView, Timer.Listener {
     private lateinit var user: User
     private var isHost: Boolean = false
+    private var gameDuration = 45L
 
     private lateinit var currentRoundTextView : TextView
     private lateinit var singerTextView : TextView
@@ -66,6 +64,7 @@ open class GameActivity : AppCompatActivity(), GameView, Timer.Listener {
             it as HashMap<String, String>
         } ?: HashMap()
         isHost = intent.getBooleanExtra(GAME_IS_HOST_KEY, false)
+        gameDuration = intent.getLongExtra(GAME_DURATION_KEY, 45)
         initViews()
 
         val gameUid = intent.getLongExtra(GAME_UID_KEY, -1L)
@@ -226,7 +225,7 @@ open class GameActivity : AppCompatActivity(), GameView, Timer.Listener {
         }
 
         // Init for the TimerProgressBarHolder
-        timerProgressBarHandler = TimerProgressBarHandler(Timer(), findViewById(R.id.roundProgressBar), this)
+        timerProgressBarHandler = TimerProgressBarHandler(Timer(gameDuration), findViewById(R.id.roundProgressBar), this)
     }
 
     protected open fun initVoiceChat(gameUid: Long) {
