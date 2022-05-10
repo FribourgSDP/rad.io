@@ -126,6 +126,8 @@
             android:name=".mockimplementations.MockUserProfileActivity"
             android:exported="false" />
         <activity
+            android:name=".mockimplementations.GoogleUserMockUserProfileActivity"           android:exported="false" />
+        <activity
             android:name=".mockimplementations.MockSettingsActivity"
             android:exported="false" />
     </application>
