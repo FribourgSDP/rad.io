@@ -2,6 +2,8 @@ package com.github.fribourgsdp.radio.data
 
 
 import android.content.Context
+import com.github.fribourgsdp.radio.database.Database
+import com.github.fribourgsdp.radio.database.DatabaseHolder
 import com.github.fribourgsdp.radio.persistence.*
 import com.github.fribourgsdp.radio.database.FirestoreDatabase
 import com.github.fribourgsdp.radio.util.SetUtility
@@ -45,9 +47,10 @@ data class User (var name: String, val color: Int) : SavesToFileSystem<User>(USE
     var isGoogleUser = false
 
 
-    companion object : LoadsFromFileSystem<User>() {
+    companion object : LoadsFromFileSystem<User>(),DatabaseHolder {
         const val USER_DATA_PATH = "user_data_file"
         override var defaultPath = USER_DATA_PATH
+        var database : Database = FirestoreDatabase();
 
         override fun load(context: Context, path: String) : User {
             val fs = fileSystemGetter.getFileSystem(context)
@@ -78,7 +81,7 @@ data class User (var name: String, val color: Int) : SavesToFileSystem<User>(USE
          * @return a default [User] in task, as an id has to be generated
          */
         fun createDefaultUser(): Task<User> {
-            return FirestoreDatabase().generateUserId().continueWith { id ->
+            return database.generateUserId().continueWith { id ->
                 val generatedUser = User("Guest", generateColor())
                 generatedUser.id = id.result.toString()
                 generatedUser
