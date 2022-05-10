@@ -15,6 +15,7 @@ class PlayerGameHandler(
 ): GameHandler(view, db), GameView.OnPickListener {
 
     private var songToGuess: String? = null
+    private var singerDuration: Long? = null
 
     override fun linkToDatabase() {
         db.listenToGameUpdate(gameID, executeOnUpdate())
@@ -83,7 +84,7 @@ class PlayerGameHandler(
     }
 
     override fun onPick(song: String) {
-        db.updateCurrentSongOfGame(gameID, song)
+        db.updateCurrentSongOfGame(gameID, song, singerDuration)
             .addOnSuccessListener {
                 view.displaySong(song)
             }
@@ -131,6 +132,10 @@ class PlayerGameHandler(
 
 
         }
+    }
+
+    fun setSingerDuration(duration: Long) {
+        singerDuration = duration
     }
 
     fun disableGame() {

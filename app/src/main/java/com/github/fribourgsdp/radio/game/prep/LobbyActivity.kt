@@ -48,6 +48,7 @@ open class LobbyActivity : MyAppCompatActivity(){
     private var isHost: Boolean = false
     private var hasVoiceIdPermissions : Boolean = false
     private var gameLobbyId: Long = -1L
+    private var gameDuration: Long = DEFAULT_GAME_DURATION
 
     private lateinit var uuidTextView     : TextView
     private lateinit var hostNameTextView : TextView
@@ -161,6 +162,7 @@ open class LobbyActivity : MyAppCompatActivity(){
         nbRounds        = intent.getIntExtra(GAME_NB_ROUNDS_KEY, getString(R.string.default_game_nb_rounds).toInt())
         withHint        = intent.getBooleanExtra(GAME_HINT_KEY, false)
         isPrivate       = intent.getBooleanExtra(GAME_PRIVACY_KEY, false)
+        gameDuration    = intent.getLongExtra(GAME_DURATION_KEY, DEFAULT_GAME_DURATION)
 
         hasVoiceIdPermissions = (ContextCompat.checkSelfPermission(this, Manifest.permission.RECORD_AUDIO) == PackageManager.PERMISSION_GRANTED)
         gameLobbyId = intent.getLongExtra(GAME_UID_KEY, -1L)
@@ -314,6 +316,7 @@ open class LobbyActivity : MyAppCompatActivity(){
             putExtra(GAME_IS_HOST_KEY, isHost)
             putExtra(MAP_ID_NAME_KEY, mapIdToName)
             putExtra(GAME_UID_KEY, gameID)
+            putExtra(GAME_DURATION_KEY, gameDuration)
         }
 
         if (isHost && game != null) {

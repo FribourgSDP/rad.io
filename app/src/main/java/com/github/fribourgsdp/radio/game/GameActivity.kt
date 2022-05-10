@@ -35,7 +35,7 @@ const val SCORES_KEY = "com.github.fribourgsdp.radio.SCORES"
 open class GameActivity : AppCompatActivity(), GameView, Timer.Listener {
     private lateinit var user: User
     private var isHost: Boolean = false
-    private var gameDuration = 45L
+    private var gameDuration = DEFAULT_GAME_DURATION
 
     private lateinit var currentRoundTextView : TextView
     private lateinit var singerTextView : TextView
@@ -77,6 +77,7 @@ open class GameActivity : AppCompatActivity(), GameView, Timer.Listener {
         }
 
         playerGameHandler = PlayerGameHandler(gameUid, this)
+        playerGameHandler.setSingerDuration(gameDuration)
 
         // On submit make the player game handler handle the guess
         songGuessSubmitButton.setOnClickListener {
@@ -225,7 +226,7 @@ open class GameActivity : AppCompatActivity(), GameView, Timer.Listener {
         }
 
         // Init for the TimerProgressBarHolder
-        timerProgressBarHandler = TimerProgressBarHandler(Timer(gameDuration), findViewById(R.id.roundProgressBar), this)
+        timerProgressBarHandler = TimerProgressBarHandler(Timer(), findViewById(R.id.roundProgressBar), this)
     }
 
     protected open fun initVoiceChat(gameUid: Long) {
