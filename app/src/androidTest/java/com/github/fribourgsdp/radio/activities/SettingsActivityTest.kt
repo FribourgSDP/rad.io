@@ -20,8 +20,10 @@ import org.junit.runner.RunWith
 import androidx.test.espresso.Espresso.onData
 import com.github.fribourgsdp.radio.MainActivity
 import com.github.fribourgsdp.radio.R
+import com.github.fribourgsdp.radio.config.Settings
 import com.github.fribourgsdp.radio.config.SettingsActivity
 import com.github.fribourgsdp.radio.config.language.Language
+import com.github.fribourgsdp.radio.mockimplementations.MockFileSystem
 import com.github.fribourgsdp.radio.mockimplementations.MockSettingsActivity
 import org.hamcrest.Matchers.*
 
@@ -31,11 +33,10 @@ class SettingsActivityTest {
   @get:Rule
     var settingsActivityRule = ActivityScenarioRule(MockSettingsActivity::class.java)
 
-    private val ctx: Context = ApplicationProvider.getApplicationContext()
-
     @Before
     fun initIntent() {
         Intents.init()
+        Settings.setFSGetter(MockFileSystem.MockFSGetter)
     }
 
     @After
@@ -47,7 +48,7 @@ class SettingsActivityTest {
     fun onBackPressedGoesToMainActivity() {
         Espresso.pressBack()
         Intents.intended(
-            Matchers.allOf(
+            allOf(
                 IntentMatchers.hasComponent(MainActivity::class.java.name)
             )
         )
@@ -65,7 +66,7 @@ class SettingsActivityTest {
             spinnerId.perform(ViewActions.click())
             onData(allOf(`is`(instanceOf(Language::class.java)),`is`(Language.FRENCH))).perform(ViewActions.click())
             Intents.intended(
-                Matchers.allOf(
+                allOf(
                     IntentMatchers.hasComponent(SettingsActivity::class.java.name),
                     IntentMatchers.toPackage("com.github.fribourgsdp.radio")
                 )
