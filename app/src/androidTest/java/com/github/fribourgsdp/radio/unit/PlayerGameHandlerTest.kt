@@ -107,7 +107,7 @@ class PlayerGameHandlerTest {
     fun displaySongOnDatabaseSuccess() {
         val view = FakeGameView(singer)
         val db = mock(Database::class.java)
-        `when`(db.updateCurrentSongOfGame(anyLong(), anyString()))
+        `when`(db.updateCurrentSongOfGame(anyLong(), anyString(), anyLong()))
             .thenReturn(Tasks.forResult(null))
 
         val handler = PlayerGameHandler(0, view, db)
@@ -250,7 +250,7 @@ class PlayerGameHandlerTest {
     fun onPickDisplaySongOnSuccess() {
         val view = FakeGameView()
         val db = mock(Database::class.java)
-        `when`(db.updateCurrentSongOfGame(anyLong(), anyString()))
+        `when`(db.updateCurrentSongOfGame(anyLong(), anyString(), anyLong()))
             .thenReturn(Tasks.forResult(null))
 
         val handler = PlayerGameHandler(0, view, db)
@@ -269,7 +269,7 @@ class PlayerGameHandlerTest {
     fun onPickDisplayErrorOnDBFailure() {
         val view = FakeGameView()
         val db = mock(Database::class.java)
-        `when`(db.updateCurrentSongOfGame(anyLong(), anyString()))
+        `when`(db.updateCurrentSongOfGame(anyLong(), anyString(), anyLong()))
             .thenReturn(Tasks.forException(Exception()))
 
         val handler = PlayerGameHandler(0, view, db)
