@@ -1,24 +1,27 @@
 package com.github.fribourgsdp.radio.data.view
 
 import android.content.ContentValues
+import android.content.Context
 import android.content.Intent
 import android.graphics.PorterDuff
 import android.graphics.PorterDuffColorFilter
 import android.os.Bundle
 import android.util.Log
+import android.view.KeyEvent
+import android.view.View
+import android.view.inputmethod.InputMethodManager
 import android.widget.Button
 import android.widget.EditText
 import android.widget.ImageView
 import android.widget.TextView
-import com.google.android.gms.tasks.Task
-import com.google.android.gms.tasks.Tasks
 import com.github.fribourgsdp.radio.*
 import com.github.fribourgsdp.radio.config.MyAppCompatActivity
 import com.github.fribourgsdp.radio.data.User
 import com.github.fribourgsdp.radio.database.DatabaseHolder
-import com.github.fribourgsdp.radio.database.FirestoreDatabase
 import com.github.fribourgsdp.radio.external.google.GoogleSignInActivity
 import com.github.fribourgsdp.radio.util.MyFragment
+import com.google.android.gms.tasks.Task
+import com.google.android.gms.tasks.Tasks
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.firebase.auth.FirebaseAuth
 import com.spotify.sdk.android.auth.AuthorizationClient
@@ -79,11 +82,45 @@ open class UserProfileActivity : MyAppCompatActivity(), KeepOrDismissPlaylistDia
             authenticateUser()
         }
 
+
         saveChangeButton.setOnClickListener {
             //this behavior should change or the this button should diseapper
             updateUser()
         }
 
+        /*usernameField.setOnFocusChangeListener { v,f->
+            if(!f) {
+                updateUser()
+            }
+        }*/
+
+       /* usernameField.setOnEditorActionListener {view, actionId, keyEvent ->
+            if (actionId == EditorInfo.IME_ACTION_SEARCH || actionId == EditorInfo.IME_ACTION_DONE ||
+                keyEvent == null //||
+                /*keyEvent.keyCode == KeyEvent.KEYCODE_ENTER ||
+                    keyEvent.keyCode == KeyEvent.KEYCODE_*/) {
+                //User finihsed typing
+                    updateUser()
+                true
+            }
+            false
+        }*/
+       /* usernameField.setOnKeyListener{v,k,e ->
+            if (e.keyCode == KeyEvent.KEYCODE_ENTER)
+            {
+                // code to hide the soft keyboard
+                usernameField.clearFocus();
+                val view: View? = this.currentFocus
+                if (view != null) {
+                    val imm: InputMethodManager =
+                        getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+                    imm.hideSoftInputFromWindow(view.getWindowToken(), 0)
+                }
+               // usernameField.text = usernameField.text.delete(usernameField.text.length-1,usernameField.text.length)
+                //usernameField.requestFocus(EditText.FOCUS_DOWN);
+            }
+            false
+        }*/
 
 
         googleSignInButton.setOnClickListener {
@@ -114,7 +151,13 @@ open class UserProfileActivity : MyAppCompatActivity(), KeepOrDismissPlaylistDia
     private fun updateUser(){
         user.name = usernameField.text.toString()
         //at this point, the userId should be the firebaseUser.uid
-        db.setUser(user.id,user)
+        if(user.isGoogleUser){
+            db.setUser(user.id,user)
+        }else{
+            val userWithoutPlaylist = user
+            userWithoutPlaylist.removePlaylists(user.getPlaylists())
+            db.setUser(user.id,userWithoutPlaylist)
+        }
         user.save(this)
         usernameInitialText.text = user.initial.uppercaseChar().toString()
     }
@@ -128,8 +171,13 @@ open class UserProfileActivity : MyAppCompatActivity(), KeepOrDismissPlaylistDia
 
 
     open fun checkUser(){
+
+        signedIn = user.isGoogleUser
+        if(signedIn){
+            googleSignInButton.text = getString(R.string.sign_out_message)
+        }
         //get current user
-        val firebaseUser = firebaseAuth.currentUser
+       /* val firebaseUser = firebaseAuth.currentUser
 
         if(firebaseUser != null){
             //check whether it is a new user of not, if yes, we saved the default user info in the cloud
@@ -148,7 +196,7 @@ open class UserProfileActivity : MyAppCompatActivity(), KeepOrDismissPlaylistDia
 
                 signedIn = true
             }
-        }
+        }*/
     }
 
 
@@ -181,7 +229,7 @@ open class UserProfileActivity : MyAppCompatActivity(), KeepOrDismissPlaylistDia
     }
 
     private fun mergePlaylist() : Task<Unit>{
-        Log.w(ContentValues.TAG, "MERGE", )
+        Log.w(ContentValues.TAG, "MERGE")
         return db.getUser(user.id).continueWith {
             user.addPlaylists(it.result.getPlaylists())
             user.isGoogleUser = true
@@ -191,7 +239,7 @@ open class UserProfileActivity : MyAppCompatActivity(), KeepOrDismissPlaylistDia
         }
     }
     private fun importPlaylist() : Task<Unit>{
-        Log.w(ContentValues.TAG, "IMPORT", )
+        Log.w(ContentValues.TAG, "IMPORT")
         user.removePlaylists(user.getPlaylists())
         return db.getUser(user.id).continueWith{
             user = it.result
@@ -202,11 +250,12 @@ open class UserProfileActivity : MyAppCompatActivity(), KeepOrDismissPlaylistDia
     }
 
     private fun dismissOnlinePlaylist() : Task<Unit>{
-        Log.w(ContentValues.TAG, "DISMISS", )
+        Log.w(ContentValues.TAG, "DISMISS")
         return db.getUser(user.id).continueWith{
             user.name = it.result.name
             user.id = it.result.id
             user.isGoogleUser = true
+            db.setUser(user.id,user)
         }
     }
 
@@ -216,9 +265,9 @@ open class UserProfileActivity : MyAppCompatActivity(), KeepOrDismissPlaylistDia
             KeepOrDismissPlaylistDialog.Choice.DISMISS -> deletePlaylist()
         }.addOnSuccessListener{
             User.createDefaultUser().continueWith {
-                user.name = it.result.name
-                user.id = it.result.id
-                user.isGoogleUser = false
+                val playlist = user.getPlaylists()
+                user = it.result
+                user.addPlaylists(playlist)
                 user.save(this)
             }
         }
@@ -226,14 +275,14 @@ open class UserProfileActivity : MyAppCompatActivity(), KeepOrDismissPlaylistDia
     }
 
     private fun keepPlaylist() : Task<Unit>{
-        Log.w(ContentValues.TAG, "KEEP", )
+        Log.w(ContentValues.TAG, "KEEP")
         return Tasks.forResult(null)
         //when keeping playlist, decide whether only those saved locally should be kept or all of them
 
     }
     private fun deletePlaylist() : Task<Unit> {
         user.removePlaylists(user.getPlaylists())
-        Log.w(ContentValues.TAG, "DELETE", )
+        Log.w(ContentValues.TAG, "DELETE")
         return Tasks.forResult(null)
 
     }
@@ -245,7 +294,7 @@ open class UserProfileActivity : MyAppCompatActivity(), KeepOrDismissPlaylistDia
     //this should only happen on successful signIn,
     private fun afterSignInProcedure(){
         user.id = firebaseAuth.currentUser?.uid ?: user.id //MAYBE THROW AN ERROR INSTEAD
-        user.isGoogleUser = true
+        user.isGoogleUser = firebaseAuth.currentUser != null
         user.save(this)
         val mergeDismissImportPlaylistPicker = MergeDismissImportPlaylistDialog(this)
         mergeDismissImportPlaylistPicker.show(supportFragmentManager, "mergeDismissImportPlaylistPicker")
