@@ -58,6 +58,20 @@ class GameSettingsActivityTest {
     }
 
     @Test
+    fun timerDialogAppearsCorrectlyWhenPressingTimerButton() {
+        onView(withId(R.id.chooseTimeButton))
+            .perform(ViewActions.click())
+    }
+
+    @Test
+    fun timerDialogHasDefaultValue45Seconds() {
+        onView(withId(R.id.timerTextView))
+            .check(ViewAssertions.matches(
+                ViewMatchers.withText("45s")
+            ))
+    }
+
+    @Test
     fun intentWorksWithCorrectSettings() {
 
         // Test values
@@ -109,7 +123,8 @@ class GameSettingsActivityTest {
                 hasExtra(GAME_PLAYLIST_KEY, Json.encodeToString(testPlaylist)),
                 hasExtra(GAME_NB_ROUNDS_KEY, testNbRounds),
                 hasExtra(GAME_HINT_KEY, withHint),
-                hasExtra(GAME_PRIVACY_KEY, private)
+                hasExtra(GAME_PRIVACY_KEY, private),
+                hasExtra(GAME_DURATION_KEY, DEFAULT_GAME_DURATION)
             )
         )
     }
