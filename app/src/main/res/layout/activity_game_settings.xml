@@ -19,6 +19,7 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <LinearLayout
+        android:id="@+id/linearLayout2"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
@@ -77,8 +78,8 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="16dp"
-                android:queryHint="@string/playlist_hint"
                 android:iconifiedByDefault="false"
+                android:queryHint="@string/playlist_hint"
                 app:layout_constraintBottom_toBottomOf="@id/playlist"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toEndOf="@id/playlist"
@@ -149,6 +150,41 @@
             android:id="@+id/privacyCheckBox"
             style="@style/SettingsText"
             android:text="@string/private_option_text" />
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+
+            <ImageButton
+                android:id="@+id/chooseTimeButton"
+                style="@style/Widget.AppCompat.ImageButton"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:layout_alignParentBottom="true"
+                android:layout_centerHorizontal="true"
+                android:layout_marginStart="136dp"
+                android:adjustViewBounds="true"
+                android:background="@drawable/round_button"
+                android:contentDescription="@string/profile_picture_description"
+                android:scaleType="fitCenter"
+                android:src="@drawable/ic_timer"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/timerTextView"
+                style="@style/SettingsText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="45s"
+                app:layout_constraintBottom_toBottomOf="@id/chooseTimeButton"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.1"
+                app:layout_constraintStart_toEndOf="@+id/chooseTimeButton"
+                app:layout_constraintTop_toTopOf="@id/chooseTimeButton" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
 
     </LinearLayout>
 
@@ -162,5 +198,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
+
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>
