@@ -23,6 +23,7 @@ import com.github.fribourgsdp.radio.R
 import com.github.fribourgsdp.radio.config.Settings
 import com.github.fribourgsdp.radio.config.SettingsActivity
 import com.github.fribourgsdp.radio.config.language.Language
+import com.github.fribourgsdp.radio.config.language.LanguageManager
 import com.github.fribourgsdp.radio.mockimplementations.MockFileSystem
 import com.github.fribourgsdp.radio.mockimplementations.MockSettingsActivity
 import org.hamcrest.Matchers.*
@@ -33,15 +34,18 @@ class SettingsActivityTest {
   @get:Rule
     var settingsActivityRule = ActivityScenarioRule(MockSettingsActivity::class.java)
 
+    private val ctx: Context = ApplicationProvider.getApplicationContext()
+
     @Before
-    fun initIntent() {
-        Intents.init()
+    fun setup() {
         Settings.setFSGetter(MockFileSystem.MockFSGetter)
+        Intents.init()
     }
 
     @After
-    fun releaseIntent() {
+    fun tearDown() {
         Intents.release()
+        LanguageManager(ctx).setLang("en")
     }
 
     @Test
