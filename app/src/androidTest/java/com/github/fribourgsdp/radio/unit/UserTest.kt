@@ -3,6 +3,7 @@ package com.github.fribourgsdp.radio.unit
 import android.content.Context
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.ext.junit.runners.AndroidJUnit4
+import androidx.test.platform.app.InstrumentationRegistry
 import com.github.fribourgsdp.radio.data.Genre
 import com.github.fribourgsdp.radio.data.Playlist
 import com.github.fribourgsdp.radio.data.Song
@@ -41,7 +42,7 @@ class UserTest {
 
     @Test
     fun defaultUserHasStarterPlaylists(){
-        User.createDefaultUser().addOnSuccessListener { u ->
+        User.createDefaultUser(InstrumentationRegistry.getInstrumentation().context).addOnSuccessListener { u ->
             val userPlaylists = u.getPlaylists()
             assertTrue(userPlaylists.contains(Playlist("Chanson française")))
             assertTrue(userPlaylists.contains(Playlist("Basic blind test")))
@@ -53,7 +54,7 @@ class UserTest {
 
     @Test
     fun chansonFrancaisePlaylistHasGoodTitlesAndArtists(){
-        User.createDefaultUser().addOnSuccessListener { u ->
+        User.createDefaultUser(InstrumentationRegistry.getInstrumentation().context).addOnSuccessListener { u ->
             val chansonFrancaisePlaylist = u.getPlaylists().find { p -> p.name == "Chanson française" }!!
             assertTrue(chansonFrancaisePlaylist.getSongs().contains(Song("Jacques Brel", "Les vieux")))
             assertFalse(chansonFrancaisePlaylist.getSongs().contains(Song("Foule sentimentale", "Alain Souchon")))
