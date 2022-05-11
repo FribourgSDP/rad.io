@@ -23,10 +23,10 @@ class StarterPlaylistTest {
     fun chansonFrancaisePlaylistHasGoodTitlesAndArtists(){
         val context = InstrumentationRegistry.getInstrumentation().context
         val chansonFrancaisePlaylist = StarterPlaylists.getStarterPlaylists(context).find { p -> p.name == "Chanson française" }!!
-        Assert.assertTrue(
+        Assert.assertFalse(
             chansonFrancaisePlaylist.getSongs().contains(Song("Jacques Brel", "Les vieux"))
         )
-        Assert.assertFalse(
+        Assert.assertTrue(
             chansonFrancaisePlaylist.getSongs()
                 .contains(Song("Foule sentimentale", "Alain Souchon"))
         )
