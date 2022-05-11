@@ -10,7 +10,7 @@ import org.junit.Test
 class StarterPlaylistTest {
     @Test
     fun allStarterPlaylistsAreLoaded(){
-        val context = InstrumentationRegistry.getInstrumentation().context
+        val context = InstrumentationRegistry.getInstrumentation().targetContext
         val userPlaylists = StarterPlaylists.getStarterPlaylists(context)
         Assert.assertTrue(userPlaylists.contains(Playlist("Chanson française")))
         Assert.assertTrue(userPlaylists.contains(Playlist("Basic blind test")))
@@ -21,7 +21,7 @@ class StarterPlaylistTest {
 
     @Test
     fun chansonFrancaisePlaylistHasGoodTitlesAndArtists(){
-        val context = InstrumentationRegistry.getInstrumentation().context
+        val context = InstrumentationRegistry.getInstrumentation().targetContext
         val chansonFrancaisePlaylist = StarterPlaylists.getStarterPlaylists(context).find { p -> p.name == "Chanson française" }!!
         Assert.assertFalse(
             chansonFrancaisePlaylist.getSongs().contains(Song("Jacques Brel", "Les vieux"))
