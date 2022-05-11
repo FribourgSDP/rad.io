@@ -24,7 +24,6 @@ const val SCORES_KEY = "com.github.fribourgsdp.radio.SCORES"
 open class GameActivity : AppCompatActivity(), GameView, Timer.Listener {
     private lateinit var user: User
     private var isHost: Boolean = false
-    private var launched = false
 
     private lateinit var currentRoundTextView : TextView
     private lateinit var singerTextView : TextView
@@ -48,12 +47,6 @@ open class GameActivity : AppCompatActivity(), GameView, Timer.Listener {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        if (launched) {
-            val intent = Intent(this, MainActivity::class.java)
-            startActivity(intent)
-            finish()
-            return
-        }
         setContentView(R.layout.activity_game)
         user = User.load(this)
         mapIdToName = intent.getSerializableExtra(MAP_ID_NAME_KEY)?.let {
@@ -82,27 +75,7 @@ open class GameActivity : AppCompatActivity(), GameView, Timer.Listener {
 
     }
 
-    override fun onResume() {
-        super.onResume()
-        if (launched) {
-            Log.e("ResumeLaunch", "in resumed and launch")
-            val intent = Intent(this, MainActivity::class.java)
-            startActivity(intent)
-            finish()
-            return
-        }
-    }
 
-    override fun onRestart() {
-        super.onRestart()
-        if (launched) {
-            Log.e("ResumeLaunch", "in resumed and launch")
-            val intent = Intent(this, MainActivity::class.java)
-            startActivity(intent)
-            finish()
-            return
-        }
-    }
 
     override fun onDestroy() {
         super.onDestroy()
@@ -216,10 +189,6 @@ open class GameActivity : AppCompatActivity(), GameView, Timer.Listener {
             playerGameHandler.removeUserFromLobby(user)
             playerGameHandler.removePlayerFromGame(user)
         }
-        val intent = Intent(this, TransitionQuitGameActivity::class.java)
-        startActivity(intent)
-        finish()
-
     }
 
     private fun initViews() {
@@ -287,8 +256,8 @@ open class GameActivity : AppCompatActivity(), GameView, Timer.Listener {
             .setFragmentResultListener("quitRequest", this) { _, bundle ->
                 val hasQuit = bundle.getBoolean("hasQuit")
                 if (hasQuit) {
-                    launched = true
                     returnToMainMenu()
+                    super.onBackPressed()
                 }
             }
     }

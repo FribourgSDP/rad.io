@@ -29,7 +29,8 @@
         <activity
             android:name=".GameActivity"
             android:launchMode= "singleInstance"
-            android:exported="false" />
+            android:exported="false"
+            android:parentActivityName=".MainActivity"/>
         <activity
             android:name=".TransitionQuitGameActivity"
             android:launchMode= "singleInstance"
