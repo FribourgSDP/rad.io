@@ -96,5 +96,9 @@
     <string name="enable_microphone">Enable Microphone</string>
     <string name="display_qr_code">Display QR Code</string>
     <string name="add_your_lyrics">---No lyrics were found for this song. Feel free to add yours !---</string>
+    <string name="timerSelectTime">Select the duration players will have to guess.</string>
+    <string name="timerMinutes">Minutes</string>
+    <string name="timerSeconds">Seconds</string>
+    <string name="gameDurationFormat">Time singing: %d seconds </string>
 </resources>
 

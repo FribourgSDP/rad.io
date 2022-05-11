@@ -4,6 +4,7 @@ import com.github.fribourgsdp.radio.database.Database
 import com.github.fribourgsdp.radio.database.FirestoreDatabase
 import com.github.fribourgsdp.radio.data.User
 import com.github.fribourgsdp.radio.game.GameView
+import com.github.fribourgsdp.radio.game.prep.DEFAULT_GAME_DURATION
 import com.github.fribourgsdp.radio.util.NOT_THE_SAME
 import com.github.fribourgsdp.radio.util.StringComparisons
 import com.google.firebase.firestore.DocumentSnapshot
@@ -17,6 +18,7 @@ class PlayerGameHandler(
 
     private var songToGuess: String? = null
     private var snapshotListenerRegistration: ListenerRegistration? = null
+    private var singerDuration: Long = DEFAULT_GAME_DURATION
 
     override fun linkToDatabase() {
         snapshotListenerRegistration = db.listenToGameUpdate(gameID, executeOnUpdate())
@@ -89,7 +91,7 @@ class PlayerGameHandler(
     }
 
     override fun onPick(song: String) {
-        db.updateCurrentSongOfGame(gameID, song)
+        db.updateCurrentSongOfGame(gameID, song, singerDuration)
             .addOnSuccessListener {
                 view.displaySong(song)
             }
@@ -137,6 +139,10 @@ class PlayerGameHandler(
 
 
         }
+    }
+
+    fun setSingerDuration(duration: Long) {
+        singerDuration = duration
     }
 
     fun disableGame() {
