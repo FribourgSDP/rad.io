@@ -53,23 +53,12 @@ open class GameSettingsActivity : AppCompatActivity() {
 
         host = User.load(this)
 
-        nameInput = findViewById(R.id.nameInput)
-        nbRoundsInput = findViewById(R.id.nbRoundsInput)
-        hintCheckBox = findViewById(R.id.hintCheckBox)
-        privacyCheckBox = findViewById(R.id.privacyCheckBox)
-        startButton = findViewById(R.id.startButton)
-        playlistSearchView = findViewById(R.id.playlistSearchView)
-        playlistListView = findViewById(R.id.playlistListView)
-        playlistsNames = getUserPlaylistNames(host)
-        playlistAdapter = ArrayAdapter(this, android.R.layout.simple_list_item_1, playlistsNames)
-        errorText = findViewById(R.id.playlistSearchError)
-        timerButton = findViewById(R.id.chooseTimeButton)
-        timerTextView = findViewById(R.id.timerTextView)
+        initViews()
+        initBehaviours()
 
+    }
 
-        playlistListView.adapter = playlistAdapter
-
-
+    private fun initBehaviours() {
         // When user is clicks on the bar, show the possibilities
         playlistSearchView.setOnSearchClickListener { playlistListView.visibility = View.VISIBLE }
 
@@ -99,7 +88,23 @@ open class GameSettingsActivity : AppCompatActivity() {
                 }
             }.show(supportFragmentManager, "TimerSettings")
         }
+    }
 
+    private fun initViews() {
+        nameInput = findViewById(R.id.nameInput)
+        nbRoundsInput = findViewById(R.id.nbRoundsInput)
+        hintCheckBox = findViewById(R.id.hintCheckBox)
+        privacyCheckBox = findViewById(R.id.privacyCheckBox)
+        startButton = findViewById(R.id.startButton)
+        playlistSearchView = findViewById(R.id.playlistSearchView)
+        playlistListView = findViewById(R.id.playlistListView)
+        playlistsNames = getUserPlaylistNames(host)
+        playlistAdapter = ArrayAdapter(this, android.R.layout.simple_list_item_1, playlistsNames)
+        errorText = findViewById(R.id.playlistSearchError)
+        timerButton = findViewById(R.id.chooseTimeButton)
+        timerTextView = findViewById(R.id.timerTextView)
+
+        playlistListView.adapter = playlistAdapter
     }
 
     override fun onBackPressed() {
