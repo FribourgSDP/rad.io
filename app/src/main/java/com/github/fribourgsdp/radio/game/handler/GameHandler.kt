@@ -17,6 +17,11 @@ abstract class GameHandler(private val view: GameView, protected val db: Databas
      */
     abstract fun linkToDatabase()
 
+    /**
+     * Unlink the [GameHandler] to the [Database]
+     */
+    abstract fun unlinkFromDatabase()
+
     protected fun executeOnUpdate(): EventListener<DocumentSnapshot> {
         return EventListener<DocumentSnapshot> { snapshot, e ->
             if (e != null) {

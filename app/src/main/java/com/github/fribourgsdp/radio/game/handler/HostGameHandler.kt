@@ -12,9 +12,11 @@ import com.github.fribourgsdp.radio.getPlayerFoundMap
 import com.github.fribourgsdp.radio.getScoresOfRound
 import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.FieldValue
+import com.google.firebase.firestore.ListenerRegistration
 
 class HostGameHandler(private val game: Game, private val view: GameView, db: Database = FirestoreDatabase(), private val lyricsGetter: LyricsGetter = MusixmatchLyricsGetter): GameHandler(view, db) {
     private var latestSingerId: String? = null
+    private var snapshotListenerRegistration: ListenerRegistration? = null
 
     override fun handleSnapshot(snapshot: DocumentSnapshot?) {
         if (snapshot != null && snapshot.exists()) {
@@ -66,7 +68,11 @@ class HostGameHandler(private val game: Game, private val view: GameView, db: Da
     }
 
     override fun linkToDatabase() {
-        db.listenToGameMetadataUpdate(game.id, executeOnUpdate())
+        snapshotListenerRegistration = db.listenToGameMetadataUpdate(game.id, executeOnUpdate())
+    }
+
+    override fun unlinkFromDatabase() {
+        snapshotListenerRegistration?.remove()
     }
 
     private fun createUpdatesMap(playerIdsOnDatabase: Set<String>): Map<String, Any> {

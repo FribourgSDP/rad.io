@@ -57,6 +57,7 @@ open class GameActivity : AppCompatActivity(), GameView, Timer.Listener {
     protected lateinit var voiceChannel: VoiceIpEngineDecorator
 
     private lateinit var playerGameHandler: PlayerGameHandler
+    private var hostGameHandler: HostGameHandler? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -73,8 +74,8 @@ open class GameActivity : AppCompatActivity(), GameView, Timer.Listener {
 
         if (isHost) {
             val game = Json.decodeFromString(intent.getStringExtra(GAME_KEY)!!) as Game
-            val hostGameHandler = HostGameHandler(game, this)
-            hostGameHandler.linkToDatabase()
+            hostGameHandler = HostGameHandler(game, this)
+            hostGameHandler?.linkToDatabase()
         }
 
         playerGameHandler = PlayerGameHandler(gameUid, this)
@@ -92,6 +93,7 @@ open class GameActivity : AppCompatActivity(), GameView, Timer.Listener {
         super.onDestroy()
         voiceChannel.leaveChannel()
         RtcEngine.destroy()
+        unlinkAll()
     }
 
     override fun chooseSong(choices: List<String>, listener: GameView.OnPickListener) {
@@ -173,6 +175,7 @@ open class GameActivity : AppCompatActivity(), GameView, Timer.Listener {
     }
 
     override fun gameOver(finalScores: Map<String, Long>) {
+        unlinkAll()
         val intent = Intent(this, EndGameActivity::class.java).apply {
             putExtra(
                 SCORES_KEY,
@@ -183,8 +186,16 @@ open class GameActivity : AppCompatActivity(), GameView, Timer.Listener {
         startActivity(intent)
     }
 
-    private fun returnToMainMenu() {
+    private fun unlinkAll() {
+        voiceChannel.leaveChannel()
+        RtcEngine.destroy()
+        playerGameHandler.unlinkFromDatabase()
+        hostGameHandler?.unlinkFromDatabase()
+        stopTimer()
+    }
 
+    private fun returnToMainMenu() {
+        unlinkAll()
         if (isHost) {
             playerGameHandler.disableGame()
         }
@@ -192,10 +203,6 @@ open class GameActivity : AppCompatActivity(), GameView, Timer.Listener {
             playerGameHandler.removeUserFromLobby(user)
             playerGameHandler.removePlayerFromGame(user)
         }
-        val intent = Intent(this, MainActivity::class.java)
-        startActivity(intent)
-        finish()
-
     }
 
     private fun initViews() {
@@ -265,6 +272,7 @@ open class GameActivity : AppCompatActivity(), GameView, Timer.Listener {
                 val hasQuit = bundle.getBoolean("hasQuit")
                 if (hasQuit) {
                     returnToMainMenu()
+                    super.onBackPressed()
                 }
             }
     }

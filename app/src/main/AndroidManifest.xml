@@ -32,7 +32,8 @@
         <activity
             android:name=".game.GameActivity"
             android:launchMode= "singleInstance"
-            android:exported="false" />
+            android:exported="false"
+            android:parentActivityName=".MainActivity"/>
         <activity
             android:name=".deprecated.VoiceOverIPActivity"
             android:exported="false" />
