@@ -117,6 +117,11 @@ class WorkingLobbyActivityTest {
     }
 
     @Test
+    fun extrasForGameWork() {
+
+    }
+
+    @Test
     fun lobbyDisplayCorrectInfosWhenInvited() {
         // Test values
         val testUID = 42L
