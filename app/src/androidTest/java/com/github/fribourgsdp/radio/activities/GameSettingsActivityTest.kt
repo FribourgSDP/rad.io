@@ -11,6 +11,7 @@ import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.UiController
 import androidx.test.espresso.ViewAction
 import androidx.test.espresso.action.ViewActions
+import androidx.test.espresso.action.ViewActions.click
 import androidx.test.espresso.assertion.ViewAssertions
 import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.intent.Intents
@@ -91,8 +92,8 @@ class GameSettingsActivityTest {
             .perform(ViewActions.click())
         onView(withText("OK"))
             .check(matches(isDisplayed()))
-        onView(withText("OK"))
             .perform(ViewActions.click())
+
 
         val chosenTime = getText(withId(R.id.timerTextView))
         val chosenTimeInSeconds = chosenTime?.take((chosenTime!!.length - 1))?.toLong()
