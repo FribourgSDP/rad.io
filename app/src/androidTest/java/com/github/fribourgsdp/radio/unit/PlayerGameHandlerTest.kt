@@ -269,8 +269,10 @@ class PlayerGameHandlerTest {
     fun onPickDisplayErrorOnDBFailure() {
         val view = FakeGameView()
         val db = mock(Database::class.java)
+        println("all fine 1")
         `when`(db.updateCurrentSongOfGame(anyLong(), anyString(), anyLong()))
             .thenReturn(Tasks.forException(Exception()))
+        
 
         val handler = PlayerGameHandler(0, view, db)
 
