@@ -4,10 +4,7 @@ import android.content.Context
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.platform.app.InstrumentationRegistry
-import com.github.fribourgsdp.radio.data.Genre
-import com.github.fribourgsdp.radio.data.Playlist
-import com.github.fribourgsdp.radio.data.Song
-import com.github.fribourgsdp.radio.data.User
+import com.github.fribourgsdp.radio.data.*
 import org.junit.Assert.*
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -40,26 +37,6 @@ class UserTest {
         assertEquals(string[0], user.initial)
     }
 
-    @Test
-    fun defaultUserHasStarterPlaylists(){
-        User.createDefaultUser(InstrumentationRegistry.getInstrumentation().context).addOnSuccessListener { u ->
-            val userPlaylists = u.getPlaylists()
-            assertTrue(userPlaylists.contains(Playlist("Chanson française")))
-            assertTrue(userPlaylists.contains(Playlist("Basic blind test")))
-            assertTrue(userPlaylists.contains(Playlist("Movie theme songs")))
-            assertTrue(userPlaylists.contains(Playlist("Video game songs")))
-            assertTrue(userPlaylists.contains(Playlist("Classical music hits")))
-        }
-    }
-
-    @Test
-    fun chansonFrancaisePlaylistHasGoodTitlesAndArtists(){
-        User.createDefaultUser(InstrumentationRegistry.getInstrumentation().context).addOnSuccessListener { u ->
-            val chansonFrancaisePlaylist = u.getPlaylists().find { p -> p.name == "Chanson française" }!!
-            assertTrue(chansonFrancaisePlaylist.getSongs().contains(Song("Jacques Brel", "Les vieux")))
-            assertFalse(chansonFrancaisePlaylist.getSongs().contains(Song("Foule sentimentale", "Alain Souchon")))
-        }
-    }
 
     @Test
     fun addPlaylistWorksAsExpected(){

@@ -2,6 +2,7 @@ package com.github.fribourgsdp.radio.data
 
 
 import android.content.Context
+import android.util.Log
 import com.github.fribourgsdp.radio.persistence.*
 import com.github.fribourgsdp.radio.database.FirestoreDatabase
 import com.github.fribourgsdp.radio.util.SetUtility
