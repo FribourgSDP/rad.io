@@ -1,129 +1,129 @@
-"Rasputin":"Boney M."
-"September":"Earth, Wind & Fire"
-"Sarà perché ti amo":"Ricchi e Poveri"
-"Halo":"Beyoncé"
-"L\'aventurier":"Indochine"
-"J\'Irai Ou Tu Iras":"Céline Dion;Jean-Jacques Goldman"
-"Africa":"Toto"
-"I\'m So Excited":"The Pointer Sisters"
-"Besoin de rien, envie de toi":"Peter & Sloane"
-"Cheap Thrills":"Sia, Sean Paul"
-"Wati by Night":"Sexion D\'Assaut"
-"Beggin\'":"Måneskin"
-"Another Love":"Tom Odell"
-"Pumped Up Kicks":"Foster the People"
-"Uptown Funk":"Mark Ronson, Bruno Mars"
-"Wake Me Up Before You Go-Go":"Wham!"
-"Je te donne":"Jean-Jacques Goldman, Michael Jones"
-"Sous le vent":"Céline Dion, Garou"
-"Billie Jean":"Michael Jackson"
-"Sweet Dreams":"Eurythmics, Annie Lennox, Dave Stewart"
-"Highway to Hell":"AC/DC"
-"Come and Get Your Love ":"Redbone"
-"Dernière danse":"Kyo"
-"Là-bas":"Jean-Jacques Goldman, Sirima"
-"Bohemian Rhapsody":"Queen"
-"CAN\'T STOP THE FEELING!":"Justin Timberlake"
-"Old Town Road":"Lil Nas X, Billy Ray Cyrus"
-"Ma direction":"Sexion D\'Assaut"
-"Footloose":"Kenny Loggins"
-"I\'m Outta Love":"Anastacia"
-"It\'s Raining Men":"The Weather Girls"
-"Knockin\' On Heaven\'s Door":"Bob Dylan"
-"Get Lucky":"Daft Punk, Pharrell Williams, Nile Rodgers"
-"Waka Waka":"Shakira, Freshlyground"
-"Eye of the Tiger":"Survivor"
-"Je t\'aimais, je t\'aime, je t\'aimerai":"Francis Cabrel"
-"Seven Nation Army":"The White Stripes"
-"Ma Benz":"Suprême NTM, Lord Kossity"
-"Hey Ya!":"Outkast"
-"Cry Me A River":"Justin Timberlake"
-"Shut Up and Let Me Go":"The Ting Tings"
-"Hey, Soul Sister":"Train"
-"Girls Just Want to Have Fun":"Cyndi Lauper"
-"Fallin\'":"Alicia Keys"
-"Thank You":"Dido"
-"Wonderwall":"Oasis"
-"All Of Me":"John Legend"
-"Sexual Healing":"Marvin Gaye"
-"Let Her Go":"Passenger"
-"Still Loving You":"Scorpions"
-"Should I Stay or Should I Go":"The Clash"
-"Heavy Cross":"Gossip"
-"Hallelujah":"Jeff Buckley"
-"Ma philosophie":"Amel Bent"
-"Maria Maria":"Santana, The Product G&B"
-"Sapés comme jamais":"Maître Gims, Niska"
-"Djadja":"Aya Nakamura"
-"Timber":"Pitbull, Kesha"
-"Let\'s Groove":"Earth, Wind & Fire"
-"I Know What You Want":"Busta Rhymes, Mariah Carey, Flipmode Squad"
-"The Final Countdown":"Europe"
-"Come":"Jain"
-"I Love Rock \'N Roll":"Joan Jett and the Blackhearts"
-"Les Champs-Elysées":"Joe Dassin"
-"Careless Whisper":"George Michael"
-"Dreams":"Fleetwood Mac"
-"Cheerleader":"OMI"
-"Killing Me Softly With His Song":"Fugees, Ms. Lauryn Hill"
-"Crazy In Love":"Beyoncé, JAY-Z"
-"It Ain\'t Me":"Kygo, Selena Gomez"
-"Don\'t Stop The Music":"Rihanna"
-"Million Eyes":"Loïc Nottet"
-"Elle a les yeux revolver":"Marc Lavoine"
-"No Scrubs":"TLC"
-"Last Nite":"The Strokes"
-"The Time of My Life":"Bill Medley, Jennifer Warnes"
-"I Wanna Dance with Somebody":"Whitney Houston"
-"Trois nuits par semaine":"Indochine"
-"Ain\'t No Sunshine":"Bill Withers"
-"Sign of the Times":"Harry Styles"
-"How To Save A Life":"The Fray"
-"Streets of Philadelphia":"Bruce Springsteen"
-"Thriller":"Michael Jackson"
-"Jailhouse Rock":"Elvis Presley"
-"Mambo No. 5":"Lou Bega"
-"Daddy Cool":"Boney M."
-"Toxic":"Britney Spears"
-"Walk Like an Egyptian":"The Bangles"
-"La même":"Maître Gims, Vianney"
-"Mr. Blue Sky":"Electric Light Orchestra"
-"Walk This Way":"Run DMC, Aerosmith"
-"Say My Name":"Destiny\'s Child"
-"If I Ain\'t Got You":"Alicia Keys"
-"Rockollection":"Laurent Voulzy"
-"Total Eclipse of the Heart":"Bonnie Tyler"
-"Ça m\\'énerve":"Helmut Fritz"
-"Personal Jesus":"Depeche Mode"
-"7 Seconds":"Youssou N\'Dour, Neneh Cherry"
-"Pour Que Tu M\'Aimes Encore":"Céline Dion"
-"Du côte de chez Swann":"Dave"
-"...Baby One More Time":"Britney Spears"
-"Yeah!":"Usher Featuring Lil\' Jon & Ludacris"
-"I Gotta Feeling":"Black Eyed Peas"
-"Human":"Rag\'n\'Bone Man"
-"Uptown Girl":"Billy Joel"
-"The Sound of Silence":"Simon & Garfunkel"
-"Suzanne":"Leonard Cohen"
-"Genie In a Bottle":"Christina Aguilera"
-"Est-ce que tu m\'aimes ?":"Maître Gims"
-"Killing In The NameE":"Rage Against the Machine"
-"Enjoy the Silence":"Depeche Mode"
-"Budapest":"George Ezra"
-"Sweater Weather":"The Neighbourhood"
-"Le temps est bon":"Bon Entendeur, Isabelle Pierre"
-"Unstoppable":"Sia"
-"Sur ma route":"Black M"
-"Happy":"Pharrell Williams"
-"Beautiful Girls":"Sean Kingston"
-"SexyBack":"Justin Timberlake, Timbaland"
-"Coco Câline":"Julien Doré"
-"Chandelier":"Sia"
-"Material Girl":"Madonna"
-"Il est cinq heures, Paris s\'éveille":"Jacques Dutronc"
-"All About That Bass":"Meghan Trainor"
-"J\'ai demandé à la lune":"Indochine"
-"Place des grands hommes":"Patrick Bruel"
-"Single Ladies":"Beyoncé"
-"You Spin Me Round":"Dead or Alive"
-"You Really Got Me":"The Kinks"
+Rasputin:Boney M.
+September:Earth, Wind & Fire
+Sarà perché ti amo:Ricchi e Poveri
+Halo:Beyoncé
+L'aventurier:Indochine
+J'Irai Ou Tu Iras:Céline Dion;Jean-Jacques Goldman
+Africa:Toto
+I'm So Excited:The Pointer Sisters
+Besoin de rien, envie de toi:Peter & Sloane
+Cheap Thrills:Sia, Sean Paul
+Wati by Night:Sexion D'Assaut
+Beggin':Måneskin
+Another Love:Tom Odell
+Pumped Up Kicks:Foster the People
+Uptown Funk:Mark Ronson, Bruno Mars
+Wake Me Up Before You Go-Go:Wham!
+Je te donne:Jean-Jacques Goldman, Michael Jones
+Sous le vent:Céline Dion, Garou
+Billie Jean:Michael Jackson
+Sweet Dreams:Eurythmics, Annie Lennox, Dave Stewart
+Highway to Hell:AC/DC
+Come and Get Your Love :Redbone
+Dernière danse:Kyo
+Là-bas:Jean-Jacques Goldman, Sirima
+Bohemian Rhapsody:Queen
+CAN'T STOP THE FEELING!:Justin Timberlake
+Old Town Road:Lil Nas X, Billy Ray Cyrus
+Ma direction:Sexion D'Assaut
+Footloose:Kenny Loggins
+I'm Outta Love:Anastacia
+It's Raining Men:The Weather Girls
+Knockin' On Heaven's Door:Bob Dylan
+Get Lucky:Daft Punk, Pharrell Williams, Nile Rodgers
+Waka Waka:Shakira, Freshlyground
+Eye of the Tiger:Survivor
+Je t'aimais, je t'aime, je t'aimerai:Francis Cabrel
+Seven Nation Army:The White Stripes
+Ma Benz:Suprême NTM, Lord Kossity
+Hey Ya!:Outkast
+Cry Me A River:Justin Timberlake
+Shut Up and Let Me Go:The Ting Tings
+Hey, Soul Sister:Train
+Girls Just Want to Have Fun:Cyndi Lauper
+Fallin':Alicia Keys
+Thank You:Dido
+Wonderwall:Oasis
+All Of Me:John Legend
+Sexual Healing:Marvin Gaye
+Let Her Go:Passenger
+Still Loving You:Scorpions
+Should I Stay or Should I Go:The Clash
+Heavy Cross:Gossip
+Hallelujah:Jeff Buckley
+Ma philosophie:Amel Bent
+Maria Maria:Santana, The Product G&B
+Sapés comme jamais:Maître Gims, Niska
+Djadja:Aya Nakamura
+Timber:Pitbull, Kesha
+Let's Groove:Earth, Wind & Fire
+I Know What You Want:Busta Rhymes, Mariah Carey, Flipmode Squad
+The Final Countdown:Europe
+Come:Jain
+I Love Rock 'N Roll:Joan Jett and the Blackhearts
+Les Champs-Elysées:Joe Dassin
+Careless Whisper:George Michael
+Dreams:Fleetwood Mac
+Cheerleader:OMI
+Killing Me Softly With His Song:Fugees, Ms. Lauryn Hill
+Crazy In Love:Beyoncé, JAY-Z
+It Ain't Me:Kygo, Selena Gomez
+Don't Stop The Music:Rihanna
+Million Eyes:Loïc Nottet
+Elle a les yeux revolver:Marc Lavoine
+No Scrubs:TLC
+Last Nite:The Strokes
+The Time of My Life:Bill Medley, Jennifer Warnes
+I Wanna Dance with Somebody:Whitney Houston
+Trois nuits par semaine:Indochine
+Ain't No Sunshine:Bill Withers
+Sign of the Times:Harry Styles
+How To Save A Life:The Fray
+Streets of Philadelphia:Bruce Springsteen
+Thriller:Michael Jackson
+Jailhouse Rock:Elvis Presley
+Mambo No. 5:Lou Bega
+Daddy Cool:Boney M.
+Toxic:Britney Spears
+Walk Like an Egyptian:The Bangles
+La même:Maître Gims, Vianney
+Mr. Blue Sky:Electric Light Orchestra
+Walk This Way:Run DMC, Aerosmith
+Say My Name:Destiny's Child
+If I Ain't Got You:Alicia Keys
+Rockollection:Laurent Voulzy
+Total Eclipse of the Heart:Bonnie Tyler
+Ça m'énerve:Helmut Fritz
+Personal Jesus:Depeche Mode
+7 Seconds:Youssou N'Dour, Neneh Cherry
+Pour Que Tu M'Aimes Encore:Céline Dion
+Du côte de chez Swann:Dave
+...Baby One More Time:Britney Spears
+Yeah!:Usher Featuring Lil' Jon & Ludacris
+I Gotta Feeling:Black Eyed Peas
+Human:Rag'n'Bone Man
+Uptown Girl:Billy Joel
+The Sound of Silence:Simon & Garfunkel
+Suzanne:Leonard Cohen
+Genie In a Bottle:Christina Aguilera
+Est-ce que tu m'aimes ?:Maître Gims
+Killing In The NameE:Rage Against the Machine
+Enjoy the Silence:Depeche Mode
+Budapest:George Ezra
+Sweater Weather:The Neighbourhood
+Le temps est bon:Bon Entendeur, Isabelle Pierre
+Unstoppable:Sia
+Sur ma route:Black M
+Happy:Pharrell Williams
+Beautiful Girls:Sean Kingston
+SexyBack:Justin Timberlake, Timbaland
+Coco Câline:Julien Doré
+Chandelier:Sia
+Material Girl:Madonna
+Il est cinq heures, Paris s'éveille:Jacques Dutronc
+All About That Bass:Meghan Trainor
+J'ai demandé à la lune:Indochine
+Place des grands hommes:Patrick Bruel
+Single Ladies:Beyoncé
+You Spin Me Round:Dead or Alive
+You Really Got Me:The Kinks

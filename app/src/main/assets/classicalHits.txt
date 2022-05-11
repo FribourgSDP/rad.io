@@ -1,39 +1,39 @@
-"Eine kleine Nachtmusik":"Wolfgang Amadeus Mozart"
-"Für Elise":"Ludwig van Beethoven"
-"Symphony no.9":"Ludwig van Beethoven"
-"Symphony no.5":"Ludwig van Beethoven"
-"Dies Irae":"Giuseppe Verdi"
-"Lacrimosa":"Wolfgang Amadeus Mozart"
-"Also sprach Zarathustra":"Richard Wagner"
-"Ride of the Valkyries":"Richard Wagner"
-"The blue Danube":"Johann Strauss II"
-"Toccata":"Johann Sebastian Bach"
-"Spring":"Antonio Vivaldi"
-"Summer":"Antonio Vivaldi"
-"Winter":"Antonio Vivaldi"
-"Nabucco":"Giuseppe Verdi"
-"La Traviatta":"Giuseppe Verdi"
-"O Fortuna":"Carl Orff"
-"From the new world":"Antonin Dvorak"
-"Hungarian Dance":"Johannes Brahms"
-"Swan Lake":"Pyotr Ilyich Tchaikovsky"
-"Gymnopédie":"Erik Satie"
-"Carmen":"Georges Bizet"
-"Moonlight sonata":"Ludwig van Beethoven"
-"Symphony no.40":"Wolfgang Amadeus Mozart"
-"L'arlésienne":"Georges Bizet"
-"The magic flute":"Wolfgang Amadeus Mozart"
-"Water music":"George Frideric Handel"
-"West side story":"Leonhard Bernstein"
-"Ave Maria":"Franz Schubert"
-"Nutcracker":"Pyotr Ilyich Tchaikovsky"
-"Bolero":"Maurics Ravel"
-"Wedding March":"Felix Mendelssohn"
-"Rigoletto":"Giuseppe Verdi"
-"Le carnaval des animaux":"Camille Saint-Saens"
-"The planets":"Gustav Holst"
-"Romeo and Juliet":"Sergei Prokofiev"
-"Turandot":"Giacomo Puccini"
-"Radetsky March":"Johann Strauss I"
-"William Tell":"Gioachino Rossini"
-"Alleluia":"George Frideric Handel"
+Eine kleine Nachtmusik:Wolfgang Amadeus Mozart
+Für Elise:Ludwig van Beethoven
+Symphony no.9:Ludwig van Beethoven
+Symphony no.5:Ludwig van Beethoven
+Dies Irae:Giuseppe Verdi
+Lacrimosa:Wolfgang Amadeus Mozart
+Also sprach Zarathustra:Richard Wagner
+Ride of the Valkyries:Richard Wagner
+The blue Danube:Johann Strauss II
+Toccata:Johann Sebastian Bach
+Spring:Antonio Vivaldi
+Summer:Antonio Vivaldi
+Winter:Antonio Vivaldi
+Nabucco:Giuseppe Verdi
+La Traviatta:Giuseppe Verdi
+O Fortuna:Carl Orff
+From the new world:Antonin Dvorak
+Hungarian Dance:Johannes Brahms
+Swan Lake:Pyotr Ilyich Tchaikovsky
+Gymnopédie:Erik Satie
+Carmen:Georges Bizet
+Moonlight sonata:Ludwig van Beethoven
+Symphony no.40:Wolfgang Amadeus Mozart
+L'arlésienne:Georges Bizet
+The magic flute:Wolfgang Amadeus Mozart
+Water music:George Frideric Handel
+West side story:Leonhard Bernstein
+Ave Maria:Franz Schubert
+Nutcracker:Pyotr Ilyich Tchaikovsky
+Bolero:Maurics Ravel
+Wedding March:Felix Mendelssohn
+Rigoletto:Giuseppe Verdi
+Le carnaval des animaux:Camille Saint-Saens
+The planets:Gustav Holst
+Romeo and Juliet:Sergei Prokofiev
+Turandot:Giacomo Puccini
+Radetsky March:Johann Strauss I
+William Tell:Gioachino Rossini
+Alleluia:George Frideric Handel

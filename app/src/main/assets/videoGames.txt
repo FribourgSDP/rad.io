@@ -1,27 +1,27 @@
-"The legend of Zelda":"Kōji Kondō"
-"The wind waker":"Kōji Kondō"
-"Super Mario Bros.":"Kōji Kondō"
-"Super Smash Bros Brawl":""
-"Still alive":"Mike Morasky"
-"Skyrim":"Jeremy Soule"
-"Wii sport":""
-"Starfox":"Hajime Hirasawa"
-"Doom":"Robert Prince"
-"Quake":"Trent Reznor"
-"Halo":"Martin O\'Donnell and Michael Salvatori"
-"Final fantasy 7":"Nobuo Uematsu"
-"Final fantasy":""
-"Oblivion":"Jeremy Soule"
-"Silent Hill":"Akira Yamaoka"
-"Castlevania":"Michiru Yamane"
-"Pokemon":""
-"Fallout 3":"Inon Zur"
-"Minecraft":"C418"
-"Tetris":""
-"Among us":""
-"The last of us":""
-"Pokemon Red":""
-"Pac man":""
-"Sonic":""
-"Civilization":"Christopher Tin"
-"Assassin\'s Creed":"",
+The legend of Zelda:Kōji Kondō
+The wind waker:Kōji Kondō
+Super Mario Bros.:Kōji Kondō
+Super Smash Bros Brawl:
+Still alive:Mike Morasky
+Skyrim:Jeremy Soule
+Wii sport:
+Starfox:Hajime Hirasawa
+Doom:Robert Prince
+Quake:Trent Reznor
+Halo:Martin O'Donnell and Michael Salvatori
+Final fantasy 7:Nobuo Uematsu
+Final fantasy:
+Oblivion:Jeremy Soule
+Silent Hill:Akira Yamaoka
+Castlevania:Michiru Yamane
+Pokemon:
+Fallout 3:Inon Zur
+Minecraft:C418
+Tetris:
+Among us:
+The last of us:
+Pokemon Red:
+Pac man:
+Sonic:
+Civilization:Christopher Tin
+Assassin's Creed:,
