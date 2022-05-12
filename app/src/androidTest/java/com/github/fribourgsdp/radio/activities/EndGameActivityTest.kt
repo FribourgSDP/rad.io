@@ -3,16 +3,21 @@ package com.github.fribourgsdp.radio.activities
 import android.content.Context
 import android.content.Intent
 import androidx.test.core.app.ActivityScenario
+import androidx.test.core.app.ActivityScenario.launch
 import androidx.test.core.app.ApplicationProvider
-import androidx.test.espresso.Espresso
+import androidx.test.espresso.Espresso.*
 import androidx.test.espresso.assertion.ViewAssertions
+import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.intent.Intents
 import androidx.test.espresso.intent.matcher.IntentMatchers
 import androidx.test.espresso.matcher.ViewMatchers
+import androidx.test.espresso.matcher.ViewMatchers.withId
+import androidx.test.espresso.matcher.ViewMatchers.withText
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.github.fribourgsdp.radio.MainActivity
 import com.github.fribourgsdp.radio.R
 import com.github.fribourgsdp.radio.game.EndGameActivity
+import com.github.fribourgsdp.radio.game.GAME_CRASH_KEY
 import com.github.fribourgsdp.radio.game.SCORES_KEY
 import com.github.fribourgsdp.radio.utils.CustomMatchers.Companion.atPosition
 import org.hamcrest.Matchers
@@ -78,6 +83,32 @@ class EndGameActivityTest{
                         )
                     )
                 )
+        }
+    }
+
+    @Test
+    fun congratsMessagedOnCorrectEnd() {
+        val testIntent = Intent(ctx, EndGameActivity::class.java).apply {
+            putExtra(GAME_CRASH_KEY, false)
+        }
+
+        launch<EndGameActivity>(testIntent).use {
+            // Check that the scores are displayed with the correct data and in the correct order
+            onView(withId(R.id.gameOverTextView))
+                .check(matches(withText(R.string.congrats)))
+        }
+    }
+
+    @Test
+    fun crashMessagedOnFailure() {
+        val testIntent = Intent(ctx, EndGameActivity::class.java).apply {
+            putExtra(GAME_CRASH_KEY, true)
+        }
+
+        launch<EndGameActivity>(testIntent).use {
+            // Check that the scores are displayed with the correct data and in the correct order
+            onView(withId(R.id.gameOverTextView))
+                .check(matches(withText(R.string.game_crashed)))
         }
     }
 }
