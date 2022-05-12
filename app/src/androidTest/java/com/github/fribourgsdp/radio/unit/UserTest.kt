@@ -90,6 +90,19 @@ class UserTest {
     }
 
     @Test
+    fun addingPlaylistWithSameNameKeepsMostRecentlyAdded(){
+        val playlist1 = Playlist("test", Genre.ROCK)
+        val playlist2 = Playlist("test", Genre.POP)
+        playlist2.addSong(Song("testSong",""))
+        assertEquals(playlist1,playlist2)
+        val userTest = User("Test")
+        userTest.addPlaylist(playlist1)
+        userTest.addPlaylist(playlist2)
+        assertEquals(1,userTest.getPlaylists().size)
+        assertEquals(Genre.POP,userTest.getPlaylistWithName("test").genre)
+        assertEquals(1,userTest.getPlaylistWithName("test").getSongs().size)
+    }
+    @Test
     fun savingUserToFile(){
         val ctx = ApplicationProvider.getApplicationContext<Context>()
         val string = "test"
