@@ -177,7 +177,6 @@ open class UserProfileActivity : MyAppCompatActivity(), KeepOrDismissPlaylistDia
     }
 
     private fun mergePlaylist() : Task<Unit>{
-        Log.w(ContentValues.TAG, "MERGE")
         return db.getUser(user.id).continueWith {
             user.addPlaylists(it.result.getPlaylists())
             user.isGoogleUser = true
@@ -187,7 +186,6 @@ open class UserProfileActivity : MyAppCompatActivity(), KeepOrDismissPlaylistDia
         }
     }
     private fun importPlaylist() : Task<Unit>{
-        Log.w(ContentValues.TAG, "IMPORT")
         user.removePlaylists(user.getPlaylists())
         return db.getUser(user.id).continueWith{
             user = it.result
@@ -198,7 +196,6 @@ open class UserProfileActivity : MyAppCompatActivity(), KeepOrDismissPlaylistDia
     }
 
     private fun dismissOnlinePlaylist() : Task<Unit>{
-        Log.w(ContentValues.TAG, "DISMISS")
         return db.getUser(user.id).continueWith{
             user.name = it.result.name
             user.id = it.result.id
@@ -223,14 +220,10 @@ open class UserProfileActivity : MyAppCompatActivity(), KeepOrDismissPlaylistDia
     }
 
     private fun keepPlaylist() : Task<Unit>{
-        Log.w(ContentValues.TAG, "KEEP")
         return Tasks.forResult(null)
-        //when keeping playlist, decide whether only those saved locally should be kept or all of them
-
     }
     private fun deletePlaylist() : Task<Unit> {
         user.removePlaylists(user.getPlaylists())
-        Log.w(ContentValues.TAG, "DELETE")
         return Tasks.forResult(null)
 
     }
