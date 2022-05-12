@@ -95,26 +95,6 @@ class WorkingJoinGameActivityTest {
         checkLobbiesDisplay(lobbies)
     }
 
-    @Test
-    fun spinnerChoiceSortsLobbiesByName() {
-        val lobbies = ArrayList(WorkingJoinGameActivity.testDatabase.lobbies)
-
-        // Sort them by name
-        lobbies.sortBy { it.name }
-
-        // open the spinner
-        onView(withId(R.id.lobbySortSpinner))
-            .perform(click())
-        // click on sort value
-        onData(allOf(`is`(instanceOf(LobbyDataKeys::class.java)),`is`(LobbyDataKeys.NAME)))
-            .inRoot(isTouchable())
-            .perform(click())
-
-        // give the time to the ui to update
-        Thread.sleep(50L)
-
-        checkLobbiesDisplay(lobbies)
-    }
 
     @Test
     fun spinnerChoiceSortsLobbiesByHostname() {
