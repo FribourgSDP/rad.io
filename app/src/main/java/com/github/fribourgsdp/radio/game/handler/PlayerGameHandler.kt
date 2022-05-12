@@ -200,6 +200,6 @@ class PlayerGameHandler(
     }
 
     companion object {
-        private val WAIT_DELTA_IN_SECONDS = 5L
+        private const val WAIT_DELTA_IN_SECONDS = 5L
     }
 }
