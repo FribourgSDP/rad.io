@@ -60,7 +60,6 @@ open class UserProfileActivity : MyAppCompatActivity(), KeepOrDismissPlaylistDia
 
         val fromGoogle = intent.getBooleanExtra("FromGoogle",false)
 
-
         User.loadOrDefault(this).addOnSuccessListener { u ->
             user = u
             checkUser()
@@ -72,7 +71,7 @@ open class UserProfileActivity : MyAppCompatActivity(), KeepOrDismissPlaylistDia
             val bundle = Bundle()
             bundle.putString(USER_DATA, Json.encodeToString(user))
             MyFragment.beginTransaction<UserPlaylistsFragment>(supportFragmentManager, bundle)
-            if(fromGoogle/*comeFromGoogleSignIn*/){
+            if(fromGoogle){
                 //check if the connection was sucessful, if yes, do the afterSignInProcedure
                 afterSignInProcedure()
             }
@@ -93,49 +92,13 @@ open class UserProfileActivity : MyAppCompatActivity(), KeepOrDismissPlaylistDia
             saveChangeButton.visibility = View.VISIBLE
             false
         }
-        /*usernameField.setOnFocusChangeListener { v,f->
-            if(!f) {
-                updateUser()
-            }
-        }*/
-
-       /* usernameField.setOnEditorActionListener {view, actionId, keyEvent ->
-            if (actionId == EditorInfo.IME_ACTION_SEARCH || actionId == EditorInfo.IME_ACTION_DONE ||
-                keyEvent == null //||
-                /*keyEvent.keyCode == KeyEvent.KEYCODE_ENTER ||
-                    keyEvent.keyCode == KeyEvent.KEYCODE_*/) {
-                //User finihsed typing
-                    updateUser()
-                true
-            }
-            false
-        }*/
-       /* usernameField.setOnKeyListener{v,k,e ->
-            if (e.keyCode == KeyEvent.KEYCODE_ENTER)
-            {
-                // code to hide the soft keyboard
-                usernameField.clearFocus();
-                val view: View? = this.currentFocus
-                if (view != null) {
-                    val imm: InputMethodManager =
-                        getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
-                    imm.hideSoftInputFromWindow(view.getWindowToken(), 0)
-                }
-               // usernameField.text = usernameField.text.delete(usernameField.text.length-1,usernameField.text.length)
-                //usernameField.requestFocus(EditText.FOCUS_DOWN);
-            }
-            false
-        }*/
-
 
         googleSignInButton.setOnClickListener {
             if (signedIn) {
                 signOut()
             } else {
-
                 startActivity(Intent(this, GoogleSignInActivity::class.java))
             }
-
         }
         findViewById<FloatingActionButton>(R.id.addPlaylistButton).setOnClickListener{startActivity(Intent(this, AddPlaylistActivity::class.java))}
 
@@ -181,27 +144,7 @@ open class UserProfileActivity : MyAppCompatActivity(), KeepOrDismissPlaylistDia
         if(signedIn){
             googleSignInButton.text = getString(R.string.sign_out_message)
         }
-        //get current user
-       /* val firebaseUser = firebaseAuth.currentUser
 
-        if(firebaseUser != null){
-            //check whether it is a new user of not, if yes, we saved the default user info in the cloud
-            //if no we load the data from the cloud.
-            val mockUser = db.getUser(firebaseUser.uid)
-            mockUser.addOnSuccessListener { l ->
-
-                if(l == null){
-                    db.setUser(firebaseUser.uid,user)
-                }else if(l.id != user.id){
-                    user = l
-                    user.save(this)
-                }
-                usernameField.setText(user.name)
-                googleSignInButton.text = getString(R.string.sign_out_message)
-
-                signedIn = true
-            }
-        }*/
     }
 
 
