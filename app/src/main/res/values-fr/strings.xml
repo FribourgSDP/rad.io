@@ -97,4 +97,8 @@
     <string name="join_with_qr_code">Rejoindre avec un code QR</string>
     <string name="enable_microphone">Activer Microphone</string>
     <string name="display_qr_code">Afficher QR Code</string>
+    <string name="timerSelectTime">Choissisez la durée durant laquelle les joueurs pourront deviner.</string>
+    <string name="timerMinutes">Minutes</string>
+    <string name="timerSeconds">Secondes</string>
+    <string name="gameDurationFormat">Durée du chanteur: %d secondes </string>
 </resources>
