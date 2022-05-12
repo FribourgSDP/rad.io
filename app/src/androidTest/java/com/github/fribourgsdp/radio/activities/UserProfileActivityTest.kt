@@ -3,6 +3,7 @@ package com.github.fribourgsdp.radio.activities
 
 import android.content.Context
 import android.content.Intent
+import android.view.View
 import androidx.test.core.app.ActivityScenario
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.espresso.Espresso
@@ -43,8 +44,10 @@ import org.junit.Assert.*
 
 import org.junit.After
 import org.junit.Before
+import org.mockito.ArgumentMatchers
 import org.mockito.Mockito
 import org.mockito.Mockito.`when`
+import org.mockito.Mockito.matches
 
 
 import java.util.concurrent.TimeUnit
@@ -73,14 +76,17 @@ class UserProfileActivityTest : TestCase() {
             onView(withId(R.id.profileButton)).perform(click())
         }
 
+        onView(withId(R.id.saveUserButton)).check(ViewAssertions.matches(ViewMatchers.withEffectiveVisibility(ViewMatchers.Visibility.INVISIBLE)))
         onView(withId(R.id.username)).perform(
             ViewActions.clearText(),
             ViewActions.typeText(testName),
             )
+        onView(withId(R.id.saveUserButton)).check(ViewAssertions.matches(ViewMatchers.isDisplayed()))
+
 
         Espresso.closeSoftKeyboard()
         onView(withId(R.id.saveUserButton)).perform(click())
-
+        onView(withId(R.id.saveUserButton)).check(ViewAssertions.matches(ViewMatchers.withEffectiveVisibility(ViewMatchers.Visibility.INVISIBLE)))
         val user = User.load(ctx)
 
         assertEquals(testName, user.name)
