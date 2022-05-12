@@ -191,6 +191,7 @@ class UserProfileActivityTest : TestCase() {
         assertEquals("testTitle",user.getPlaylists().toList()[0].name)
 
 
+
     }
 
     @Test
@@ -235,6 +236,7 @@ class UserProfileActivityTest : TestCase() {
         assertFalse(user.isGoogleUser)
         assertEquals("Guest",user.name)
         assertEquals("1",user.id)
+        assertEquals(0,user.getPlaylists().size)
     }
 
     @Test
@@ -260,6 +262,8 @@ class UserProfileActivityTest : TestCase() {
         assertFalse(user.isGoogleUser)
         assertEquals("Guest",user.name)
         assertEquals("1",user.id)
+        assertEquals(1,user.getPlaylists().size)
+        assertEquals("testTitle",user.getPlaylists().toList()[0].name)
 
     }
 
