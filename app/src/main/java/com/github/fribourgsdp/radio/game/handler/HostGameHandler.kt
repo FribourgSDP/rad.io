@@ -54,25 +54,50 @@ class HostGameHandler(
 
                 // update the game
                 val updatesMap = createUpdatesMap(doneMap.keys)
-                db.updateGame(game.id, updatesMap).addOnSuccessListener {
+                val onSuccess: (Void) -> (Unit) = {
                     // update the latest singer
                     latestSingerId = updatesMap["singer"] as String
-                    db.resetGameMetadata(
-                        game.id,
-                        latestSingerId!!
-                    ).addOnFailureListener {
-                        Log.e("HostGameHandler Error", "Metadata reset: ${it.message}", it)
+                    resetGameMetadata(latestSingerId!!)
+                }
+
+                db.updateGame(game.id, updatesMap)
+                    .addOnSuccessListener(onSuccess)
+                    .addOnFailureListener {
+                        Log.e("HostGameHandler Error", "Game update: ${it.message}", it)
                         view.displayError(ctx.getString(R.string.game_error))
-                    }
-                }.addOnFailureListener {
-                    Log.e("HostGameHandler Error", "Game update: ${it.message}", it)
-                    view.displayError(ctx.getString(R.string.game_error))
+
+                        // retry
+                        db.updateGame(game.id, updatesMap)
+                            .addOnSuccessListener(onSuccess)
+                            .addOnFailureListener {
+                                // quit on second failure
+                                view.gameOver(game.getAllScores(), true)
+                            }
                 }
             }
 
         } else {
             Log.e("HostGameHandler Error", "Snapshot error")
             view.displayError(ctx.getString(R.string.game_error))
+        }
+    }
+
+    private fun resetGameMetadata(latestSingerId: String) {
+        db.resetGameMetadata(
+            game.id,
+            latestSingerId
+        ).addOnFailureListener {
+            Log.e("HostGameHandler Error", "Metadata reset: ${it.message}", it)
+            view.displayError(ctx.getString(R.string.game_error))
+
+            // retry
+            db.resetGameMetadata(
+                game.id,
+                latestSingerId
+            ).addOnFailureListener {
+                // quit on second failure
+                view.gameOver(game.getAllScores(), true)
+            }
         }
     }
 
