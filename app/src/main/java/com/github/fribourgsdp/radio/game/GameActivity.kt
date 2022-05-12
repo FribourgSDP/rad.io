@@ -110,7 +110,11 @@ open class GameActivity : AppCompatActivity(), GameView, Timer.Listener {
 
     override fun displaySong(songName: String) {
         // Close the lyrics popup if already open
-        lyricsPopup?.dismiss()
+        lyricsPopup?.let {
+            if (it.isVisible) {
+                it.dismiss()
+            }
+        }
 
         // Hide the edit text and the submit button
         songGuessEditText.visibility = View.GONE
@@ -129,7 +133,11 @@ open class GameActivity : AppCompatActivity(), GameView, Timer.Listener {
 
     override fun displayGuessInput() {
         // Close the lyrics popup if already open
-        lyricsPopup?.dismiss()
+        lyricsPopup?.let {
+            if (it.isVisible) {
+                it.dismiss()
+            }
+        }
 
         // Hide the song view
         songTextView.visibility = View.GONE
@@ -146,7 +154,11 @@ open class GameActivity : AppCompatActivity(), GameView, Timer.Listener {
 
     override fun displayError(errorMessage: String) {
         // Close the lyrics popup if already open
-        lyricsPopup?.dismiss()
+        lyricsPopup?.let {
+            if (it.isVisible) {
+                it.dismiss()
+            }
+        }
 
         // Show the error
         errorOrFailureTextView.apply {
@@ -165,7 +177,11 @@ open class GameActivity : AppCompatActivity(), GameView, Timer.Listener {
 
     override fun displayWaitOnSinger(singer: String) {
         // Close the lyrics popup if already open
-        lyricsPopup?.dismiss()
+        lyricsPopup?.let {
+            if (it.isVisible) {
+                it.dismiss()
+            }
+        }
 
         // We can display the wait message where the same box as the song
         displaySong(getString(R.string.wait_for_pick_format, mapIdToName[singer]  ?: singer))
@@ -174,7 +190,11 @@ open class GameActivity : AppCompatActivity(), GameView, Timer.Listener {
 
     override fun displayPlayerScores(playerScores: Map<String, Long>) {
         // Close the lyrics popup if already open
-        lyricsPopup?.dismiss()
+        lyricsPopup?.let {
+            if (it.isVisible) {
+                it.dismiss()
+            }
+        }
 
         scoresAdapter.updateScore(
             // Replace ids by names
@@ -294,7 +314,11 @@ open class GameActivity : AppCompatActivity(), GameView, Timer.Listener {
     
     override fun updateLyrics(lyrics : String) {
         // Close the lyrics popup if already open
-        lyricsPopup?.dismiss()
+        lyricsPopup?.let {
+            if (it.isVisible) {
+                it.dismiss()
+            }
+        }
         
         lyricsPopup = if(lyrics.isNotEmpty() && lyrics != LYRICS_NOT_FOUND_PLACEHOLDER)  LyricsPopup(lyrics)
             else null
