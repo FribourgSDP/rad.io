@@ -249,6 +249,10 @@ class PlayerGameHandlerTest {
 
         assertEquals("Wrong answer", view.error)
         assertEquals(View.VISIBLE, view.errorVisibility)
+
+        // Game crashed
+        assertTrue(view.gameOver)
+        assertTrue(view.crashed)
     }
 
     @Test
@@ -286,6 +290,10 @@ class PlayerGameHandlerTest {
         
         assertEquals(ctx.getString(R.string.game_error), view.error)
         assertEquals(View.VISIBLE, view.errorVisibility)
+
+        // Game crashed
+        assertTrue(view.gameOver)
+        assertTrue(view.crashed)
     }
 
     @Test
@@ -375,6 +383,31 @@ class PlayerGameHandlerTest {
         Thread.sleep(1)
 
         assertEquals(View.GONE, view.errorVisibility)
+    }
+
+    @Test
+    fun gameCrashOnTimoutButDBFail() {
+        val view = FakeGameView("Not Singer")
+        val db = mock(Database::class.java)
+        `when`(db.playerEndTurn(anyLong(), anyString(), anyBoolean()))
+            .thenReturn(Tasks.forException(Exception()))
+
+        `when`(mockSnapshot.getString("current_song")).thenReturn(song)
+
+        val handler = PlayerGameHandler(ctx, 0, view, db)
+
+        // Update song to guess
+        handler.handleSnapshot(mockSnapshot)
+
+        // Check it
+        handler.handleGuess("", "", true)
+
+        // Wait for the task of the database to execute
+        Thread.sleep(1)
+
+        // Game crashed
+        assertTrue(view.gameOver)
+        assertTrue(view.crashed)
     }
 
 }
