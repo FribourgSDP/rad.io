@@ -19,6 +19,7 @@ class PlayerGameHandler(
 ): GameHandler(ctx, view, db), GameView.OnPickListener {
 
     private var songToGuess: String? = null
+    private var scores: HashMap<String, Long>? = null
 
     override fun linkToDatabase() {
         db.listenToGameUpdate(gameID, executeOnUpdate())
@@ -27,9 +28,9 @@ class PlayerGameHandler(
     override fun handleSnapshot(snapshot: DocumentSnapshot?) {
         if (snapshot != null && snapshot.exists()) {
             val gameStillValid = snapshot.getBoolean("validity")!!
-            val scores = snapshot.get("scores") as HashMap<String, Long>
+            scores = snapshot.get("scores") as HashMap<String, Long>
             if (snapshot.getBoolean("finished")!! || !gameStillValid) {
-                view.gameOver(scores)
+                view.gameOver(scores!!, gameStillValid)
                 return
             }
 
@@ -39,7 +40,7 @@ class PlayerGameHandler(
             view.updateRound(snapshot.getLong("current_round")!!)
 
             // update the score
-            view.displayPlayerScores(scores)
+            view.displayPlayerScores(scores!!)
 
             // Get the picked song
             // It's not null when there is one.
@@ -58,8 +59,16 @@ class PlayerGameHandler(
         if (songToGuess == null) { return }
 
         if (timeout) {
-            db.playerEndTurn(gameID, userId, false).addOnFailureListener {
-                view.displayError(ctx.getString(R.string.game_error))
+            db.playerEndTurn(gameID, userId, false)
+                .addOnFailureListener {
+                    Log.e("PlayerGameHandler Error", "In end turn with timeout: ${it.message}", it)
+                    view.displayError(ctx.getString(R.string.game_error))
+
+                    // retry
+                    db.playerEndTurn(gameID, userId, false)
+                        .addOnFailureListener {
+                            view.gameOver(scores, true)
+                        }
             }
 
             // Hide the error if a wrong guess was made
@@ -81,21 +90,35 @@ class PlayerGameHandler(
             // Hide the error if a wrong guess was made
             view.hideError()
 
-            db.playerEndTurn(gameID, userId, true).addOnFailureListener {
+            db.playerEndTurn(gameID, userId, true)
+                .addOnFailureListener {
                     Log.e("PlayerGameHandler Error", "In end turn: ${it.message}", it)
                     view.displayError(ctx.getString(R.string.game_error))
+
+                    // retry
+                    db.playerEndTurn(gameID, userId, true)
+                        .addOnFailureListener {
+                            view.gameOver(scores, true)
+                        }
                 }
         }
     }
 
     override fun onPick(song: String) {
+        val onSuccess: (Void?) -> Unit = { view.displaySong(song) }
+
         db.updateCurrentSongOfGame(gameID, song)
-            .addOnSuccessListener {
-                view.displaySong(song)
-            }
+            .addOnSuccessListener(onSuccess)
             .addOnFailureListener {
                 Log.e("PlayerGameHandler Error", "onPick: ${it.message}", it)
                 view.displayError(ctx.getString(R.string.game_error))
+
+                // retry
+                db.updateCurrentSongOfGame(gameID, song)
+                    .addOnSuccessListener(onSuccess)
+                    .addOnFailureListener {
+                        view.gameOver(scores, true)
+                    }
             }
     }
 
