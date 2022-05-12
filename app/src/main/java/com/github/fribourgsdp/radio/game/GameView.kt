@@ -62,11 +62,13 @@ interface GameView: Timer.DeadlineHandler {
 
     /**
      * Handle the end of the game.
+     * @param finalScores the scores when the game is over
+     * @param hasCrashed whether the game finished by crashing or not
      */
     fun gameOver(finalScores: Map<String, Long>?, hasCrashed: Boolean = false)
 
     /**
-     * Displays the given [String] in the dedicated TextView
+     * Update the [lyrics] of the current song in the game
      */
     fun updateLyrics(lyrics : String)
 
