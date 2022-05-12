@@ -30,8 +30,7 @@ import com.github.fribourgsdp.radio.data.view.REDIRECT_URI
 import com.github.fribourgsdp.radio.data.view.UserProfileActivity
 import com.github.fribourgsdp.radio.database.Database
 import com.github.fribourgsdp.radio.external.google.GoogleSignInActivity
-import com.github.fribourgsdp.radio.mockimplementations.GoogleUserMockUserProfileActivity
-import com.github.fribourgsdp.radio.mockimplementations.MockUserProfileActivity
+import com.github.fribourgsdp.radio.mockimplementations.*
 import com.google.android.gms.tasks.Tasks
 import com.google.firebase.auth.FirebaseAuth
 import junit.framework.TestCase
@@ -163,8 +162,8 @@ class UserProfileActivityTest : TestCase() {
 
         }
         var user = User.load(ctx)
-        assertEquals("onlineUserTest",user.name)
-        assertEquals("onlineUserTestId",user.id)
+        assertEquals(onlineUserName,user.name)
+        assertEquals(onlineUserId,user.id)
         assertEquals(2,user.getPlaylists().size)
     }
 
@@ -184,12 +183,10 @@ class UserProfileActivityTest : TestCase() {
 
             }
         var user = User.load(ctx)
-        assertEquals("onlineUserTest",user.name)
-        assertEquals("onlineUserTestId",user.id)
+        assertEquals(onlineUserName,user.name)
+        assertEquals(onlineUserId,user.id)
         assertEquals(1,user.getPlaylists().size)
-        assertEquals("testTitle",user.getPlaylists().toList()[0].name)
-
-
+        assertEquals(playListName,user.getPlaylists().toList()[0].name)
 
     }
 
@@ -208,10 +205,10 @@ class UserProfileActivityTest : TestCase() {
 
         }
         val user = User.load(ctx)
-        assertEquals("onlineUserTest",user.name)
-        assertEquals("onlineUserTestId",user.id)
+        assertEquals(onlineUserName,user.name)
+        assertEquals(onlineUserId,user.id)
         assertEquals(1,user.getPlaylists().size)
-        assertEquals("TEST_PLAYLIST",user.getPlaylists().toList()[0].id)
+        assertEquals(testPlaylistId,user.getPlaylists().toList()[0].id)
 
     }
 
@@ -262,7 +259,7 @@ class UserProfileActivityTest : TestCase() {
         assertEquals("Guest",user.name)
         assertEquals("1",user.id)
         assertEquals(1,user.getPlaylists().size)
-        assertEquals("testTitle",user.getPlaylists().toList()[0].name)
+        assertEquals(playListName,user.getPlaylists().toList()[0].name)
 
     }
 
