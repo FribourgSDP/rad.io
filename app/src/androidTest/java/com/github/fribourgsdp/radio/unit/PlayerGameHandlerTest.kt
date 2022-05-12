@@ -175,7 +175,7 @@ class PlayerGameHandlerTest {
         Thread.sleep(sleepingTime)
 
         assertEquals(View.VISIBLE, view.songVisibility)
-        assertEquals("You correctly guessed $song", view.song)
+        assertEquals(ctx.getString(R.string.correct_guess_format, song), view.song)
         assertEquals(View.GONE, view.guessInputVisibility)
     }
 
@@ -199,7 +199,7 @@ class PlayerGameHandlerTest {
         // Wait for the task of the database to execute
         Thread.sleep(sleepingTime)
 
-        assertEquals("Wrong answer", view.error)
+        assertEquals(ctx.getString(R.string.wrong_guess), view.error)
         assertEquals(View.VISIBLE, view.errorVisibility)
     }
 
@@ -223,7 +223,7 @@ class PlayerGameHandlerTest {
         // Wait for the task of the database to execute
         Thread.sleep(sleepingTime)
 
-        assertEquals("You're close!", view.error)
+        assertEquals(ctx.getString(R.string.close_guess), view.error)
         assertEquals(View.VISIBLE, view.errorVisibility)
     }
 

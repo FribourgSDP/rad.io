@@ -66,11 +66,11 @@ class PlayerGameHandler(
 
         val nbErrors = StringComparisons.compare(songToGuess!!, guess)
         if (nbErrors == NOT_THE_SAME) {
-            view.displayError("Wrong answer")
+            view.displayError(ctx.getString(R.string.wrong_guess))
         } else if (nbErrors != 0) {
-            view.displayError("You're close!")
+            view.displayError(ctx.getString(R.string.close_guess))
         } else {
-            view.displaySong("You correctly guessed $guess")
+            view.displaySong(ctx.getString(R.string.correct_guess_format, songToGuess))
             view.stopTimer()
 
             // Hide the error if a wrong guess was made
