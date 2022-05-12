@@ -5,6 +5,9 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
 import android.widget.*
+import com.akexorcist.snaptimepicker.SnapTimePickerDialog
+import com.akexorcist.snaptimepicker.TimeRange
+import com.akexorcist.snaptimepicker.TimeValue
 import com.github.fribourgsdp.radio.MainActivity
 import com.github.fribourgsdp.radio.R
 import com.github.fribourgsdp.radio.data.Playlist
@@ -19,6 +22,9 @@ const val GAME_NB_ROUNDS_KEY = "com.github.fribourgsdp.radio.GAME_NB_ROUNDS"
 const val GAME_HINT_KEY = "com.github.fribourgsdp.radio.GAME_HINT"
 const val GAME_PRIVACY_KEY = "com.github.fribourgsdp.radio.GAME_PRIVACY"
 const val GAME_IS_HOST_KEY = "com.github.fribourgsdp.radio.GAME_IS_HOST"
+const val GAME_DURATION_KEY = "com.github.fribourgsdp.radio.GAME_DURATION"
+
+const val DEFAULT_GAME_DURATION = 45L;
 
 open class GameSettingsActivity : AppCompatActivity() {
     private lateinit var host: User
@@ -28,6 +34,8 @@ open class GameSettingsActivity : AppCompatActivity() {
     private lateinit var hintCheckBox : CheckBox
     private lateinit var privacyCheckBox : CheckBox
     private lateinit var startButton : Button
+    private lateinit var timerButton : ImageButton
+    private lateinit var timerTextView: TextView
 
     private lateinit var playlistSearchView : SearchView
     private lateinit var playlistListView : ListView
@@ -37,26 +45,20 @@ open class GameSettingsActivity : AppCompatActivity() {
 
     private lateinit var selectedPlaylist: Playlist
 
+    private var gameTimeDuration = DEFAULT_GAME_DURATION
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_game_settings)
 
         host = User.load(this)
 
-        nameInput = findViewById(R.id.nameInput)
-        nbRoundsInput = findViewById(R.id.nbRoundsInput)
-        hintCheckBox = findViewById(R.id.hintCheckBox)
-        privacyCheckBox = findViewById(R.id.privacyCheckBox)
-        startButton = findViewById(R.id.startButton)
-        playlistSearchView = findViewById(R.id.playlistSearchView)
-        playlistListView = findViewById(R.id.playlistListView)
-        playlistsNames = getUserPlaylistNames(host)
-        playlistAdapter = ArrayAdapter(this, android.R.layout.simple_list_item_1, playlistsNames)
-        errorText = findViewById(R.id.playlistSearchError)
+        initViews()
+        initBehaviours()
 
-        playlistListView.adapter = playlistAdapter
+    }
 
-
+    private fun initBehaviours() {
         // When user is clicks on the bar, show the possibilities
         playlistSearchView.setOnSearchClickListener { playlistListView.visibility = View.VISIBLE }
 
@@ -71,6 +73,38 @@ open class GameSettingsActivity : AppCompatActivity() {
 
         startButton.setOnClickListener(startButtonBehavior())
 
+        timerButton.setOnClickListener {
+            SnapTimePickerDialog.Builder().apply {
+                setTitle(R.string.timerSelectTime)
+                setPrefix(R.string.timerMinutes)
+                setSuffix(R.string.timerSeconds)
+                setThemeColor(R.color.purple_200)
+                setPreselectedTime(TimeValue(0, DEFAULT_GAME_DURATION.toInt()))
+                setSelectableTimeRange(TimeRange(TimeValue(0, 5), TimeValue(2, 0)))
+            }.build().apply {
+                setListener { minute, second ->
+                    gameTimeDuration = (60*minute + second).toLong()
+                    timerTextView.text = gameTimeDuration.toString() + "s"
+                }
+            }.show(supportFragmentManager, "TimerSettings")
+        }
+    }
+
+    private fun initViews() {
+        nameInput = findViewById(R.id.nameInput)
+        nbRoundsInput = findViewById(R.id.nbRoundsInput)
+        hintCheckBox = findViewById(R.id.hintCheckBox)
+        privacyCheckBox = findViewById(R.id.privacyCheckBox)
+        startButton = findViewById(R.id.startButton)
+        playlistSearchView = findViewById(R.id.playlistSearchView)
+        playlistListView = findViewById(R.id.playlistListView)
+        playlistsNames = getUserPlaylistNames(host)
+        playlistAdapter = ArrayAdapter(this, android.R.layout.simple_list_item_1, playlistsNames)
+        errorText = findViewById(R.id.playlistSearchError)
+        timerButton = findViewById(R.id.chooseTimeButton)
+        timerTextView = findViewById(R.id.timerTextView)
+
+        playlistListView.adapter = playlistAdapter
     }
 
     override fun onBackPressed() {
@@ -95,6 +129,7 @@ open class GameSettingsActivity : AppCompatActivity() {
                 putExtra(GAME_HINT_KEY, hintCheckBox.isChecked)
                 putExtra(GAME_PRIVACY_KEY, privacyCheckBox.isChecked)
                 putExtra(GAME_IS_HOST_KEY, true)
+                putExtra(GAME_DURATION_KEY, gameTimeDuration)
             }
             startActivity(intent)
         }

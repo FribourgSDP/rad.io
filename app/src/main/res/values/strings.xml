@@ -101,5 +101,9 @@
     <string name="wrong_guess">Wrong answer</string>
     <string name="close_guess">You\'re close!</string>
     <string name="correct_guess_format">You correctly guessed %s</string>
+    <string name="timerSelectTime">Select the duration players will have to guess.</string>
+    <string name="timerMinutes">Minutes</string>
+    <string name="timerSeconds">Seconds</string>
+    <string name="gameDurationFormat">Time singing: %d seconds </string>
 </resources>
 

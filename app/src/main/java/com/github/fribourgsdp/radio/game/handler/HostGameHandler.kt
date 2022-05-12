@@ -9,9 +9,9 @@ import com.github.fribourgsdp.radio.external.musixmatch.LyricsGetter
 import com.github.fribourgsdp.radio.external.musixmatch.MusixmatchLyricsGetter
 import com.github.fribourgsdp.radio.game.Game
 import com.github.fribourgsdp.radio.game.GameView
-import com.github.fribourgsdp.radio.getPlayerDoneMap
-import com.github.fribourgsdp.radio.getPlayerFoundMap
-import com.github.fribourgsdp.radio.getScoresOfRound
+import com.github.fribourgsdp.radio.util.getPlayerDoneMap
+import com.github.fribourgsdp.radio.util.getPlayerFoundMap
+import com.github.fribourgsdp.radio.util.getScoresOfRound
 import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.FieldValue
 

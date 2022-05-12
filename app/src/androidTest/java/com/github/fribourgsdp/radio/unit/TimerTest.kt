@@ -53,7 +53,7 @@ class TimerTest {
         assertFalse(done)
 
         // Sleep the time of the timer + 1
-        Thread.sleep(timerTimeInSeconds * 1000 + 1)
+        Thread.sleep(2* timerTimeInSeconds * 1000)
 
         // Check it's done
         assertTrue(done)
