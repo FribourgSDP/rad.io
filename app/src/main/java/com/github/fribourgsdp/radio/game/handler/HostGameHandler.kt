@@ -54,7 +54,7 @@ class HostGameHandler(
 
                 // update the game
                 val updatesMap = createUpdatesMap(doneMap.keys)
-                val onSuccess: (Void) -> (Unit) = {
+                val onSuccess: (Void?) -> (Unit) = {
                     // update the latest singer
                     latestSingerId = updatesMap["singer"] as String
                     resetGameMetadata(latestSingerId!!)
