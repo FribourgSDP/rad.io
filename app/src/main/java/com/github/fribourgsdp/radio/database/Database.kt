@@ -135,10 +135,10 @@ interface Database {
     fun updateGame(id: Long, updatesMap: Map<String, Any>) : Task<Void>
 
     /**
-     * Update the current song to [songName] in the game [id].
+     * Update the current song to [songName] in the game [id] and make the singer's timer last [incrementBy] seconds.
      * @return a task void so that we know if the current song of the game was correctly updated.
      */
-    fun updateCurrentSongOfGame(id: Long, songName: String) : Task<Void> {
+    fun updateCurrentSongOfGame(id: Long, songName: String, incrementBy: Long) : Task<Void> {
         return updateGame(id, hashMapOf("current_song" to songName))
     }
 

@@ -51,7 +51,7 @@ class MainActivity : MyAppCompatActivity() {
 
     }
     private fun createUser(){
-        User.createDefaultUser().continueWith{ user ->
+        User.createDefaultUser(this).continueWith{ user ->
             val result = user.result
             result.save(this)
             db.setUser(result.id,result)

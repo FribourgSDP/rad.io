@@ -2,12 +2,12 @@ package com.github.fribourgsdp.radio.database
 
 import android.content.ContentValues
 import android.util.Log
-import com.github.fribourgsdp.radio.*
 import com.github.fribourgsdp.radio.data.Genre
 import com.github.fribourgsdp.radio.data.Playlist
 import com.github.fribourgsdp.radio.data.Song
 import com.github.fribourgsdp.radio.data.User
 import com.github.fribourgsdp.radio.game.Game
+import com.github.fribourgsdp.radio.util.*
 import com.google.android.gms.tasks.Task
 import com.google.android.gms.tasks.Tasks
 import com.google.firebase.Timestamp
@@ -465,9 +465,10 @@ class FirestoreDatabase(var refMake: FirestoreRef) : Database {
             .update(updatesMap)
     }
 
-    override fun updateCurrentSongOfGame(id: Long, songName: String): Task<Void> {
+    override fun updateCurrentSongOfGame(id: Long, songName: String, incrementBy: Long): Task<Void> {
         val roundDeadline = Date()
-        roundDeadline.time += ROUND_TIME_IN_MILLIS
+        //incrementBy is in seconds whereas we must add milliseconds to the time before deadline.
+        roundDeadline.time += incrementBy*1000
 
         val songUpdateMap = hashMapOf(
             "current_song" to songName,
@@ -559,11 +560,4 @@ class FirestoreDatabase(var refMake: FirestoreRef) : Database {
         db.collection(collectionPath).document(id.toString())
             .addSnapshotListener(listener)
     }
-
-    companion object {
-        // Here it's 45 seconds in milliseconds
-        private const val ROUND_TIME_IN_MILLIS = 45_000L
-    }
-
-
 }

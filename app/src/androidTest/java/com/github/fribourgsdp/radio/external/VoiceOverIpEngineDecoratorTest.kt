@@ -85,6 +85,7 @@ fun makeMockRtcEngine() : RtcEngine {
     `when`(mockEngine.setAudioProfile(anyInt(), anyInt())).thenReturn(0)
     `when`(mockEngine.leaveChannel()).thenReturn(0)
     `when`(mockEngine.muteLocalAudioStream(anyBoolean())).thenReturn(0)
+    `when`(mockEngine.setDefaultAudioRoutetoSpeakerphone(anyBoolean())).thenReturn(0)
     return mockEngine
 }
 

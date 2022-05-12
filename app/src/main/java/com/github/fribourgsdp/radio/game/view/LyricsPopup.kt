@@ -6,6 +6,8 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.core.text.HtmlCompat
+import androidx.core.text.HtmlCompat.FROM_HTML_MODE_LEGACY
 import androidx.fragment.app.DialogFragment
 import com.github.fribourgsdp.radio.R
 
@@ -19,7 +21,7 @@ class LyricsPopup(private val lyrics : String) : DialogFragment() {
     ): View {
         val rootView: View = inflater.inflate(R.layout.popup_lyrics, container, false)
         text = rootView.findViewById(R.id.lyricsPopupTextView)
-        text.text = lyrics
+        text.text = HtmlCompat.fromHtml(lyrics, FROM_HTML_MODE_LEGACY)
         closeButton = rootView.findViewById(R.id.close_popup_button)
         closeButton.setOnClickListener{
             //dismiss

@@ -23,6 +23,8 @@ import com.github.fribourgsdp.radio.external.musixmatch.MusixmatchLyricsGetter
 import com.github.fribourgsdp.radio.game.Game
 import com.github.fribourgsdp.radio.game.GameActivity
 import com.github.fribourgsdp.radio.game.view.QuitGameOrLobbyDialog
+import com.github.fribourgsdp.radio.util.getPermissions
+import com.github.fribourgsdp.radio.util.getPlayers
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
@@ -48,6 +50,7 @@ open class LobbyActivity : MyAppCompatActivity(){
     private var isHost: Boolean = false
     private var hasVoiceIdPermissions : Boolean = false
     private var gameLobbyId: Long = -1L
+    private var gameDuration: Long = DEFAULT_GAME_DURATION
 
     private lateinit var uuidTextView     : TextView
     private lateinit var hostNameTextView : TextView
@@ -56,6 +59,7 @@ open class LobbyActivity : MyAppCompatActivity(){
     private lateinit var nbRoundsTextView : TextView
     private lateinit var withHintTextView : TextView
     private lateinit var privateTextView  : TextView
+    private lateinit var singerDurationTextView : TextView
 
     private lateinit var launchGameButton: Button
     private lateinit var askForPermissionsButton: Button
@@ -161,6 +165,7 @@ open class LobbyActivity : MyAppCompatActivity(){
         nbRounds        = intent.getIntExtra(GAME_NB_ROUNDS_KEY, getString(R.string.default_game_nb_rounds).toInt())
         withHint        = intent.getBooleanExtra(GAME_HINT_KEY, false)
         isPrivate       = intent.getBooleanExtra(GAME_PRIVACY_KEY, false)
+        gameDuration    = intent.getLongExtra(GAME_DURATION_KEY, DEFAULT_GAME_DURATION)
 
         hasVoiceIdPermissions = (ContextCompat.checkSelfPermission(this, Manifest.permission.RECORD_AUDIO) == PackageManager.PERMISSION_GRANTED)
         gameLobbyId = intent.getLongExtra(GAME_UID_KEY, -1L)
@@ -175,6 +180,7 @@ open class LobbyActivity : MyAppCompatActivity(){
         withHintTextView = findViewById(R.id.withHintText)
         privateTextView  = findViewById(R.id.privateText)
         privateTextView  = findViewById(R.id.privateText)
+        singerDurationTextView = findViewById(R.id.singerDurationLobbyText)
         layoutManager = LinearLayoutManager(this)
         val recyclerView = findViewById<RecyclerView>(R.id.lobbyRecyclerView)
         recyclerView.layoutManager = layoutManager
@@ -220,6 +226,7 @@ open class LobbyActivity : MyAppCompatActivity(){
         nbRoundsTextView.text = getString(R.string.number_of_rounds_format, nbRounds)
         withHintTextView.text = getString(R.string.hints_enabled_format, withHint)
         privateTextView.text  = getString(R.string.private_format, isPrivate)
+        singerDurationTextView.text = getString(R.string.gameDurationFormat, gameDuration)
     }
 
     private fun linkToDatabase(uid: Long) {
@@ -314,6 +321,7 @@ open class LobbyActivity : MyAppCompatActivity(){
             putExtra(GAME_IS_HOST_KEY, isHost)
             putExtra(MAP_ID_NAME_KEY, mapIdToName)
             putExtra(GAME_UID_KEY, gameID)
+            putExtra(GAME_DURATION_KEY, gameDuration)
         }
 
         if (isHost && game != null) {

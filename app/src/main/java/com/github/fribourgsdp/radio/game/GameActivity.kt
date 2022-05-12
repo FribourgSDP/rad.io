@@ -11,12 +11,15 @@ import androidx.recyclerview.widget.RecyclerView
 import com.github.fribourgsdp.radio.*
 import com.github.fribourgsdp.radio.game.timer.Timer
 import com.github.fribourgsdp.radio.data.User
+import com.github.fribourgsdp.radio.external.musixmatch.MusixmatchLyricsGetter.LYRICS_NOT_FOUND_PLACEHOLDER
 import com.github.fribourgsdp.radio.game.handler.HostGameHandler
 import com.github.fribourgsdp.radio.game.handler.PlayerGameHandler
-import com.github.fribourgsdp.radio.game.prep.GAME_IS_HOST_KEY
+import com.github.fribourgsdp.radio.game.prep.DEFAULT_GAME_DURATION
+import com.github.fribourgsdp.radio.game.prep.MAP_ID_NAME_KEY
 import com.github.fribourgsdp.radio.game.prep.GAME_KEY
 import com.github.fribourgsdp.radio.game.prep.GAME_UID_KEY
-import com.github.fribourgsdp.radio.game.prep.MAP_ID_NAME_KEY
+import com.github.fribourgsdp.radio.game.prep.GAME_DURATION_KEY
+import com.github.fribourgsdp.radio.game.prep.GAME_IS_HOST_KEY
 import com.github.fribourgsdp.radio.game.timer.TimerProgressBarHandler
 import com.github.fribourgsdp.radio.game.view.LyricsPopup
 import com.github.fribourgsdp.radio.game.view.QuitGameOrLobbyDialog
@@ -37,6 +40,7 @@ const val SCORES_KEY = "com.github.fribourgsdp.radio.SCORES"
 open class GameActivity : AppCompatActivity(), GameView, Timer.Listener {
     private lateinit var user: User
     private var isHost: Boolean = false
+    private var gameDuration = DEFAULT_GAME_DURATION
 
     private lateinit var currentRoundTextView : TextView
     private lateinit var singerTextView : TextView
@@ -65,6 +69,7 @@ open class GameActivity : AppCompatActivity(), GameView, Timer.Listener {
             it as HashMap<String, String>
         } ?: HashMap()
         isHost = intent.getBooleanExtra(GAME_IS_HOST_KEY, false)
+        gameDuration = intent.getLongExtra(GAME_DURATION_KEY, DEFAULT_GAME_DURATION)
         initViews()
 
         val gameUid = intent.getLongExtra(GAME_UID_KEY, -1L)
@@ -77,6 +82,7 @@ open class GameActivity : AppCompatActivity(), GameView, Timer.Listener {
         }
 
         playerGameHandler = PlayerGameHandler(gameUid, this)
+        playerGameHandler.setSingerDuration(gameDuration)
 
         // On submit make the player game handler handle the guess
         songGuessSubmitButton.setOnClickListener {
@@ -235,6 +241,7 @@ open class GameActivity : AppCompatActivity(), GameView, Timer.Listener {
         val userId = user.name.hashCode().absoluteValue
         voiceChannel.setAudioProfile(Constants.AUDIO_PROFILE_MUSIC_STANDARD, Constants.AUDIO_SCENARIO_CHATROOM_ENTERTAINMENT);
         voiceChannel.enableAudioVolumeIndication(200,3,true)
+        voiceChannel.setDefaultAudioRoutetoSpeakerphone(true)
         voiceChannel.joinChannel(voiceChannel.getToken(userId, gameUid.toString()), gameUid.toString(), "", userId)
     }
 
@@ -270,7 +277,10 @@ open class GameActivity : AppCompatActivity(), GameView, Timer.Listener {
     override fun displayLyrics(lyrics : String) {
         showLyricsButton.visibility = View.VISIBLE
         showLyricsButton.setOnClickListener { displayLyrics(lyrics) }
-        val lyricsPopup = LyricsPopup(lyrics)
-        lyricsPopup.show(supportFragmentManager, "lyricsPopup")
+        if(lyrics.isNotEmpty() && lyrics != LYRICS_NOT_FOUND_PLACEHOLDER) {
+
+            val lyricsPopup = LyricsPopup(lyrics)
+            lyricsPopup.show(supportFragmentManager, "lyricsPopup")
+        }
     }
 }
