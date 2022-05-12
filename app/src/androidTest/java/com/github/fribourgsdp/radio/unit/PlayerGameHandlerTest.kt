@@ -22,7 +22,7 @@ class PlayerGameHandlerTest {
 
     private lateinit var mockSnapshot: DocumentSnapshot
 
-    private val sleepingTime = 50L
+    private val sleepingTime = 500L
     private val singer = "Singer"
     private val song = "A good song"
     private val round = 1L
@@ -172,7 +172,7 @@ class PlayerGameHandlerTest {
         handler.handleGuess(song, "")
 
         // Wait for the task of the database to execute
-        Thread.sleep(1)
+        Thread.sleep(sleepingTime)
 
         assertEquals(View.VISIBLE, view.songVisibility)
         assertEquals("You correctly guessed $song", view.song)
@@ -197,7 +197,7 @@ class PlayerGameHandlerTest {
         handler.handleGuess("Not the song", "")
 
         // Wait for the task of the database to execute
-        Thread.sleep(1)
+        Thread.sleep(sleepingTime)
 
         assertEquals("Wrong answer", view.error)
         assertEquals(View.VISIBLE, view.errorVisibility)
@@ -221,7 +221,7 @@ class PlayerGameHandlerTest {
         handler.handleGuess(song + "a", "")
 
         // Wait for the task of the database to execute
-        Thread.sleep(1)
+        Thread.sleep(sleepingTime)
 
         assertEquals("You're close!", view.error)
         assertEquals(View.VISIBLE, view.errorVisibility)
@@ -245,7 +245,7 @@ class PlayerGameHandlerTest {
         handler.handleGuess("Not the song", "")
 
         // Wait for the task of the database to execute
-        Thread.sleep(1)
+        Thread.sleep(sleepingTime)
 
         assertEquals("Wrong answer", view.error)
         assertEquals(View.VISIBLE, view.errorVisibility)
@@ -267,7 +267,7 @@ class PlayerGameHandlerTest {
         handler.onPick(song)
 
         // Wait for the task of the database to execute
-        Thread.sleep(100)
+        Thread.sleep(sleepingTime)
 
         assertEquals(View.VISIBLE, view.songVisibility)
         assertEquals(song, view.song)
@@ -286,7 +286,7 @@ class PlayerGameHandlerTest {
         handler.onPick(song)
 
         // Wait for the task of the database to execute
-        Thread.sleep(1000)
+        Thread.sleep(sleepingTime)
         
         assertEquals(ctx.getString(R.string.game_error), view.error)
         assertEquals(View.VISIBLE, view.errorVisibility)
@@ -357,7 +357,7 @@ class PlayerGameHandlerTest {
         handler.handleGuess(song, "")
 
         // Wait for the task of the database to execute
-        Thread.sleep(1)
+        Thread.sleep(sleepingTime)
 
         assertFalse(view.timerRunning)
     }
@@ -380,7 +380,7 @@ class PlayerGameHandlerTest {
         handler.handleGuess("", "", true)
 
         // Wait for the task of the database to execute
-        Thread.sleep(1)
+        Thread.sleep(sleepingTime)
 
         assertEquals(View.GONE, view.errorVisibility)
     }
@@ -403,7 +403,7 @@ class PlayerGameHandlerTest {
         handler.handleGuess("", "", true)
 
         // Wait for the task of the database to execute
-        Thread.sleep(1)
+        Thread.sleep(sleepingTime)
 
         // Game crashed
         assertTrue(view.gameOver)
