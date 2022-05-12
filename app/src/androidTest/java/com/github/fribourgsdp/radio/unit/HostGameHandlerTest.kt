@@ -107,4 +107,48 @@ class HostGameHandlerTest {
         assertEquals(ctx.getString(R.string.game_error), view.error)
         assertEquals(View.VISIBLE, view.errorVisibility)
     }
+
+    @Test
+    fun gameCrashOnDoubleDatabaseUpdateFailure() {
+        val view = FakeGameView()
+        val db = mock(Database::class.java)
+        `when`(db.updateGame(anyLong(), anyMap()))
+            .thenReturn(Tasks.forException(Exception()))
+
+        val handler = HostGameHandler(ctx, fakeGame, view, db)
+
+        handler.handleSnapshot(mockSnapshot)
+
+        // Wait for the task of the database to execute
+        Thread.sleep(sleepingTime)
+
+        assertEquals(ctx.getString(R.string.game_error), view.error)
+        assertEquals(View.VISIBLE, view.errorVisibility)
+        assertTrue(view.gameOver)
+        assertTrue(view.crashed)
+    }
+
+
+
+    @Test
+    fun gameCrashOnDoubleDatabaseResetFailure() {
+        val view = FakeGameView()
+        val db = mock(Database::class.java)
+        `when`(db.updateGame(anyLong(), anyMap()))
+            .thenReturn(Tasks.forResult(null))
+        `when`(db.resetGameMetadata(anyLong(), anyString()))
+            .thenReturn(Tasks.forException(Exception()))
+
+        val handler = HostGameHandler(ctx, fakeGame, view, db)
+
+        handler.handleSnapshot(mockSnapshot)
+
+        // Wait for the task of the database to execute
+        Thread.sleep(sleepingTime)
+
+        assertEquals(ctx.getString(R.string.game_error), view.error)
+        assertEquals(View.VISIBLE, view.errorVisibility)
+        assertTrue(view.gameOver)
+        assertTrue(view.crashed)
+    }
 }
