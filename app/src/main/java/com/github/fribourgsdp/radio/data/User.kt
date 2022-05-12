@@ -2,6 +2,7 @@ package com.github.fribourgsdp.radio.data
 
 
 import android.content.Context
+import android.util.Log
 import com.github.fribourgsdp.radio.persistence.*
 import com.github.fribourgsdp.radio.database.FirestoreDatabase
 import com.github.fribourgsdp.radio.util.SetUtility
@@ -76,10 +77,13 @@ data class User (var name: String, val color: Int) : SavesToFileSystem<User>(USE
          *
          * @return a default [User]
          */
-        fun createDefaultUser(): Task<User> {
+        fun createDefaultUser(context : Context? = null): Task<User> {
             return FirestoreDatabase().generateUserId().continueWith { id ->
                 val generatedUser = User("Guest", generateColor())
                 generatedUser.id = id.result.toString()
+                if(context != null) {
+                    generatedUser.addPlaylists(StarterPlaylists.getStarterPlaylists(context))
+                }
                 generatedUser
             }
 
