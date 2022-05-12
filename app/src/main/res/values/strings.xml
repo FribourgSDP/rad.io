@@ -97,5 +97,6 @@
     <string name="display_qr_code">Display QR Code</string>
     <string name="add_your_lyrics">---No lyrics were found for this song. Feel free to add yours !---</string>
     <string name="game_error">An error occurred.</string>
+    <string name="game_crashed">The game crashed…</string>
 </resources>
 

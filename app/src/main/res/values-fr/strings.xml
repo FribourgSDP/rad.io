@@ -98,4 +98,5 @@
     <string name="enable_microphone">Activer Microphone</string>
     <string name="display_qr_code">Afficher QR Code</string>
     <string name="game_error">Une erreur est survenue.</string>
+    <string name="game_crashed">La partie a été interrompue…</string>
 </resources>
