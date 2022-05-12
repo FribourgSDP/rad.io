@@ -32,13 +32,6 @@ import org.junit.runner.RunWith
  */
 @RunWith(AndroidJUnit4::class)
 class WorkingJoinGameActivityTest {
-
-    @get:Rule
-    var mRuntimePermissionRule = GrantPermissionRule.grant(Manifest.permission.CAMERA)
-    @get:Rule
-    var mRuntimePermissionRule2 = GrantPermissionRule.grant(Manifest.permission.VIBRATE)
-
-
     @Before
     fun initIntent() {
         Intents.init()
@@ -95,75 +88,4 @@ class WorkingJoinGameActivityTest {
             )
         }
     }
-
-
-    @Test
-    fun cancelScanQRCodeWork(){
-
-        val context: Context = ApplicationProvider.getApplicationContext()
-        val intent = Intent(context, QRCodeJoinGameActivity::class.java)
-        ActivityScenario.launch<QRCodeJoinGameActivity>(intent).use { scenario ->
-            ViewActions.closeSoftKeyboard()
-            val joinQRCodeButton = Espresso.onView(ViewMatchers.withId(R.id.joinWithQRCode))
-            joinQRCodeButton.perform(ViewActions.click())
-
-            Espresso.onView(ViewMatchers.withId(R.id.cancel_button))
-                .inRoot(RootMatchers.isDialog())
-                .check(ViewAssertions.matches(ViewMatchers.isDisplayed()))
-
-            Espresso.onView(ViewMatchers.withId(R.id.cancel_button))
-                .inRoot(RootMatchers.isDialog())
-                .perform(ViewActions.click())
-
-            Espresso.onView(ViewMatchers.withId(R.id.cancel_button))
-                .check(ViewAssertions.doesNotExist())
-        }
-    }
-
-    @Test
-    fun joinLobbyWithScanQRCodeWork(){
-
-        val context: Context = ApplicationProvider.getApplicationContext()
-        val intent = Intent(context, QRCodeJoinGameActivityJoin::class.java)
-        ActivityScenario.launch<QRCodeJoinGameActivityJoin>(intent).use { scenario ->
-            val displayQRCodeButton = Espresso.onView(ViewMatchers.withId(R.id.joinWithQRCode))
-            displayQRCodeButton.perform(ViewActions.click())
-
-            Espresso.onView(ViewMatchers.withId(R.id.cancel_button))
-                .inRoot(RootMatchers.isDialog())
-                .perform(ViewActions.click())
-
-
-            Intents.intended(
-                Matchers.allOf(
-                    IntentMatchers.toPackage("com.github.fribourgsdp.radio"),
-                    IntentMatchers.hasComponent(LobbyActivity::class.java.name),
-                )
-            )
-
-        }
-    }
-
-    @Test
-    fun joinFailLobbyWithScanQRCodeWork(){
-
-        val context: Context = ApplicationProvider.getApplicationContext()
-        val intent = Intent(context, QRCodeJoinGameActivityJoinFail::class.java)
-        ActivityScenario.launch<QRCodeJoinGameActivityJoinFail>(intent).use { scenario ->
-            val displayQRCodeButton = Espresso.onView(ViewMatchers.withId(R.id.joinWithQRCode))
-            displayQRCodeButton.perform(ViewActions.click())
-
-            Espresso.onView(ViewMatchers.withId(R.id.cancel_button))
-                .inRoot(RootMatchers.isDialog())
-                .perform(ViewActions.click())
-
-            Espresso.onView(ViewMatchers.withId(R.id.cancel_button))
-                .inRoot(RootMatchers.isDialog())
-                .check(ViewAssertions.matches(ViewMatchers.isDisplayed()))
-
-        }
-    }
-
-
-
 }
