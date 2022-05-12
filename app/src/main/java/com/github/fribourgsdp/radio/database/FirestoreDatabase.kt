@@ -2,10 +2,8 @@ package com.github.fribourgsdp.radio.database
 
 import android.content.ContentValues
 import android.util.Log
-import com.github.fribourgsdp.radio.data.Genre
-import com.github.fribourgsdp.radio.data.Playlist
-import com.github.fribourgsdp.radio.data.Song
-import com.github.fribourgsdp.radio.data.User
+import com.github.fribourgsdp.radio.*
+import com.github.fribourgsdp.radio.data.*
 import com.github.fribourgsdp.radio.game.Game
 import com.github.fribourgsdp.radio.util.*
 import com.google.android.gms.tasks.Task
@@ -16,10 +14,12 @@ import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.firestore.EventListener
+import com.google.firebase.firestore.FieldValue
 import java.lang.Exception
 import java.util.*
 import kotlin.collections.ArrayList
 import kotlin.collections.HashMap
+
 
 /**
  * This class serves to make possible the dependency injection with mockito. We mock the
@@ -233,8 +233,42 @@ class FirestoreDatabase(var refMake: FirestoreRef) : Database {
             "validity" to true
         )
 
-        return db.collection("lobby").document(id.toString())
-            .set(gameData)
+        val collection = db.collection("lobby")
+        val lobbyRef = collection.document(id.toString())
+
+        // get the public lobbies only if the game is public
+        val publicLobbiesRef = if (settings.isPrivate) null else collection.document("public")
+
+        return db.runTransaction { transaction ->
+            val lobbySnapshot = transaction.get(lobbyRef)
+            val publicLobbiesSnapshot = publicLobbiesRef?.let { transaction.get(it) }
+
+            if (!lobbySnapshot.exists()) {
+                throw IllegalArgumentException("Document $id not found.")
+            }
+
+            // If the game is public (the snapshot not null), but we can't find the public snapshot:
+            // throw an exception
+            if (publicLobbiesSnapshot != null && !publicLobbiesSnapshot.exists()) {
+                throw IllegalArgumentException("The public lobbies could not be reached.")
+            }
+
+            transaction.set(lobbyRef, gameData)
+
+            if (publicLobbiesRef != null) {
+                transaction.update(
+                    publicLobbiesRef, id.toString(),
+                    hashMapOf(
+                        "name" to settings.name,
+                        "host" to settings.hostName
+                    )
+                )
+            }
+
+            // Success
+            null
+        }
+
 
     }
 
@@ -291,6 +325,28 @@ class FirestoreDatabase(var refMake: FirestoreRef) : Database {
 
             // Success
             null
+        }
+    }
+
+    override fun getPublicLobbies(): Task<List<LobbyData>> {
+        return db.collection("lobby").document("public").get().continueWith { snapshot ->
+            if (snapshot.result == null || !snapshot.result.exists()) {
+                throw Exception("Could not fetch public lobbies")
+            }
+
+            createListLobbyDataFromRawData(snapshot.result.data)
+        }
+    }
+
+    override fun removeLobbyFromPublic(id: Long): Task<Void> {
+        return db.collection("lobby").document("public")
+            .update(id.toString(), FieldValue.delete())
+    }
+
+    override fun listenToPublicLobbiesUpdate(listener: EventListener<List<LobbyData>>) {
+        db.collection("lobby").document("public").addSnapshotListener { snapshot, error ->
+            val value = snapshot?.let{ createListLobbyDataFromRawData(it.data) }
+            listener.onEvent(value, error)
         }
     }
 
@@ -448,8 +504,27 @@ class FirestoreDatabase(var refMake: FirestoreRef) : Database {
     }
 
     override fun launchGame(id: Long): Task<Void> {
-        return db.collection("lobby").document(id.toString())
-            .update("launched", true)
+        val collection = db.collection("lobby")
+        val lobbyRef = collection.document(id.toString())
+        val publicRef = collection.document("public")
+        return db.runTransaction { transaction ->
+            val lobbySnapshot = transaction.get(lobbyRef)
+            val publicLobbiesSnapshot = transaction.get(publicRef)
+
+            if (!lobbySnapshot.exists()) {
+                throw IllegalArgumentException("Document $id not found.")
+            }
+
+            if (!publicLobbiesSnapshot.exists()) {
+                throw IllegalArgumentException("The public lobbies could not be reached.")
+            }
+
+            transaction.update(lobbyRef, "launched", true)
+            transaction.update(publicRef, "$id", FieldValue.delete())
+
+            // Success
+            null
+        }
     }
 
     override fun listenToGameUpdate(id: Long, listener: EventListener<DocumentSnapshot>) {
@@ -560,4 +635,11 @@ class FirestoreDatabase(var refMake: FirestoreRef) : Database {
         db.collection(collectionPath).document(id.toString())
             .addSnapshotListener(listener)
     }
+
+    private fun createListLobbyDataFromRawData(data: Map<String, Any>?): List<LobbyData> {
+        return data?.let {
+            (it as Map<String, Map<String, String>>).entries.map { (id, data) -> LobbyData(id.toLong(), data["name"]!!, data["host"]!!) }
+        } ?: ArrayList()
+    }
+
 }

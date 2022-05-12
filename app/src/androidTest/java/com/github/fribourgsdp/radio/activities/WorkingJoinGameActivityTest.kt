@@ -1,23 +1,25 @@
 package com.github.fribourgsdp.radio.activities
 
-import android.Manifest
 import android.content.Context
-import android.content.Intent
-import androidx.test.core.app.ActivityScenario
 import androidx.test.core.app.ApplicationProvider
-import androidx.test.espresso.Espresso
+import androidx.test.espresso.Espresso.*
 import androidx.test.espresso.action.ViewActions
-import androidx.test.espresso.assertion.ViewAssertions
+import androidx.test.espresso.action.ViewActions.click
+import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.intent.Intents
 import androidx.test.espresso.intent.matcher.IntentMatchers
-import androidx.test.espresso.matcher.RootMatchers
-import androidx.test.espresso.matcher.ViewMatchers
+import androidx.test.espresso.matcher.RootMatchers.isTouchable
+import androidx.test.espresso.matcher.ViewMatchers.*
+import androidx.test.ext.junit.rules.ActivityScenarioRule
 import androidx.test.ext.junit.runners.AndroidJUnit4
-import androidx.test.rule.GrantPermissionRule
+import com.github.fribourgsdp.radio.data.LobbyData
+import com.github.fribourgsdp.radio.data.LobbyDataKeys
 import com.github.fribourgsdp.radio.R
 import com.github.fribourgsdp.radio.game.prep.*
 import com.github.fribourgsdp.radio.mockimplementations.*
-import org.hamcrest.Matchers
+import com.github.fribourgsdp.radio.mockimplementations.WorkingJoinGameActivity
+import com.github.fribourgsdp.radio.utils.CustomMatchers.Companion.atPosition
+import org.hamcrest.Matchers.*
 import org.junit.After
 import org.junit.Before
 import org.junit.Rule
@@ -32,6 +34,11 @@ import org.junit.runner.RunWith
  */
 @RunWith(AndroidJUnit4::class)
 class WorkingJoinGameActivityTest {
+    @get:Rule
+    var joinActivityRule = ActivityScenarioRule(WorkingJoinGameActivity::class.java)
+
+    private val ctx: Context = ApplicationProvider.getApplicationContext()
+
     @Before
     fun initIntent() {
         Intents.init()
@@ -47,45 +54,133 @@ class WorkingJoinGameActivityTest {
         // Test values => this one cannot exist, so it won't look in the database
         val testUID = 1001L
 
-        val context: Context = ApplicationProvider.getApplicationContext()
-        val intent = Intent(context, WorkingJoinGameActivity::class.java)
-        ActivityScenario.launch<WorkingJoinGameActivity>(intent).use { scenario ->
+        val joinButton = onView(withId(R.id.joinGameButton))
 
-            val joinButton = Espresso.onView(ViewMatchers.withId(R.id.joinGameButton))
+        joinButton.check(matches(isNotEnabled()))
 
-            joinButton.check(
-                ViewAssertions.matches(
-                    ViewMatchers.isNotEnabled()
-                )
+        onView(withId(R.id.gameToJoinID))
+            .perform(ViewActions.typeText(testUID.toString()))
+
+        closeSoftKeyboard()
+
+        joinButton.check(matches(isEnabled()))
+
+        joinButton.perform(click())
+
+        Intents.intended(
+            allOf(
+                IntentMatchers.toPackage("com.github.fribourgsdp.radio"),
+                IntentMatchers.hasComponent(LobbyActivity::class.java.name),
+                IntentMatchers.hasExtra(GAME_HOST_NAME_KEY, LocalDatabase.EXPECTED_SETTINGS.hostName),
+                IntentMatchers.hasExtra(GAME_NAME_KEY, LocalDatabase.EXPECTED_SETTINGS.name),
+                IntentMatchers.hasExtra(GAME_PLAYLIST_NAME_KEY,LocalDatabase.EXPECTED_SETTINGS.playlistName),
+                IntentMatchers.hasExtra(GAME_NB_ROUNDS_KEY, LocalDatabase.EXPECTED_SETTINGS.nbRounds),
+                IntentMatchers.hasExtra(GAME_HINT_KEY, LocalDatabase.EXPECTED_SETTINGS.withHint),
+                IntentMatchers.hasExtra(GAME_PRIVACY_KEY, LocalDatabase.EXPECTED_SETTINGS.isPrivate),
+                IntentMatchers.hasExtra(GAME_IS_HOST_KEY, false),
+                IntentMatchers.hasExtra(GAME_UID_KEY, testUID)
             )
+        )
 
-            Espresso.onView(ViewMatchers.withId(R.id.gameToJoinID))
-                .perform(ViewActions.typeText(testUID.toString()))
-
-            Espresso.closeSoftKeyboard()
-
-            joinButton.check(
-                ViewAssertions.matches(
-                    ViewMatchers.isEnabled()
-                )
-            )
-
-            joinButton.perform(ViewActions.click())
-
-            Intents.intended(
-                Matchers.allOf(
-                    IntentMatchers.toPackage("com.github.fribourgsdp.radio"),
-                    IntentMatchers.hasComponent(LobbyActivity::class.java.name),
-                    IntentMatchers.hasExtra(GAME_HOST_NAME_KEY, LocalDatabase.EXPECTED_SETTINGS.hostName),
-                    IntentMatchers.hasExtra(GAME_NAME_KEY, LocalDatabase.EXPECTED_SETTINGS.name),
-                    IntentMatchers.hasExtra(GAME_PLAYLIST_NAME_KEY,LocalDatabase.EXPECTED_SETTINGS.playlistName),
-                    IntentMatchers.hasExtra(GAME_NB_ROUNDS_KEY, LocalDatabase.EXPECTED_SETTINGS.nbRounds),
-                    IntentMatchers.hasExtra(GAME_HINT_KEY, LocalDatabase.EXPECTED_SETTINGS.withHint),
-                    IntentMatchers.hasExtra(GAME_PRIVACY_KEY, LocalDatabase.EXPECTED_SETTINGS.isPrivate),
-                    IntentMatchers.hasExtra(GAME_IS_HOST_KEY, false),
-                    IntentMatchers.hasExtra(GAME_UID_KEY, testUID)
-                )
-            )
-        }
     }
+
+    @Test
+    fun publicLobbiesDisplay() {
+        val lobbies = ArrayList(WorkingJoinGameActivity.testDatabase.lobbies)
+
+        checkLobbiesDisplay(lobbies)
+    }
+
+    @Test
+    fun spinnerChoiceSortsLobbiesByName() {
+        val lobbies = ArrayList(WorkingJoinGameActivity.testDatabase.lobbies)
+
+        // Sort them by name
+        lobbies.sortBy { it.name }
+
+        // open the spinner
+        onView(withId(R.id.lobbySortSpinner))
+            .perform(click())
+        // click on sort value
+        onData(allOf(`is`(instanceOf(LobbyDataKeys::class.java)),`is`(LobbyDataKeys.NAME)))
+            .inRoot(isTouchable())
+            .perform(click())
+
+        // give the time to the ui to update
+        Thread.sleep(50L)
+
+        checkLobbiesDisplay(lobbies)
+    }
+
+    @Test
+    fun spinnerChoiceSortsLobbiesByHostname() {
+        val lobbies = ArrayList(WorkingJoinGameActivity.testDatabase.lobbies)
+
+        // Sort them by host name
+        lobbies.sortBy { it.hostName }
+
+        // open the spinner
+        onView(withId(R.id.lobbySortSpinner))
+            .perform(click())
+        // click on sort value
+        onData(allOf(`is`(instanceOf(LobbyDataKeys::class.java)),`is`(LobbyDataKeys.HOSTNAME)))
+            .inRoot(isTouchable())
+            .perform(click())
+
+        // give the time to the ui to update
+        Thread.sleep(50L)
+
+        checkLobbiesDisplay(lobbies)
+    }
+
+    private fun checkLobbiesDisplay(expected: List<LobbyData>) {
+        // Check that the scores are displayed with the correct data and in the correct order
+        onView(withId(R.id.publicLobbiesRecyclerView))
+            .check(
+                matches(
+                    allOf(
+                        // First lobby
+                        atPosition(
+                            0, R.id.lobbyIdTextView,
+                            withText(expected[0].id.toString())
+                        ),
+                        atPosition(
+                            0, R.id.lobbyNameTextView,
+                            withText(ctx.getString(R.string.game_name_format, expected[0].name))
+                        ),
+                        atPosition(
+                            0, R.id.lobbyHostNameTextView,
+                            withText(ctx.getString(R.string.host_name_format, expected[0].hostName))
+                        ),
+                        // Second lobby
+                        atPosition(
+                            1, R.id.lobbyIdTextView,
+                            withText(expected[1].id.toString())
+                        ),
+                        atPosition(
+                            1, R.id.lobbyNameTextView,
+                            withText(ctx.getString(R.string.game_name_format, expected[1].name))
+                        ),
+                        atPosition(
+                            1, R.id.lobbyHostNameTextView,
+                            withText(ctx.getString(R.string.host_name_format, expected[1].hostName))
+                        ),
+                        // Third lobby
+                        atPosition(
+                            2, R.id.lobbyIdTextView,
+                            withText(expected[2].id.toString())
+                        ),
+                        atPosition(
+                            2, R.id.lobbyNameTextView,
+                            withText(ctx.getString(R.string.game_name_format, expected[2].name))
+                        ),
+                        atPosition(
+                            2, R.id.lobbyHostNameTextView,
+                            withText(ctx.getString(R.string.host_name_format, expected[2].hostName))
+                        ),
+                    )
+                )
+            )
+    }
+
 }

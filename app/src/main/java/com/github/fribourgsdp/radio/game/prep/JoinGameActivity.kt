@@ -7,17 +7,19 @@ import android.os.Bundle
 import android.view.KeyEvent
 import android.view.View
 import android.view.inputmethod.EditorInfo
-import android.widget.Button
-import android.widget.EditText
-import android.widget.TextView
+import android.widget.*
 import androidx.core.content.ContextCompat
 import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.DialogFragment
-import com.github.fribourgsdp.radio.database.Database
-import com.github.fribourgsdp.radio.database.FirestoreDatabase
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import com.github.fribourgsdp.radio.data.LobbyDataKeys
+import com.github.fribourgsdp.radio.game.view.PublicLobbiesAdapter
 import com.github.fribourgsdp.radio.R
 import com.github.fribourgsdp.radio.config.MyAppCompatActivity
 import com.github.fribourgsdp.radio.data.User
+import com.github.fribourgsdp.radio.database.Database
+import com.github.fribourgsdp.radio.database.FirestoreDatabase
 
 const val GAME_UID_KEY = "com.github.fribourgsdp.radio.GAME_UID"
 const val GAME_HOST_NAME_KEY = "com.github.fribourgsdp.radio.GAME_HOST_NAME"
@@ -30,6 +32,8 @@ open class JoinGameActivity : MyAppCompatActivity() {
     private lateinit var idInput: EditText
     private lateinit var joinButton : Button
     private lateinit var joinErrorView : TextView
+    private lateinit var lobbiesRecyclerView: RecyclerView
+    private lateinit var spinner: Spinner
     private lateinit var joinWithQRCodeButton : Button
     private lateinit var qrCodeScan: DialogFragment
 
@@ -42,6 +46,8 @@ open class JoinGameActivity : MyAppCompatActivity() {
         joinButton = findViewById(R.id.joinGameButton)
         joinWithQRCodeButton = findViewById(R.id.joinWithQRCode)
         joinErrorView = findViewById(R.id.joinErrorView)
+        lobbiesRecyclerView = findViewById(R.id.publicLobbiesRecyclerView)
+        spinner = findViewById(R.id.lobbySortSpinner)
 
         idInput.addTextChangedListener {
             joinButton.isEnabled = idInput.text.toString().trim().isNotEmpty()
@@ -59,6 +65,9 @@ open class JoinGameActivity : MyAppCompatActivity() {
             }
             false
         }
+
+        initPublicLobbiesDisplay()
+
         initJoinWithQRCode()
     }
 
@@ -105,5 +114,37 @@ open class JoinGameActivity : MyAppCompatActivity() {
             joinErrorView.text = getString(R.string.lobby_not_found, id)
             joinErrorView.visibility = View.VISIBLE
         }
+    }
+
+    private fun initPublicLobbiesDisplay() {
+        // init the cards
+        lobbiesRecyclerView.layoutManager = LinearLayoutManager(this)
+        val adapter = PublicLobbiesAdapter(this, this.db).apply {
+            setOnPickListener { connectToLobby(it) }
+        }
+        lobbiesRecyclerView.adapter = adapter
+
+        // set the context for LobbyDataKeys to use the values in string.xml
+        LobbyDataKeys.setContext(this)
+
+        // init the spinner
+        spinner.adapter = ArrayAdapter(this, android.R.layout.simple_spinner_item, LobbyDataKeys.values()).apply {
+            setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+        }
+        spinner.onItemSelectedListener = LobbySelector(adapter)
+    }
+
+    private class LobbySelector(private val publicLobbiesAdapter: PublicLobbiesAdapter): AdapterView.OnItemSelectedListener {
+        override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
+            val key = parent?.getItemAtPosition(position) as LobbyDataKeys?
+            if (key != null) {
+                publicLobbiesAdapter.sortBy(key)
+            }
+        }
+
+        override fun onNothingSelected(parent: AdapterView<*>?) {
+            // Do nothing
+        }
+
     }
 }

@@ -17,7 +17,11 @@ class WorkingJoinGameActivity : JoinGameActivity() {
     }
 
     override fun initDatabase(): Database {
-        return LocalDatabase()
+        return testDatabase
+    }
+
+    companion object {
+        val testDatabase = LocalDatabase()
     }
 }
 
