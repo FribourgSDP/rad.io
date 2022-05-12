@@ -51,6 +51,10 @@ class PublicLobbiesAdapter(private val context: Context, private val db: Databas
         return lobbies?.size ?: 0
     }
 
+    override fun getItemId(position: Int): Long {
+        return lobbies?.get(position)?.id ?: super.getItemId(position)
+    }
+
     /**
      * Sort the values in the [adapter][PublicLobbiesAdapter] by the given [key].
      */
