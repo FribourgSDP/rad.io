@@ -97,6 +97,15 @@
     <string name="join_with_qr_code">Rejoindre avec un code QR</string>
     <string name="enable_microphone">Activer Microphone</string>
     <string name="display_qr_code">Afficher QR Code</string>
+    <string name="spotify_linked">associé</string>
+    <string name="spotify_unlinked">dissocié</string>
+    <string name="MergeImportDismissPlaylistText">Voulez-vous combiner, importer ou ignorer les playlists stockées en ligne?</string>
+    <string name="mergePlaylist">combiner</string>
+    <string name="importPlaylist">importer</string>
+    <string name="dismissOnlinePlaylist">ignorer les playlists en ligne</string>
+    <string name="KeepPlaylistLocallyText">Voulez-vous garder les playlists associées à ce compte sur votre téléphone?</string>
+    <string name="keepPlaylist">Garder les playlists localement</string>
+    <string name="dismissPlaylist">Supprimer les playlists localement</string>
     <string name="timerSelectTime">Choissisez la durée durant laquelle les joueurs pourront deviner.</string>
     <string name="timerMinutes">Minutes</string>
     <string name="timerSeconds">Secondes</string>

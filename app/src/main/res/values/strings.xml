@@ -95,6 +95,16 @@
     <string name="join_with_qr_code">Join With QR Code</string>
     <string name="enable_microphone">Enable Microphone</string>
     <string name="display_qr_code">Display QR Code</string>
+    <string name="spotify_linked">linked</string>
+    <string name="spotify_unlinked">unlinked</string>
+    <string name="MergeImportDismissPlaylistText">Do you want to merge, import or dismiss the playlist stored online?</string>
+    <string name="mergePlaylist">Merge</string>
+    <string name="importPlaylist">import</string>
+    <string name="dismissOnlinePlaylist">dismiss online playlist</string>
+    <string name="KeepPlaylistLocallyText">Do you want to keep the playlist associated to this account on your phone?</string>
+    <string name="keepPlaylist">Keep playlist locally</string>
+    <string name="dismissPlaylist">Delete playlist locally</string>
+
     <string name="add_your_lyrics">---No lyrics were found for this song. Feel free to add yours !---</string>
     <string name="timerSelectTime">Select the duration players will have to guess.</string>
     <string name="timerMinutes">Minutes</string>
