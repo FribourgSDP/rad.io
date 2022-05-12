@@ -44,7 +44,7 @@ open class GameActivity : AppCompatActivity(), GameView, Timer.Listener {
     private lateinit var singerTextView : TextView
     private lateinit var songTextView : TextView
     private lateinit var errorOrFailureTextView : TextView
-    private lateinit var lyricsPopup : PopupWindow
+    private var lyricsPopup : LyricsPopup? = null
     private lateinit var songGuessEditText : EditText
     private lateinit var muteButton : ImageButton
     private lateinit var songGuessSubmitButton: Button
@@ -113,7 +113,9 @@ open class GameActivity : AppCompatActivity(), GameView, Timer.Listener {
         songGuessEditText.visibility = View.GONE
         songGuessSubmitButton.visibility = View.GONE
 
-        showLyricsButton.visibility = View.VISIBLE
+        if (lyricsPopup != null) {
+            showLyricsButton.visibility = View.VISIBLE
+        }
 
         // Show the song instead
         songTextView.apply {
@@ -156,6 +158,7 @@ open class GameActivity : AppCompatActivity(), GameView, Timer.Listener {
     override fun displayWaitOnSinger(singer: String) {
         // We can display the wait message where the same box as the song
         displaySong(getString(R.string.wait_for_pick_format, mapIdToName[singer]  ?: singer))
+        showLyricsButton.visibility = View.GONE
     }
 
     override fun displayPlayerScores(playerScores: Map<String, Long>) {
@@ -216,6 +219,7 @@ open class GameActivity : AppCompatActivity(), GameView, Timer.Listener {
         songGuessEditText = findViewById(R.id.songGuessEditText)
         songGuessSubmitButton = findViewById(R.id.songGuessSubmitButton)
         showLyricsButton = findViewById(R.id.showLyricsButton)
+        showLyricsButton.setOnClickListener { lyricsPopup?.show(supportFragmentManager, "lyricsPopup") }
 
         // trigger the submit button when the user presses "enter" in the text field
         songGuessEditText.setOnEditorActionListener { _: TextView?, actionId: Int, _: KeyEvent? ->
@@ -274,13 +278,8 @@ open class GameActivity : AppCompatActivity(), GameView, Timer.Listener {
             }
     }
     
-    override fun displayLyrics(lyrics : String) {
-        showLyricsButton.visibility = View.VISIBLE
-        showLyricsButton.setOnClickListener { displayLyrics(lyrics) }
-        if(lyrics.isNotEmpty() && lyrics != LYRICS_NOT_FOUND_PLACEHOLDER) {
-
-            val lyricsPopup = LyricsPopup(lyrics)
-            lyricsPopup.show(supportFragmentManager, "lyricsPopup")
-        }
+    override fun updateLyrics(lyrics : String) {
+        lyricsPopup = if(lyrics.isNotEmpty() && lyrics != LYRICS_NOT_FOUND_PLACEHOLDER)  LyricsPopup(lyrics)
+            else null
     }
 }

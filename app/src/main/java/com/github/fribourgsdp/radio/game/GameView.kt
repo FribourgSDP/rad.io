@@ -68,7 +68,7 @@ interface GameView: Timer.DeadlineHandler {
     /**
      * Displays the given [String] in the dedicated TextView
      */
-    fun displayLyrics(lyrics : String)
+    fun updateLyrics(lyrics : String)
 
     /**
      * An interface creating listeners able to handle songs pick in a [GameView].

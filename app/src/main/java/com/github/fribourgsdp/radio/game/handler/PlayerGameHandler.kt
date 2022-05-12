@@ -125,11 +125,11 @@ class PlayerGameHandler(
             }
     }
 
-    private fun displayLyrics(snapshot: DocumentSnapshot){
+    private fun updateLyrics(snapshot: DocumentSnapshot){
         val lyricsHashMap =
             snapshot.get("song_choices_lyrics")!! as Map<String, String>
         val lyrics = lyricsHashMap[songToGuess!!]
-        view.displayLyrics(lyrics!!)
+        view.updateLyrics(lyrics!!)
     }
 
     private fun chooseSong(snapshot: DocumentSnapshot){
@@ -144,7 +144,8 @@ class PlayerGameHandler(
             if (songToGuess == null) {
                 chooseSong(snapshot)
             } else {
-                displayLyrics(snapshot)
+                updateLyrics(snapshot)
+                view.displaySong(songToGuess!!)
                 view.startTimer(deadline!!.toDate())
             }
 

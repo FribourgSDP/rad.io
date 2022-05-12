@@ -85,10 +85,12 @@ class PlayerGameHandlerTest {
     fun callDisplayLyricsOnSnapshot(){
         val view = FakeGameView(singer)
         val handler = PlayerGameHandler(ctx, 0, view)
-        `when`(mockSnapshot.getString("current_song")).thenReturn("Momentum")
-        `when`(mockSnapshot.get("song_choices_lyrics")).thenReturn(hashMapOf("Momentum" to "Lorem Ipsum"))
+        val song = "Momentum"
+        val lyrics = "Lorem Ipsum"
+        `when`(mockSnapshot.getString("current_song")).thenReturn(song)
+        `when`(mockSnapshot.get("song_choices_lyrics")).thenReturn(hashMapOf(song to lyrics))
         handler.handleSnapshot(mockSnapshot)
-        assertTrue(view.lyricsDisplayed)
+        assertEquals(lyrics, view.lyricsDisplayed)
     }
 
     @Test
