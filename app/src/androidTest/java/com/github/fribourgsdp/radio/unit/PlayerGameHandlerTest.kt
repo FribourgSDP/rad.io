@@ -242,12 +242,12 @@ class PlayerGameHandlerTest {
         handler.handleSnapshot(mockSnapshot)
 
         // Check it
-        handler.handleGuess("Not the song", "")
+        handler.handleGuess(song, "")
 
         // Wait for the task of the database to execute
         Thread.sleep(sleepingTime)
 
-        assertEquals("Wrong answer", view.error)
+        assertEquals(ctx.getString(R.string.game_error), view.error)
         assertEquals(View.VISIBLE, view.errorVisibility)
 
         // Game crashed
