@@ -42,6 +42,13 @@ open class JoinGameActivity : MyAppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_join_game)
 
+        initViews()
+        initPublicLobbiesDisplay()
+        initJoinWithQRCode()
+
+    }
+
+    private fun initViews() {
         idInput = findViewById(R.id.gameToJoinID)
         joinButton = findViewById(R.id.joinGameButton)
         joinWithQRCodeButton = findViewById(R.id.joinWithQRCode)
@@ -65,10 +72,6 @@ open class JoinGameActivity : MyAppCompatActivity() {
             }
             false
         }
-
-        initPublicLobbiesDisplay()
-
-        initJoinWithQRCode()
     }
 
     open fun initDatabase(): Database {
@@ -119,7 +122,7 @@ open class JoinGameActivity : MyAppCompatActivity() {
     private fun initPublicLobbiesDisplay() {
         // init the cards
         lobbiesRecyclerView.layoutManager = LinearLayoutManager(this)
-        val adapter = PublicLobbiesAdapter(this, this.db).apply {
+        val adapter = PublicLobbiesAdapter(this, db).apply {
             setOnPickListener { connectToLobby(it) }
         }
         lobbiesRecyclerView.adapter = adapter
