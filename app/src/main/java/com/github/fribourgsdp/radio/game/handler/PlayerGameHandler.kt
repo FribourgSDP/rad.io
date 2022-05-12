@@ -8,6 +8,7 @@ import com.github.fribourgsdp.radio.database.FirestoreDatabase
 import com.github.fribourgsdp.radio.data.User
 import com.github.fribourgsdp.radio.game.GameView
 import com.github.fribourgsdp.radio.game.prep.DEFAULT_GAME_DURATION
+import com.github.fribourgsdp.radio.game.timer.Timer
 import com.github.fribourgsdp.radio.util.NOT_THE_SAME
 import com.github.fribourgsdp.radio.util.StringComparisons
 import com.google.firebase.firestore.DocumentSnapshot
@@ -22,6 +23,10 @@ class PlayerGameHandler(
     private var songToGuess: String? = null
     private var scores: HashMap<String, Long>? = null
     private var singerDuration: Long = DEFAULT_GAME_DURATION
+    private val stopTimer = Timer(singerDuration + WAIT_DELTA_IN_SECONDS).apply {
+        // When this timer expires, stop the game
+        setOnDoneListener { view.gameOver(scores, true) }
+    }
 
     override fun linkToDatabase() {
         db.listenToGameUpdate(gameID, executeOnUpdate())
@@ -29,6 +34,9 @@ class PlayerGameHandler(
 
     override fun handleSnapshot(snapshot: DocumentSnapshot?) {
         if (snapshot != null && snapshot.exists()) {
+            // stop the timer if it was running
+            stopTimer.stop()
+
             val gameStillValid = snapshot.getBoolean("validity")!!
             scores = snapshot.get("scores") as HashMap<String, Long>
             if (snapshot.getBoolean("finished")!! || !gameStillValid) {
@@ -48,8 +56,10 @@ class PlayerGameHandler(
             // It's not null when there is one.
             songToGuess = snapshot.getString("current_song")
 
-
             updateViewForPlayer(snapshot, singerName)
+
+            // Start the stop timer to stop everything if something fails
+            stopTimer.start()
 
         } else {
             Log.e("PlayerGameHandler Error", "Snapshot error")
@@ -174,6 +184,7 @@ class PlayerGameHandler(
 
     fun setSingerDuration(duration: Long) {
         singerDuration = duration
+        stopTimer.setTime(duration + WAIT_DELTA_IN_SECONDS)
     }
 
     fun disableGame() {
@@ -186,5 +197,9 @@ class PlayerGameHandler(
 
     fun removePlayerFromGame(user: User) {
         db.removePlayerFromGame(gameID, user)
+    }
+
+    companion object {
+        private val WAIT_DELTA_IN_SECONDS = 5L
     }
 }
