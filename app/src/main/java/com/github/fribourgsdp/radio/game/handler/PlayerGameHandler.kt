@@ -59,21 +59,7 @@ class PlayerGameHandler(
         if (songToGuess == null) { return }
 
         if (timeout) {
-            db.playerEndTurn(gameID, userId, false)
-                .addOnFailureListener {
-                    Log.e("PlayerGameHandler Error", "In end turn with timeout: ${it.message}", it)
-                    view.displayError(ctx.getString(R.string.game_error))
-
-                    // retry
-                    db.playerEndTurn(gameID, userId, false)
-                        .addOnFailureListener {
-                            view.gameOver(scores, true)
-                        }
-            }
-
-            // Hide the error if a wrong guess was made
-            view.hideError()
-
+            handleTimeoutOnGuess(userId)
             // exit the handling when timeout
             return
         }
@@ -102,6 +88,23 @@ class PlayerGameHandler(
                         }
                 }
         }
+    }
+
+    private fun handleTimeoutOnGuess(userId: String) {
+        db.playerEndTurn(gameID, userId, false)
+            .addOnFailureListener {
+                Log.e("PlayerGameHandler Error", "In end turn with timeout: ${it.message}", it)
+                view.displayError(ctx.getString(R.string.game_error))
+
+                // retry
+                db.playerEndTurn(gameID, userId, false)
+                    .addOnFailureListener {
+                        view.gameOver(scores, true)
+                    }
+            }
+
+        // Hide the error if a wrong guess was made
+        view.hideError()
     }
 
     override fun onPick(song: String) {
