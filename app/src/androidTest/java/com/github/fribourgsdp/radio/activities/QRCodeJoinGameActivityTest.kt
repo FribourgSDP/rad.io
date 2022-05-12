@@ -29,10 +29,6 @@ import org.junit.runner.RunWith
 
 @RunWith(AndroidJUnit4::class)
 class QRCodeJoinGameActivityTest {
-    @get:Rule
-    var mRuntimePermissionRule = GrantPermissionRule.grant(Manifest.permission.CAMERA)
-    @get:Rule
-    var mRuntimePermissionRule2 = GrantPermissionRule.grant(Manifest.permission.VIBRATE)
 
     @Before
     fun initIntent() {
