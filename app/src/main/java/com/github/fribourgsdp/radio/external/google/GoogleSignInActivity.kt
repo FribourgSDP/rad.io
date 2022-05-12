@@ -110,6 +110,7 @@ class GoogleSignInActivity : MyAppCompatActivity() {
             }
             //start profile activity
             val intent = Intent(this, UserProfileActivity::class.java)
+            intent.putExtra("FromGoogle",true)
             startActivity(intent)
             finish()
         }
