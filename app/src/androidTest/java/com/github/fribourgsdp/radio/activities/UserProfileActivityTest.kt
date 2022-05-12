@@ -71,24 +71,21 @@ class UserProfileActivityTest : TestCase() {
     fun changingNameAndSavingChangesChangesUser(){
         val testName = "test"
 
-        val intent = Intent(ctx, MainActivity::class.java)
-        ActivityScenario.launch<MainActivity>(intent).use { scenario ->
-            onView(withId(R.id.profileButton)).perform(click())
-        }
+        val intent = Intent(ctx, MockUserProfileActivity::class.java)
 
+        ActivityScenario.launch<MockUserProfileActivity>(intent).use { scenario ->
         onView(withId(R.id.saveUserButton)).check(ViewAssertions.matches(ViewMatchers.withEffectiveVisibility(ViewMatchers.Visibility.INVISIBLE)))
         onView(withId(R.id.username)).perform(
             ViewActions.clearText(),
             ViewActions.typeText(testName),
             )
         onView(withId(R.id.saveUserButton)).check(ViewAssertions.matches(ViewMatchers.isDisplayed()))
-
-
         Espresso.closeSoftKeyboard()
         onView(withId(R.id.saveUserButton)).perform(click())
         onView(withId(R.id.saveUserButton)).check(ViewAssertions.matches(ViewMatchers.withEffectiveVisibility(ViewMatchers.Visibility.INVISIBLE)))
-        val user = User.load(ctx)
+        }
 
+        val user = User.load(ctx)
         assertEquals(testName, user.name)
 
     }
@@ -97,18 +94,14 @@ class UserProfileActivityTest : TestCase() {
     fun changingNameAndNotSavingDoesntChangeUser(){
         val testName = "testNotSave"
 
-        val intent = Intent(ctx, MainActivity::class.java)
-        ActivityScenario.launch<MainActivity>(intent).use { scenario ->
-            onView(withId(R.id.profileButton)).perform(click())
+        val intent = Intent(ctx, MockUserProfileActivity::class.java)
+        ActivityScenario.launch<MockUserProfileActivity>(intent).use { scenario ->
+            onView(withId(R.id.username)).perform(
+                ViewActions.clearText(),
+                ViewActions.typeText(testName),
+                )
+            Espresso.closeSoftKeyboard()
         }
-
-        onView(withId(R.id.username)).perform(
-            ViewActions.clearText(),
-            ViewActions.typeText(testName),
-            )
-
-        Espresso.closeSoftKeyboard()
-
         val user = User.load(ctx)
         assertNotEquals(testName,user.name)
 
