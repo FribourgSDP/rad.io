@@ -86,8 +86,13 @@ open class UserProfileActivity : MyAppCompatActivity(), KeepOrDismissPlaylistDia
         saveChangeButton.setOnClickListener {
             //this behavior should change or the this button should diseapper
             updateUser()
+            saveChangeButton.visibility = View.INVISIBLE
         }
 
+        usernameField.setOnKeyListener{ v,k,e ->
+            saveChangeButton.visibility = View.VISIBLE
+            false
+        }
         /*usernameField.setOnFocusChangeListener { v,f->
             if(!f) {
                 updateUser()
