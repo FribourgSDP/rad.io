@@ -23,6 +23,7 @@ class FakeGameView(private val playerID: String = ""): GameView {
     var scores: Map<String, Long> = HashMap()
 
     var gameOver = false
+    var crashed = false
 
     var timerRunning = false
     var timerDeadline: Date? = null
@@ -71,8 +72,9 @@ class FakeGameView(private val playerID: String = ""): GameView {
         scores = HashMap(playerScores)
     }
 
-    override fun gameOver(finalScores: Map<String, Long>) {
+    override fun gameOver(finalScores: Map<String, Long>, hasCrashed: Boolean) {
         gameOver = true
+        crashed = hasCrashed
     }
 
     override fun startTimer(deadline: Date) {
