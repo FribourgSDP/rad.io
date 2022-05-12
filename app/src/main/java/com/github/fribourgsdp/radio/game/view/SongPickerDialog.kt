@@ -16,6 +16,9 @@ class SongPickerDialog(private val choices: List<String>, private val listener: 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         val rootView: View = inflater.inflate(R.layout.fragment_song_picker, container, false)
 
+        // disable click outside of dialog
+        isCancelable = false
+
         // Add the buttons of the view to the list
         buttons.add(rootView.findViewById(R.id.songPick0))
         buttons.add(rootView.findViewById(R.id.songPick1))
