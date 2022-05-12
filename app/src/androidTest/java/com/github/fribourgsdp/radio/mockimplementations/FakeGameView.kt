@@ -72,7 +72,7 @@ class FakeGameView(private val playerID: String = ""): GameView {
         scores = HashMap(playerScores)
     }
 
-    override fun gameOver(finalScores: Map<String, Long>, hasCrashed: Boolean) {
+    override fun gameOver(finalScores: Map<String, Long>?, hasCrashed: Boolean) {
         gameOver = true
         crashed = hasCrashed
     }

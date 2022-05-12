@@ -63,7 +63,7 @@ interface GameView: Timer.DeadlineHandler {
     /**
      * Handle the end of the game.
      */
-    fun gameOver(finalScores: Map<String, Long>, hasCrashed: Boolean = false)
+    fun gameOver(finalScores: Map<String, Long>?, hasCrashed: Boolean = false)
 
     /**
      * Displays the given [String] in the dedicated TextView

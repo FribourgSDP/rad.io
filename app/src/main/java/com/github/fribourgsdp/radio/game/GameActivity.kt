@@ -173,13 +173,16 @@ open class GameActivity : AppCompatActivity(), GameView, Timer.Listener {
         timerProgressBarHandler.stopTimer()
     }
 
-    override fun gameOver(finalScores: Map<String, Long>, hasCrashed: Boolean) {
+    override fun gameOver(finalScores: Map<String, Long>?, hasCrashed: Boolean) {
         val intent = Intent(this, EndGameActivity::class.java).apply {
-            putExtra(
-                SCORES_KEY,
-                // Replace ids by names and put in an ArrayList to make it Serializable
-                ArrayList(finalScores.map { (id, score) -> Pair(mapIdToName[id] ?: id, score)})
-            )
+            finalScores?.let {
+                putExtra(
+                    SCORES_KEY,
+                    // Replace ids by names and put in an ArrayList to make it Serializable
+                    ArrayList(it.map { (id, score) -> Pair(mapIdToName[id] ?: id, score) })
+                )
+            }
+
             putExtra(GAME_CRASH_KEY, hasCrashed)
         }
         startActivity(intent)
