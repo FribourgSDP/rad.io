@@ -15,6 +15,7 @@ import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.github.fribourgsdp.radio.data.LobbyData
 import com.github.fribourgsdp.radio.data.LobbyDataKeys
 import com.github.fribourgsdp.radio.R
+import com.github.fribourgsdp.radio.config.language.LanguageManager
 import com.github.fribourgsdp.radio.game.prep.*
 import com.github.fribourgsdp.radio.mockimplementations.*
 import com.github.fribourgsdp.radio.mockimplementations.WorkingJoinGameActivity
@@ -41,6 +42,9 @@ class WorkingJoinGameActivityTest {
 
     @Before
     fun initIntent() {
+        // TODO: Remove this when mocked
+        // Until the language manager has been mocked this is the only solution
+        LanguageManager(ctx).setLang("en")
         Intents.init()
     }
 
