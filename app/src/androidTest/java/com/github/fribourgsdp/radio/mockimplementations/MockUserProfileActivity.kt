@@ -17,7 +17,11 @@ const val userName = "test"
 const val playListName = "testTitle"
 const val songName = "TestSongName"
 const val userId = "testId"
-
+const val artistName = "artist"
+const val playlistName = "testPlaylist"
+const val testPlaylistId = "TEST_PLAYLIST"
+const val onlineUserId = "onlineUserTestId"
+const val onlineUserName = "onlineUserTest"
 
 class GoogleUserMockUserProfileActivity : UserProfileActivity() {
 
@@ -27,27 +31,25 @@ class GoogleUserMockUserProfileActivity : UserProfileActivity() {
         user.isGoogleUser = true
         user.id = userId
         val playlist1 = Playlist(playListName, Genre.ROCK)
-        val song = Song(songName, "artist")
+        val song = Song(songName, artistName)
         playlist1.addSong(song)
         user.addPlaylists(setOf(playlist1))
         user.save(mock(Context::class.java))
         super.onCreate(savedInstanceState)
     }
 
-    /* override fun checkUser() {
-     }*/
-    //get and set user
+
     override fun initializeDatabase(): Database {
         val db = Mockito.mock(Database::class.java)
-        val playlistName = "testPlaylist"
+
         val playlist : Playlist = Playlist(playlistName, Genre.NONE)
-        playlist.id = "TEST_PLAYLIST"
+        playlist.id = testPlaylistId
         playlist.addSong(Song("rouge", "sardou"))
         playlist.addSong(Song("salut", "sardou"))
         playlist.addSong(Song("Le France", "sardou"))
 
-        val testUser = User("onlineUserTest")
-        testUser.id = "onlineUserTestId"
+        val testUser = User(onlineUserName)
+        testUser.id = onlineUserId
         testUser.addPlaylist(playlist)
         testUser.isGoogleUser = true
         Mockito.`when`(db.getUser(anyString())).thenReturn(Tasks.forResult(testUser))
@@ -72,27 +74,23 @@ open class MockUserProfileActivity : UserProfileActivity() {
         val user = User(userName, 0)
         user.id = userId
         val playlist1 = Playlist(playListName, Genre.ROCK)
-        val song = Song(songName, "artist")
+        val song = Song(songName, artistName)
         playlist1.addSong(song)
         user.addPlaylists(setOf(playlist1))
         user.save(mock(Context::class.java))
         super.onCreate(savedInstanceState)
     }
 
-   /* override fun checkUser() {
-    }*/
-    //get and set user
     override fun initializeDatabase(): Database {
-        val db = Mockito.mock(Database::class.java)
-        val playlistName = "testPlaylist"
-        val playlist : Playlist = Playlist(playlistName, Genre.NONE)
-        playlist.id = "TEST_PLAYLIST"
+        val db = mock(Database::class.java)
+        val playlist = Playlist(playlistName, Genre.NONE)
+        playlist.id = testPlaylistId
         playlist.addSong(Song("rouge", "sardou"))
         playlist.addSong(Song("salut", "sardou"))
         playlist.addSong(Song("Le France", "sardou"))
 
-        val testUser = User("onlineUserTest")
-        testUser.id = "onlineUserTestId"
+        val testUser = User(onlineUserName)
+        testUser.id = onlineUserId
         testUser.addPlaylist(playlist)
         testUser.isGoogleUser = true
         Mockito.`when`(db.getUser(anyString())).thenReturn(Tasks.forResult(testUser))
