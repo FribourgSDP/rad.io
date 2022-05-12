@@ -150,6 +150,9 @@ class PlayerGameHandler(
             }
 
         } else {
+            // No lyrics when user is not the singer
+            view.updateLyrics("")
+
             if (songToGuess != null) {
                 // The singer picked a song so the player can guess
                 view.displayGuessInput()
