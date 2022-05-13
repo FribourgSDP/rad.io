@@ -3,6 +3,7 @@ package com.github.fribourgsdp.radio.game
 import com.github.fribourgsdp.radio.data.Playlist
 import com.github.fribourgsdp.radio.data.Song
 import com.github.fribourgsdp.radio.data.User
+import com.github.fribourgsdp.radio.game.prep.DEFAULT_GAME_DURATION
 import java.util.*
 import kotlin.collections.ArrayList
 import kotlin.collections.HashMap
@@ -135,6 +136,7 @@ class Game private constructor(val id: Long, val name: String, val host: User, v
         private var withHint  = false
         private var isPrivate = false
         private var list = ArrayList<String>()
+        private var singerDuration: Long = DEFAULT_GAME_DURATION
 
         /**
          * Set the [id] of the game.
@@ -142,6 +144,15 @@ class Game private constructor(val id: Long, val name: String, val host: User, v
          */
         fun setID(id: Long): Builder {
             this.id = id
+            return this
+        }
+
+        /**
+         * Set the [duration] of the game
+         * @return the [Builder]
+         */
+        fun setDuration(duration: Long): Builder {
+            this.singerDuration = duration
             return this
         }
 
@@ -237,7 +248,7 @@ class Game private constructor(val id: Long, val name: String, val host: User, v
         * @return the [Settings] of the game currently building.
         */
         fun getSettings(): Settings {
-            return Settings(host.name, name, playlist.name, nbRounds, withHint, isPrivate)
+            return Settings(host.name, name, playlist.name, nbRounds, withHint, isPrivate, singerDuration)
         }
 
         /**
@@ -256,7 +267,9 @@ class Game private constructor(val id: Long, val name: String, val host: User, v
         val playlistName: String,
         val nbRounds: Int,
         val withHint: Boolean,
-        val isPrivate: Boolean
+        val isPrivate: Boolean,
+        val singerDuration: Long
+
     )
 
     companion object {

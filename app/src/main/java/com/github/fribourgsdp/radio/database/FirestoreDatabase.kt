@@ -227,6 +227,7 @@ class FirestoreDatabase(var refMake: FirestoreRef) : Database {
             "nbRounds" to settings.nbRounds,
             "withHint" to settings.withHint,
             "private" to settings.isPrivate,
+            "singerDuration" to settings.singerDuration,
             "players" to hashMapOf<String, String>(),
             "permissions" to hashMapOf<String, Boolean>(),
             "launched" to false,
@@ -258,9 +259,10 @@ class FirestoreDatabase(var refMake: FirestoreRef) : Database {
             val nbRounds = snapshot.getLong("nbRounds")!!
             val withHint = snapshot.getBoolean("withHint")!!
             val private = snapshot.getBoolean("private")!!
+            val singerDuration = snapshot.getLong("singerDuration")!!
 
             // Success
-            Game.Settings(host, name, playlist, nbRounds.toInt(), withHint, private)
+            Game.Settings(host, name, playlist, nbRounds.toInt(), withHint, private, singerDuration)
         }
     }
 

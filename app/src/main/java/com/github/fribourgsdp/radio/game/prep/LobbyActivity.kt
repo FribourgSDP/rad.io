@@ -112,7 +112,7 @@ open class LobbyActivity : MyAppCompatActivity(){
                         db.launchGame(uid).addOnSuccessListener {
 
                             // When launched correctly, go to the game activity
-                            goToGameActivity(true, game, uid)
+                            goToGameActivity(true, game, uid, gameDuration)
 
                         }.addOnFailureListener {
                             uuidTextView.text = getString(R.string.launch_game_error)
@@ -239,6 +239,7 @@ open class LobbyActivity : MyAppCompatActivity(){
                     .setNbRounds(nbRounds)
                     .setWithHint(withHint)
                     .setPrivacy(isPrivate)
+                    .setDuration(gameDuration)
 
 
                 openLobby(uid)
@@ -275,6 +276,8 @@ open class LobbyActivity : MyAppCompatActivity(){
                 if (!gameStillValid) {
                     returnToMainMenu()
                 }
+
+                val singerDuration = snapshot.get("singerDuration")!! as Long
          
                 val newMap = snapshot.getPlayers()
 
@@ -288,7 +291,7 @@ open class LobbyActivity : MyAppCompatActivity(){
 
 
                 if (!isHost && isGameLaunched != null && isGameLaunched) {
-                    goToGameActivity(false, gameID = uid)
+                    goToGameActivity(false, gameID = uid, singerDuration = singerDuration)
                 }
 
             } else {
@@ -316,12 +319,12 @@ open class LobbyActivity : MyAppCompatActivity(){
         mapIdToName = HashMap(playersMap)
     }
 
-    protected open fun goToGameActivity(isHost: Boolean, game: Game? = null, gameID: Long) {
+    protected open fun goToGameActivity(isHost: Boolean, game: Game? = null, gameID: Long, singerDuration: Long = DEFAULT_GAME_DURATION) {
         val intent: Intent = Intent(this, GameActivity::class.java).apply {
             putExtra(GAME_IS_HOST_KEY, isHost)
             putExtra(MAP_ID_NAME_KEY, mapIdToName)
             putExtra(GAME_UID_KEY, gameID)
-            putExtra(GAME_DURATION_KEY, gameDuration)
+            putExtra(GAME_DURATION_KEY, singerDuration)
         }
 
         if (isHost && game != null) {
