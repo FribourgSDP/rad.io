@@ -531,9 +531,9 @@ class FirestoreDatabase(var refMake: FirestoreRef) : Database {
             }
 
             // reset done map
-         
+            // singer is done by default
             val updatedDoneMap = snapshot.getPlayerDoneMap()
-            updatedDoneMap.replaceAll { _, _ -> false}
+            updatedDoneMap.replaceAll { id, _ -> id == singer}
 
             // reset found map
             val updatedFoundMap = snapshot.getPlayerFoundMap()

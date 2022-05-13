@@ -17,6 +17,7 @@ import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.github.fribourgsdp.radio.R
 import com.github.fribourgsdp.radio.data.Playlist
 import com.github.fribourgsdp.radio.data.User
+import com.github.fribourgsdp.radio.external.musixmatch.MusixmatchLyricsGetter
 import com.github.fribourgsdp.radio.game.*
 import com.github.fribourgsdp.radio.game.prep.GAME_IS_HOST_KEY
 import com.github.fribourgsdp.radio.game.prep.GAME_KEY
@@ -238,18 +239,49 @@ class GameActivityTest {
     }
 
     @Test
-    fun testDisplayLyrics(){
+    fun testDisplayLyrics() {
         val testIntent = Intent(ctx, GameActivity::class.java)
         ActivityScenario.launch<GameActivity>(testIntent).use { scenario ->
             scenario.onActivity {
-                it.displayLyrics("Lorem ipsum, dolor sit amet")
+                it.updateLyrics("Lorem ipsum, dolor sit amet")
+                // Display the song to see if the button is displayed
+                it.displaySong("Lorem ipsum")
             }
-            onView(withId(R.id.close_popup_button))
-                .inRoot(isDialog())
-                .perform(ViewActions.click())
-            Thread.sleep(1)
+
             onView(withId(R.id.showLyricsButton))
                 .check(matches(isDisplayed()))
+
+        }
+    }
+
+    @Test
+    fun testDisplayLyricsNotShownWhenEmpty() {
+        val testIntent = Intent(ctx, GameActivity::class.java)
+        ActivityScenario.launch<GameActivity>(testIntent).use { scenario ->
+            scenario.onActivity {
+                it.updateLyrics("")
+                // Display the song to see if the button is displayed
+                it.displaySong("")
+            }
+
+            onView(withId(R.id.showLyricsButton))
+                .check(matches(not(isDisplayed())))
+
+        }
+    }
+
+    @Test
+    fun testDisplayLyricsNotShownWhenUnavailable() {
+        val testIntent = Intent(ctx, GameActivity::class.java)
+        ActivityScenario.launch<GameActivity>(testIntent).use { scenario ->
+            scenario.onActivity {
+                it.updateLyrics(MusixmatchLyricsGetter.LYRICS_NOT_FOUND_PLACEHOLDER)
+                // Display the song to see if the button is displayed
+                it.displaySong("")
+            }
+
+            onView(withId(R.id.showLyricsButton))
+                .check(matches(not(isDisplayed())))
 
         }
     }

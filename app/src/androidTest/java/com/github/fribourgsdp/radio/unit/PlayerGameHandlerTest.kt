@@ -1,6 +1,9 @@
 package com.github.fribourgsdp.radio.unit
 
+import android.content.Context
 import android.view.View
+import androidx.test.core.app.ApplicationProvider
+import com.github.fribourgsdp.radio.R
 import com.github.fribourgsdp.radio.database.Database
 import com.github.fribourgsdp.radio.game.handler.PlayerGameHandler
 import com.github.fribourgsdp.radio.mockimplementations.FakeGameView
@@ -15,6 +18,8 @@ import java.util.*
 
 
 class PlayerGameHandlerTest {
+    private val ctx: Context = ApplicationProvider.getApplicationContext()
+
     private lateinit var mockSnapshot: DocumentSnapshot
 
     private val sleepingTime = 50L
@@ -46,7 +51,7 @@ class PlayerGameHandlerTest {
     @Test
     fun correctSingerUpdate() {
         val view = FakeGameView()
-        val handler = PlayerGameHandler(0, view)
+        val handler = PlayerGameHandler(ctx, 0, view)
 
         handler.handleSnapshot(mockSnapshot)
 
@@ -56,7 +61,7 @@ class PlayerGameHandlerTest {
     @Test
     fun correctRoundUpdate() {
         val view = FakeGameView()
-        val handler = PlayerGameHandler(0, view)
+        val handler = PlayerGameHandler(ctx, 0, view)
 
         handler.handleSnapshot(mockSnapshot)
 
@@ -66,7 +71,7 @@ class PlayerGameHandlerTest {
     @Test
     fun displayGuessWhenOtherPlayerAndPickNotNull() {
         val view = FakeGameView("Not singer")
-        val handler = PlayerGameHandler(0, view)
+        val handler = PlayerGameHandler(ctx, 0, view)
         `when`(mockSnapshot.getString("current_song")).thenReturn(song)
 
         handler.handleSnapshot(mockSnapshot)
@@ -79,17 +84,19 @@ class PlayerGameHandlerTest {
     @Test
     fun callDisplayLyricsOnSnapshot(){
         val view = FakeGameView(singer)
-        val handler = PlayerGameHandler(0, view)
-        `when`(mockSnapshot.getString("current_song")).thenReturn("Momentum")
-        `when`(mockSnapshot.get("song_choices_lyrics")).thenReturn(hashMapOf("Momentum" to "Lorem Ipsum"))
+        val handler = PlayerGameHandler(ctx, 0, view)
+        val song = "Momentum"
+        val lyrics = "Lorem Ipsum"
+        `when`(mockSnapshot.getString("current_song")).thenReturn(song)
+        `when`(mockSnapshot.get("song_choices_lyrics")).thenReturn(hashMapOf(song to lyrics))
         handler.handleSnapshot(mockSnapshot)
-        assertTrue(view.lyricsDisplayed)
+        assertEquals(lyrics, view.lyricsDisplayed)
     }
 
     @Test
     fun displayWaitWhenOtherPlayerAndPickNull() {
         val view = FakeGameView("Not singer")
-        val handler = PlayerGameHandler(0, view)
+        val handler = PlayerGameHandler(ctx, 0, view)
 
         handler.handleSnapshot(mockSnapshot)
 
@@ -110,7 +117,7 @@ class PlayerGameHandlerTest {
         `when`(db.updateCurrentSongOfGame(anyLong(), anyString(), anyLong()))
             .thenReturn(Tasks.forResult(null))
 
-        val handler = PlayerGameHandler(0, view, db)
+        val handler = PlayerGameHandler(ctx, 0, view, db)
 
         handler.handleSnapshot(mockSnapshot)
 
@@ -127,11 +134,11 @@ class PlayerGameHandlerTest {
     fun displayErrorOnNullSnapshot() {
         val view = FakeGameView()
 
-        val handler = PlayerGameHandler(0, view)
+        val handler = PlayerGameHandler(ctx, 0, view)
 
         handler.handleSnapshot(null)
 
-        assertEquals("An error occurred", view.error)
+        assertEquals(ctx.getString(R.string.game_error), view.error)
         assertEquals(View.VISIBLE, view.errorVisibility)
     }
 
@@ -141,11 +148,11 @@ class PlayerGameHandlerTest {
 
         val view = FakeGameView()
 
-        val handler = PlayerGameHandler(0, view)
+        val handler = PlayerGameHandler(ctx, 0, view)
 
         handler.handleSnapshot(mockSnapshot)
 
-        assertEquals("An error occurred", view.error)
+        assertEquals(ctx.getString(R.string.game_error), view.error)
         assertEquals(View.VISIBLE, view.errorVisibility)
     }
 
@@ -158,7 +165,7 @@ class PlayerGameHandlerTest {
 
         `when`(mockSnapshot.getString("current_song")).thenReturn(song)
 
-        val handler = PlayerGameHandler(0, view, db)
+        val handler = PlayerGameHandler(ctx, 0, view, db)
 
         // Update song to guess
         handler.handleSnapshot(mockSnapshot)
@@ -167,10 +174,10 @@ class PlayerGameHandlerTest {
         handler.handleGuess(song, "")
 
         // Wait for the task of the database to execute
-        Thread.sleep(1)
+        Thread.sleep(sleepingTime)
 
         assertEquals(View.VISIBLE, view.songVisibility)
-        assertEquals("You correctly guessed $song", view.song)
+        assertEquals(ctx.getString(R.string.correct_guess_format, song), view.song)
         assertEquals(View.GONE, view.guessInputVisibility)
     }
 
@@ -183,7 +190,7 @@ class PlayerGameHandlerTest {
 
         `when`(mockSnapshot.getString("current_song")).thenReturn(song)
 
-        val handler = PlayerGameHandler(0, view, db)
+        val handler = PlayerGameHandler(ctx, 0, view, db)
 
         // Update song to guess
         handler.handleSnapshot(mockSnapshot)
@@ -192,9 +199,9 @@ class PlayerGameHandlerTest {
         handler.handleGuess("Not the song", "")
 
         // Wait for the task of the database to execute
-        Thread.sleep(1)
+        Thread.sleep(sleepingTime)
 
-        assertEquals("Wrong answer", view.error)
+        assertEquals(ctx.getString(R.string.wrong_guess), view.error)
         assertEquals(View.VISIBLE, view.errorVisibility)
     }
 
@@ -207,7 +214,7 @@ class PlayerGameHandlerTest {
 
         `when`(mockSnapshot.getString("current_song")).thenReturn(song)
 
-        val handler = PlayerGameHandler(0, view, db)
+        val handler = PlayerGameHandler(ctx, 0, view, db)
 
         // Update song to guess
         handler.handleSnapshot(mockSnapshot)
@@ -216,9 +223,9 @@ class PlayerGameHandlerTest {
         handler.handleGuess(song + "a", "")
 
         // Wait for the task of the database to execute
-        Thread.sleep(1)
+        Thread.sleep(sleepingTime)
 
-        assertEquals("You're close!", view.error)
+        assertEquals(ctx.getString(R.string.close_guess), view.error)
         assertEquals(View.VISIBLE, view.errorVisibility)
     }
 
@@ -231,19 +238,23 @@ class PlayerGameHandlerTest {
 
         `when`(mockSnapshot.getString("current_song")).thenReturn(song)
 
-        val handler = PlayerGameHandler(0, view, db)
+        val handler = PlayerGameHandler(ctx, 0, view, db)
 
         // Update song to guess
         handler.handleSnapshot(mockSnapshot)
 
         // Check it
-        handler.handleGuess("Not the song", "")
+        handler.handleGuess(song, "")
 
         // Wait for the task of the database to execute
-        Thread.sleep(1)
+        Thread.sleep(sleepingTime)
 
-        assertEquals("Wrong answer", view.error)
+        assertEquals(ctx.getString(R.string.game_error), view.error)
         assertEquals(View.VISIBLE, view.errorVisibility)
+
+        // Game crashed
+        assertTrue(view.gameOver)
+        assertTrue(view.crashed)
     }
 
     @Test
@@ -253,12 +264,12 @@ class PlayerGameHandlerTest {
         `when`(db.updateCurrentSongOfGame(anyLong(), anyString(), anyLong()))
             .thenReturn(Tasks.forResult(null))
 
-        val handler = PlayerGameHandler(0, view, db)
+        val handler = PlayerGameHandler(ctx, 0, view, db)
 
         handler.onPick(song)
 
         // Wait for the task of the database to execute
-        Thread.sleep(100)
+        Thread.sleep(sleepingTime)
 
         assertEquals(View.VISIBLE, view.songVisibility)
         assertEquals(song, view.song)
@@ -274,21 +285,25 @@ class PlayerGameHandlerTest {
             .thenReturn(Tasks.forException(Exception()))
         
 
-        val handler = PlayerGameHandler(0, view, db)
+        val handler = PlayerGameHandler(ctx, 0, view, db)
 
         handler.onPick(song)
 
         // Wait for the task of the database to execute
-        Thread.sleep(1000)
+        Thread.sleep(sleepingTime)
         
-        assertEquals("An error occurred", view.error)
+        assertEquals(ctx.getString(R.string.game_error), view.error)
         assertEquals(View.VISIBLE, view.errorVisibility)
+
+        // Game crashed
+        assertTrue(view.gameOver)
+        assertTrue(view.crashed)
     }
 
     @Test
     fun displayScoresWorks() {
         val view = FakeGameView()
-        val handler = PlayerGameHandler(0, view)
+        val handler = PlayerGameHandler(ctx, 0, view)
 
         handler.handleSnapshot(mockSnapshot)
 
@@ -304,7 +319,7 @@ class PlayerGameHandlerTest {
     @Test
     fun gameFinishedCorrectlyHandled() {
         val view = FakeGameView()
-        val handler = PlayerGameHandler(0, view)
+        val handler = PlayerGameHandler(ctx, 0, view)
 
         `when`(mockSnapshot.getBoolean("finished")).thenReturn(true)
 
@@ -316,7 +331,7 @@ class PlayerGameHandlerTest {
     @Test
     fun timerLaunchedWhenGuessing() {
         val view = FakeGameView("Not singer")
-        val handler = PlayerGameHandler(0, view)
+        val handler = PlayerGameHandler(ctx, 0, view)
         `when`(mockSnapshot.getString("current_song")).thenReturn(song)
 
         handler.handleSnapshot(mockSnapshot)
@@ -337,7 +352,7 @@ class PlayerGameHandlerTest {
 
         `when`(mockSnapshot.getString("current_song")).thenReturn(song)
 
-        val handler = PlayerGameHandler(0, view, db)
+        val handler = PlayerGameHandler(ctx, 0, view, db)
 
         // Update song to guess
         handler.handleSnapshot(mockSnapshot)
@@ -346,7 +361,7 @@ class PlayerGameHandlerTest {
         handler.handleGuess(song, "")
 
         // Wait for the task of the database to execute
-        Thread.sleep(1)
+        Thread.sleep(sleepingTime)
 
         assertFalse(view.timerRunning)
     }
@@ -360,7 +375,7 @@ class PlayerGameHandlerTest {
 
         `when`(mockSnapshot.getString("current_song")).thenReturn(song)
 
-        val handler = PlayerGameHandler(0, view, db)
+        val handler = PlayerGameHandler(ctx, 0, view, db)
 
         // Update song to guess
         handler.handleSnapshot(mockSnapshot)
@@ -369,9 +384,34 @@ class PlayerGameHandlerTest {
         handler.handleGuess("", "", true)
 
         // Wait for the task of the database to execute
-        Thread.sleep(1)
+        Thread.sleep(sleepingTime)
 
         assertEquals(View.GONE, view.errorVisibility)
+    }
+
+    @Test
+    fun gameCrashOnTimoutButDBFail() {
+        val view = FakeGameView("Not Singer")
+        val db = mock(Database::class.java)
+        `when`(db.playerEndTurn(anyLong(), anyString(), anyBoolean()))
+            .thenReturn(Tasks.forException(Exception()))
+
+        `when`(mockSnapshot.getString("current_song")).thenReturn(song)
+
+        val handler = PlayerGameHandler(ctx, 0, view, db)
+
+        // Update song to guess
+        handler.handleSnapshot(mockSnapshot)
+
+        // Check it
+        handler.handleGuess("", "", true)
+
+        // Wait for the task of the database to execute
+        Thread.sleep(sleepingTime)
+
+        // Game crashed
+        assertTrue(view.gameOver)
+        assertTrue(view.crashed)
     }
 
 }

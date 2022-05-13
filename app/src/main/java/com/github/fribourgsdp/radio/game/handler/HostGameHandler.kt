@@ -1,5 +1,8 @@
 package com.github.fribourgsdp.radio.game.handler
 
+import android.content.Context
+import android.util.Log
+import com.github.fribourgsdp.radio.R
 import com.github.fribourgsdp.radio.database.Database
 import com.github.fribourgsdp.radio.database.FirestoreDatabase
 import com.github.fribourgsdp.radio.external.musixmatch.LyricsGetter
@@ -12,7 +15,13 @@ import com.github.fribourgsdp.radio.util.getScoresOfRound
 import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.FieldValue
 
-class HostGameHandler(private val game: Game, private val view: GameView, db: Database = FirestoreDatabase(), private val lyricsGetter: LyricsGetter = MusixmatchLyricsGetter): GameHandler(view, db) {
+class HostGameHandler(
+    private val ctx: Context,
+    private val game: Game,
+    private val view: GameView,
+    db: Database = FirestoreDatabase(),
+    private val lyricsGetter: LyricsGetter = MusixmatchLyricsGetter
+): GameHandler(ctx, view, db) {
     private var latestSingerId: String? = null
 
     override fun handleSnapshot(snapshot: DocumentSnapshot?) {
@@ -45,22 +54,50 @@ class HostGameHandler(private val game: Game, private val view: GameView, db: Da
 
                 // update the game
                 val updatesMap = createUpdatesMap(doneMap.keys)
-                db.updateGame(game.id, updatesMap).addOnSuccessListener {
+                val onSuccess: (Void?) -> (Unit) = {
                     // update the latest singer
                     latestSingerId = updatesMap["singer"] as String
-                    db.resetGameMetadata(
-                        game.id,
-                        latestSingerId!!
-                    ).addOnFailureListener {
-                        view.displayError("An error occurred.")
-                    }
-                }.addOnFailureListener {
-                    view.displayError("An error occurred.")
+                    resetGameMetadata(latestSingerId!!)
+                }
+
+                db.updateGame(game.id, updatesMap)
+                    .addOnSuccessListener(onSuccess)
+                    .addOnFailureListener {
+                        Log.e("HostGameHandler Error", "Game update: ${it.message}", it)
+                        view.displayError(ctx.getString(R.string.game_error))
+
+                        // retry
+                        db.updateGame(game.id, updatesMap)
+                            .addOnSuccessListener(onSuccess)
+                            .addOnFailureListener {
+                                // quit on second failure
+                                view.gameOver(game.getAllScores(), true)
+                            }
                 }
             }
 
         } else {
-            view.displayError("An error occurred.")
+            Log.e("HostGameHandler Error", "Snapshot error")
+            view.displayError(ctx.getString(R.string.game_error))
+        }
+    }
+
+    private fun resetGameMetadata(latestSingerId: String) {
+        db.resetGameMetadata(
+            game.id,
+            latestSingerId
+        ).addOnFailureListener {
+            Log.e("HostGameHandler Error", "Metadata reset: ${it.message}", it)
+            view.displayError(ctx.getString(R.string.game_error))
+
+            // retry
+            db.resetGameMetadata(
+                game.id,
+                latestSingerId
+            ).addOnFailureListener {
+                // quit on second failure
+                view.gameOver(game.getAllScores(), true)
+            }
         }
     }
 
