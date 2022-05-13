@@ -1,5 +1,6 @@
 package com.github.fribourgsdp.radio.mockimplementations
 
+import com.github.fribourgsdp.radio.data.LobbyData
 import com.github.fribourgsdp.radio.data.Playlist
 import com.github.fribourgsdp.radio.data.Song
 import com.github.fribourgsdp.radio.data.User
@@ -78,6 +79,18 @@ class BuggyDatabase : Database {
 
     override fun addUserToLobby(id: Long, user: User, hasMicPermissions: Boolean): Task<Void> {
         return Tasks.forException(Exception("Error"))
+    }
+
+    override fun getPublicLobbies(): Task<List<LobbyData>> {
+        return Tasks.forException(Exception("No lobbies"))
+    }
+
+    override fun removeLobbyFromPublic(id: Long): Task<Void> {
+        TODO("Not yet implemented")
+    }
+
+    override fun listenToPublicLobbiesUpdate(listener: EventListener<List<LobbyData>>) {
+        
     }
 
     override fun openGame(id: Long): Task<Void> {

@@ -22,7 +22,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="32dp"
         android:ems="10"
-        android:hint="@string/join_id_hint"
+        android:hint="@string/default_lobby_id"
         android:inputType="numberSigned"
         android:textAlignment="center"
         android:textSize="34sp"
@@ -38,7 +38,7 @@
         android:layout_marginTop="32dp"
         android:textAlignment="center"
         android:textColor="@color/red"
-        android:visibility="invisible"
+        android:visibility="gone"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/gameToJoinID" />
@@ -64,4 +64,49 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
+
+    <TextView
+        android:id="@+id/joinPublicLobbies"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="32dp"
+        android:text="@string/public_lobbies"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/joinErrorView" />
+
+    <TextView
+        android:id="@+id/lobbySortTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="8dp"
+        android:text="@string/sort_by"
+        app:layout_constraintEnd_toStartOf="@+id/lobbySortSpinner"
+        app:layout_constraintTop_toBottomOf="@+id/joinPublicLobbies" />
+
+    <Spinner
+        android:id="@+id/lobbySortSpinner"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="24dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/lobbySortTextView"
+        app:layout_constraintBottom_toBottomOf="@+id/lobbySortTextView" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/publicLobbiesRecyclerView"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginStart="24dp"
+        android:layout_marginEnd="24dp"
+        android:layout_marginBottom="32dp"
+        app:layout_constraintBottom_toTopOf="@+id/joinGameButton"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/lobbySortTextView" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

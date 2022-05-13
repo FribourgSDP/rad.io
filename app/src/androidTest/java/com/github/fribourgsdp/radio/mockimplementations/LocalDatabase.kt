@@ -1,5 +1,6 @@
 package com.github.fribourgsdp.radio.mockimplementations
 
+import com.github.fribourgsdp.radio.data.LobbyData
 import com.github.fribourgsdp.radio.data.Playlist
 import com.github.fribourgsdp.radio.data.Song
 import com.github.fribourgsdp.radio.data.User
@@ -14,6 +15,13 @@ class LocalDatabase : Database {
     private val userMap: MutableMap<String, User> = mutableMapOf()
     private val songMap: MutableMap<String, Song> = mutableMapOf()
     private val playlistMap: MutableMap<String, Playlist> = mutableMapOf()
+
+    val lobbies = arrayListOf(
+        LobbyData(1, "c", "z"),
+        LobbyData(2, "b", "x"),
+        LobbyData(3, "a", "y")
+    )
+    private var lobbiesListener: EventListener<List<LobbyData>>? = null
 
 
     override fun getUser(userId: String): Task<User> {
@@ -82,6 +90,20 @@ class LocalDatabase : Database {
 
     override fun addUserToLobby(id: Long, user: User, hasMicPermissions: Boolean): Task<Void> {
         return Tasks.forResult(null)
+    }
+
+    override fun getPublicLobbies(): Task<List<LobbyData>> {
+        return Tasks.forResult(ArrayList(lobbies))
+    }
+
+    override fun removeLobbyFromPublic(id: Long): Task<Void> {
+        lobbies.removeIf { it.id == id }
+        lobbiesListener?.onEvent(ArrayList(lobbies), null)
+        return Tasks.forResult(null)
+    }
+
+    override fun listenToPublicLobbiesUpdate(listener: EventListener<List<LobbyData>>) {
+        lobbiesListener = listener
     }
 
     override fun modifyUserMicPermissions(id: Long, user: User, newPermissions: Boolean): Task<Void> {
