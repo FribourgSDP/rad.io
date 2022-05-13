@@ -398,16 +398,23 @@ class FirestoreDatabase(var refMake: FirestoreRef) : Database {
     }
 
     override fun disableLobby(gameID: Long): Task<Void> {
-        val docRef = db.collection("lobby").document(gameID.toString())
-
+        val collection = db.collection("lobby")
+        val lobbyRef = collection.document(gameID.toString())
+        val publicRef = collection.document("public")
         return db.runTransaction { transaction ->
-            val snapshot = transaction.get(docRef)
+            val lobbySnapshot = transaction.get(lobbyRef)
+            val publicLobbiesSnapshot = transaction.get(publicRef)
 
-            if (!snapshot.exists()) {
+            if (!lobbySnapshot.exists()) {
                 throw IllegalArgumentException("Document $gameID not found.")
             }
 
-            transaction.update(docRef, "validity", false)
+            if (!publicLobbiesSnapshot.exists()) {
+                throw IllegalArgumentException("The public lobbies could not be reached.")
+            }
+
+            transaction.update(lobbyRef, "validity", false)
+            transaction.update(publicRef, "$gameID", FieldValue.delete())
 
             // Success
             null
