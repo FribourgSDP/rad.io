@@ -7,7 +7,7 @@
     tools:context=".game.EndGameActivity">
 
     <TextView
-        android:id="@+id/congratsTextView"
+        android:id="@+id/gameOverTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="32dp"
@@ -25,5 +25,5 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/congratsTextView" />
+        app:layout_constraintTop_toBottomOf="@+id/gameOverTextView" />
 </androidx.constraintlayout.widget.ConstraintLayout>

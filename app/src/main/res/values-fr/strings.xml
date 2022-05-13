@@ -102,6 +102,11 @@
     <string name="join_with_qr_code">Rejoindre avec un code QR</string>
     <string name="enable_microphone">Activer Microphone</string>
     <string name="display_qr_code">Afficher QR Code</string>
+    <string name="game_error">Une erreur est survenue.</string>
+    <string name="game_crashed">La partie a été interrompue…</string>
+    <string name="wrong_guess">Mauvaise réponse</string>
+    <string name="close_guess">Tu es proches !</string>
+    <string name="correct_guess_format">Tu as trouvé %s</string>
     <string name="spotify_linked">associé</string>
     <string name="spotify_unlinked">dissocié</string>
     <string name="MergeImportDismissPlaylistText">Voulez-vous combiner, importer ou ignorer les playlists stockées en ligne?</string>

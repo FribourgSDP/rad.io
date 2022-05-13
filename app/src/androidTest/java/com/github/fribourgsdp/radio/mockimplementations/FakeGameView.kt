@@ -7,7 +7,7 @@ import kotlin.collections.HashMap
 
 class FakeGameView(private val playerID: String = ""): GameView {
 
-    var lyricsDisplayed = false
+    var lyricsDisplayed = ""
 
     var singer = ""
     var round = 0L
@@ -23,6 +23,7 @@ class FakeGameView(private val playerID: String = ""): GameView {
     var scores: Map<String, Long> = HashMap()
 
     var gameOver = false
+    var crashed = false
 
     var timerRunning = false
     var timerDeadline: Date? = null
@@ -71,8 +72,9 @@ class FakeGameView(private val playerID: String = ""): GameView {
         scores = HashMap(playerScores)
     }
 
-    override fun gameOver(finalScores: Map<String, Long>) {
+    override fun gameOver(finalScores: Map<String, Long>?, hasCrashed: Boolean) {
         gameOver = true
+        crashed = hasCrashed
     }
 
     override fun startTimer(deadline: Date) {
@@ -84,8 +86,8 @@ class FakeGameView(private val playerID: String = ""): GameView {
         timerRunning = false
     }
 
-    override fun displayLyrics(lyrics: String) {
-        lyricsDisplayed = true
+    override fun updateLyrics(lyrics: String) {
+        lyricsDisplayed = lyrics
     }
 
 }

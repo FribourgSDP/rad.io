@@ -1,22 +1,32 @@
 package com.github.fribourgsdp.radio.game.handler
 
+import android.content.Context
+import android.util.Log
+import com.github.fribourgsdp.radio.R
 import com.github.fribourgsdp.radio.database.Database
 import com.github.fribourgsdp.radio.database.FirestoreDatabase
 import com.github.fribourgsdp.radio.data.User
 import com.github.fribourgsdp.radio.game.GameView
 import com.github.fribourgsdp.radio.game.prep.DEFAULT_GAME_DURATION
+import com.github.fribourgsdp.radio.game.timer.Timer
 import com.github.fribourgsdp.radio.util.NOT_THE_SAME
 import com.github.fribourgsdp.radio.util.StringComparisons
 import com.google.firebase.firestore.DocumentSnapshot
 
 class PlayerGameHandler(
+    private val ctx: Context,
     private val gameID: Long,
     private val view: GameView,
     db: Database = FirestoreDatabase()
-): GameHandler(view, db), GameView.OnPickListener {
+): GameHandler(ctx, view, db), GameView.OnPickListener {
 
     private var songToGuess: String? = null
+    private var scores: HashMap<String, Long>? = null
     private var singerDuration: Long = DEFAULT_GAME_DURATION
+    private val stopTimer = Timer(singerDuration + WAIT_DELTA_IN_SECONDS).apply {
+        // When this timer expires, stop the game
+        setOnDoneListener { view.gameOver(scores, true) }
+    }
 
     override fun linkToDatabase() {
         db.listenToGameUpdate(gameID, executeOnUpdate())
@@ -24,10 +34,13 @@ class PlayerGameHandler(
 
     override fun handleSnapshot(snapshot: DocumentSnapshot?) {
         if (snapshot != null && snapshot.exists()) {
+            // stop the timer if it was running
+            stopTimer.stop()
+
             val gameStillValid = snapshot.getBoolean("validity")!!
-            val scores = snapshot.get("scores") as HashMap<String, Long>
+            scores = snapshot.get("scores") as HashMap<String, Long>
             if (snapshot.getBoolean("finished")!! || !gameStillValid) {
-                view.gameOver(scores)
+                view.gameOver(scores!!, gameStillValid)
                 return
             }
 
@@ -37,17 +50,20 @@ class PlayerGameHandler(
             view.updateRound(snapshot.getLong("current_round")!!)
 
             // update the score
-            view.displayPlayerScores(scores)
+            view.displayPlayerScores(scores!!)
 
             // Get the picked song
             // It's not null when there is one.
             songToGuess = snapshot.getString("current_song")
 
-
             updateViewForPlayer(snapshot, singerName)
 
+            // Start the stop timer to stop everything if something fails
+            stopTimer.start()
+
         } else {
-            view.displayError("An error occurred")
+            Log.e("PlayerGameHandler Error", "Snapshot error")
+            view.displayError(ctx.getString(R.string.game_error))
         }
     }
 
@@ -55,50 +71,77 @@ class PlayerGameHandler(
         if (songToGuess == null) { return }
 
         if (timeout) {
-            db.playerEndTurn(gameID, userId, false).addOnFailureListener {
-                view.displayError("An error occurred")
-            }
-
-            // Hide the error if a wrong guess was made
-            view.hideError()
-
+            handleTimeoutOnGuess(userId)
             // exit the handling when timeout
             return
         }
 
         val nbErrors = StringComparisons.compare(songToGuess!!, guess)
         if (nbErrors == NOT_THE_SAME) {
-            view.displayError("Wrong answer")
+            view.displayError(ctx.getString(R.string.wrong_guess))
         } else if (nbErrors != 0) {
-            view.displayError("You're close!")
+            view.displayError(ctx.getString(R.string.close_guess))
         } else {
-            view.displaySong("You correctly guessed $guess")
+            view.displaySong(ctx.getString(R.string.correct_guess_format, songToGuess))
             view.stopTimer()
 
             // Hide the error if a wrong guess was made
             view.hideError()
 
-            db.playerEndTurn(gameID, userId, true).addOnFailureListener {
-                    view.displayError("An error occurred")
+            db.playerEndTurn(gameID, userId, true)
+                .addOnFailureListener {
+                    Log.e("PlayerGameHandler Error", "In end turn: ${it.message}", it)
+                    view.displayError(ctx.getString(R.string.game_error))
+
+                    // retry
+                    db.playerEndTurn(gameID, userId, true)
+                        .addOnFailureListener {
+                            view.gameOver(scores, true)
+                        }
                 }
         }
     }
 
-    override fun onPick(song: String) {
-        db.updateCurrentSongOfGame(gameID, song, singerDuration)
-            .addOnSuccessListener {
-                view.displaySong(song)
-            }
+    private fun handleTimeoutOnGuess(userId: String) {
+        db.playerEndTurn(gameID, userId, false)
             .addOnFailureListener {
-                view.displayError("An error occurred")
+                Log.e("PlayerGameHandler Error", "In end turn with timeout: ${it.message}", it)
+                view.displayError(ctx.getString(R.string.game_error))
+
+                // retry
+                db.playerEndTurn(gameID, userId, false)
+                    .addOnFailureListener {
+                        view.gameOver(scores, true)
+                    }
+            }
+
+        // Hide the error if a wrong guess was made
+        view.hideError()
+    }
+
+    override fun onPick(song: String) {
+        val onSuccess: (Void?) -> Unit = { view.displaySong(song) }
+
+        db.updateCurrentSongOfGame(gameID, song, singerDuration)
+            .addOnSuccessListener(onSuccess)
+            .addOnFailureListener {
+                Log.e("PlayerGameHandler Error", "onPick: ${it.message}", it)
+                view.displayError(ctx.getString(R.string.game_error))
+
+                // retry
+                db.updateCurrentSongOfGame(gameID, song, singerDuration)
+                    .addOnSuccessListener(onSuccess)
+                    .addOnFailureListener {
+                        view.gameOver(scores, true)
+                    }
             }
     }
 
-    private fun displayLyrics(snapshot: DocumentSnapshot){
+    private fun updateLyrics(snapshot: DocumentSnapshot){
         val lyricsHashMap =
             snapshot.get("song_choices_lyrics")!! as Map<String, String>
         val lyrics = lyricsHashMap[songToGuess!!]
-        view.displayLyrics(lyrics!!)
+        view.updateLyrics(lyrics!!)
     }
 
     private fun chooseSong(snapshot: DocumentSnapshot){
@@ -113,11 +156,15 @@ class PlayerGameHandler(
             if (songToGuess == null) {
                 chooseSong(snapshot)
             } else {
-                displayLyrics(snapshot)
+                updateLyrics(snapshot)
+                view.displaySong(songToGuess!!)
                 view.startTimer(deadline!!.toDate())
             }
 
         } else {
+            // No lyrics when user is not the singer
+            view.updateLyrics("")
+
             if (songToGuess != null) {
                 // The singer picked a song so the player can guess
                 view.displayGuessInput()
@@ -137,6 +184,7 @@ class PlayerGameHandler(
 
     fun setSingerDuration(duration: Long) {
         singerDuration = duration
+        stopTimer.setTime(duration + WAIT_DELTA_IN_SECONDS)
     }
 
     fun disableGame() {
@@ -149,5 +197,9 @@ class PlayerGameHandler(
 
     fun removePlayerFromGame(user: User) {
         db.removePlayerFromGame(gameID, user)
+    }
+
+    companion object {
+        private const val WAIT_DELTA_IN_SECONDS = 5L
     }
 }

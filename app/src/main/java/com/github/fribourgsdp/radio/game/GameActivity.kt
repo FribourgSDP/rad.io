@@ -36,6 +36,7 @@ import kotlin.math.absoluteValue
 
 
 const val SCORES_KEY = "com.github.fribourgsdp.radio.SCORES"
+const val GAME_CRASH_KEY = "com.github.fribourgsdp.radio.GAME_CRASH"
 
 open class GameActivity : AppCompatActivity(), GameView, Timer.Listener {
     private lateinit var user: User
@@ -46,7 +47,7 @@ open class GameActivity : AppCompatActivity(), GameView, Timer.Listener {
     private lateinit var singerTextView : TextView
     private lateinit var songTextView : TextView
     private lateinit var errorOrFailureTextView : TextView
-    private lateinit var lyricsPopup : PopupWindow
+    private var lyricsPopup : LyricsPopup? = null
     private lateinit var songGuessEditText : EditText
     private lateinit var muteButton : ImageButton
     private lateinit var songGuessSubmitButton: Button
@@ -77,11 +78,11 @@ open class GameActivity : AppCompatActivity(), GameView, Timer.Listener {
 
         if (isHost) {
             val game = Json.decodeFromString(intent.getStringExtra(GAME_KEY)!!) as Game
-            val hostGameHandler = HostGameHandler(game, this)
+            val hostGameHandler = HostGameHandler(this, game, this)
             hostGameHandler.linkToDatabase()
         }
 
-        playerGameHandler = PlayerGameHandler(gameUid, this)
+        playerGameHandler = PlayerGameHandler(this, gameUid, this)
         playerGameHandler.setSingerDuration(gameDuration)
 
         // On submit make the player game handler handle the guess
@@ -113,11 +114,16 @@ open class GameActivity : AppCompatActivity(), GameView, Timer.Listener {
     }
 
     override fun displaySong(songName: String) {
+        // Close the lyrics popup if already open
+        closeLyricsPopup()
+
         // Hide the edit text and the submit button
         songGuessEditText.visibility = View.GONE
         songGuessSubmitButton.visibility = View.GONE
 
-        showLyricsButton.visibility = View.VISIBLE
+        if (lyricsPopup != null) {
+            showLyricsButton.visibility = View.VISIBLE
+        }
 
         // Show the song instead
         songTextView.apply {
@@ -127,6 +133,8 @@ open class GameActivity : AppCompatActivity(), GameView, Timer.Listener {
     }
 
     override fun displayGuessInput() {
+        // Close the lyrics popup if already open
+        closeLyricsPopup()
 
         // Hide the song view
         songTextView.visibility = View.GONE
@@ -142,6 +150,9 @@ open class GameActivity : AppCompatActivity(), GameView, Timer.Listener {
     }
 
     override fun displayError(errorMessage: String) {
+        // Close the lyrics popup if already open
+        closeLyricsPopup()
+
         // Show the error
         errorOrFailureTextView.apply {
             text = errorMessage
@@ -160,9 +171,13 @@ open class GameActivity : AppCompatActivity(), GameView, Timer.Listener {
     override fun displayWaitOnSinger(singer: String) {
         // We can display the wait message where the same box as the song
         displaySong(getString(R.string.wait_for_pick_format, mapIdToName[singer]  ?: singer))
+        showLyricsButton.visibility = View.GONE
     }
 
     override fun displayPlayerScores(playerScores: Map<String, Long>) {
+        // Close the lyrics popup if already open
+        closeLyricsPopup()
+
         scoresAdapter.updateScore(
             // Replace ids by names
             playerScores.map { (id, score) -> Pair(mapIdToName[id] ?: id, score)}
@@ -177,13 +192,17 @@ open class GameActivity : AppCompatActivity(), GameView, Timer.Listener {
         timerProgressBarHandler.stopTimer()
     }
 
-    override fun gameOver(finalScores: Map<String, Long>) {
+    override fun gameOver(finalScores: Map<String, Long>?, hasCrashed: Boolean) {
         val intent = Intent(this, EndGameActivity::class.java).apply {
-            putExtra(
-                SCORES_KEY,
-                // Replace ids by names and put in an ArrayList to make it Serializable
-                ArrayList(finalScores.map { (id, score) -> Pair(mapIdToName[id] ?: id, score)})
-            )
+            finalScores?.let {
+                putExtra(
+                    SCORES_KEY,
+                    // Replace ids by names and put in an ArrayList to make it Serializable
+                    ArrayList(it.map { (id, score) -> Pair(mapIdToName[id] ?: id, score) })
+                )
+            }
+
+            putExtra(GAME_CRASH_KEY, hasCrashed)
         }
         startActivity(intent)
     }
@@ -216,6 +235,7 @@ open class GameActivity : AppCompatActivity(), GameView, Timer.Listener {
         songGuessEditText = findViewById(R.id.songGuessEditText)
         songGuessSubmitButton = findViewById(R.id.songGuessSubmitButton)
         showLyricsButton = findViewById(R.id.showLyricsButton)
+        showLyricsButton.setOnClickListener { lyricsPopup?.show(supportFragmentManager, "lyricsPopup") }
 
         // trigger the submit button when the user presses "enter" in the text field
         songGuessEditText.setOnEditorActionListener { _: TextView?, actionId: Int, _: KeyEvent? ->
@@ -274,13 +294,19 @@ open class GameActivity : AppCompatActivity(), GameView, Timer.Listener {
             }
     }
     
-    override fun displayLyrics(lyrics : String) {
-        showLyricsButton.visibility = View.VISIBLE
-        showLyricsButton.setOnClickListener { displayLyrics(lyrics) }
-        if(lyrics.isNotEmpty() && lyrics != LYRICS_NOT_FOUND_PLACEHOLDER) {
+    override fun updateLyrics(lyrics : String) {
+        // Close the lyrics popup if already open
+        closeLyricsPopup()
+        
+        lyricsPopup = if(lyrics.isNotEmpty() && lyrics != LYRICS_NOT_FOUND_PLACEHOLDER)  LyricsPopup(lyrics)
+            else null
+    }
 
-            val lyricsPopup = LyricsPopup(lyrics)
-            lyricsPopup.show(supportFragmentManager, "lyricsPopup")
+    private fun closeLyricsPopup() {
+        lyricsPopup?.let {
+            if (it.isVisible) {
+                it.dismiss()
+            }
         }
     }
 }
