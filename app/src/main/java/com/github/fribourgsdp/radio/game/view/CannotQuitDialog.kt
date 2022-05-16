@@ -7,9 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.TextView
-import androidx.core.os.bundleOf
 import androidx.fragment.app.DialogFragment
-import androidx.fragment.app.setFragmentResult
 import com.github.fribourgsdp.radio.R
 import kotlin.random.Random
 
@@ -17,12 +15,13 @@ import kotlin.random.Random
 class CannotQuitDialog(val ctx: Context): DialogFragment() {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
-        val rootView: View = inflater.inflate(R.layout.fragment_quit_lobby_or_game, container, false)
+        val rootView: View = inflater.inflate(R.layout.fragment_cant_quit_game, container, false)
         val closeButton: Button = rootView.findViewById(R.id.cancelQuitGame)
+        val dontQuitMessage: TextView = rootView.findViewById(R.id.cantQuitGameMessage)
+
         closeButton.setOnClickListener {
             dismiss()
         }
-        val dontQuitMessage: TextView = rootView.findViewById(R.id.cantQuitGameMessage)
         dontQuitMessage.text = getRandomDontQuitSentence()
 
         return rootView
