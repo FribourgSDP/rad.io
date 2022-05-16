@@ -22,6 +22,7 @@ const val GAME_NB_ROUNDS_KEY = "com.github.fribourgsdp.radio.GAME_NB_ROUNDS"
 const val GAME_HINT_KEY = "com.github.fribourgsdp.radio.GAME_HINT"
 const val GAME_PRIVACY_KEY = "com.github.fribourgsdp.radio.GAME_PRIVACY"
 const val GAME_IS_HOST_KEY = "com.github.fribourgsdp.radio.GAME_IS_HOST"
+const val GAME_IS_NO_SING_MODE = "com.github.fribourgsdp.radio.GAME_IS_NO_SING_MODE"
 const val GAME_DURATION_KEY = "com.github.fribourgsdp.radio.GAME_DURATION"
 
 const val DEFAULT_GAME_DURATION = 45L;
@@ -33,6 +34,7 @@ open class GameSettingsActivity : AppCompatActivity() {
     private lateinit var nbRoundsInput : EditText
     private lateinit var hintCheckBox : CheckBox
     private lateinit var privacyCheckBox : CheckBox
+    private lateinit var noSingCheckBox : CheckBox
     private lateinit var startButton : Button
     private lateinit var timerButton : ImageButton
     private lateinit var timerTextView: TextView
@@ -95,6 +97,7 @@ open class GameSettingsActivity : AppCompatActivity() {
         nbRoundsInput = findViewById(R.id.nbRoundsInput)
         hintCheckBox = findViewById(R.id.hintCheckBox)
         privacyCheckBox = findViewById(R.id.privacyCheckBox)
+        noSingCheckBox = findViewById(R.id.noSingCheckbox)
         startButton = findViewById(R.id.startButton)
         playlistSearchView = findViewById(R.id.playlistSearchView)
         playlistListView = findViewById(R.id.playlistListView)
@@ -129,6 +132,7 @@ open class GameSettingsActivity : AppCompatActivity() {
                 putExtra(GAME_HINT_KEY, hintCheckBox.isChecked)
                 putExtra(GAME_PRIVACY_KEY, privacyCheckBox.isChecked)
                 putExtra(GAME_IS_HOST_KEY, true)
+                putExtra(GAME_IS_NO_SING_MODE, noSingCheckBox.isChecked)
                 putExtra(GAME_DURATION_KEY, gameTimeDuration)
             }
             startActivity(intent)
