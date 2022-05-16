@@ -120,4 +120,7 @@
     <string name="timerMinutes">Minutes</string>
     <string name="timerSeconds">Secondes</string>
     <string name="gameDurationFormat">Durée du chanteur: %d secondes </string>
+    <string name="noSingModeCheckbox">Paroles lues par un robot !</string>
+    <string name="with_singer_format">Avec chanteur : %b</string>
+    <string name="listen">Ecoute !</string>
 </resources>
