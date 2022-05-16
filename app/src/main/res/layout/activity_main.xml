@@ -68,6 +68,15 @@
             android:text="Voice Call Demo!"
              />
 
+        <EditText
+            android:id="@+id/zzz"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:inputType="textPersonName"
+            android:minHeight="48dp"
+            android:text="Name" />
+
     </LinearLayout>
 
 
