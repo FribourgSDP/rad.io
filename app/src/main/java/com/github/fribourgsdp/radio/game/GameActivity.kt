@@ -2,6 +2,8 @@ package com.github.fribourgsdp.radio.game
 
 import android.content.Intent
 import android.os.Bundle
+import android.speech.tts.TextToSpeech
+import android.util.Log
 import android.view.*
 import android.view.inputmethod.EditorInfo
 import android.widget.*
@@ -9,17 +11,12 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.github.fribourgsdp.radio.*
-import com.github.fribourgsdp.radio.game.timer.Timer
 import com.github.fribourgsdp.radio.data.User
 import com.github.fribourgsdp.radio.external.musixmatch.MusixmatchLyricsGetter.LYRICS_NOT_FOUND_PLACEHOLDER
 import com.github.fribourgsdp.radio.game.handler.HostGameHandler
 import com.github.fribourgsdp.radio.game.handler.PlayerGameHandler
-import com.github.fribourgsdp.radio.game.prep.DEFAULT_GAME_DURATION
-import com.github.fribourgsdp.radio.game.prep.MAP_ID_NAME_KEY
-import com.github.fribourgsdp.radio.game.prep.GAME_KEY
-import com.github.fribourgsdp.radio.game.prep.GAME_UID_KEY
-import com.github.fribourgsdp.radio.game.prep.GAME_DURATION_KEY
-import com.github.fribourgsdp.radio.game.prep.GAME_IS_HOST_KEY
+import com.github.fribourgsdp.radio.game.prep.*
+import com.github.fribourgsdp.radio.game.timer.Timer
 import com.github.fribourgsdp.radio.game.timer.TimerProgressBarHandler
 import com.github.fribourgsdp.radio.game.view.LyricsPopup
 import com.github.fribourgsdp.radio.game.view.QuitGameOrLobbyDialog
@@ -41,6 +38,7 @@ const val GAME_CRASH_KEY = "com.github.fribourgsdp.radio.GAME_CRASH"
 open class GameActivity : AppCompatActivity(), GameView, Timer.Listener {
     private lateinit var user: User
     private var isHost: Boolean = false
+    private var noSing = false
     private var gameDuration = DEFAULT_GAME_DURATION
 
     private lateinit var currentRoundTextView : TextView
@@ -62,6 +60,8 @@ open class GameActivity : AppCompatActivity(), GameView, Timer.Listener {
 
     private lateinit var playerGameHandler: PlayerGameHandler
 
+    private lateinit var tts : TextToSpeech
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_game)
@@ -70,6 +70,7 @@ open class GameActivity : AppCompatActivity(), GameView, Timer.Listener {
             it as HashMap<String, String>
         } ?: HashMap()
         isHost = intent.getBooleanExtra(GAME_IS_HOST_KEY, false)
+        noSing = intent.getBooleanExtra(GAME_IS_NO_SING_MODE, false)
         gameDuration = intent.getLongExtra(GAME_DURATION_KEY, DEFAULT_GAME_DURATION)
         initViews()
 
@@ -78,11 +79,12 @@ open class GameActivity : AppCompatActivity(), GameView, Timer.Listener {
 
         if (isHost) {
             val game = Json.decodeFromString(intent.getStringExtra(GAME_KEY)!!) as Game
-            val hostGameHandler = HostGameHandler(this, game, this)
+            val hostGameHandler = HostGameHandler(this, game, this, noSing=noSing)
             hostGameHandler.linkToDatabase()
+            hostGameHandler.setSingerDuration(gameDuration)
         }
 
-        playerGameHandler = PlayerGameHandler(this, gameUid, this)
+        playerGameHandler = PlayerGameHandler(this, gameUid, this, noSing=noSing)
         playerGameHandler.setSingerDuration(gameDuration)
 
         // On submit make the player game handler handle the guess
@@ -118,8 +120,10 @@ open class GameActivity : AppCompatActivity(), GameView, Timer.Listener {
         closeLyricsPopup()
 
         // Hide the edit text and the submit button
-        songGuessEditText.visibility = View.GONE
-        songGuessSubmitButton.visibility = View.GONE
+        if(!noSing) {
+            songGuessEditText.visibility = View.GONE
+            songGuessSubmitButton.visibility = View.GONE
+        }
 
         if (lyricsPopup != null) {
             showLyricsButton.visibility = View.VISIBLE
@@ -300,6 +304,21 @@ open class GameActivity : AppCompatActivity(), GameView, Timer.Listener {
         
         lyricsPopup = if(lyrics.isNotEmpty() && lyrics != LYRICS_NOT_FOUND_PLACEHOLDER)  LyricsPopup(lyrics)
             else null
+    }
+
+    override fun readLyrics(lyrics: String) {
+        Log.println(Log.ASSERT, "*", "TextToSpeech : $lyrics")
+        tts = TextToSpeech(applicationContext){
+            if(it != TextToSpeech.ERROR){
+                tts.language = Locale.UK
+            }
+        }
+        Toast.makeText(applicationContext, lyrics,Toast.LENGTH_SHORT).show();
+        tts.speak(lyrics, TextToSpeech.QUEUE_FLUSH, null, UUID.randomUUID().toString());
+    }
+
+    override fun sayListen() {
+        singerTextView.text = getString(R.string.listen)
     }
 
     private fun closeLyricsPopup() {
