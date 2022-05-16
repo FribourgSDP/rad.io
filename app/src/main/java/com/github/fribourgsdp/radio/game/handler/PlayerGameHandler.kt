@@ -17,7 +17,8 @@ class PlayerGameHandler(
     private val ctx: Context,
     private val gameID: Long,
     private val view: GameView,
-    db: Database = FirestoreDatabase()
+    db: Database = FirestoreDatabase(),
+    private val noSing : Boolean = false
 ): GameHandler(ctx, view, db), GameView.OnPickListener {
 
     private var songToGuess: String? = null
@@ -40,13 +41,10 @@ class PlayerGameHandler(
             val gameStillValid = snapshot.getBoolean("validity")!!
             scores = snapshot.get("scores") as HashMap<String, Long>
             if (snapshot.getBoolean("finished")!! || !gameStillValid) {
-                view.gameOver(scores!!, gameStillValid)
+                view.gameOver(scores!!, false)
                 return
             }
 
-            val singerName = snapshot.getString("singer")!!
-
-            view.updateSinger(singerName)
             view.updateRound(snapshot.getLong("current_round")!!)
 
             // update the score
@@ -56,7 +54,13 @@ class PlayerGameHandler(
             // It's not null when there is one.
             songToGuess = snapshot.getString("current_song")
 
-            updateViewForPlayer(snapshot, singerName)
+            if(!noSing) {
+                val singerName = snapshot.getString("singer")!!
+                view.updateSinger(singerName)
+                updateViewForPlayer(snapshot, singerName)
+            } else{
+                updateViewNoSingMode(snapshot)
+            }
 
             // Start the stop timer to stop everything if something fails
             stopTimer.start()
@@ -144,11 +148,26 @@ class PlayerGameHandler(
         view.updateLyrics(lyrics!!)
     }
 
+    private fun readLyrics(snapshot: DocumentSnapshot){
+        val lyricsHashMap =
+            snapshot.get("song_choices_lyrics")!! as Map<String, String>
+        val lyrics = lyricsHashMap[songToGuess!!]
+        view.readLyrics(lyrics!!)
+    }
+
     private fun chooseSong(snapshot: DocumentSnapshot){
         val choices = snapshot.get("song_choices")!! as ArrayList<String>
         view.chooseSong(choices, this)
     }
 
+    private fun updateViewNoSingMode(snapshot: DocumentSnapshot) {
+        val deadline = snapshot.getTimestamp("round_deadline")
+        if(deadline != null) {
+            view.startTimer(deadline.toDate())
+            readLyrics(snapshot)
+        }
+        view.sayListen()
+    }
     private fun updateViewForPlayer(snapshot: DocumentSnapshot, singerName : String){
         val deadline = snapshot.getTimestamp("round_deadline")
 

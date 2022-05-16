@@ -9,20 +9,27 @@ import com.github.fribourgsdp.radio.external.musixmatch.LyricsGetter
 import com.github.fribourgsdp.radio.external.musixmatch.MusixmatchLyricsGetter
 import com.github.fribourgsdp.radio.game.Game
 import com.github.fribourgsdp.radio.game.GameView
+import com.github.fribourgsdp.radio.game.prep.DEFAULT_GAME_DURATION
+import com.github.fribourgsdp.radio.util.getAndCast
 import com.github.fribourgsdp.radio.util.getPlayerDoneMap
 import com.github.fribourgsdp.radio.util.getPlayerFoundMap
 import com.github.fribourgsdp.radio.util.getScoresOfRound
 import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.FieldValue
+import java.time.Duration
+
+const val NO_SINGER = ""
 
 class HostGameHandler(
     private val ctx: Context,
     private val game: Game,
     private val view: GameView,
     db: Database = FirestoreDatabase(),
+    private val noSing : Boolean = false,
     private val lyricsGetter: LyricsGetter = MusixmatchLyricsGetter
 ): GameHandler(ctx, view, db) {
     private var latestSingerId: String? = null
+    private var singerDuration : Long = DEFAULT_GAME_DURATION
 
     override fun handleSnapshot(snapshot: DocumentSnapshot?) {
         if (snapshot != null && snapshot.exists()) {
@@ -32,7 +39,7 @@ class HostGameHandler(
             val allDone = !doneMap.containsValue(false)
 
             //Check if only the host is left
-            if (doneMap.size <= 1) {
+            if (doneMap.size <= 1 && !noSing) {
                 view.gameOver(game.getAllScores())
                 return
             }
@@ -55,9 +62,15 @@ class HostGameHandler(
                 // update the game
                 val updatesMap = createUpdatesMap(doneMap.keys)
                 val onSuccess: (Void?) -> (Unit) = {
-                    // update the latest singer
-                    latestSingerId = updatesMap["singer"] as String
-                    resetGameMetadata(latestSingerId!!)
+                    if(!noSing) {
+                        // update the latest singer
+                        latestSingerId = updatesMap["singer"] as String
+                        resetGameMetadata(latestSingerId!!)
+                    } else{
+                        resetGameMetadata(NO_SINGER)
+                        assignSong(updatesMap["current_song"] as String)
+                        game.incrementCurrentRound()
+                    }
                 }
 
                 db.updateGame(game.id, updatesMap)
@@ -101,6 +114,10 @@ class HostGameHandler(
         }
     }
 
+    private fun assignSong(songName : String){
+        db.updateCurrentSongOfGame(game.id, songName, singerDuration)
+    }
+
     override fun linkToDatabase() {
         db.listenToGameMetadataUpdate(game.id, executeOnUpdate())
     }
@@ -118,22 +135,39 @@ class HostGameHandler(
                 nextChoicesLyrics[song.name] = lyricsGetter.markSongName(song.lyrics, song.name)
             }
 
-        var nextUser = ""
-        do {
-            nextUser = game.getUserToPlay()
-        } while (!playerIdsOnDatabase.contains(nextUser))
+        if(!noSing) {
+
+            var nextUser = ""
+            do {
+                nextUser = game.getUserToPlay()
+            } while (!playerIdsOnDatabase.contains(nextUser))
 
 
-        return hashMapOf(
-            "finished" to done,
-            "current_round" to game.currentRound,
-            "current_song" to FieldValue.delete(),
-            "round_deadline" to FieldValue.delete(),
-            "singer" to nextUser,
-            "song_choices" to nextChoices.toList(),
-            "song_choices_lyrics" to nextChoicesLyrics,
-            "scores" to game.getAllScores()
-        )
+            return hashMapOf(
+                "finished" to done,
+                "current_round" to game.currentRound,
+                "current_song" to FieldValue.delete(),
+                "round_deadline" to FieldValue.delete(),
+                "singer" to nextUser,
+                "song_choices" to nextChoices.toList(),
+                "song_choices_lyrics" to nextChoicesLyrics,
+                "scores" to game.getAllScores()
+            )
+        } else{
+            return hashMapOf(
+                "finished" to done,
+                "current_round" to game.currentRound,
+                "current_song" to nextChoices[0],// TODO:
+                "round_deadline" to FieldValue.delete(),
+                "song_choices" to nextChoices.toList(),
+                "song_choices_lyrics" to nextChoicesLyrics,
+                "scores" to game.getAllScores()
+            )
+        }
+    }
+
+    fun setSingerDuration(l : Long){
+        singerDuration = l
     }
 
     companion object {
