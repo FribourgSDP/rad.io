@@ -21,10 +21,7 @@ import com.github.fribourgsdp.radio.game.prep.GAME_UID_KEY
 import com.github.fribourgsdp.radio.game.prep.GAME_DURATION_KEY
 import com.github.fribourgsdp.radio.game.prep.GAME_IS_HOST_KEY
 import com.github.fribourgsdp.radio.game.timer.TimerProgressBarHandler
-import com.github.fribourgsdp.radio.game.view.LyricsPopup
-import com.github.fribourgsdp.radio.game.view.QuitGameOrLobbyDialog
-import com.github.fribourgsdp.radio.game.view.ScoresAdapter
-import com.github.fribourgsdp.radio.game.view.SongPickerDialog
+import com.github.fribourgsdp.radio.game.view.*
 import com.github.fribourgsdp.radio.voip.MyIRtcEngineEventHandler
 import com.github.fribourgsdp.radio.voip.VoiceIpEngineDecorator
 import io.agora.rtc.Constants
@@ -283,15 +280,21 @@ open class GameActivity : AppCompatActivity(), GameView, Timer.Listener {
     }
 
     override fun onBackPressed() {
-        val warningDisplay = QuitGameOrLobbyDialog(this)
-        warningDisplay.show(supportFragmentManager, "warningForQuittingLobby")
-        supportFragmentManager
-            .setFragmentResultListener("quitRequest", this) { _, bundle ->
-                val hasQuit = bundle.getBoolean("hasQuit")
-                if (hasQuit) {
-                    returnToMainMenu()
+        if (isHost) {
+            val warningDisplay = QuitGameOrLobbyDialog(this)
+            warningDisplay.show(supportFragmentManager, "warningForQuittingLobby")
+            supportFragmentManager
+                .setFragmentResultListener("quitRequest", this) { _, bundle ->
+                    val hasQuit = bundle.getBoolean("hasQuit")
+                    if (hasQuit) {
+                        returnToMainMenu()
+                    }
                 }
-            }
+        }
+        else {
+            val cannotQuitDisplay = CannotQuitDialog(this)
+            cannotQuitDisplay.show(supportFragmentManager, "cannotQuitGame")
+        }
     }
     
     override fun updateLyrics(lyrics : String) {
