@@ -256,9 +256,9 @@ open class GameActivity : AppCompatActivity(), GameView, Timer.Listener {
 
     protected open fun initVoiceChat(gameUid: Long) {
 
-        val map = mapIdToName.mapKeys { it.hashCode().absoluteValue }
+        val map = mapIdToName.mapKeys { it.key.hashCode().absoluteValue }
         if (!this::voiceChannel.isInitialized) voiceChannel = VoiceIpEngineDecorator(this, MyIRtcEngineEventHandler(this, map))
-        val userId = user.name.hashCode().absoluteValue
+        val userId = user.id.hashCode().absoluteValue
         voiceChannel.setAudioProfile(Constants.AUDIO_PROFILE_MUSIC_STANDARD, Constants.AUDIO_SCENARIO_CHATROOM_ENTERTAINMENT);
         voiceChannel.enableAudioVolumeIndication(200,3,true)
         voiceChannel.setDefaultAudioRoutetoSpeakerphone(true)
