@@ -60,9 +60,21 @@ open class FirestoreRef {
 
 open class TransactionManager() {
     lateinit var db: FirebaseFirestore
-    open fun executeTransaction(updateFunction: Transaction.Function<Any>) : Task<Any> {
+    open fun executeIdTransaction(docRef: DocumentReference?, keyID: String, keyMax: String, number: Int) : Task<Pair<Long, Long>> {
         return db.runTransaction { transaction ->
-            updateFunction.apply(transaction)
+            val snapshot = transaction.get(docRef!!)
+
+            if (!snapshot.exists()) {
+                throw Exception("Document not found.")
+            }
+
+            val id = snapshot.getLong(keyID)!!
+            val nextId = (id + number) % snapshot.getLong(keyMax)!!
+
+            transaction.update(docRef, keyID, nextId)
+
+            // Success
+            Pair(id,nextId)
         }
     }
 }
@@ -231,21 +243,7 @@ class FirestoreDatabase(var refMake: FirestoreRef, var transactionMgr: Transacti
 
         val docRef = refMake.getGenericIdRef(collectionPath, documentPath)
 
-        return db.runTransaction { transaction ->
-            val snapshot = transaction.get(docRef)
-
-            if (!snapshot.exists()) {
-                throw Exception("Document not found.")
-            }
-
-            val id = snapshot.getLong(keyID)!!
-            val nextId = (id + number) % snapshot.getLong(keyMax)!!
-
-            transaction.update(docRef, keyID, nextId)
-
-            // Success
-            Pair(id,nextId)
-        }
+        return transactionMgr.executeIdTransaction(docRef, keyID, keyMax, number)
     }
 
 

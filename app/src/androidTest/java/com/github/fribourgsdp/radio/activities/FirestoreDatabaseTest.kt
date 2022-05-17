@@ -14,10 +14,11 @@ import org.junit.Test
 import java.util.concurrent.TimeUnit
 import org.junit.Assert.*
 import org.junit.Before
+import org.mockito.ArgumentMatcher
+import org.mockito.ArgumentMatchers
 import org.mockito.ArgumentMatchers.anyString
 import org.mockito.Mockito.*
 //import java.lang.Exception
-
 class FirestoreDatabaseTest {
     private val userNameTest = "BakerTest"
     private val userIdTest = "ID124Test"
@@ -123,7 +124,7 @@ class FirestoreDatabaseTest {
         `when`(mockSnapshot.exists()).thenReturn(true)
         `when`(mockSnapshot.get("current_id")).thenReturn(3L)
         `when`(mockSnapshot.get("max_id")).thenReturn(1000L)
-        `when`(mockTransactionManager.executeTransaction(any())).thenReturn(Tasks.forResult(3L))
+        `when`(mockTransactionManager.executeIdTransaction(any(), anyString(), anyString(), anyInt())).thenReturn(Tasks.forResult(Pair(3L, 4L)))
         val lobbyId = db.getLobbyId()
 
         assertEquals(3L, Tasks.await(lobbyId))
@@ -134,10 +135,21 @@ class FirestoreDatabaseTest {
         `when`(mockSnapshot.exists()).thenReturn(true)
         `when`(mockSnapshot.get("current_id")).thenReturn(3L)
         `when`(mockSnapshot.get("max_id")).thenReturn(1000L)
-        `when`(mockTransactionManager.executeTransaction(any())).thenReturn(Tasks.forResult(3L))
+        `when`(mockTransactionManager.executeIdTransaction(any(), anyString(), anyString(), anyInt())).thenReturn(Tasks.forResult(Pair(3L, 4L)))
         val songId = db.generateSongId()
 
         assertEquals(3L, Tasks.await(songId))
+    }
+
+    @Test
+    fun generateUserIdWorks() {
+        `when`(mockSnapshot.exists()).thenReturn(true)
+        `when`(mockSnapshot.get("current_id")).thenReturn(3L)
+        `when`(mockSnapshot.get("max_id")).thenReturn(1000L)
+        `when`(mockTransactionManager.executeIdTransaction(any(), anyString(), anyString(), anyInt())).thenReturn(Tasks.forResult(Pair(3L, 4L)))
+        val userID = db.generateUserId()
+
+        assertEquals(3L, Tasks.await(userID))
     }
 
     @Test
