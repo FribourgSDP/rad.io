@@ -132,5 +132,7 @@
             >"Bien essayé mais tu restes ici!"</item>
         <item
             >"Je doute que tu veuilles vraiment partir."</item>
+        <item
+            >"Seuls les losers quittent une partie, je doute que tu veuilles en être un"</item>
     </string-array>
 </resources>
