@@ -2,6 +2,7 @@ package com.github.fribourgsdp.radio.game
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.*
 import android.view.inputmethod.EditorInfo
 import android.widget.*
@@ -11,6 +12,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.github.fribourgsdp.radio.*
 import com.github.fribourgsdp.radio.game.timer.Timer
 import com.github.fribourgsdp.radio.data.User
+import com.github.fribourgsdp.radio.external.google.GoogleSignInActivity
 import com.github.fribourgsdp.radio.external.musixmatch.MusixmatchLyricsGetter.LYRICS_NOT_FOUND_PLACEHOLDER
 import com.github.fribourgsdp.radio.game.handler.HostGameHandler
 import com.github.fribourgsdp.radio.game.handler.PlayerGameHandler
@@ -146,9 +148,6 @@ open class GameActivity : AppCompatActivity(), GameView, Timer.Listener {
         // Hide the song view
         songTextView.visibility = View.GONE
 
-        if(withHint) {
-            hintTextView.visibility = View.VISIBLE
-        }
 
         showLyricsButton.visibility = View.GONE
 
@@ -269,6 +268,7 @@ open class GameActivity : AppCompatActivity(), GameView, Timer.Listener {
     protected open fun initVoiceChat(gameUid: Long) {
 
         val map = mapIdToName.mapKeys { it.hashCode().absoluteValue }
+        Log.d("TESTID", "initVoiceChat : ${map}")
         if (!this::voiceChannel.isInitialized) voiceChannel = VoiceIpEngineDecorator(this, MyIRtcEngineEventHandler(this, map))
         val userId = user.name.hashCode().absoluteValue
         voiceChannel.setAudioProfile(Constants.AUDIO_PROFILE_MUSIC_STANDARD, Constants.AUDIO_SCENARIO_CHATROOM_ENTERTAINMENT);
@@ -319,6 +319,7 @@ open class GameActivity : AppCompatActivity(), GameView, Timer.Listener {
 
     override fun addHint(songNameHint: SongNameHint) {
         if(withHint) {
+            hintTextView.visibility = View.VISIBLE
             this.songNameHint = songNameHint
             lastTime = 0
             hintTextView.text = this.songNameHint.toString()
@@ -326,7 +327,7 @@ open class GameActivity : AppCompatActivity(), GameView, Timer.Listener {
     }
 
     private fun updateHint(timeInSeconds: Int){
-        if(withHint) {
+        if(withHint && hintTextView.visibility == View.VISIBLE) {
             if(timeInSeconds - lastTime >= 5) {
                 songNameHint.addALetter()
                 hintTextView.text = this.songNameHint.toString()
