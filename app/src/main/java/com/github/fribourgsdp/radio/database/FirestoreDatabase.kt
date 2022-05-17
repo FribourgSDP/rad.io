@@ -324,7 +324,7 @@ class FirestoreDatabase(var refMake: FirestoreRef, var transactionMgr: Transacti
     }
 
     override fun getGameSettingsFromLobby(id: Long) :Task<Game.Settings> {
-        val docRef = db.collection("lobby").document(id.toString())
+        val docRef = refMake.getGenericIdRef("lobby", id.toString())
 
         return db.runTransaction { transaction ->
             val snapshot = transaction.get(docRef)
@@ -517,7 +517,7 @@ class FirestoreDatabase(var refMake: FirestoreRef, var transactionMgr: Transacti
     }
 
     override fun openGame(id: Long): Task<Void> {
-        return db.collection("games").document(id.toString())
+        return refMake.getGenericIdRef("games", id.toString())
             .set(
                 hashMapOf(
                     "finished" to false,

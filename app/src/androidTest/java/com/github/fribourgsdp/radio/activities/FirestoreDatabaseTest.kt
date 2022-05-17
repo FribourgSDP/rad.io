@@ -7,6 +7,7 @@ import com.github.fribourgsdp.radio.data.User
 import com.github.fribourgsdp.radio.database.FirestoreDatabase
 import com.github.fribourgsdp.radio.database.FirestoreRef
 import com.github.fribourgsdp.radio.database.TransactionManager
+import com.github.fribourgsdp.radio.game.Game
 import com.google.android.gms.tasks.Tasks
 import com.google.firebase.firestore.DocumentReference
 import com.google.firebase.firestore.DocumentSnapshot
@@ -173,6 +174,31 @@ class FirestoreDatabaseTest {
 
         val playlistId = db.generatePlaylistId()
         assertEquals(3L, Tasks.await(playlistId))
+    }
+
+    @Test(expected = Exception::class)
+    fun emptySongNameThrowsExcep() {
+        Tasks.await(db.getSong(""))
+    }
+
+    @Test(expected = Exception::class)
+    fun registerEmptySongNameThrowsExcep() {
+        Tasks.await(db.registerSong(Song("", "")))
+    }
+
+    @Test(expected = Exception::class)
+    fun emptyPlaylistNameThrowsExcep() {
+        Tasks.await(db.getPlaylist(""))
+    }
+
+    @Test(expected = Exception::class)
+    fun registerEmptyPlaylistNameThrowsExcep() {
+        Tasks.await(db.registerPlaylist(Playlist("")))
+    }
+
+    @Test
+    fun openGameWorks() {
+        db.openGame(3L)
     }
 
     @Test
