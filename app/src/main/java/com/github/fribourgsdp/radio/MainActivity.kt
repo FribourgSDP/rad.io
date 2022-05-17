@@ -1,65 +1,65 @@
 package com.github.fribourgsdp.radio
 
-import android.app.Activity
-import android.os.Bundle
-import android.speech.tts.TextToSpeech
-import android.speech.tts.TextToSpeech.OnInitListener
-import android.view.View
-import android.widget.Button
-import android.widget.EditText
-import android.widget.Toast
-import java.util.*
 
-class MainActivity : Activity(), TextToSpeech.OnInitListener {
-    var t1: TextToSpeech? = null
-    var ed1: EditText? = null
-    var b1: Button? = null
+
+import android.content.Intent
+import android.os.Bundle
+import android.widget.Button
+
+//import com.github.fribourgsdp.radio.databinding.ActivityMainBinding
+
+import android.widget.ImageButton
+import com.github.fribourgsdp.radio.config.MyAppCompatActivity
+import com.github.fribourgsdp.radio.config.SettingsActivity
+import com.github.fribourgsdp.radio.data.User
+import com.github.fribourgsdp.radio.data.view.UserProfileActivity
+import com.github.fribourgsdp.radio.database.FirestoreDatabase
+import com.github.fribourgsdp.radio.deprecated.VoiceOverIPActivity
+import com.github.fribourgsdp.radio.game.prep.GameSettingsActivity
+import com.github.fribourgsdp.radio.game.prep.JoinGameActivity
+
+class MainActivity : MyAppCompatActivity() {
+    private val db = FirestoreDatabase()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        ed1 = findViewById<View>(R.id.zzz) as EditText
-        b1 = findViewById<View>(R.id.VoiceOverIpButton) as Button
-        t1 = TextToSpeech(
-            applicationContext
-        ) { status ->
-            if (status != TextToSpeech.ERROR) {
-                t1!!.language = Locale.UK
-            }
-        }
-        b1!!.setOnClickListener {
-            val toSpeak = ed1!!.text.toString()
-            Toast.makeText(applicationContext, toSpeak, Toast.LENGTH_SHORT).show()
-            saySomething(toSpeak, TextToSpeech.QUEUE_ADD)
 
+        val voiceOverIpButton = findViewById<Button>(R.id.VoiceOverIpButton)
+        voiceOverIpButton.setOnClickListener{startActivity(Intent(this, VoiceOverIPActivity::class.java))}
+
+        val playButton = findViewById<Button>(R.id.playButton)
+        playButton.setOnClickListener {startActivity(Intent(this, GameSettingsActivity::class.java))}
+        val joinButton : Button = findViewById(R.id.joinButton)
+        joinButton.setOnClickListener {startActivity(Intent(this, JoinGameActivity::class.java))}
+        val settingsButton = findViewById<Button>(R.id.settingsButton)
+        settingsButton.setOnClickListener {startActivity(Intent(this, SettingsActivity::class.java))}
+        val profileButton: ImageButton = findViewById(R.id.profileButton)
+        profileButton.setOnClickListener {
+            startActivity(Intent(this, UserProfileActivity::class.java))
         }
+
+        /** this user allows quick demo's as it is data that is written to the app
+         * specific storage and can be easily read without intents */
+        try {
+            //if this is successful, we don't need to do anything
+            val user = User.load(this)
+
+        } catch (e: java.io.FileNotFoundException) {
+            createUser()
+        }
+
+
     }
-    override fun onInit(status: Int) {
-        // check the results in status variable.
-        if (status == TextToSpeech.SUCCESS) {
-            // setting the language to the default phone language.
-            val ttsLang = t1?.setLanguage(Locale.getDefault())
-            // check if the language is supportable.
-            if (ttsLang == TextToSpeech.LANG_MISSING_DATA || ttsLang == TextToSpeech.LANG_NOT_SUPPORTED) {
-                Toast.makeText(this, "We can't support your language", Toast.LENGTH_LONG).show()
-            }
-        } else {
-            Toast.makeText(this, "TTS Initialization failed!", Toast.LENGTH_SHORT).show()
+    private fun createUser(){
+        User.createDefaultUser(this).continueWith{ user ->
+            val result = user.result
+            result.save(this)
+            db.setUser(result.id,result)
         }
+
     }
 
-    private fun saySomething(something: String, queueMode: Int = TextToSpeech.QUEUE_ADD) {
-        val speechStatus = t1?.speak(something, queueMode, null, "ID")
-        if (speechStatus == TextToSpeech.ERROR) {
-            Toast.makeText(this, "Cant use the Text to speech.", Toast.LENGTH_LONG).show()
-        }
-    }
-
-
-    public override fun onPause() {
-        if (t1 != null) {
-            t1!!.stop()
-            t1!!.shutdown()
-        }
-        super.onPause()
+    override fun onBackPressed() {
+        /* This activity is the main activity of our app and we wish to stay on this*/
     }
 }
