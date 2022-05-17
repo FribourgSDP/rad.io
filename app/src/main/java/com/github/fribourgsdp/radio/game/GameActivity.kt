@@ -45,6 +45,7 @@ open class GameActivity : AppCompatActivity(), GameView, Timer.Listener {
     private lateinit var songTextView : TextView
     private lateinit var errorOrFailureTextView : TextView
     private var lyricsPopup : LyricsPopup? = null
+    private var cantQuitGamePopup : CannotQuitDialog? = null
     private lateinit var songGuessEditText : EditText
     private lateinit var muteButton : ImageButton
     private lateinit var songGuessSubmitButton: Button
@@ -112,7 +113,7 @@ open class GameActivity : AppCompatActivity(), GameView, Timer.Listener {
 
     override fun displaySong(songName: String) {
         // Close the lyrics popup if already open
-        closeLyricsPopup()
+        closePopups()
 
         // Hide the edit text and the submit button
         songGuessEditText.visibility = View.GONE
@@ -131,7 +132,7 @@ open class GameActivity : AppCompatActivity(), GameView, Timer.Listener {
 
     override fun displayGuessInput() {
         // Close the lyrics popup if already open
-        closeLyricsPopup()
+        closePopups()
 
         // Hide the song view
         songTextView.visibility = View.GONE
@@ -148,7 +149,7 @@ open class GameActivity : AppCompatActivity(), GameView, Timer.Listener {
 
     override fun displayError(errorMessage: String) {
         // Close the lyrics popup if already open
-        closeLyricsPopup()
+        closePopups()
 
         // Show the error
         errorOrFailureTextView.apply {
@@ -173,7 +174,7 @@ open class GameActivity : AppCompatActivity(), GameView, Timer.Listener {
 
     override fun displayPlayerScores(playerScores: Map<String, Long>) {
         // Close the lyrics popup if already open
-        closeLyricsPopup()
+        closePopups()
 
         scoresAdapter.updateScore(
             // Replace ids by names
@@ -292,21 +293,26 @@ open class GameActivity : AppCompatActivity(), GameView, Timer.Listener {
                 }
         }
         else {
-            val cannotQuitDisplay = CannotQuitDialog(this)
-            cannotQuitDisplay.show(supportFragmentManager, "cannotQuitGame")
+            cantQuitGamePopup = CannotQuitDialog(this)
+            cantQuitGamePopup?.show(supportFragmentManager, "cannotQuitGame")
         }
     }
     
     override fun updateLyrics(lyrics : String) {
         // Close the lyrics popup if already open
-        closeLyricsPopup()
+        closePopups()
         
         lyricsPopup = if(lyrics.isNotEmpty() && lyrics != LYRICS_NOT_FOUND_PLACEHOLDER)  LyricsPopup(lyrics)
             else null
     }
 
-    private fun closeLyricsPopup() {
+    private fun closePopups() {
         lyricsPopup?.let {
+            if (it.isVisible) {
+                it.dismiss()
+            }
+        }
+        cantQuitGamePopup?.let {
             if (it.isVisible) {
                 it.dismiss()
             }
