@@ -120,7 +120,7 @@ class Game private constructor(val id: Long, val name: String, val host: User, v
         return if(!noSing) {
             nbRounds <= currentRound && usersToPlay <= 0
         } else{
-            nbRounds <= currentRound
+            nbRounds < currentRound
         }
     }
 

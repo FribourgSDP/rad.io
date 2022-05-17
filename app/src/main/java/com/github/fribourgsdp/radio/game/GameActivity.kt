@@ -15,6 +15,7 @@ import com.github.fribourgsdp.radio.R
 import com.github.fribourgsdp.radio.config.language.LanguageManager
 import com.github.fribourgsdp.radio.data.User
 import com.github.fribourgsdp.radio.external.musixmatch.MusixmatchLyricsGetter.LYRICS_NOT_FOUND_PLACEHOLDER
+import com.github.fribourgsdp.radio.external.musixmatch.MusixmatchLyricsGetter.makeReadable
 import com.github.fribourgsdp.radio.game.handler.HostGameHandler
 import com.github.fribourgsdp.radio.game.handler.PlayerGameHandler
 import com.github.fribourgsdp.radio.game.prep.*
@@ -321,7 +322,7 @@ open class GameActivity : AppCompatActivity(), GameView, Timer.Listener, TextToS
 
     override fun readLyrics(lyrics: String) {
         Toast.makeText(applicationContext, "TTS", Toast.LENGTH_SHORT).show()
-        val speechStatus = tts?.speak(lyrics, TextToSpeech.QUEUE_ADD, null, "ID")
+        val speechStatus = tts?.speak(makeReadable(lyrics), TextToSpeech.QUEUE_ADD, null, "ID")
         if(speechStatus == TextToSpeech.ERROR){
             Toast.makeText(this, "Cant use the Text to speech.", Toast.LENGTH_LONG).show()
         }
