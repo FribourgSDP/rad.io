@@ -3,14 +3,16 @@ package com.github.fribourgsdp.radio.game
 import android.content.Intent
 import android.os.Bundle
 import android.speech.tts.TextToSpeech
-import android.util.Log
-import android.view.*
+import android.view.KeyEvent
+import android.view.View
 import android.view.inputmethod.EditorInfo
 import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.github.fribourgsdp.radio.*
+import com.github.fribourgsdp.radio.MainActivity
+import com.github.fribourgsdp.radio.R
+import com.github.fribourgsdp.radio.config.language.LanguageManager
 import com.github.fribourgsdp.radio.data.User
 import com.github.fribourgsdp.radio.external.musixmatch.MusixmatchLyricsGetter.LYRICS_NOT_FOUND_PLACEHOLDER
 import com.github.fribourgsdp.radio.game.handler.HostGameHandler
@@ -35,7 +37,7 @@ import kotlin.math.absoluteValue
 const val SCORES_KEY = "com.github.fribourgsdp.radio.SCORES"
 const val GAME_CRASH_KEY = "com.github.fribourgsdp.radio.GAME_CRASH"
 
-open class GameActivity : AppCompatActivity(), GameView, Timer.Listener {
+open class GameActivity : AppCompatActivity(), GameView, Timer.Listener, TextToSpeech.OnInitListener {
     private lateinit var user: User
     private var isHost: Boolean = false
     private var noSing = false
@@ -60,7 +62,7 @@ open class GameActivity : AppCompatActivity(), GameView, Timer.Listener {
 
     private lateinit var playerGameHandler: PlayerGameHandler
 
-    private lateinit var tts : TextToSpeech
+    private var tts : TextToSpeech? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -94,6 +96,17 @@ open class GameActivity : AppCompatActivity(), GameView, Timer.Listener {
 
         playerGameHandler.linkToDatabase()
 
+        initTextToSpeech()
+
+    }
+
+    private fun initTextToSpeech(){
+        if(!noSing) return
+        tts = TextToSpeech(applicationContext){ status ->
+            if(status == TextToSpeech.ERROR){
+                Toast.makeText(applicationContext, "Could not create TextToSpeech engine", Toast.LENGTH_LONG).show()
+            }
+        }
     }
 
     override fun onDestroy() {
@@ -307,14 +320,39 @@ open class GameActivity : AppCompatActivity(), GameView, Timer.Listener {
     }
 
     override fun readLyrics(lyrics: String) {
-        Log.println(Log.ASSERT, "*", "TextToSpeech : $lyrics")
-        tts = TextToSpeech(applicationContext){
-            if(it != TextToSpeech.ERROR){
-                tts.language = Locale.UK
-            }
+        Toast.makeText(applicationContext, "TTS", Toast.LENGTH_SHORT).show()
+        val speechStatus = tts?.speak(lyrics, TextToSpeech.QUEUE_ADD, null, "ID")
+        if(speechStatus == TextToSpeech.ERROR){
+            Toast.makeText(this, "Cant use the Text to speech.", Toast.LENGTH_LONG).show()
         }
-        Toast.makeText(applicationContext, lyrics,Toast.LENGTH_SHORT).show();
-        tts.speak(lyrics, TextToSpeech.QUEUE_FLUSH, null, UUID.randomUUID().toString());
+    }
+
+    override fun onInit(status: Int) {
+        // check the results in status variable.
+        if (status == TextToSpeech.SUCCESS) {
+            // setting the language to the default phone language.
+            val language = LanguageManager(this).getLang()
+            val locale = if(language == "fr"){
+                Locale.FRENCH
+            } else {
+                Locale.UK
+            }
+            val ttsLangStatus = tts!!.setLanguage(locale)
+            // check if the language is supportable.
+            if (ttsLangStatus == TextToSpeech.LANG_MISSING_DATA || ttsLangStatus == TextToSpeech.LANG_NOT_SUPPORTED) {
+                Toast.makeText(this, "We can't support your language", Toast.LENGTH_LONG).show()
+            }
+        } else {
+            Toast.makeText(this, "TTS Initialization failed!", Toast.LENGTH_SHORT).show()
+        }
+    }
+
+    override fun onPause() {
+        if (tts != null) {
+            tts!!.stop()
+            tts!!.shutdown()
+        }
+        super.onPause()
     }
 
     override fun sayListen() {
