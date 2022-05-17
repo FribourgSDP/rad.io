@@ -2,7 +2,7 @@ package com.github.fribourgsdp.radio.mockimplementations
 
 import android.content.Context
 import android.os.Bundle
-import com.github.fribourgsdp.radio.activities.makeMockLanguageManager
+import android.util.Log
 import com.github.fribourgsdp.radio.config.Settings
 import com.github.fribourgsdp.radio.config.SettingsActivity
 import com.github.fribourgsdp.radio.config.language.LanguageManager
@@ -16,6 +16,6 @@ class MockSettingsActivity : SettingsActivity() {
     }
 
     override fun getLanguageManager() : LanguageManager{
-        return makeMockLanguageManager()
+        return MockLanguageManager(this)
     }
 }
