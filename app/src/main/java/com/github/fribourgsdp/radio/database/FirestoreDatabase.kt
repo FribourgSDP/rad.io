@@ -9,12 +9,10 @@ import com.github.fribourgsdp.radio.util.*
 import com.google.android.gms.tasks.Task
 import com.google.android.gms.tasks.Tasks
 import com.google.firebase.Timestamp
-import com.google.firebase.firestore.DocumentReference
-import com.google.firebase.firestore.DocumentSnapshot
+import com.google.firebase.firestore.*
+import com.google.firebase.firestore.EventListener
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
-import com.google.firebase.firestore.EventListener
-import com.google.firebase.firestore.FieldValue
 import java.lang.Exception
 import java.util.*
 import kotlin.collections.ArrayList
@@ -27,7 +25,7 @@ import kotlin.collections.HashMap
  *
  */
 open class FirestoreRef {
-    val db = Firebase.firestore
+    lateinit var db: FirebaseFirestore
     open fun getUserRef(userId : String) : DocumentReference {
         return db.collection("user").document(userId)
     }
@@ -55,6 +53,18 @@ open class FirestoreRef {
     open fun getUserInfoMetadataRef() : DocumentReference {
         return db.collection("metadata").document("UserInfo")
     }
+    open fun getGenericIdRef(collectionPath : String, documentPath : String) : DocumentReference {
+        return db.collection(collectionPath).document(documentPath)
+    }
+}
+
+open class TransactionManager() {
+    lateinit var db: FirebaseFirestore
+    open fun executeTransaction(updateFunction: Transaction.Function<Any>) : Task<Any> {
+        return db.runTransaction { transaction ->
+            updateFunction.apply(transaction)
+        }
+    }
 }
 /**
  *
@@ -63,9 +73,13 @@ open class FirestoreRef {
  *
  * @constructor Creates a database linked to Firestore
  */
-class FirestoreDatabase(var refMake: FirestoreRef) : Database {
+class FirestoreDatabase(var refMake: FirestoreRef, var transactionMgr: TransactionManager) : Database {
     private val db = Firebase.firestore
-    constructor():this(FirestoreRef())
+    init {
+        refMake.db = db
+        transactionMgr.db = db
+    }
+    constructor():this(FirestoreRef(), TransactionManager())
 
     override fun getUser(userId : String): Task<User> {
         return  refMake.getUserRef(userId).get().continueWith { l ->
@@ -215,7 +229,7 @@ class FirestoreDatabase(var refMake: FirestoreRef) : Database {
         val keyID = "current_id"
         val keyMax = "max_id"
 
-        val docRef = db.collection(collectionPath).document(documentPath)
+        val docRef = refMake.getGenericIdRef(collectionPath, documentPath)
 
         return db.runTransaction { transaction ->
             val snapshot = transaction.get(docRef)

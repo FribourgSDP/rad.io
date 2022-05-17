@@ -6,6 +6,7 @@ import com.github.fribourgsdp.radio.data.Song
 import com.github.fribourgsdp.radio.data.User
 import com.github.fribourgsdp.radio.database.FirestoreDatabase
 import com.github.fribourgsdp.radio.database.FirestoreRef
+import com.github.fribourgsdp.radio.database.TransactionManager
 import com.google.android.gms.tasks.Tasks
 import com.google.firebase.firestore.DocumentReference
 import com.google.firebase.firestore.DocumentSnapshot
@@ -35,6 +36,7 @@ class FirestoreDatabaseTest {
 
     private lateinit var mockFirestoreRef: FirestoreRef
     private lateinit var mockSnapshot: DocumentSnapshot
+    private lateinit var mockTransactionManager: TransactionManager
     private lateinit var mockDocumentReference : DocumentReference
     private lateinit var db : FirestoreDatabase
     @Before
@@ -42,7 +44,8 @@ class FirestoreDatabaseTest {
         mockFirestoreRef = mock(FirestoreRef::class.java)
         mockSnapshot = mock(DocumentSnapshot::class.java)
         mockDocumentReference = mock(DocumentReference::class.java)
-        db = FirestoreDatabase(mockFirestoreRef)
+        mockTransactionManager = mock(TransactionManager::class.java)
+        db = FirestoreDatabase(mockFirestoreRef, mockTransactionManager)
 
         //this handling is always the same, what changes is what the document snapshot returns
         `when`(mockDocumentReference.get()).thenReturn(Tasks.forResult(mockSnapshot))
@@ -57,6 +60,7 @@ class FirestoreDatabaseTest {
         `when`(mockFirestoreRef.getPlaylistInfoMetadataRef()).thenReturn(mockDocumentReference)
         `when`(mockFirestoreRef.getSongInfoMetadataRef()).thenReturn(mockDocumentReference)
         `when`(mockFirestoreRef.getUserInfoMetadataRef()).thenReturn(mockDocumentReference)
+        `when`(mockFirestoreRef.getGenericIdRef(anyString(), anyString())).thenReturn(mockDocumentReference)
     }
     @Test
     fun registeringUserAndFetchingItWorks(){
@@ -112,6 +116,28 @@ class FirestoreDatabaseTest {
         val t1 = db.getPlaylist("playlist1.id")
         assertEquals(playlist1,Tasks.await(t1))
 
+    }
+
+    @Test
+    fun getLobbyIdWorks() {
+        `when`(mockSnapshot.exists()).thenReturn(true)
+        `when`(mockSnapshot.get("current_id")).thenReturn(3L)
+        `when`(mockSnapshot.get("max_id")).thenReturn(1000L)
+        `when`(mockTransactionManager.executeTransaction(any())).thenReturn(Tasks.forResult(3L))
+        val lobbyId = db.getLobbyId()
+
+        assertEquals(3L, Tasks.await(lobbyId))
+    }
+
+    @Test
+    fun generateSongIdWorks() {
+        `when`(mockSnapshot.exists()).thenReturn(true)
+        `when`(mockSnapshot.get("current_id")).thenReturn(3L)
+        `when`(mockSnapshot.get("max_id")).thenReturn(1000L)
+        `when`(mockTransactionManager.executeTransaction(any())).thenReturn(Tasks.forResult(3L))
+        val songId = db.generateSongId()
+
+        assertEquals(3L, Tasks.await(songId))
     }
 
     @Test
