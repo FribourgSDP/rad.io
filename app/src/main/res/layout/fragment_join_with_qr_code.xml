@@ -12,18 +12,6 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 
-    <!--TextView to display the scanned data-->
-    <TextView
-        android:id="@+id/idTVscanned"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="top"
-        android:background="@color/white"
-        android:padding="5dp"
-        android:text="@string/scanned_data"
-        android:textColor="@color/black" />
-
-    <!--Button for creating a QR code-->
     <Button
         android:id="@+id/cancel_button"
         android:layout_width="match_parent"
