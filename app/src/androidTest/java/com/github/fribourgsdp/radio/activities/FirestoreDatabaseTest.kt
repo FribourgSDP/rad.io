@@ -154,11 +154,11 @@ class FirestoreDatabaseTest {
 
     @Test
     fun modifyingPermissionsWorks(){
-        val db = FirestoreDatabase()
-        val user = User("nathan")
-        user.id = "215"
-        val lobbyId = 123456789L
-        val result = Tasks.withTimeout(db.modifyUserMicPermissions(lobbyId, user, true), 10, TimeUnit.SECONDS)
+        `when`(mockSnapshot.exists()).thenReturn(true)
+        val mockPermissions = hashMapOf(Pair("user1", true), Pair("user2", false))
+        `when`(mockSnapshot.get("permissions")).thenReturn(mockPermissions)
+        `when`(mockTransactionManager.executeMicPermissionsTransaction(any(), anyString(), anyBoolean(), anyLong())).thenReturn(Tasks.forResult(null))
+        val result = db.modifyUserMicPermissions(37, User("nate"), true)
         assertEquals(null, Tasks.await(result))
     }
 

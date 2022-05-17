@@ -77,6 +77,23 @@ open class TransactionManager() {
             Pair(id,nextId)
         }
     }
+    open fun executeMicPermissionsTransaction(docRef: DocumentReference?, userId: String, newPermissions: Boolean, id: Long): Task<Void> {
+        return db.runTransaction { transaction ->
+            val snapshot = transaction.get(docRef!!)
+
+            if (!snapshot.exists()) {
+                throw IllegalArgumentException("Document $id not found.")
+            }
+
+            val playerPermissions = snapshot.getPermissions()
+            playerPermissions[userId] = newPermissions
+
+            transaction.update(docRef, "permissions", playerPermissions)
+
+            // Success
+            null
+        }
+    }
 }
 /**
  *
@@ -496,22 +513,7 @@ class FirestoreDatabase(var refMake: FirestoreRef, var transactionMgr: Transacti
 
     override fun modifyUserMicPermissions(id: Long, user: User, newPermissions: Boolean): Task<Void> {
         val docRef = db.collection("lobby").document(id.toString())
-
-        return db.runTransaction { transaction ->
-            val snapshot = transaction.get(docRef)
-
-            if (!snapshot.exists()) {
-                throw IllegalArgumentException("Document $id not found.")
-            }
-
-            val playerPermissions = snapshot.getPermissions()
-            playerPermissions[user.id] = newPermissions
-
-            transaction.update(docRef, "permissions", playerPermissions)
-
-            // Success
-            null
-        }
+        return transactionMgr.executeMicPermissionsTransaction(docRef, user.id, newPermissions, id)
     }
 
     override fun openGame(id: Long): Task<Void> {
