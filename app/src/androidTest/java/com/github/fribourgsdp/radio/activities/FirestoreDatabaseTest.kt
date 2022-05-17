@@ -153,6 +153,29 @@ class FirestoreDatabaseTest {
     }
 
     @Test
+    fun generateSongIdsWorks() {
+        `when`(mockSnapshot.exists()).thenReturn(true)
+        `when`(mockSnapshot.get("current_id")).thenReturn(3L)
+        `when`(mockSnapshot.get("max_id")).thenReturn(1000L)
+        `when`(mockTransactionManager.executeIdTransaction(any(), anyString(), anyString(), anyInt())).thenReturn(Tasks.forResult(Pair(3L, 6L)))
+
+        val songIds = db.generateSongIds(3)
+        assertEquals(Pair(3L, 6L), Tasks.await(songIds))
+    }
+
+    @Test
+    fun generatePlaylistIdWorks() {
+        `when`(mockSnapshot.exists()).thenReturn(true)
+        `when`(mockSnapshot.get("current_id")).thenReturn(3L)
+        `when`(mockSnapshot.get("max_id")).thenReturn(1000L)
+        `when`(mockTransactionManager.executeIdTransaction(any(), anyString(), anyString(), anyInt())).thenReturn(Tasks.forResult(Pair(3L, 4L)))
+
+
+        val playlistId = db.generatePlaylistId()
+        assertEquals(3L, Tasks.await(playlistId))
+    }
+
+    @Test
     fun modifyingPermissionsWorks(){
         `when`(mockSnapshot.exists()).thenReturn(true)
         val mockPermissions = hashMapOf(Pair("user1", true), Pair("user2", false))
