@@ -22,8 +22,11 @@ import com.github.fribourgsdp.radio.MainActivity
 import com.github.fribourgsdp.radio.R
 import com.github.fribourgsdp.radio.config.SettingsActivity
 import com.github.fribourgsdp.radio.config.language.Language
+import com.github.fribourgsdp.radio.config.language.LanguageManager
 import com.github.fribourgsdp.radio.mockimplementations.MockSettingsActivity
+import com.google.firebase.auth.AuthResult
 import org.hamcrest.Matchers.*
+import org.mockito.Mockito
 
 
 @RunWith(AndroidJUnit4::class)
@@ -73,4 +76,10 @@ class SettingsActivityTest {
 
         }
     }
+}
+
+
+fun makeMockLanguageManager() : LanguageManager{
+    val mockLanguageManager: LanguageManager = Mockito.mock(LanguageManager::class.java)
+    return mockLanguageManager
 }
