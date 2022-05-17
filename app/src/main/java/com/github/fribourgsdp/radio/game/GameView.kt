@@ -1,6 +1,7 @@
 package com.github.fribourgsdp.radio.game
 
 import com.github.fribourgsdp.radio.game.timer.Timer
+import com.github.fribourgsdp.radio.util.SongNameHint
 
 interface GameView: Timer.DeadlineHandler {
     /**
@@ -71,6 +72,9 @@ interface GameView: Timer.DeadlineHandler {
      * Update the [lyrics] of the current song in the game
      */
     fun updateLyrics(lyrics : String)
+
+
+    fun addHint(songNameHint: SongNameHint)
 
     /**
      * An interface creating listeners able to handle songs pick in a [GameView].
