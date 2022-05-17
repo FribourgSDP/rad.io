@@ -16,6 +16,7 @@ const val TRACK_SEARCH = "track.search"
 const val QUERY_TRACK_FIELD = "q_track"
 const val QUERY_ARTIST_FIELD = "q_artist"
 const val SORT_CONDITION = "s_artist_rating=desc"
+const val REPLACEMENT_STRING = "tralala"
 
 interface LyricsGetter{
     fun getLyrics(songName: String,artistName: String = "",client: OkHttpClient = OkHttpClient(),parser: JSONParser = JSONStandardParser()): CompletableFuture<String>
@@ -174,6 +175,15 @@ object MusixmatchLyricsGetter : LyricsGetter {
             lyrics
                 .replace(name, "<strike>${name[0].uppercase() + name.lowercase().substring(1)}</strike>", ignoreCase = true)
                 .replace("\n", "<br>")
+    }
+
+    /**
+     * Cancels the effect of previous function, replacing marked name of song with [REPLACEMENT_STRING]
+     */
+    fun makeReadable(lyrics: String) : String{
+        return lyrics
+            .replace("<br>", "\n")
+            .replace(Regex("<strike>.+</strike>"), REPLACEMENT_STRING)
     }
 
     /**
