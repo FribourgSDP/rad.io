@@ -28,14 +28,32 @@ import kotlin.collections.HashMap
  */
 open class FirestoreRef {
     val db = Firebase.firestore
-    open fun getUserRef(userId : String) : DocumentReference{
+    open fun getUserRef(userId : String) : DocumentReference {
         return db.collection("user").document(userId)
     }
-    open fun getSongRef(songId : String) : DocumentReference{
+    open fun getSongRef(songId : String) : DocumentReference {
         return db.collection("songs").document(songId)
     }
-    open fun getPlaylistRef(playlistId : String) : DocumentReference{
+    open fun getPlaylistRef(playlistId : String) : DocumentReference {
         return db.collection("playlists").document(playlistId)
+    }
+    open fun getLobbyRef(lobbyId: String) : DocumentReference {
+        return db.collection("lobby").document(lobbyId)
+    }
+    open fun getGameRef(gameId: String) : DocumentReference {
+        return db.collection("games").document(gameId)
+    }
+    open fun getGameMetadataRef(gameId: String) : DocumentReference {
+        return db.collection("games_metadata").document(gameId)
+    }
+    open fun getPlaylistInfoMetadataRef() : DocumentReference {
+        return db.collection("metadata").document("PlaylistInfo")
+    }
+    open fun getSongInfoMetadataRef() : DocumentReference {
+        return db.collection("metadata").document("SongInfo")
+    }
+    open fun getUserInfoMetadataRef() : DocumentReference {
+        return db.collection("metadata").document("UserInfo")
     }
 }
 /**

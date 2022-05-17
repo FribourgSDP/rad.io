@@ -39,8 +39,6 @@ class FirestoreDatabaseTest {
     private lateinit var db : FirestoreDatabase
     @Before
     fun setup(){
-
-
         mockFirestoreRef = mock(FirestoreRef::class.java)
         mockSnapshot = mock(DocumentSnapshot::class.java)
         mockDocumentReference = mock(DocumentReference::class.java)
@@ -53,7 +51,12 @@ class FirestoreDatabaseTest {
         `when`(mockFirestoreRef.getUserRef((anyString()))).thenReturn(mockDocumentReference)
         `when`(mockFirestoreRef.getSongRef(anyString())).thenReturn(mockDocumentReference)
         `when`(mockFirestoreRef.getPlaylistRef((anyString()))).thenReturn(mockDocumentReference)
-
+        `when`(mockFirestoreRef.getLobbyRef((anyString()))).thenReturn(mockDocumentReference)
+        `when`(mockFirestoreRef.getGameRef((anyString()))).thenReturn(mockDocumentReference)
+        `when`(mockFirestoreRef.getGameMetadataRef((anyString()))).thenReturn(mockDocumentReference)
+        `when`(mockFirestoreRef.getPlaylistInfoMetadataRef()).thenReturn(mockDocumentReference)
+        `when`(mockFirestoreRef.getSongInfoMetadataRef()).thenReturn(mockDocumentReference)
+        `when`(mockFirestoreRef.getUserInfoMetadataRef()).thenReturn(mockDocumentReference)
     }
     @Test
     fun registeringUserAndFetchingItWorks(){
@@ -81,7 +84,6 @@ class FirestoreDatabaseTest {
 
     @Test
     fun  registerSongAndFetchingItWorks(){
-
         `when`(mockSnapshot.exists()).thenReturn(true)
 
         `when`(mockSnapshot.get("songName")).thenReturn("song1")
@@ -92,7 +94,6 @@ class FirestoreDatabaseTest {
         db.registerSong(song1)
         val song = Tasks.await(db.getSong("idTest1"))
         assertEquals(song1,song)
-
     }
    
 
