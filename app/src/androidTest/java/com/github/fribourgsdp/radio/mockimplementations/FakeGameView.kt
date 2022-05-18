@@ -2,6 +2,7 @@ package com.github.fribourgsdp.radio.mockimplementations
 
 import android.view.View
 import com.github.fribourgsdp.radio.game.GameView
+import com.github.fribourgsdp.radio.util.SongNameHint
 import java.util.*
 import kotlin.collections.HashMap
 
@@ -88,6 +89,10 @@ class FakeGameView(private val playerID: String = ""): GameView {
 
     override fun updateLyrics(lyrics: String) {
         lyricsDisplayed = lyrics
+    }
+
+    override fun addHint(songNameHint: SongNameHint) {
+        TODO("Not yet implemented")
     }
 
 }
