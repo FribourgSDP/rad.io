@@ -383,10 +383,10 @@ class GameActivityTest {
         ActivityScenario.launch<MockGameActivity>(testIntent).use { scenario ->
             scenario.onActivity {
                 it.addHint(songNameHint)
-                it.updateHint(5)
-                it.updateHint(10)
-                it.updateHint(15)
-                it.updateHint(20)
+                it.updateHint(45)
+                it.updateHint(90)
+                it.updateHint(135)
+                it.updateHint(180)
             }
 
             onView(withId(R.id.hintTextView))
