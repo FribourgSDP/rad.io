@@ -84,12 +84,15 @@ open class SettingsActivity : MyAppCompatActivity() {
 
 
     private fun setLocale(language : String){
-        val languageManager  = LanguageManager(this)
+        val languageManager  = getLanguageManager()
         languageManager.setLang(language)
         val refresh = Intent(this, SettingsActivity::class.java)
         finish()
         startActivity(refresh)
     }
 
+    protected open fun getLanguageManager() : LanguageManager{
+        return LanguageManager(this)
+    }
 
 }
