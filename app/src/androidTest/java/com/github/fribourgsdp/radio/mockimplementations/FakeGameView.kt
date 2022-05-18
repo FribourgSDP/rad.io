@@ -92,7 +92,6 @@ class FakeGameView(private val playerID: String = ""): GameView {
     }
 
     override fun addHint(songNameHint: SongNameHint) {
-        TODO("Not yet implemented")
     }
 
 }
