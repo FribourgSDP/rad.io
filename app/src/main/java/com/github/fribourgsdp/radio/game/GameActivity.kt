@@ -31,6 +31,7 @@ import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.json.Json
 import java.util.*
 import kotlin.math.absoluteValue
+import kotlin.math.ceil
 import kotlin.properties.Delegates
 
 
@@ -328,7 +329,8 @@ open class GameActivity : AppCompatActivity(), GameView, Timer.Listener {
 
     fun updateHint(timeInSeconds: Int){
         if(withHint && hintTextView.visibility == View.VISIBLE) {
-            if(timeInSeconds - lastTime >= 5) {
+            val limit = ceil(gameDuration/ (ceil(songNameHint.length()/2.0)+1))
+            if(timeInSeconds - lastTime >= limit) {
                 songNameHint.addALetter()
                 hintTextView.text = this.songNameHint.toString()
                 lastTime = timeInSeconds

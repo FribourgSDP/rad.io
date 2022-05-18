@@ -21,6 +21,10 @@ class SongNameHint(val songName : String) {
         }
     }
 
+    fun length():Int{
+        return songName.length
+    }
+
     override fun toString(): String {
         return songNameHint
     }
