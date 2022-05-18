@@ -326,7 +326,7 @@ open class GameActivity : AppCompatActivity(), GameView, Timer.Listener {
         }
     }
 
-    private fun updateHint(timeInSeconds: Int){
+    fun updateHint(timeInSeconds: Int){
         if(withHint && hintTextView.visibility == View.VISIBLE) {
             if(timeInSeconds - lastTime >= 5) {
                 songNameHint.addALetter()

@@ -3,15 +3,18 @@ package com.github.fribourgsdp.radio.activities
 
 import android.content.Context
 import android.content.Intent
+import android.view.View
 import androidx.test.core.app.ActivityScenario
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.espresso.Espresso
 import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.action.ViewActions
+import androidx.test.espresso.assertion.ViewAssertions
 import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.intent.Intents
 import androidx.test.espresso.intent.matcher.IntentMatchers
 import androidx.test.espresso.matcher.RootMatchers.isDialog
+import androidx.test.espresso.matcher.ViewMatchers
 import androidx.test.espresso.matcher.ViewMatchers.*
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.github.fribourgsdp.radio.R
@@ -19,9 +22,11 @@ import com.github.fribourgsdp.radio.data.Playlist
 import com.github.fribourgsdp.radio.data.User
 import com.github.fribourgsdp.radio.external.musixmatch.MusixmatchLyricsGetter
 import com.github.fribourgsdp.radio.game.*
+import com.github.fribourgsdp.radio.game.prep.GAME_HINT_KEY
 import com.github.fribourgsdp.radio.game.prep.GAME_IS_HOST_KEY
 import com.github.fribourgsdp.radio.game.prep.GAME_KEY
 import com.github.fribourgsdp.radio.mockimplementations.MockGameActivity
+import com.github.fribourgsdp.radio.util.SongNameHint
 import com.github.fribourgsdp.radio.utils.CustomMatchers.Companion.atPosition
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
@@ -219,8 +224,8 @@ class GameActivityTest {
             "singer2" to 100L
         )
 
-        val testIntent = Intent(ctx, GameActivity::class.java)
-        ActivityScenario.launch<GameActivity>(testIntent).use { scenario ->
+        val testIntent = Intent(ctx, MockGameActivity::class.java)
+        ActivityScenario.launch<MockGameActivity>(testIntent).use { scenario ->
             scenario.onActivity {
                 it.displayPlayerScores(scores)
             }
@@ -240,8 +245,8 @@ class GameActivityTest {
 
     @Test
     fun testDisplayLyrics() {
-        val testIntent = Intent(ctx, GameActivity::class.java)
-        ActivityScenario.launch<GameActivity>(testIntent).use { scenario ->
+        val testIntent = Intent(ctx, MockGameActivity::class.java)
+        ActivityScenario.launch<MockGameActivity>(testIntent).use { scenario ->
             scenario.onActivity {
                 it.updateLyrics("Lorem ipsum, dolor sit amet")
                 // Display the song to see if the button is displayed
@@ -256,8 +261,8 @@ class GameActivityTest {
 
     @Test
     fun testDisplayLyricsNotShownWhenEmpty() {
-        val testIntent = Intent(ctx, GameActivity::class.java)
-        ActivityScenario.launch<GameActivity>(testIntent).use { scenario ->
+        val testIntent = Intent(ctx, MockGameActivity::class.java)
+        ActivityScenario.launch<MockGameActivity>(testIntent).use { scenario ->
             scenario.onActivity {
                 it.updateLyrics("")
                 // Display the song to see if the button is displayed
@@ -272,8 +277,8 @@ class GameActivityTest {
 
     @Test
     fun testDisplayLyricsNotShownWhenUnavailable() {
-        val testIntent = Intent(ctx, GameActivity::class.java)
-        ActivityScenario.launch<GameActivity>(testIntent).use { scenario ->
+        val testIntent = Intent(ctx, MockGameActivity::class.java)
+        ActivityScenario.launch<MockGameActivity>(testIntent).use { scenario ->
             scenario.onActivity {
                 it.updateLyrics(MusixmatchLyricsGetter.LYRICS_NOT_FOUND_PLACEHOLDER)
                 // Display the song to see if the button is displayed
@@ -294,8 +299,8 @@ class GameActivityTest {
             "singer2" to 100L
         )
 
-        val testIntent = Intent(ctx, GameActivity::class.java)
-        ActivityScenario.launch<GameActivity>(testIntent).use { scenario ->
+        val testIntent = Intent(ctx, MockGameActivity::class.java)
+        ActivityScenario.launch<MockGameActivity>(testIntent).use { scenario ->
             scenario.onActivity {
                 it.gameOver(scores)
             }
@@ -309,4 +314,92 @@ class GameActivityTest {
             )
         }
     }
+
+
+
+    @Test
+    fun addHintCorrectly() {
+
+        val songNameHint = SongNameHint("chanson")
+        val testIntent = Intent(ctx, MockGameActivity::class.java).putExtra(GAME_HINT_KEY, true)
+        ActivityScenario.launch<MockGameActivity>(testIntent).use { scenario ->
+            scenario.onActivity {
+                it.addHint(songNameHint)
+            }
+
+            onView(withId(R.id.hintTextView))
+                .check(matches(isDisplayed()))
+        }
+    }
+
+
+    @Test
+    fun removeHintCorrectly() {
+
+        val songNameHint = SongNameHint("chanson")
+        val testIntent = Intent(ctx, MockGameActivity::class.java).putExtra(GAME_HINT_KEY, true)
+        ActivityScenario.launch<MockGameActivity>(testIntent).use { scenario ->
+            scenario.onActivity {
+                it.addHint(songNameHint)
+                it.displaySong("chanson")
+            }
+
+            onView(withId(R.id.hintTextView))
+                .check(matches(not(isDisplayed())))
+        }
+    }
+
+
+    @Test
+    fun addNoLetterHintCorrectly() {
+
+        val songNameHint = SongNameHint("chanson")
+        val testIntent = Intent(ctx, MockGameActivity::class.java).putExtra(GAME_HINT_KEY, true)
+        ActivityScenario.launch<MockGameActivity>(testIntent).use { scenario ->
+            scenario.onActivity {
+                it.addHint(songNameHint)
+                it.updateHint(0)
+            }
+
+            onView(withId(R.id.hintTextView))
+                .check(matches(isDisplayed()))
+
+
+            val txtView = onView(ViewMatchers.withId(R.id.hintTextView))
+            txtView.check(
+                matches(
+                    withText("_______")
+                )
+            )
+        }
+    }
+
+
+    @Test
+    fun addAllLetterHintCorrectly() {
+
+        val songNameHint = SongNameHint("song")
+        val testIntent = Intent(ctx, MockGameActivity::class.java).putExtra(GAME_HINT_KEY, true)
+        ActivityScenario.launch<MockGameActivity>(testIntent).use { scenario ->
+            scenario.onActivity {
+                it.addHint(songNameHint)
+                it.updateHint(5)
+                it.updateHint(10)
+                it.updateHint(15)
+                it.updateHint(20)
+            }
+
+            onView(withId(R.id.hintTextView))
+                .check(matches(isDisplayed()))
+
+
+            val txtView = onView(ViewMatchers.withId(R.id.hintTextView))
+            txtView.check(
+                matches(
+                    withText("song")
+                )
+            )
+        }
+    }
 }
+
