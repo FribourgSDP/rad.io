@@ -112,7 +112,7 @@ open class GameActivity : AppCompatActivity(), GameView, Timer.Listener {
     }
 
     override fun displaySong(songName: String) {
-        // Close the lyrics popup if already open
+        //Close any active popup if open
         closePopups()
 
         // Hide the edit text and the submit button
@@ -131,7 +131,7 @@ open class GameActivity : AppCompatActivity(), GameView, Timer.Listener {
     }
 
     override fun displayGuessInput() {
-        // Close the lyrics popup if already open
+        //Close any active popup if open
         closePopups()
 
         // Hide the song view
@@ -148,7 +148,7 @@ open class GameActivity : AppCompatActivity(), GameView, Timer.Listener {
     }
 
     override fun displayError(errorMessage: String) {
-        // Close the lyrics popup if already open
+        //Close any active popup if open
         closePopups()
 
         // Show the error
@@ -173,7 +173,7 @@ open class GameActivity : AppCompatActivity(), GameView, Timer.Listener {
     }
 
     override fun displayPlayerScores(playerScores: Map<String, Long>) {
-        // Close the lyrics popup if already open
+        //Close any active popup if open
         closePopups()
 
         scoresAdapter.updateScore(
@@ -299,7 +299,7 @@ open class GameActivity : AppCompatActivity(), GameView, Timer.Listener {
     }
     
     override fun updateLyrics(lyrics : String) {
-        // Close the lyrics popup if already open
+        //Close any active popup if open
         closePopups()
         
         lyricsPopup = if(lyrics.isNotEmpty() && lyrics != LYRICS_NOT_FOUND_PLACEHOLDER)  LyricsPopup(lyrics)
