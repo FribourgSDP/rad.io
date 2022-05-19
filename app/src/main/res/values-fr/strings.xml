@@ -123,4 +123,7 @@
     <string name="noSingModeCheckbox">Paroles lues par un robot !</string>
     <string name="with_singer_format">Avec chanteur : %b</string>
     <string name="listen">Ecoute !</string>
+    <string name="cantUseTextToSpeech">La synthèse vocale ne peut pas être utilisée.</string>
+    <string name="ttsWeCantSupportYourLanguage">Cette langue n\'est pas supportée sur cet appareil.</string>
+    <string name="TextToSpeechInitializationFailed">La synthèse vocale n\'a pas pu être initialisée.</string>
 </resources>

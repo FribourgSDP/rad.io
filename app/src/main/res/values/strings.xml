@@ -122,5 +122,8 @@
     <string name="noSingModeCheckbox">Lyrics read by bot !</string>
     <string name="with_singer_format">With singer : %b</string>
     <string name="listen">Listen !</string>
+    <string name="cantUseTextToSpeech">Cannot use the Text-to-speech engine.</string>
+    <string name="ttsWeCantSupportYourLanguage">We can\'t support your language on this device.</string>
+    <string name="TextToSpeechInitializationFailed">Text-to-speech engine could not be initialized properly.</string>
 </resources>
 
