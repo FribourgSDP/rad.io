@@ -64,8 +64,6 @@ open class UserProfileActivity : MyAppCompatActivity(), KeepOrDismissPlaylistDia
         instantiateViews()
 
 
-        val fromGoogle = intent.getBooleanExtra("FromGoogle",false)
-
         User.loadOrDefault(this).addOnSuccessListener { u ->
             user = u
             checkUser()
@@ -78,10 +76,6 @@ open class UserProfileActivity : MyAppCompatActivity(), KeepOrDismissPlaylistDia
             bundle.putString(USER_DATA, Json.encodeToString(user))
             MyFragment.beginTransaction<UserPlaylistsFragment>(supportFragmentManager, bundle)
 
-            /*if(fromGoogle){
-                //check if the connection was sucessful, if yes, do the afterSignInProcedure
-                afterSignInProcedure()
-            }*/
         }
 
         launchSpotifyButton.setOnClickListener {
