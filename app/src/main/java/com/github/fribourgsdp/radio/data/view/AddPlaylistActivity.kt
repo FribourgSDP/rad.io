@@ -23,7 +23,7 @@ import com.github.fribourgsdp.radio.database.FirestoreDatabase
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.json.Json
 
-class AddPlaylistActivity : DatabaseHolder, MyAppCompatActivity(), SavePlaylistOnlinePickerDialog.OnPickListener {
+open class AddPlaylistActivity : DatabaseHolder, MyAppCompatActivity(), SavePlaylistOnlinePickerDialog.OnPickListener {
 
     private val listSongs = ArrayList<Song>()
     private var listNames = ArrayList<String>()
