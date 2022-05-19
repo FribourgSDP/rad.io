@@ -21,10 +21,7 @@ import com.github.fribourgsdp.radio.game.handler.PlayerGameHandler
 import com.github.fribourgsdp.radio.game.prep.*
 import com.github.fribourgsdp.radio.game.timer.Timer
 import com.github.fribourgsdp.radio.game.timer.TimerProgressBarHandler
-import com.github.fribourgsdp.radio.game.view.LyricsPopup
-import com.github.fribourgsdp.radio.game.view.QuitGameOrLobbyDialog
-import com.github.fribourgsdp.radio.game.view.ScoresAdapter
-import com.github.fribourgsdp.radio.game.view.SongPickerDialog
+import com.github.fribourgsdp.radio.game.view.*
 import com.github.fribourgsdp.radio.voip.MyIRtcEngineEventHandler
 import com.github.fribourgsdp.radio.voip.VoiceIpEngineDecorator
 import io.agora.rtc.Constants
@@ -49,6 +46,7 @@ open class GameActivity : AppCompatActivity(), GameView, Timer.Listener, TextToS
     private lateinit var songTextView : TextView
     private lateinit var errorOrFailureTextView : TextView
     private var lyricsPopup : LyricsPopup? = null
+    private var cantQuitGamePopup : CannotQuitDialog? = null
     private lateinit var songGuessEditText : EditText
     private lateinit var muteButton : ImageButton
     private lateinit var songGuessSubmitButton: Button
@@ -130,8 +128,8 @@ open class GameActivity : AppCompatActivity(), GameView, Timer.Listener, TextToS
     }
 
     override fun displaySong(songName: String) {
-        // Close the lyrics popup if already open
-        closeLyricsPopup()
+        //Close any active popup if open
+        closePopups()
 
         // Hide the edit text and the submit button
         if(!noSing) {
@@ -151,8 +149,8 @@ open class GameActivity : AppCompatActivity(), GameView, Timer.Listener, TextToS
     }
 
     override fun displayGuessInput() {
-        // Close the lyrics popup if already open
-        closeLyricsPopup()
+        //Close any active popup if open
+        closePopups()
 
         // Hide the song view
         songTextView.visibility = View.GONE
@@ -168,8 +166,8 @@ open class GameActivity : AppCompatActivity(), GameView, Timer.Listener, TextToS
     }
 
     override fun displayError(errorMessage: String) {
-        // Close the lyrics popup if already open
-        closeLyricsPopup()
+        //Close any active popup if open
+        closePopups()
 
         // Show the error
         errorOrFailureTextView.apply {
@@ -193,8 +191,8 @@ open class GameActivity : AppCompatActivity(), GameView, Timer.Listener, TextToS
     }
 
     override fun displayPlayerScores(playerScores: Map<String, Long>) {
-        // Close the lyrics popup if already open
-        closeLyricsPopup()
+        //Close any active popup if open
+        closePopups()
 
         scoresAdapter.updateScore(
             // Replace ids by names
@@ -274,9 +272,9 @@ open class GameActivity : AppCompatActivity(), GameView, Timer.Listener, TextToS
 
     protected open fun initVoiceChat(gameUid: Long) {
 
-        val map = mapIdToName.mapKeys { it.hashCode().absoluteValue }
+        val map = mapIdToName.mapKeys { it.key.hashCode().absoluteValue }
         if (!this::voiceChannel.isInitialized) voiceChannel = VoiceIpEngineDecorator(this, MyIRtcEngineEventHandler(this, map))
-        val userId = user.name.hashCode().absoluteValue
+        val userId = user.id.hashCode().absoluteValue
         voiceChannel.setAudioProfile(Constants.AUDIO_PROFILE_MUSIC_STANDARD, Constants.AUDIO_SCENARIO_CHATROOM_ENTERTAINMENT);
         voiceChannel.enableAudioVolumeIndication(200,3,true)
         voiceChannel.setDefaultAudioRoutetoSpeakerphone(true)
@@ -301,20 +299,26 @@ open class GameActivity : AppCompatActivity(), GameView, Timer.Listener, TextToS
     }
 
     override fun onBackPressed() {
-        val warningDisplay = QuitGameOrLobbyDialog(this)
-        warningDisplay.show(supportFragmentManager, "warningForQuittingLobby")
-        supportFragmentManager
-            .setFragmentResultListener("quitRequest", this) { _, bundle ->
-                val hasQuit = bundle.getBoolean("hasQuit")
-                if (hasQuit) {
-                    returnToMainMenu()
+        if (isHost) {
+            val warningDisplay = QuitGameOrLobbyDialog(this)
+            warningDisplay.show(supportFragmentManager, "warningForQuittingLobby")
+            supportFragmentManager
+                .setFragmentResultListener("quitRequest", this) { _, bundle ->
+                    val hasQuit = bundle.getBoolean("hasQuit")
+                    if (hasQuit) {
+                        returnToMainMenu()
+                    }
                 }
-            }
+        }
+        else {
+            cantQuitGamePopup = CannotQuitDialog(this)
+            cantQuitGamePopup?.show(supportFragmentManager, "cannotQuitGame")
+        }
     }
     
     override fun updateLyrics(lyrics : String) {
-        // Close the lyrics popup if already open
-        closeLyricsPopup()
+        //Close any active popup if open
+        closePopups()
         
         lyricsPopup = if(lyrics.isNotEmpty() && lyrics != LYRICS_NOT_FOUND_PLACEHOLDER)  LyricsPopup(lyrics)
             else null
@@ -360,8 +364,14 @@ open class GameActivity : AppCompatActivity(), GameView, Timer.Listener, TextToS
         singerTextView.text = getString(R.string.listen)
     }
 
-    private fun closeLyricsPopup() {
+   
+    private fun closePopups(){
         lyricsPopup?.let {
+            if (it.isVisible) {
+                it.dismiss()
+            }
+        }
+        cantQuitGamePopup?.let {
             if (it.isVisible) {
                 it.dismiss()
             }
