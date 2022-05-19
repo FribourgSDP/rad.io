@@ -74,6 +74,10 @@ interface GameView: Timer.DeadlineHandler {
     fun updateLyrics(lyrics : String)
 
 
+    /**
+    * Displays HintTextView, and updates the name song hint
+    * @param songNameHint the new song name hint
+     */
     fun addHint(songNameHint: SongNameHint)
 
     /**
