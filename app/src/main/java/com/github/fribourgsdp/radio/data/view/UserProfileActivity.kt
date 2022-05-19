@@ -120,7 +120,11 @@ open class UserProfileActivity : MyAppCompatActivity(), KeepOrDismissPlaylistDia
         user.name = usernameField.text.toString()
         //at this point, the userId should be the firebaseUser.uid
         if(user.isGoogleUser){
-            db.setUser(user.id,user)
+            //remove all n
+
+
+            val onlineUser = user.onlineCopy()
+            db.setUser(onlineUser.id,onlineUser)
         }else{
             val userWithoutPlaylist = user
             userWithoutPlaylist.removePlaylists(user.getPlaylists())
@@ -182,7 +186,9 @@ open class UserProfileActivity : MyAppCompatActivity(), KeepOrDismissPlaylistDia
             user.isGoogleUser = true
             user.name = it.result.name
             user.id = it.result.id
-            db.setUser(user.id,user)
+            val onlineUser = user.onlineCopy()
+            db.setUser(onlineUser.id,onlineUser)
+
         }
     }
     private fun importPlaylist() : Task<Unit>{
@@ -200,7 +206,8 @@ open class UserProfileActivity : MyAppCompatActivity(), KeepOrDismissPlaylistDia
             user.name = it.result.name
             user.id = it.result.id
             user.isGoogleUser = true
-            db.setUser(user.id,user)
+            val onlineUser = user.onlineCopy()
+            db.setUser(onlineUser.id,onlineUser)
         }
     }
 
