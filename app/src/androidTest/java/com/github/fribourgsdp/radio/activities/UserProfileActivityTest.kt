@@ -153,7 +153,7 @@ class UserProfileActivityTest : TestCase() {
         ActivityScenario.launch<UserProfileActivity>(intent).use {scenario ->
 
             scenario.onActivity { a ->
-                a.loginFromGoogle()
+                a.loginFromGoogle(0)
             }
 
             onView(ViewMatchers.withText(R.string.MergeImportDismissPlaylistText)) // Look for the dialog => use its title
@@ -177,7 +177,7 @@ class UserProfileActivityTest : TestCase() {
             ActivityScenario.launch<UserProfileActivity>(intent).use {scenario ->
 
                 scenario.onActivity { a ->
-                    a.loginFromGoogle()
+                    a.loginFromGoogle(0)
                 }
 
                 onView(ViewMatchers.withText(R.string.MergeImportDismissPlaylistText)) // Look for the dialog => use its title
@@ -202,7 +202,7 @@ class UserProfileActivityTest : TestCase() {
         ActivityScenario.launch<UserProfileActivity>(intent).use {scenario ->
 
             scenario.onActivity { a ->
-                a.loginFromGoogle()
+                a.loginFromGoogle(0)
             }
 
             onView(ViewMatchers.withText(R.string.MergeImportDismissPlaylistText)) // Look for the dialog => use its title

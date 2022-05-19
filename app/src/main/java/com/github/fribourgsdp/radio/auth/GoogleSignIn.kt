@@ -61,11 +61,13 @@ class GoogleSignIn(val activity: UserProfileActivity, serverClientId : String) {
             }
     }
 
-
-    fun signIn(){
+    fun signIn(firebaseAuth : FirebaseAuth = FirebaseAuth.getInstance()){
         //init firebase auth
-        firebaseAuth = FirebaseAuth.getInstance()
-        if(!checkUser()) {
+        this.firebaseAuth = firebaseAuth
+
+        if(checkUser()) {
+            activity.loginFromGoogle(2)
+        }else{
             val intent = googleSignInClient.signInIntent
             launcher.launch(intent)
         }
@@ -74,22 +76,25 @@ class GoogleSignIn(val activity: UserProfileActivity, serverClientId : String) {
     fun firebaseAuthWithCredentitial(credential: AuthCredential, firebaseAuth: FirebaseAuth) {
         firebaseAuth.signInWithCredential(credential).addOnSuccessListener { authResult ->
             //login success
-
+            var isNew = 0
             //check if user is new or existing
             if (authResult.additionalUserInfo!!.isNewUser) {
                 //user is new - Account Create
                 // val mail = saveUserInDatabse(authResult)
                 //saveTestUser(this, mail)
+                isNew = 1
                 Toast.makeText(activity, "Account created", Toast.LENGTH_SHORT)
                     .show()
+
+                activity.loginFromGoogle(1)
             } else {
                 //existing user - LoggedIn
                 Toast.makeText(activity, "LoggedIn", Toast.LENGTH_SHORT).show()
-            }
-            //start profile activity
 
-            //TODO FROM GOOGLE TRUE
-            activity.loginFromGoogle()
+                activity.loginFromGoogle(0)
+            }
+
+
         }
             .addOnFailureListener { e ->
                 //login failed
@@ -98,7 +103,7 @@ class GoogleSignIn(val activity: UserProfileActivity, serverClientId : String) {
                     Toast.LENGTH_SHORT
                 ).show()
 
-                //TODO FROM GOOGLE FALSE
+                activity.loginFromGoogle(-1)
             }
     }
 

@@ -17,6 +17,7 @@ import android.widget.TextView
 import com.github.fribourgsdp.radio.*
 import com.github.fribourgsdp.radio.auth.GoogleSignIn
 import com.github.fribourgsdp.radio.config.MyAppCompatActivity
+import com.github.fribourgsdp.radio.config.SettingsActivity
 import com.github.fribourgsdp.radio.data.User
 import com.github.fribourgsdp.radio.database.DatabaseHolder
 import com.github.fribourgsdp.radio.external.google.GoogleSignInActivity
@@ -51,7 +52,7 @@ open class UserProfileActivity : MyAppCompatActivity(), KeepOrDismissPlaylistDia
 
     private var db = initializeDatabase()
 
-    lateinit var googleSignIn : GoogleSignIn
+    protected lateinit var googleSignIn : GoogleSignIn
 
     //firebase auth
     private lateinit var firebaseAuth: FirebaseAuth
@@ -100,16 +101,20 @@ open class UserProfileActivity : MyAppCompatActivity(), KeepOrDismissPlaylistDia
         }
 
         googleSignInButton.setOnClickListener {
-            if (signedIn) {
-                signOut()
-            } else {
-
-                googleSignIn.signIn()
-                //startActivity(Intent(this, GoogleSignInActivity::class.java))
-            }
+            signInOrOut()
         }
         findViewById<FloatingActionButton>(R.id.addPlaylistButton).setOnClickListener{startActivity(Intent(this, AddPlaylistActivity::class.java))}
 
+    }
+
+    open fun signInOrOut(){
+        if (signedIn) {
+            signOut()
+        } else {
+
+            googleSignIn.signIn()
+            //startActivity(Intent(this, GoogleSignInActivity::class.java))
+        }
     }
 
     private fun instantiateViews(){
@@ -236,9 +241,11 @@ open class UserProfileActivity : MyAppCompatActivity(), KeepOrDismissPlaylistDia
 
     }
 
-
-    fun loginFromGoogle(){
-        afterSignInProcedure()
+    //return -1 if fail, 2 if already logged and when it success 1 for new user and 0 otherwise
+    open fun loginFromGoogle(code : Int) {
+        if(code == 0 || code == 1) {
+            afterSignInProcedure()
+        }
     }
 
 
@@ -249,8 +256,6 @@ open class UserProfileActivity : MyAppCompatActivity(), KeepOrDismissPlaylistDia
         user.save(this)
         val mergeDismissImportPlaylistPicker = MergeDismissImportPlaylistDialog(this)
         mergeDismissImportPlaylistPicker.show(supportFragmentManager, "mergeDismissImportPlaylistPicker")
-
-
     }
 
     private fun signOut(){
