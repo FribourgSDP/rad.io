@@ -11,6 +11,7 @@ import com.github.fribourgsdp.radio.game.prep.DEFAULT_GAME_DURATION
 import com.github.fribourgsdp.radio.game.timer.Timer
 import com.github.fribourgsdp.radio.util.NOT_THE_SAME
 import com.github.fribourgsdp.radio.util.StringComparisons
+import com.github.fribourgsdp.radio.util.getAndCast
 import com.google.firebase.firestore.DocumentSnapshot
 
 class PlayerGameHandler(
@@ -145,17 +146,17 @@ class PlayerGameHandler(
     }
 
     private fun updateLyrics(snapshot: DocumentSnapshot){
-        val lyricsHashMap =
-            snapshot.get("song_choices_lyrics")!! as Map<String, String>
-        val lyrics = lyricsHashMap[songToGuess!!]
-        view.updateLyrics(lyrics!!)
+        view.updateLyrics(getLyricsFromSnapshot(snapshot))
     }
 
     private fun readLyrics(snapshot: DocumentSnapshot){
+        view.readLyrics(getLyricsFromSnapshot(snapshot))
+    }
+
+    private fun getLyricsFromSnapshot(snapshot: DocumentSnapshot) : String {
         val lyricsHashMap =
-            snapshot.get("song_choices_lyrics")!! as Map<String, String>
-        val lyrics = lyricsHashMap[songToGuess!!]
-        view.readLyrics(lyrics!!)
+            snapshot.getAndCast<Map<String, String>>("song_choices_lyrics")
+        return lyricsHashMap[songToGuess!!]!!
     }
 
     private fun chooseSong(snapshot: DocumentSnapshot){
