@@ -74,6 +74,8 @@ open class PlaylistSongsFragment : MyFragment(R.layout.fragment_playlist_display
                 playlist.saveOnline()
             }.addOnSuccessListener {
                 user.save(requireContext())
+                val onlineUser = user.onlineCopy()
+                db.setUser(onlineUser.id,onlineUser)
                 saveOnlineButton.visibility = View.INVISIBLE
             }
         }
