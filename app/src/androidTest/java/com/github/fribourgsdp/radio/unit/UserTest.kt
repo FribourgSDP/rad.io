@@ -161,4 +161,23 @@ class UserTest {
         user.addPlaylists(setOf(playlist1,playlist2, playlist3))
         user.getPlaylistWithName("doesNotExist")
     }
+
+    @Test
+    fun onlineCopyReturnsUserWithOnlyOnlinePlaylists(){
+        val user = User("test1")
+        val playlist1 = Playlist("test", Genre.ROCK)
+        val playlist2 = Playlist("test2", Genre.POP)
+        playlist1.savedOnline = true
+        user.addPlaylist(playlist1)
+        user.addPlaylist(playlist2)
+        val user2 = user.onlineCopy()
+
+        assertEquals(1,user2.getPlaylists().size)
+        assertEquals("test",user2.getPlaylists().toList()[0].name)
+        assertEquals(2,user.getPlaylists().size)
+        user2.name = "test3"
+        assertEquals("test3",user2.name)
+        assertEquals("test1",user.name)
+
+    }
 }
