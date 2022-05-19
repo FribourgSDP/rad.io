@@ -3,6 +3,7 @@ package com.github.fribourgsdp.radio.game
 import com.github.fribourgsdp.radio.data.Playlist
 import com.github.fribourgsdp.radio.data.Song
 import com.github.fribourgsdp.radio.data.User
+import com.github.fribourgsdp.radio.external.musixmatch.MusixmatchLyricsGetter
 import java.util.*
 import kotlin.collections.ArrayList
 import kotlin.collections.HashMap
@@ -109,6 +110,25 @@ class Game private constructor(val id: Long, val name: String, val host: User, v
             songsNotDone.remove(random)
         }
 
+        return chosen
+    }
+
+    /**
+     * Similar as [getChoices], but only returns one song selected among the songs that have lyrics.
+     * @return null if no song has lyrics
+     */
+    fun getChoiceWithLyrics() : Song? {
+        if(songsNotDone.isEmpty()){
+            songsNotDone.addAll(playlist.getSongs()
+                .filter { song ->
+                    !(song.lyrics == MusixmatchLyricsGetter.BACKEND_ERROR_PLACEHOLDER || song.lyrics == MusixmatchLyricsGetter.LYRICS_NOT_FOUND_PLACEHOLDER)
+            })
+        }
+        if(songsNotDone.isEmpty()){
+            return null
+        }
+        val chosen = songsNotDone.random()
+        songsNotDone.remove(chosen)
         return chosen
     }
 

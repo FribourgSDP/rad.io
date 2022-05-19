@@ -129,13 +129,13 @@ class HostGameHandler(
         val done = game.isDone()
         val nextChoices = MutableList<String>(0) { "" }
         val nextChoicesLyrics = HashMap<String, String>(3)
-        game.getChoices(3).stream()
-            .forEach { song ->
-                nextChoices.add(song.name)
-                nextChoicesLyrics[song.name] = lyricsGetter.markSongName(song.lyrics, song.name)
-            }
 
         if(!noSing) {
+            game.getChoices(3).stream()
+                .forEach { song ->
+                    nextChoices.add(song.name)
+                    nextChoicesLyrics[song.name] = lyricsGetter.markSongName(song.lyrics, song.name)
+                }
 
             var nextUser = ""
             do {
@@ -154,6 +154,10 @@ class HostGameHandler(
                 "scores" to game.getAllScores()
             )
         } else{
+            game.getChoiceWithLyrics().let{
+                nextChoices.add(it!!.name)
+                nextChoicesLyrics[it.name] = lyricsGetter.markSongName(it.lyrics, it.name)
+            }
             return hashMapOf(
                 "finished" to done,
                 "current_round" to game.currentRound,
