@@ -34,6 +34,7 @@ import kotlin.properties.Delegates
 
 const val SCORES_KEY = "com.github.fribourgsdp.radio.SCORES"
 const val GAME_CRASH_KEY = "com.github.fribourgsdp.radio.GAME_CRASH"
+const val HINT_FRACTION = 1.0/3
 
 open class GameActivity : AppCompatActivity(), GameView, Timer.Listener {
     private lateinit var user: User
@@ -334,7 +335,7 @@ open class GameActivity : AppCompatActivity(), GameView, Timer.Listener {
 
     fun updateHint(timeInSeconds: Int){
         if(withHint && hintTextView.visibility == View.VISIBLE) {
-            val limit = ceil(gameDuration/ (ceil(songNameHint.length()/2.0)+1))
+            val limit = ceil(gameDuration/ (ceil(songNameHint.length()* HINT_FRACTION)+1))
             if(timeInSeconds - lastTime >= limit) {
                 songNameHint.addALetter()
                 hintTextView.text = this.songNameHint.toString()
