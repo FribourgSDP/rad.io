@@ -126,4 +126,5 @@
     <string name="cantUseTextToSpeech">La synthèse vocale ne peut pas être utilisée.</string>
     <string name="ttsWeCantSupportYourLanguage">Cette langue n\'est pas supportée sur cet appareil.</string>
     <string name="TextToSpeechInitializationFailed">La synthèse vocale n\'a pas pu être initialisée.</string>
+    <string name="playlistLyricsLess">La playlist sélectionnée ne contient aucune chanson avec des paroles. Choisis-en une autre.</string>
 </resources>

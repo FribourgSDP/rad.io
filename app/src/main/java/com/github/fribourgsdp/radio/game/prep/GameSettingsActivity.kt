@@ -129,7 +129,7 @@ open class GameSettingsActivity : AppCompatActivity() {
             if(noSingCheckBox.isChecked && selectedPlaylist.getSongs().none { song ->
                     !(song.lyrics == MusixmatchLyricsGetter.BACKEND_ERROR_PLACEHOLDER || song.lyrics == MusixmatchLyricsGetter.LYRICS_NOT_FOUND_PLACEHOLDER)
                 }){
-                Toast.makeText(applicationContext, "The selected playlist has no song with lyrics", Toast.LENGTH_LONG).show()
+                Toast.makeText(applicationContext, getString(R.string.playlistLyricsLess), Toast.LENGTH_LONG).show()
             } else {
                 val intent: Intent = Intent(this, LobbyActivity::class.java).apply {
                     putExtra(

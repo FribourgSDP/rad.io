@@ -125,5 +125,6 @@
     <string name="cantUseTextToSpeech">Cannot use the Text-to-speech engine.</string>
     <string name="ttsWeCantSupportYourLanguage">We can\'t support your language on this device.</string>
     <string name="TextToSpeechInitializationFailed">Text-to-speech engine could not be initialized properly.</string>
+    <string name="playlistLyricsLess">The selected playlist has no song with lyrics. Please select another one.</string>
 </resources>
 
