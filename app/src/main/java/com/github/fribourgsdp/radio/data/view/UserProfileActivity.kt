@@ -15,6 +15,7 @@ import android.widget.EditText
 import android.widget.ImageView
 import android.widget.TextView
 import com.github.fribourgsdp.radio.*
+import com.github.fribourgsdp.radio.auth.GoogleSignIn
 import com.github.fribourgsdp.radio.config.MyAppCompatActivity
 import com.github.fribourgsdp.radio.data.User
 import com.github.fribourgsdp.radio.database.DatabaseHolder
@@ -47,8 +48,10 @@ open class UserProfileActivity : MyAppCompatActivity(), KeepOrDismissPlaylistDia
     private lateinit var userIcon : ImageView
     private var signedIn : Boolean = false
 
+
     private var db = initializeDatabase()
 
+    lateinit var googleSignIn : GoogleSignIn
 
     //firebase auth
     private lateinit var firebaseAuth: FirebaseAuth
@@ -56,7 +59,9 @@ open class UserProfileActivity : MyAppCompatActivity(), KeepOrDismissPlaylistDia
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_user_profile)
+        googleSignIn = GoogleSignIn(this, getString(R.string.default_web_client_id))
         instantiateViews()
+
 
         val fromGoogle = intent.getBooleanExtra("FromGoogle",false)
 
@@ -71,10 +76,11 @@ open class UserProfileActivity : MyAppCompatActivity(), KeepOrDismissPlaylistDia
             val bundle = Bundle()
             bundle.putString(USER_DATA, Json.encodeToString(user))
             MyFragment.beginTransaction<UserPlaylistsFragment>(supportFragmentManager, bundle)
-            if(fromGoogle){
+
+            /*if(fromGoogle){
                 //check if the connection was sucessful, if yes, do the afterSignInProcedure
                 afterSignInProcedure()
-            }
+            }*/
         }
 
         launchSpotifyButton.setOnClickListener {
@@ -97,7 +103,9 @@ open class UserProfileActivity : MyAppCompatActivity(), KeepOrDismissPlaylistDia
             if (signedIn) {
                 signOut()
             } else {
-                startActivity(Intent(this, GoogleSignInActivity::class.java))
+
+                googleSignIn.signIn()
+                //startActivity(Intent(this, GoogleSignInActivity::class.java))
             }
         }
         findViewById<FloatingActionButton>(R.id.addPlaylistButton).setOnClickListener{startActivity(Intent(this, AddPlaylistActivity::class.java))}
@@ -229,7 +237,9 @@ open class UserProfileActivity : MyAppCompatActivity(), KeepOrDismissPlaylistDia
     }
 
 
-
+    fun loginFromGoogle(){
+        afterSignInProcedure()
+    }
 
 
     //this should only happen on successful signIn,
