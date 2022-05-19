@@ -120,5 +120,7 @@
     <string name="timerMinutes">Minutes</string>
     <string name="timerSeconds">Seconds</string>
     <string name="gameDurationFormat">Time singing: %d seconds </string>
+    <string name="round_time_text">Round duration:</string>
+    <string name="round_duration_format">%d seconds</string>
 </resources>
 

@@ -34,8 +34,7 @@ open class GameSettingsActivity : AppCompatActivity() {
     private lateinit var hintCheckBox : CheckBox
     private lateinit var privacyCheckBox : CheckBox
     private lateinit var startButton : Button
-    private lateinit var timerButton : ImageButton
-    private lateinit var timerTextView: TextView
+    private lateinit var timerButton : Button
 
     private lateinit var playlistSearchView : SearchView
     private lateinit var playlistListView : ListView
@@ -84,7 +83,7 @@ open class GameSettingsActivity : AppCompatActivity() {
             }.build().apply {
                 setListener { minute, second ->
                     gameTimeDuration = (60*minute + second).toLong()
-                    timerTextView.text = gameTimeDuration.toString() + "s"
+                    timerButton.text = getString(R.string.round_duration_format, gameTimeDuration)
                 }
             }.show(supportFragmentManager, "TimerSettings")
         }
@@ -101,8 +100,9 @@ open class GameSettingsActivity : AppCompatActivity() {
         playlistsNames = getUserPlaylistNames(host)
         playlistAdapter = ArrayAdapter(this, android.R.layout.simple_list_item_1, playlistsNames)
         errorText = findViewById(R.id.playlistSearchError)
-        timerButton = findViewById(R.id.chooseTimeButton)
-        timerTextView = findViewById(R.id.timerTextView)
+        timerButton = findViewById<Button?>(R.id.chooseTimeButton).apply {
+            text = getString(R.string.round_duration_format, gameTimeDuration)
+        }
 
         playlistListView.adapter = playlistAdapter
     }

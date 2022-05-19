@@ -120,4 +120,6 @@
     <string name="timerMinutes">Minutes</string>
     <string name="timerSeconds">Secondes</string>
     <string name="gameDurationFormat">Durée du chanteur: %d secondes </string>
+    <string name="round_time_text">Durée d\'un tour:</string>
+    <string name="round_duration_format">%d secondes</string>
 </resources>
