@@ -12,6 +12,7 @@ import com.github.fribourgsdp.radio.MainActivity
 import com.github.fribourgsdp.radio.R
 import com.github.fribourgsdp.radio.data.Playlist
 import com.github.fribourgsdp.radio.data.User
+import com.github.fribourgsdp.radio.external.musixmatch.MusixmatchLyricsGetter
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 
@@ -125,17 +126,29 @@ open class GameSettingsActivity : AppCompatActivity() {
 
     private fun startButtonBehavior() : View.OnClickListener {
         return View.OnClickListener {
-            val intent: Intent = Intent(this, LobbyActivity::class.java).apply {
-                putExtra(GAME_NAME_KEY, nameInput.text.toString().ifEmpty { getString(R.string.default_game_name) })
-                putExtra(GAME_PLAYLIST_KEY, Json.encodeToString(selectedPlaylist))
-                putExtra(GAME_NB_ROUNDS_KEY, nbRoundsInput.text.toString().ifEmpty { getString(R.string.default_game_nb_rounds) }.toInt())
-                putExtra(GAME_HINT_KEY, hintCheckBox.isChecked)
-                putExtra(GAME_PRIVACY_KEY, privacyCheckBox.isChecked)
-                putExtra(GAME_IS_HOST_KEY, true)
-                putExtra(GAME_IS_NO_SING_MODE, noSingCheckBox.isChecked)
-                putExtra(GAME_DURATION_KEY, gameTimeDuration)
+            if(noSingCheckBox.isChecked && selectedPlaylist.getSongs().none { song ->
+                    !(song.lyrics == MusixmatchLyricsGetter.BACKEND_ERROR_PLACEHOLDER || song.lyrics == MusixmatchLyricsGetter.LYRICS_NOT_FOUND_PLACEHOLDER)
+                }){
+                Toast.makeText(applicationContext, "The selected playlist has no song with lyrics", Toast.LENGTH_LONG).show()
+            } else {
+                val intent: Intent = Intent(this, LobbyActivity::class.java).apply {
+                    putExtra(
+                        GAME_NAME_KEY,
+                        nameInput.text.toString().ifEmpty { getString(R.string.default_game_name) })
+                    putExtra(GAME_PLAYLIST_KEY, Json.encodeToString(selectedPlaylist))
+                    putExtra(
+                        GAME_NB_ROUNDS_KEY,
+                        nbRoundsInput.text.toString()
+                            .ifEmpty { getString(R.string.default_game_nb_rounds) }.toInt()
+                    )
+                    putExtra(GAME_HINT_KEY, hintCheckBox.isChecked)
+                    putExtra(GAME_PRIVACY_KEY, privacyCheckBox.isChecked)
+                    putExtra(GAME_IS_HOST_KEY, true)
+                    putExtra(GAME_IS_NO_SING_MODE, noSingCheckBox.isChecked)
+                    putExtra(GAME_DURATION_KEY, gameTimeDuration)
+                }
+                startActivity(intent)
             }
-            startActivity(intent)
         }
     }
     private fun getPlaylist(name: String): Playlist {
