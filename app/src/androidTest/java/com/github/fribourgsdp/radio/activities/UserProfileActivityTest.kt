@@ -20,6 +20,7 @@ import androidx.test.espresso.matcher.ViewMatchers.withId
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.github.fribourgsdp.radio.MainActivity
 import com.github.fribourgsdp.radio.R
+import com.github.fribourgsdp.radio.auth.GoogleSignInResult
 import com.github.fribourgsdp.radio.data.Genre
 import com.github.fribourgsdp.radio.data.Playlist
 import com.github.fribourgsdp.radio.data.Song
@@ -153,7 +154,7 @@ class UserProfileActivityTest : TestCase() {
         ActivityScenario.launch<UserProfileActivity>(intent).use {scenario ->
 
             scenario.onActivity { a ->
-                a.loginFromGoogle(0)
+                a.loginFromGoogle(GoogleSignInResult.NORMAL_USER)
             }
 
             onView(ViewMatchers.withText(R.string.MergeImportDismissPlaylistText)) // Look for the dialog => use its title
@@ -177,7 +178,7 @@ class UserProfileActivityTest : TestCase() {
             ActivityScenario.launch<UserProfileActivity>(intent).use {scenario ->
 
                 scenario.onActivity { a ->
-                    a.loginFromGoogle(0)
+                    a.loginFromGoogle(GoogleSignInResult.NORMAL_USER)
                 }
 
                 onView(ViewMatchers.withText(R.string.MergeImportDismissPlaylistText)) // Look for the dialog => use its title
@@ -202,7 +203,7 @@ class UserProfileActivityTest : TestCase() {
         ActivityScenario.launch<UserProfileActivity>(intent).use {scenario ->
 
             scenario.onActivity { a ->
-                a.loginFromGoogle(0)
+                a.loginFromGoogle(GoogleSignInResult.NORMAL_USER)
             }
 
             onView(ViewMatchers.withText(R.string.MergeImportDismissPlaylistText)) // Look for the dialog => use its title

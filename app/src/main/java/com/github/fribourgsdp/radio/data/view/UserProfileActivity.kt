@@ -15,7 +15,7 @@ import android.widget.EditText
 import android.widget.ImageView
 import android.widget.TextView
 import com.github.fribourgsdp.radio.*
-import com.github.fribourgsdp.radio.auth.GoogleSignIn
+import com.github.fribourgsdp.radio.auth.*
 import com.github.fribourgsdp.radio.config.MyAppCompatActivity
 import com.github.fribourgsdp.radio.config.SettingsActivity
 import com.github.fribourgsdp.radio.data.User
@@ -236,8 +236,8 @@ open class UserProfileActivity : MyAppCompatActivity(), KeepOrDismissPlaylistDia
     }
 
     //return -1 if fail, 2 if already logged and when it success 1 for new user and 0 otherwise
-    open fun loginFromGoogle(code : Int) {
-        if(code == 0 || code == 1) {
+    open fun loginFromGoogle(code : GoogleSignInResult) {
+        if(code == GoogleSignInResult.NORMAL_USER || code == GoogleSignInResult.NEW_USER) {
             afterSignInProcedure()
         }
     }

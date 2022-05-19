@@ -66,7 +66,7 @@ class GoogleSignIn(val activity: UserProfileActivity, serverClientId : String) {
         this.firebaseAuth = firebaseAuth
 
         if(checkUser()) {
-            activity.loginFromGoogle(2)
+            activity.loginFromGoogle(GoogleSignInResult.ALREADY_LOGIN)
         }else{
             val intent = googleSignInClient.signInIntent
             launcher.launch(intent)
@@ -86,12 +86,12 @@ class GoogleSignIn(val activity: UserProfileActivity, serverClientId : String) {
                 Toast.makeText(activity, "Account created", Toast.LENGTH_SHORT)
                     .show()
 
-                activity.loginFromGoogle(1)
+                activity.loginFromGoogle(GoogleSignInResult.NEW_USER)
             } else {
                 //existing user - LoggedIn
                 Toast.makeText(activity, "LoggedIn", Toast.LENGTH_SHORT).show()
 
-                activity.loginFromGoogle(0)
+                activity.loginFromGoogle(GoogleSignInResult.NORMAL_USER)
             }
 
 
@@ -103,7 +103,7 @@ class GoogleSignIn(val activity: UserProfileActivity, serverClientId : String) {
                     Toast.LENGTH_SHORT
                 ).show()
 
-                activity.loginFromGoogle(-1)
+                activity.loginFromGoogle(GoogleSignInResult.FAIL)
             }
     }
 

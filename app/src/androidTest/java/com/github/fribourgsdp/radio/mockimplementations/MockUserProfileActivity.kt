@@ -6,6 +6,7 @@ import com.github.fribourgsdp.radio.activities.makeMockAdditionalUserInfo
 import com.github.fribourgsdp.radio.activities.makeMockAuthResult
 import com.github.fribourgsdp.radio.activities.makeMockFireBaseAuth
 import com.github.fribourgsdp.radio.activities.makeMockFirebaseUser
+import com.github.fribourgsdp.radio.auth.GoogleSignInResult
 import com.github.fribourgsdp.radio.data.Genre
 import com.github.fribourgsdp.radio.data.Playlist
 import com.github.fribourgsdp.radio.data.Song
@@ -97,13 +98,13 @@ class GoogleSignInTestMockUserProfileActivity : MockUserProfileActivity()  {
         googleSignIn.firebaseAuthWithCredentitial(credential, firebaseAuth)
     }
 
-    override fun loginFromGoogle(code : Int){
+    override fun loginFromGoogle(code : GoogleSignInResult){
 
         when (code) {
-            -1 -> failLogin = true
-            1 -> newLogin = true
-            0 -> normalLogin = true
-            2 -> alreadyLogin = true
+            GoogleSignInResult.FAIL -> failLogin = true
+            GoogleSignInResult.NEW_USER -> newLogin = true
+            GoogleSignInResult.NORMAL_USER -> normalLogin = true
+            GoogleSignInResult.ALREADY_LOGIN -> alreadyLogin = true
         }
     }
 
