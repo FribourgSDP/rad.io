@@ -107,6 +107,9 @@ class PlayerGameHandler(
     }
 
     private fun handleTimeoutOnGuess(userId: String) {
+        if(noSing){
+            view.displaySong("Previous song was : ${songToGuess.toString()}")
+        }
         db.playerEndTurn(gameID, userId, false)
             .addOnFailureListener {
                 Log.e("PlayerGameHandler Error", "In end turn with timeout: ${it.message}", it)
