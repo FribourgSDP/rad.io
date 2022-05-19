@@ -39,7 +39,6 @@ class WorkingLobbyActivityTest {
     private val ctx: Context = ApplicationProvider.getApplicationContext()
     @Before
     fun initIntent() {
-        LanguageManager(ctx).setLang("en")
         Intents.init()
     }
     @After
