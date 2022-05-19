@@ -101,15 +101,6 @@ open class GameActivity : AppCompatActivity(), GameView, Timer.Listener, TextToS
 
     }
 
-    private fun initTextToSpeech(){
-        if(!noSing) return
-        tts = TextToSpeech(applicationContext){ status ->
-            if(status == TextToSpeech.ERROR){
-                Toast.makeText(applicationContext, "Could not create TextToSpeech engine", Toast.LENGTH_LONG).show()
-            }
-        }
-    }
-
     override fun onDestroy() {
         super.onDestroy()
         voiceChannel.leaveChannel()
@@ -322,10 +313,15 @@ open class GameActivity : AppCompatActivity(), GameView, Timer.Listener, TextToS
 
     override fun readLyrics(lyrics: String) {
         Toast.makeText(applicationContext, "TTS", Toast.LENGTH_SHORT).show()
-        val speechStatus = tts?.speak(makeReadable(lyrics), TextToSpeech.QUEUE_ADD, null, "ID")
+        val speechStatus = tts?.speak(makeReadable(lyrics), TextToSpeech.QUEUE_FLUSH, null, "ID")
         if(speechStatus == TextToSpeech.ERROR){
-            Toast.makeText(this, "Cant use the Text to speech.", Toast.LENGTH_LONG).show()
+            Toast.makeText(this, getString(R.string.cantUseTextToSpeech), Toast.LENGTH_LONG).show()
         }
+    }
+
+    private fun initTextToSpeech(){
+        if(!noSing) return
+        tts = TextToSpeech(applicationContext, this)
     }
 
     override fun onInit(status: Int) {
@@ -334,17 +330,17 @@ open class GameActivity : AppCompatActivity(), GameView, Timer.Listener, TextToS
             // setting the language to the default phone language.
             val language = LanguageManager(this).getLang()
             val locale = if(language == "fr"){
-                Locale.FRENCH
+                Locale.FRANCE
             } else {
                 Locale.UK
             }
             val ttsLangStatus = tts!!.setLanguage(locale)
             // check if the language is supportable.
             if (ttsLangStatus == TextToSpeech.LANG_MISSING_DATA || ttsLangStatus == TextToSpeech.LANG_NOT_SUPPORTED) {
-                Toast.makeText(this, "We can't support your language", Toast.LENGTH_LONG).show()
+                Toast.makeText(this, getString(R.string.ttsWeCantSupportYourLanguage), Toast.LENGTH_LONG).show()
             }
         } else {
-            Toast.makeText(this, "TTS Initialization failed!", Toast.LENGTH_SHORT).show()
+            Toast.makeText(this, getString(R.string.TextToSpeechInitializationFailed), Toast.LENGTH_SHORT).show()
         }
     }
 
