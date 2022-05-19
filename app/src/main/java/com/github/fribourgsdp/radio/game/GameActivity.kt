@@ -37,6 +37,7 @@ import kotlin.math.absoluteValue
 
 const val SCORES_KEY = "com.github.fribourgsdp.radio.SCORES"
 const val GAME_CRASH_KEY = "com.github.fribourgsdp.radio.GAME_CRASH"
+const val TTS_INITIALIZATION_RETRY_DELAY_MS = 1000
 
 open class GameActivity : AppCompatActivity(), GameView, Timer.Listener, TextToSpeech.OnInitListener {
     private lateinit var user: User
@@ -316,6 +317,10 @@ open class GameActivity : AppCompatActivity(), GameView, Timer.Listener, TextToS
         val speechStatus = tts?.speak(makeReadable(lyrics), TextToSpeech.QUEUE_FLUSH, null, "ID")
         if(speechStatus == TextToSpeech.ERROR){
             Toast.makeText(this, getString(R.string.cantUseTextToSpeech), Toast.LENGTH_LONG).show()
+            val t = Thread {
+                Thread.sleep(TTS_INITIALIZATION_RETRY_DELAY_MS.toLong())
+                readLyrics(lyrics)
+            }
         }
     }
 
