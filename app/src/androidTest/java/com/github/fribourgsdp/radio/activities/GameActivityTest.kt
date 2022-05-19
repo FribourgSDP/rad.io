@@ -58,8 +58,10 @@ class GameActivityTest {
     }
 
     @Test
-    fun onBackPressedThenCancelStays() {
+    fun onBackPressedHostThenCancelStays() {
         val testIntent = Intent(ctx, MockGameActivity::class.java)
+            .putExtra(GAME_IS_HOST_KEY, true)
+            .putExtra(GAME_KEY, Json.encodeToString(fakeGame))
         ActivityScenario.launch<MockGameActivity>(testIntent).use { _ ->
             Espresso.pressBack()
             onView(withId(R.id.cancelQuitGameOrLobby))
@@ -69,8 +71,22 @@ class GameActivityTest {
     }
 
     @Test
-    fun onBackPressedThenContinueGoesToMain() {
+    fun onBackPressedNonHostThenReturnStays() {
         val testIntent = Intent(ctx, MockGameActivity::class.java)
+            .putExtra(GAME_IS_HOST_KEY, false)
+        ActivityScenario.launch<MockGameActivity>(testIntent).use {_ ->
+            Espresso.pressBack()
+            onView(withId(R.id.cancelQuitGame))
+                .inRoot(isDialog())
+                .perform(ViewActions.click())
+        }
+    }
+
+    @Test
+    fun onBackPressedHostThenContinueGoesToMain() {
+        val testIntent = Intent(ctx, MockGameActivity::class.java)
+            .putExtra(GAME_IS_HOST_KEY, true)
+            .putExtra(GAME_KEY, Json.encodeToString(fakeGame))
         ActivityScenario.launch<MockGameActivity>(testIntent).use { _ ->
             Espresso.pressBack()
             Espresso.onView(withId(R.id.validateQuitGameOrLobby))
