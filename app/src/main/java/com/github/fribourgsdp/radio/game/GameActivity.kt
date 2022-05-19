@@ -21,10 +21,7 @@ import com.github.fribourgsdp.radio.game.prep.GAME_UID_KEY
 import com.github.fribourgsdp.radio.game.prep.GAME_DURATION_KEY
 import com.github.fribourgsdp.radio.game.prep.GAME_IS_HOST_KEY
 import com.github.fribourgsdp.radio.game.timer.TimerProgressBarHandler
-import com.github.fribourgsdp.radio.game.view.LyricsPopup
-import com.github.fribourgsdp.radio.game.view.QuitGameOrLobbyDialog
-import com.github.fribourgsdp.radio.game.view.ScoresAdapter
-import com.github.fribourgsdp.radio.game.view.SongPickerDialog
+import com.github.fribourgsdp.radio.game.view.*
 import com.github.fribourgsdp.radio.voip.MyIRtcEngineEventHandler
 import com.github.fribourgsdp.radio.voip.VoiceIpEngineDecorator
 import io.agora.rtc.Constants
@@ -48,6 +45,7 @@ open class GameActivity : AppCompatActivity(), GameView, Timer.Listener {
     private lateinit var songTextView : TextView
     private lateinit var errorOrFailureTextView : TextView
     private var lyricsPopup : LyricsPopup? = null
+    private var cantQuitGamePopup : CannotQuitDialog? = null
     private lateinit var songGuessEditText : EditText
     private lateinit var muteButton : ImageButton
     private lateinit var songGuessSubmitButton: Button
@@ -114,8 +112,8 @@ open class GameActivity : AppCompatActivity(), GameView, Timer.Listener {
     }
 
     override fun displaySong(songName: String) {
-        // Close the lyrics popup if already open
-        closeLyricsPopup()
+        //Close any active popup if open
+        closePopups()
 
         // Hide the edit text and the submit button
         songGuessEditText.visibility = View.GONE
@@ -133,8 +131,8 @@ open class GameActivity : AppCompatActivity(), GameView, Timer.Listener {
     }
 
     override fun displayGuessInput() {
-        // Close the lyrics popup if already open
-        closeLyricsPopup()
+        //Close any active popup if open
+        closePopups()
 
         // Hide the song view
         songTextView.visibility = View.GONE
@@ -150,8 +148,8 @@ open class GameActivity : AppCompatActivity(), GameView, Timer.Listener {
     }
 
     override fun displayError(errorMessage: String) {
-        // Close the lyrics popup if already open
-        closeLyricsPopup()
+        //Close any active popup if open
+        closePopups()
 
         // Show the error
         errorOrFailureTextView.apply {
@@ -175,8 +173,8 @@ open class GameActivity : AppCompatActivity(), GameView, Timer.Listener {
     }
 
     override fun displayPlayerScores(playerScores: Map<String, Long>) {
-        // Close the lyrics popup if already open
-        closeLyricsPopup()
+        //Close any active popup if open
+        closePopups()
 
         scoresAdapter.updateScore(
             // Replace ids by names
@@ -283,27 +281,38 @@ open class GameActivity : AppCompatActivity(), GameView, Timer.Listener {
     }
 
     override fun onBackPressed() {
-        val warningDisplay = QuitGameOrLobbyDialog(this)
-        warningDisplay.show(supportFragmentManager, "warningForQuittingLobby")
-        supportFragmentManager
-            .setFragmentResultListener("quitRequest", this) { _, bundle ->
-                val hasQuit = bundle.getBoolean("hasQuit")
-                if (hasQuit) {
-                    returnToMainMenu()
+        if (isHost) {
+            val warningDisplay = QuitGameOrLobbyDialog(this)
+            warningDisplay.show(supportFragmentManager, "warningForQuittingLobby")
+            supportFragmentManager
+                .setFragmentResultListener("quitRequest", this) { _, bundle ->
+                    val hasQuit = bundle.getBoolean("hasQuit")
+                    if (hasQuit) {
+                        returnToMainMenu()
+                    }
                 }
-            }
+        }
+        else {
+            cantQuitGamePopup = CannotQuitDialog(this)
+            cantQuitGamePopup?.show(supportFragmentManager, "cannotQuitGame")
+        }
     }
     
     override fun updateLyrics(lyrics : String) {
-        // Close the lyrics popup if already open
-        closeLyricsPopup()
+        //Close any active popup if open
+        closePopups()
         
         lyricsPopup = if(lyrics.isNotEmpty() && lyrics != LYRICS_NOT_FOUND_PLACEHOLDER)  LyricsPopup(lyrics)
             else null
     }
 
-    private fun closeLyricsPopup() {
+    private fun closePopups() {
         lyricsPopup?.let {
+            if (it.isVisible) {
+                it.dismiss()
+            }
+        }
+        cantQuitGamePopup?.let {
             if (it.isVisible) {
                 it.dismiss()
             }
