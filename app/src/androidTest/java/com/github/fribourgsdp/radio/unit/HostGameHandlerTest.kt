@@ -4,7 +4,9 @@ import android.content.Context
 import android.view.View
 import androidx.test.core.app.ApplicationProvider
 import com.github.fribourgsdp.radio.R
+import com.github.fribourgsdp.radio.data.Genre
 import com.github.fribourgsdp.radio.data.Playlist
+import com.github.fribourgsdp.radio.data.Song
 import com.github.fribourgsdp.radio.data.User
 import com.github.fribourgsdp.radio.database.Database
 import com.github.fribourgsdp.radio.game.Game
@@ -41,6 +43,7 @@ class HostGameHandlerTest {
         `when`(mockSnapshot.get("player_done_map")).thenReturn(fakeGame.getAllPlayersId().associateWith { true })
         `when`(mockSnapshot.get("scores_of_round")).thenReturn(fakeGame.getAllPlayersId().associateWith { 0L })
         `when`(mockSnapshot.get("player_found_map")).thenReturn(fakeGame.getAllPlayersId().associateWith { true })
+        `when`(mockSnapshot.get("current_song")).thenReturn("Test Song")
         `when`(mockSnapshot.exists()).thenReturn(true)
     }
 
@@ -150,5 +153,30 @@ class HostGameHandlerTest {
         assertEquals(View.VISIBLE, view.errorVisibility)
         assertTrue(view.gameOver)
         assertTrue(view.crashed)
+    }
+
+    @Test
+    fun incrementationOfRoundTest(){
+        val view = FakeGameView()
+        val game = Game.Builder()
+            .setNoSing(true)
+            .setHost(host)
+            .addUserId(otherPlayer.id)
+            .setPlaylist(Playlist("Test PL", setOf(Song("a", "b", "c")), Genre.NONE))
+            .build()
+        val db = mock(Database::class.java)
+        `when`(db.updateGame(anyLong(), anyMap()))
+            .thenReturn(Tasks.forResult(null))
+        `when`(db.resetGameMetadata(anyLong(), anyString()))
+            .thenReturn(Tasks.forResult(null))
+        `when`(db.updateCurrentSongOfGame(anyLong(), anyString(), anyLong()))
+            .thenReturn(Tasks.forResult(null))
+        val handler = HostGameHandler(ctx, game, view, db, noSing = true)
+        handler.handleSnapshot(mockSnapshot)
+
+        // Wait for the task of the database to execute
+        Thread.sleep(sleepingTime)
+
+        assertEquals(2, game.currentRound)
     }
 }

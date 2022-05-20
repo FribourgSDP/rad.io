@@ -19,7 +19,9 @@ import com.github.fribourgsdp.radio.data.Playlist
 import com.github.fribourgsdp.radio.data.User
 import com.github.fribourgsdp.radio.external.musixmatch.MusixmatchLyricsGetter
 import com.github.fribourgsdp.radio.game.*
+import com.github.fribourgsdp.radio.game.handler.NO_SINGER
 import com.github.fribourgsdp.radio.game.prep.GAME_IS_HOST_KEY
+import com.github.fribourgsdp.radio.game.prep.GAME_IS_NO_SING_MODE
 import com.github.fribourgsdp.radio.game.prep.GAME_KEY
 import com.github.fribourgsdp.radio.mockimplementations.MockGameActivity
 import com.github.fribourgsdp.radio.utils.CustomMatchers.Companion.atPosition
@@ -323,6 +325,18 @@ class GameActivityTest {
                     IntentMatchers.toPackage("com.github.fribourgsdp.radio")
                 )
             )
+        }
+    }
+
+    @Test
+    fun updateSingerInNoSingModeDisplaysNeutralText(){
+        val testIntent = Intent(ctx, GameActivity::class.java)
+        testIntent.putExtra(GAME_IS_NO_SING_MODE, true)
+        ActivityScenario.launch<GameActivity>(testIntent).use { scenario ->
+            scenario.onActivity {
+                it.updateSinger(NO_SINGER)
+                onView(withId(R.id.singerTextView)).check(matches(withText(ctx.getString(R.string.listen))))
+            }
         }
     }
 }

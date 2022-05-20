@@ -30,6 +30,7 @@ class GameTest {
     private val nbRounds = 3
     private val withHint = true
     private val isPrivate = false
+    private val noSing = false
 
     private val gameBuilder = Game.Builder().setHost(host)
         .setName(name)
@@ -38,6 +39,7 @@ class GameTest {
         .setNbRounds(nbRounds)
         .setPrivacy(isPrivate)
         .addUserId(otherId)
+        .setNoSing(noSing)
 
     @Test
     fun builderWorksCorrectlyWithCorrectArgs() {
@@ -152,6 +154,17 @@ class GameTest {
 
         assertTrue(game.isDone())
 
+    }
+    @Test
+    fun gameDoneAtRightTimeNoSingMode(){
+        val game = gameBuilder
+            .setNoSing(true)
+            .build()
+        for(i in 1..nbRounds){
+            assertFalse(game.isDone())
+            game.incrementCurrentRound()
+        }
+        assertTrue(game.isDone())
     }
 
     @Test
