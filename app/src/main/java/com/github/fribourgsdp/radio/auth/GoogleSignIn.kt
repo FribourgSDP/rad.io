@@ -76,13 +76,11 @@ class GoogleSignIn(val activity: UserProfileActivity, serverClientId : String) {
     fun firebaseAuthWithCredentitial(credential: AuthCredential, firebaseAuth: FirebaseAuth) {
         firebaseAuth.signInWithCredential(credential).addOnSuccessListener { authResult ->
             //login success
-            var isNew = 0
             //check if user is new or existing
             if (authResult.additionalUserInfo!!.isNewUser) {
                 //user is new - Account Create
                 // val mail = saveUserInDatabse(authResult)
                 //saveTestUser(this, mail)
-                isNew = 1
                 Toast.makeText(activity, "Account created", Toast.LENGTH_SHORT)
                     .show()
 

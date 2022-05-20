@@ -235,7 +235,10 @@ open class UserProfileActivity : MyAppCompatActivity(), KeepOrDismissPlaylistDia
 
     }
 
-    //return -1 if fail, 2 if already logged and when it success 1 for new user and 0 otherwise
+    /**
+     * Used to indicate that you are logging in from GoogleSignIn
+     * @param code Represents the result of the connection through Google SignIn (Fail, newuser, normalUser or Already connected)
+     */
     open fun loginFromGoogle(code : GoogleSignInResult) {
         if(code == GoogleSignInResult.NORMAL_USER || code == GoogleSignInResult.NEW_USER) {
             afterSignInProcedure()
