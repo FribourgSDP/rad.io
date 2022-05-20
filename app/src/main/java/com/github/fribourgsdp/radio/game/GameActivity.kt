@@ -62,7 +62,7 @@ open class GameActivity : AppCompatActivity(), GameView, Timer.Listener {
 
     private lateinit var playerGameHandler: PlayerGameHandler
 
-    private val tts = MyTextToSpeech(applicationContext)
+    private lateinit var tts : MyTextToSpeech
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -80,6 +80,7 @@ open class GameActivity : AppCompatActivity(), GameView, Timer.Listener {
         initVoiceChat(gameUid)
 
         initHostGameHandler()
+        tts = MyTextToSpeech(applicationContext)
         tts.initTextToSpeech(noSing)
 
         playerGameHandler = PlayerGameHandler(this, gameUid, this, noSing=noSing, tts=tts)
