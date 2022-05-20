@@ -9,6 +9,7 @@ import com.github.fribourgsdp.radio.data.User
 import com.github.fribourgsdp.radio.game.GameView
 import com.github.fribourgsdp.radio.game.prep.DEFAULT_GAME_DURATION
 import com.github.fribourgsdp.radio.game.timer.Timer
+import com.github.fribourgsdp.radio.util.MyTextToSpeech
 import com.github.fribourgsdp.radio.util.NOT_THE_SAME
 import com.github.fribourgsdp.radio.util.StringComparisons
 import com.github.fribourgsdp.radio.util.getAndCast
@@ -19,7 +20,8 @@ class PlayerGameHandler(
     private val gameID: Long,
     private val view: GameView,
     db: Database = FirestoreDatabase(),
-    private val noSing : Boolean = false
+    private val noSing : Boolean = false,
+    private val tts : MyTextToSpeech? = null
 ): GameHandler(ctx, view, db), GameView.OnPickListener {
 
     private var songToGuess: String? = null
@@ -149,9 +151,6 @@ class PlayerGameHandler(
         view.updateLyrics(getLyricsFromSnapshot(snapshot))
     }
 
-    private fun readLyrics(snapshot: DocumentSnapshot){
-        view.readLyrics(getLyricsFromSnapshot(snapshot))
-    }
 
     private fun getLyricsFromSnapshot(snapshot: DocumentSnapshot) : String {
         val lyricsHashMap =
@@ -160,7 +159,7 @@ class PlayerGameHandler(
     }
 
     private fun chooseSong(snapshot: DocumentSnapshot){
-        val choices = snapshot.get("song_choices")!! as ArrayList<String>
+        val choices = snapshot.getAndCast<ArrayList<String>>("song_choices")
         view.chooseSong(choices, this)
     }
 
@@ -168,9 +167,9 @@ class PlayerGameHandler(
         val deadline = snapshot.getTimestamp("round_deadline")
         if(deadline != null) {
             view.startTimer(deadline.toDate())
-            readLyrics(snapshot)
+            tts!!.readLyrics(getLyricsFromSnapshot(snapshot))
         }
-        view.sayListen()
+        view.updateSinger("")
     }
     private fun updateViewForPlayer(snapshot: DocumentSnapshot, singerName : String){
         val deadline = snapshot.getTimestamp("round_deadline")

@@ -27,18 +27,10 @@ class MyTextToSpeech(private val applicationContext: Context) : TextToSpeech.OnI
             val ttsLangStatus = tts!!.setLanguage(locale)
             // check if the language is supportable.
             if (ttsLangStatus == TextToSpeech.LANG_MISSING_DATA || ttsLangStatus == TextToSpeech.LANG_NOT_SUPPORTED) {
-                Toast.makeText(
-                    applicationContext,
-                    applicationContext.getString(R.string.ttsWeCantSupportYourLanguage),
-                    Toast.LENGTH_LONG
-                ).show()
+                toastDisplay(applicationContext.getString(R.string.ttsWeCantSupportYourLanguage))
             }
         } else {
-            Toast.makeText(
-                applicationContext,
-                applicationContext.getString(R.string.TextToSpeechInitializationFailed),
-                Toast.LENGTH_SHORT
-            ).show()
+            toastDisplay(applicationContext.getString(R.string.TextToSpeechInitializationFailed))
         }
     }
 
@@ -56,10 +48,10 @@ class MyTextToSpeech(private val applicationContext: Context) : TextToSpeech.OnI
      * If the TextToSpeech engine appears not to be initialized yet, spawns a new Thread and retries [TTS_INITIALIZATION_RETRY_DELAY_MS]ms later.
      */
     fun readLyrics(lyrics : String){
-        Toast.makeText(applicationContext, "TTS", Toast.LENGTH_SHORT).show()
+        toastDisplay("TTS")
         val speechStatus = tts?.speak(MusixmatchLyricsGetter.makeReadable(lyrics), TextToSpeech.QUEUE_FLUSH, null, "ID")
         if(speechStatus == TextToSpeech.ERROR){
-            Toast.makeText(applicationContext, applicationContext.getString(R.string.cantUseTextToSpeech), Toast.LENGTH_LONG).show()
+            toastDisplay(applicationContext.getString(R.string.cantUseTextToSpeech))
             val t = Thread {
                 Thread.sleep(TTS_INITIALIZATION_RETRY_DELAY_MS.toLong())
                 readLyrics(lyrics)
@@ -75,5 +67,9 @@ class MyTextToSpeech(private val applicationContext: Context) : TextToSpeech.OnI
             tts!!.stop()
             tts!!.shutdown()
         }
+    }
+
+    private fun toastDisplay(text : String){
+        Toast.makeText(applicationContext, text, Toast.LENGTH_LONG).show()
     }
 }
