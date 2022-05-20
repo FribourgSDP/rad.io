@@ -2,6 +2,11 @@ package com.github.fribourgsdp.radio.mockimplementations
 
 import android.content.Context
 import android.os.Bundle
+import com.github.fribourgsdp.radio.activities.makeMockAdditionalUserInfo
+import com.github.fribourgsdp.radio.activities.makeMockAuthResult
+import com.github.fribourgsdp.radio.activities.makeMockFireBaseAuth
+import com.github.fribourgsdp.radio.activities.makeMockFirebaseUser
+import com.github.fribourgsdp.radio.auth.GoogleSignInResult
 import com.github.fribourgsdp.radio.data.Genre
 import com.github.fribourgsdp.radio.data.Playlist
 import com.github.fribourgsdp.radio.data.Song
@@ -9,6 +14,8 @@ import com.github.fribourgsdp.radio.data.User
 import com.github.fribourgsdp.radio.data.view.UserProfileActivity
 import com.github.fribourgsdp.radio.database.Database
 import com.google.android.gms.tasks.Tasks
+import com.google.firebase.auth.AuthCredential
+import com.google.firebase.auth.FirebaseAuth
 import org.mockito.Mockito
 import org.mockito.Mockito.anyString
 import org.mockito.Mockito.mock
@@ -67,6 +74,50 @@ class GoogleUserMockUserProfileActivity : UserProfileActivity() {
 
 }
 
+
+class GoogleSignInTestMockUserProfileActivity : MockUserProfileActivity()  {
+
+    var normalLogin = false
+    var newLogin = false
+    var failLogin = false
+    var alreadyLogin = false
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        User.setFSGetter(MockFileSystem.MockFSGetter)
+        val user = User(userName, 0)
+        user.id = userId
+        val playlist1 = Playlist(playListName, Genre.ROCK)
+        val song = Song(songName, artistName)
+        playlist1.addSong(song)
+        user.addPlaylists(setOf(playlist1))
+        user.save(Mockito.mock(Context::class.java))
+        super.onCreate(savedInstanceState)
+    }
+
+    fun firebaseAuthWithCredentitial(credential: AuthCredential, firebaseAuth: FirebaseAuth){
+        googleSignIn.firebaseAuthWithCredentitial(credential, firebaseAuth)
+    }
+
+    override fun loginFromGoogle(code : GoogleSignInResult){
+
+        when (code) {
+            GoogleSignInResult.FAIL -> failLogin = true
+            GoogleSignInResult.NEW_USER -> newLogin = true
+            GoogleSignInResult.NORMAL_USER -> normalLogin = true
+            GoogleSignInResult.ALREADY_LOGIN -> alreadyLogin = true
+        }
+    }
+
+    override fun signInOrOut(){
+        val mockAdditionalUserInfo = makeMockAdditionalUserInfo(false)
+        val mockUser = makeMockFirebaseUser()
+        val mockAuthResult = makeMockAuthResult(mockAdditionalUserInfo,mockUser)
+        val mockFireBaseAuth = makeMockFireBaseAuth(false, mockAuthResult,mockUser)
+
+        googleSignIn.signIn(mockFireBaseAuth)
+    }
+}
+
 open class MockUserProfileActivity : UserProfileActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -107,3 +158,5 @@ open class MockUserProfileActivity : UserProfileActivity() {
 
 
 }
+
+

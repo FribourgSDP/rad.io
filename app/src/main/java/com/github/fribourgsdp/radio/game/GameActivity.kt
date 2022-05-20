@@ -2,7 +2,6 @@ package com.github.fribourgsdp.radio.game
 
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.view.*
 import android.view.inputmethod.EditorInfo
 import android.widget.*
@@ -12,7 +11,6 @@ import androidx.recyclerview.widget.RecyclerView
 import com.github.fribourgsdp.radio.*
 import com.github.fribourgsdp.radio.game.timer.Timer
 import com.github.fribourgsdp.radio.data.User
-import com.github.fribourgsdp.radio.external.google.GoogleSignInActivity
 import com.github.fribourgsdp.radio.external.musixmatch.MusixmatchLyricsGetter.LYRICS_NOT_FOUND_PLACEHOLDER
 import com.github.fribourgsdp.radio.game.handler.HostGameHandler
 import com.github.fribourgsdp.radio.game.handler.PlayerGameHandler
@@ -29,7 +27,6 @@ import kotlinx.serialization.json.Json
 import java.util.*
 import kotlin.math.absoluteValue
 import kotlin.math.ceil
-import kotlin.properties.Delegates
 
 
 const val SCORES_KEY = "com.github.fribourgsdp.radio.SCORES"
