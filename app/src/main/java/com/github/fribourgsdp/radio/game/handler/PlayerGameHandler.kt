@@ -41,7 +41,7 @@ class PlayerGameHandler(
             val gameStillValid = snapshot.getBoolean("validity")!!
             scores = snapshot.get("scores") as HashMap<String, Long>
             if (snapshot.getBoolean("finished")!! || !gameStillValid) {
-                view.gameOver(scores!!, gameStillValid)
+                view.gameOver(scores!!, !gameStillValid)
                 return
             }
 
