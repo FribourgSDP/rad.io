@@ -12,7 +12,6 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.github.fribourgsdp.radio.MainActivity
 import com.github.fribourgsdp.radio.R
-import com.github.fribourgsdp.radio.config.language.LanguageManager
 import com.github.fribourgsdp.radio.data.User
 import com.github.fribourgsdp.radio.external.musixmatch.MusixmatchLyricsGetter.LYRICS_NOT_FOUND_PLACEHOLDER
 import com.github.fribourgsdp.radio.external.musixmatch.MusixmatchLyricsGetter.makeReadable
@@ -25,6 +24,7 @@ import com.github.fribourgsdp.radio.game.view.LyricsPopup
 import com.github.fribourgsdp.radio.game.view.QuitGameOrLobbyDialog
 import com.github.fribourgsdp.radio.game.view.ScoresAdapter
 import com.github.fribourgsdp.radio.game.view.SongPickerDialog
+import com.github.fribourgsdp.radio.util.MyTextToSpeech
 import com.github.fribourgsdp.radio.voip.MyIRtcEngineEventHandler
 import com.github.fribourgsdp.radio.voip.VoiceIpEngineDecorator
 import io.agora.rtc.Constants
@@ -37,9 +37,8 @@ import kotlin.math.absoluteValue
 
 const val SCORES_KEY = "com.github.fribourgsdp.radio.SCORES"
 const val GAME_CRASH_KEY = "com.github.fribourgsdp.radio.GAME_CRASH"
-const val TTS_INITIALIZATION_RETRY_DELAY_MS = 1000
 
-open class GameActivity : AppCompatActivity(), GameView, Timer.Listener, TextToSpeech.OnInitListener {
+open class GameActivity : AppCompatActivity(), GameView, Timer.Listener {
     private lateinit var user: User
     private var isHost: Boolean = false
     private var noSing = false
@@ -64,7 +63,7 @@ open class GameActivity : AppCompatActivity(), GameView, Timer.Listener, TextToS
 
     private lateinit var playerGameHandler: PlayerGameHandler
 
-    private var tts : TextToSpeech? = null
+    private val tts = MyTextToSpeech(applicationContext)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -81,12 +80,7 @@ open class GameActivity : AppCompatActivity(), GameView, Timer.Listener, TextToS
         val gameUid = intent.getLongExtra(GAME_UID_KEY, -1L)
         initVoiceChat(gameUid)
 
-        if (isHost) {
-            val game = Json.decodeFromString(intent.getStringExtra(GAME_KEY)!!) as Game
-            val hostGameHandler = HostGameHandler(this, game, this, noSing=noSing)
-            hostGameHandler.linkToDatabase()
-            hostGameHandler.setSingerDuration(gameDuration)
-        }
+        initHostGameHandler()
 
         playerGameHandler = PlayerGameHandler(this, gameUid, this, noSing=noSing)
         playerGameHandler.setSingerDuration(gameDuration)
@@ -98,7 +92,7 @@ open class GameActivity : AppCompatActivity(), GameView, Timer.Listener, TextToS
 
         playerGameHandler.linkToDatabase()
 
-        initTextToSpeech()
+        tts.initTextToSpeech(noSing)
 
     }
 
@@ -232,6 +226,15 @@ open class GameActivity : AppCompatActivity(), GameView, Timer.Listener, TextToS
 
     }
 
+    private fun initHostGameHandler(){
+        if (isHost) {
+            val game = Json.decodeFromString(intent.getStringExtra(GAME_KEY)!!) as Game
+            val hostGameHandler = HostGameHandler(this, game, this, noSing=noSing)
+            hostGameHandler.linkToDatabase()
+            hostGameHandler.setSingerDuration(gameDuration)
+        }
+    }
+
     private fun initViews() {
         currentRoundTextView = findViewById(R.id.currentRoundView)
         singerTextView = findViewById(R.id.singerTextView)
@@ -313,47 +316,11 @@ open class GameActivity : AppCompatActivity(), GameView, Timer.Listener, TextToS
     }
 
     override fun readLyrics(lyrics: String) {
-        Toast.makeText(applicationContext, "TTS", Toast.LENGTH_SHORT).show()
-        val speechStatus = tts?.speak(makeReadable(lyrics), TextToSpeech.QUEUE_FLUSH, null, "ID")
-        if(speechStatus == TextToSpeech.ERROR){
-            Toast.makeText(this, getString(R.string.cantUseTextToSpeech), Toast.LENGTH_LONG).show()
-            val t = Thread {
-                Thread.sleep(TTS_INITIALIZATION_RETRY_DELAY_MS.toLong())
-                readLyrics(lyrics)
-            }
-        }
-    }
-
-    private fun initTextToSpeech(){
-        if(!noSing) return
-        tts = TextToSpeech(applicationContext, this)
-    }
-
-    override fun onInit(status: Int) {
-        // check the results in status variable.
-        if (status == TextToSpeech.SUCCESS) {
-            // setting the language to the default phone language.
-            val language = LanguageManager(this).getLang()
-            val locale = if(language == "fr"){
-                Locale.FRANCE
-            } else {
-                Locale.UK
-            }
-            val ttsLangStatus = tts!!.setLanguage(locale)
-            // check if the language is supportable.
-            if (ttsLangStatus == TextToSpeech.LANG_MISSING_DATA || ttsLangStatus == TextToSpeech.LANG_NOT_SUPPORTED) {
-                Toast.makeText(this, getString(R.string.ttsWeCantSupportYourLanguage), Toast.LENGTH_LONG).show()
-            }
-        } else {
-            Toast.makeText(this, getString(R.string.TextToSpeechInitializationFailed), Toast.LENGTH_SHORT).show()
-        }
+        tts.readLyrics(lyrics)
     }
 
     override fun onPause() {
-        if (tts != null) {
-            tts!!.stop()
-            tts!!.shutdown()
-        }
+        tts.onPause()
         super.onPause()
     }
 
