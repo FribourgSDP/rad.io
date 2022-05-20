@@ -73,11 +73,6 @@ interface GameView: Timer.DeadlineHandler {
     fun updateLyrics(lyrics : String)
 
     /**
-     * Use the TextToSpeech functionality to read out given lyrics.
-     */
-    fun readLyrics(lyrics: String)
-
-    /**
      * Modifies the text saying who's singing to be neutral
      */
     fun sayListen()

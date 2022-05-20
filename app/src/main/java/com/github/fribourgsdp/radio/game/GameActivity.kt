@@ -81,8 +81,9 @@ open class GameActivity : AppCompatActivity(), GameView, Timer.Listener {
         initVoiceChat(gameUid)
 
         initHostGameHandler()
+        tts.initTextToSpeech(noSing)
 
-        playerGameHandler = PlayerGameHandler(this, gameUid, this, noSing=noSing)
+        playerGameHandler = PlayerGameHandler(this, gameUid, this, noSing=noSing, tts=tts)
         playerGameHandler.setSingerDuration(gameDuration)
 
         // On submit make the player game handler handle the guess
@@ -91,8 +92,6 @@ open class GameActivity : AppCompatActivity(), GameView, Timer.Listener {
         }
 
         playerGameHandler.linkToDatabase()
-
-        tts.initTextToSpeech(noSing)
 
     }
 
@@ -313,10 +312,6 @@ open class GameActivity : AppCompatActivity(), GameView, Timer.Listener {
         
         lyricsPopup = if(lyrics.isNotEmpty() && lyrics != LYRICS_NOT_FOUND_PLACEHOLDER)  LyricsPopup(lyrics)
             else null
-    }
-
-    override fun readLyrics(lyrics: String) {
-        tts.readLyrics(lyrics)
     }
 
     override fun onPause() {
