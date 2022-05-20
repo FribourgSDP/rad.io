@@ -42,9 +42,6 @@ class WorkingJoinGameActivityTest {
 
     @Before
     fun initIntent() {
-        // TODO: Remove this when mocked
-        // Until the language manager has been mocked this is the only solution
-        LanguageManager(ctx).setLang("en")
         Intents.init()
     }
 
