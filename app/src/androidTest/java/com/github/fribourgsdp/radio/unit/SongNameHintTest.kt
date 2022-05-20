@@ -1,9 +1,5 @@
 package com.github.fribourgsdp.radio.unit
 
-import android.util.Log
-import com.github.fribourgsdp.radio.config.Settings
-import com.github.fribourgsdp.radio.config.language.Language
-import com.github.fribourgsdp.radio.external.google.GoogleSignInActivity
 import com.github.fribourgsdp.radio.util.SongNameHint
 import org.junit.Assert
 import org.junit.Test

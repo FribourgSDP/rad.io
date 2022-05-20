@@ -81,7 +81,7 @@
             android:name=".game.prep.GameSettingsActivity"
             android:exported="false" />
         <activity
-            android:name=".external.google.GoogleSignInActivity"
+            android:name=".deprecated.GoogleSignInActivity"
             android:exported="false" />
         <activity
             android:name=".MainActivity"

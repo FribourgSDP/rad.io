@@ -3,7 +3,6 @@ package com.github.fribourgsdp.radio.activities
 
 import android.content.Context
 import android.content.Intent
-import android.view.View
 import androidx.test.core.app.ActivityScenario
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.espresso.Espresso
@@ -12,7 +11,6 @@ import androidx.test.espresso.action.ViewActions
 import androidx.test.espresso.action.ViewActions.click
 import androidx.test.espresso.assertion.ViewAssertions
 import androidx.test.espresso.intent.Intents
-import androidx.test.espresso.intent.matcher.IntentMatchers
 import androidx.test.espresso.intent.matcher.IntentMatchers.hasComponent
 import androidx.test.espresso.matcher.RootMatchers
 import androidx.test.espresso.matcher.ViewMatchers
@@ -21,21 +19,14 @@ import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.github.fribourgsdp.radio.MainActivity
 import com.github.fribourgsdp.radio.R
 import com.github.fribourgsdp.radio.auth.GoogleSignInResult
-import com.github.fribourgsdp.radio.data.Genre
-import com.github.fribourgsdp.radio.data.Playlist
-import com.github.fribourgsdp.radio.data.Song
 import com.github.fribourgsdp.radio.data.User
 import com.github.fribourgsdp.radio.data.view.MY_CLIENT_ID
-import com.github.fribourgsdp.radio.data.view.PlaylistSongsFragment
 import com.github.fribourgsdp.radio.data.view.REDIRECT_URI
 import com.github.fribourgsdp.radio.data.view.UserProfileActivity
 import com.github.fribourgsdp.radio.database.Database
-import com.github.fribourgsdp.radio.external.google.GoogleSignInActivity
 import com.github.fribourgsdp.radio.mockimplementations.*
 import com.google.android.gms.tasks.Tasks
-import com.google.firebase.auth.FirebaseAuth
 import junit.framework.TestCase
-import org.hamcrest.Matchers
 import org.hamcrest.Matchers.allOf
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -44,13 +35,8 @@ import org.junit.Assert.*
 
 import org.junit.After
 import org.junit.Before
-import org.mockito.ArgumentMatchers
 import org.mockito.Mockito
 import org.mockito.Mockito.`when`
-import org.mockito.Mockito.matches
-
-
-import java.util.concurrent.TimeUnit
 
 @RunWith(AndroidJUnit4::class)
 class UserProfileActivityTest : TestCase() {

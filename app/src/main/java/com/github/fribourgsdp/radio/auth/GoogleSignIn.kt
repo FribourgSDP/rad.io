@@ -6,10 +6,7 @@ import android.util.Log
 import android.widget.Toast
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.appcompat.app.AppCompatActivity
-import com.github.fribourgsdp.radio.R
 import com.github.fribourgsdp.radio.data.view.UserProfileActivity
-import com.github.fribourgsdp.radio.external.google.GoogleSignInActivity
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions

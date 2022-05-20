@@ -1,15 +1,10 @@
 package com.github.fribourgsdp.radio.data.view
 
-import android.content.ContentValues
-import android.content.Context
 import android.content.Intent
 import android.graphics.PorterDuff
 import android.graphics.PorterDuffColorFilter
 import android.os.Bundle
-import android.util.Log
-import android.view.KeyEvent
 import android.view.View
-import android.view.inputmethod.InputMethodManager
 import android.widget.Button
 import android.widget.EditText
 import android.widget.ImageView
@@ -17,10 +12,8 @@ import android.widget.TextView
 import com.github.fribourgsdp.radio.*
 import com.github.fribourgsdp.radio.auth.*
 import com.github.fribourgsdp.radio.config.MyAppCompatActivity
-import com.github.fribourgsdp.radio.config.SettingsActivity
 import com.github.fribourgsdp.radio.data.User
 import com.github.fribourgsdp.radio.database.DatabaseHolder
-import com.github.fribourgsdp.radio.external.google.GoogleSignInActivity
 import com.github.fribourgsdp.radio.util.MyFragment
 import com.google.android.gms.tasks.Task
 import com.google.android.gms.tasks.Tasks
@@ -107,7 +100,6 @@ open class UserProfileActivity : MyAppCompatActivity(), KeepOrDismissPlaylistDia
         } else {
 
             googleSignIn.signIn()
-            //startActivity(Intent(this, GoogleSignInActivity::class.java))
         }
     }
 
