@@ -22,6 +22,7 @@ import com.github.fribourgsdp.radio.game.prep.*
 import com.github.fribourgsdp.radio.game.timer.Timer
 import com.github.fribourgsdp.radio.game.timer.TimerProgressBarHandler
 import com.github.fribourgsdp.radio.game.view.*
+import com.github.fribourgsdp.radio.util.MyTextToSpeech
 import com.github.fribourgsdp.radio.voip.MyIRtcEngineEventHandler
 import com.github.fribourgsdp.radio.voip.VoiceIpEngineDecorator
 import io.agora.rtc.Constants
@@ -105,7 +106,12 @@ open class GameActivity : AppCompatActivity(), GameView, Timer.Listener {
     }
 
     override fun updateSinger(singerId: String) {
-        singerTextView.text = getString(R.string.singing_format, mapIdToName[singerId] ?: singerId)
+        if(noSing){
+            singerTextView.text = getString(R.string.listen)
+        } else {
+            singerTextView.text =
+                getString(R.string.singing_format, mapIdToName[singerId] ?: singerId)
+        }
     }
 
     override fun updateRound(currentRound: Long) {
@@ -321,10 +327,6 @@ open class GameActivity : AppCompatActivity(), GameView, Timer.Listener {
     override fun onPause() {
         tts.onPause()
         super.onPause()
-    }
-
-    override fun sayListen() {
-        singerTextView.text = getString(R.string.listen)
     }
 
 

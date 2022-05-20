@@ -90,7 +90,4 @@ class FakeGameView(private val playerID: String = ""): GameView {
         lyricsDisplayed = lyrics
     }
 
-    override fun sayListen() {
-        TODO("Not yet implemented")
-    }
 }

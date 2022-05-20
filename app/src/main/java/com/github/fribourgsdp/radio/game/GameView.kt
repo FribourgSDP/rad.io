@@ -12,6 +12,7 @@ interface GameView: Timer.DeadlineHandler {
 
     /**
      * Update the view to display the current singer in the game.
+     * Or modifies the text saying who's singing to be neutral
      * @param singerId the id of the singer
      */
     fun updateSinger(singerId: String)
@@ -71,11 +72,6 @@ interface GameView: Timer.DeadlineHandler {
      * Update the [lyrics] of the current song in the game
      */
     fun updateLyrics(lyrics : String)
-
-    /**
-     * Modifies the text saying who's singing to be neutral
-     */
-    fun sayListen()
 
     /**
      * An interface creating listeners able to handle songs pick in a [GameView].
