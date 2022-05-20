@@ -13,6 +13,7 @@ import com.github.fribourgsdp.radio.R
 import com.github.fribourgsdp.radio.data.Playlist
 import com.github.fribourgsdp.radio.data.User
 import com.github.fribourgsdp.radio.external.musixmatch.MusixmatchLyricsGetter
+import com.github.fribourgsdp.radio.game.Game
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 
@@ -126,9 +127,7 @@ open class GameSettingsActivity : AppCompatActivity() {
 
     private fun startButtonBehavior() : View.OnClickListener {
         return View.OnClickListener {
-            if(noSingCheckBox.isChecked && selectedPlaylist.getSongs().none { song ->
-                    !(song.lyrics == MusixmatchLyricsGetter.BACKEND_ERROR_PLACEHOLDER || song.lyrics == MusixmatchLyricsGetter.LYRICS_NOT_FOUND_PLACEHOLDER)
-                }){
+            if(noSingCheckBox.isChecked && selectedPlaylist.getSongs().none(Game.songHasLyrics)){
                 Toast.makeText(applicationContext, getString(R.string.playlistLyricsLess), Toast.LENGTH_LONG).show()
             } else {
                 val intent: Intent = Intent(this, LobbyActivity::class.java).apply {

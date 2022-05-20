@@ -4,11 +4,9 @@ import com.github.fribourgsdp.radio.data.Playlist
 import com.github.fribourgsdp.radio.data.Song
 import com.github.fribourgsdp.radio.data.User
 import com.github.fribourgsdp.radio.external.musixmatch.MusixmatchLyricsGetter
-import java.util.*
-import kotlin.collections.ArrayList
-import kotlin.collections.HashMap
-import kotlin.collections.HashSet
 import kotlinx.serialization.Serializable
+import java.util.*
+import java.util.function.Predicate
 import kotlin.math.max
 
 /**
@@ -26,7 +24,7 @@ import kotlin.math.max
 @Serializable
 class Game private constructor(val id: Long, val name: String, val host: User, val playlist: Playlist, val nbRounds: Int,
                                val withHint: Boolean, val isPrivate: Boolean, private val listUser: List<String>,
-                               val noSing : Boolean) {
+                               private val noSing : Boolean) {
 
     private val scoreMap = HashMap(listUser.associateWith { 0L })
     private var usersToPlay = listUser.size
@@ -34,7 +32,12 @@ class Game private constructor(val id: Long, val name: String, val host: User, v
     var currentRound = 1
         private set
 
-    private val songsNotDone = HashSet(playlist.getSongs())
+    private val songsNotDone =
+        if(!noSing)
+            HashSet(playlist.getSongs())
+        else
+            HashSet(playlist.getSongs().filter(songHasLyrics))
+
 
     /**
      * Return the score of a user.
@@ -118,11 +121,10 @@ class Game private constructor(val id: Long, val name: String, val host: User, v
      * @return null if no song has lyrics
      */
     fun getChoiceWithLyrics() : Song? {
+        //Also restart from the beginning if all songs have been done.
         if(songsNotDone.isEmpty()){
             songsNotDone.addAll(playlist.getSongs()
-                .filter { song ->
-                    !(song.lyrics == MusixmatchLyricsGetter.BACKEND_ERROR_PLACEHOLDER || song.lyrics == MusixmatchLyricsGetter.LYRICS_NOT_FOUND_PLACEHOLDER)
-            })
+                .filter(songHasLyrics))
         }
         if(songsNotDone.isEmpty()){
             return null
@@ -324,6 +326,15 @@ class Game private constructor(val id: Long, val name: String, val host: User, v
                     max(70 - 5 * (position - 3), 10)
                 }
             }
+        }
+
+        /**
+         * Predicate that is true for songs that have lyrics, and false for songs whose lyrics are not defined due to
+         * - error in the backend
+         * - lyrics nonexistence
+         */
+        val songHasLyrics : (Song) -> Boolean = { song : Song ->
+            !(song.lyrics == MusixmatchLyricsGetter.BACKEND_ERROR_PLACEHOLDER || song.lyrics == MusixmatchLyricsGetter.LYRICS_NOT_FOUND_PLACEHOLDER)
         }
 
     }
