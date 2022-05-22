@@ -345,7 +345,6 @@ class GameActivityTest {
             onView(withId(R.id.singerTextView)).check(matches(withText(ctx.getString(R.string.listen))))
         }
     }
-}
 
 
     @Test
