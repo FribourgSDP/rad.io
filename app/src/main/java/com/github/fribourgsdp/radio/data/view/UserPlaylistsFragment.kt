@@ -3,6 +3,10 @@ package com.github.fribourgsdp.radio.data.view
 import android.content.Intent
 import android.os.Bundle
 import android.view.View
+import androidx.activity.result.ActivityResult
+import androidx.activity.result.ActivityResultCaller.*
+import androidx.activity.result.ActivityResultLauncher
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.github.fribourgsdp.radio.util.MyFragment
@@ -18,13 +22,17 @@ const val PLAYLIST_DATA = "com.github.fribourgsdp.radio.PLAYLIST_INNER_DATA"
 class UserPlaylistsFragment : MyFragment(R.layout.fragment_user_playlists_display),
     OnClickListener {
     private lateinit var user: User
-    private lateinit var userPlaylists: MutableList<Playlist>
+    private lateinit var userPlaylists: List<Playlist>
     private lateinit var songDisplay: RecyclerView
+    private lateinit var startForResult : ActivityResultLauncher<Intent>
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         loadData()
         initializeRecyclerView()
+        startForResult = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
+                _: ActivityResult -> notifyUserChanged()
+        }
     }
 
     private fun initializeRecyclerView() {
@@ -38,13 +46,15 @@ class UserPlaylistsFragment : MyFragment(R.layout.fragment_user_playlists_displa
         activity?.run {
             val intent = Intent(this, PlaylistsFragmentHolderActivity::class.java)
                 .putExtra(PLAYLIST_DATA, userPlaylists[position].name)
-            startActivity(intent)
+            startForResult.launch(intent)
         }
     }
 
     fun notifyUserChanged() {
         loadData()
-        songDisplay.adapter?.notifyDataSetChanged()
+        // for some reason, notifying changes does not work
+        // but creating a new adapter does
+        songDisplay.adapter = PlaylistAdapter(userPlaylists, this)
     }
 
     private fun loadData(){

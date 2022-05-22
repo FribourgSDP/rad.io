@@ -15,10 +15,4 @@ class PlaylistsFragmentHolderActivity : MyAppCompatActivity() {
         bundle.putString(PLAYLIST_DATA, intent.getStringExtra(PLAYLIST_DATA))
         MyFragment.beginTransaction<PlaylistSongsFragment>(supportFragmentManager, bundle)
     }
-
-    override fun onBackPressed() {
-        val intent = Intent(this, UserProfileActivity::class.java)
-        startActivity(intent)
-        finish()
-    }
 }
