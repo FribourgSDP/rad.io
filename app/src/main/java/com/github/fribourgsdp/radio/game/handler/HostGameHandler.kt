@@ -10,13 +10,11 @@ import com.github.fribourgsdp.radio.external.musixmatch.MusixmatchLyricsGetter
 import com.github.fribourgsdp.radio.game.Game
 import com.github.fribourgsdp.radio.game.GameView
 import com.github.fribourgsdp.radio.game.prep.DEFAULT_GAME_DURATION
-import com.github.fribourgsdp.radio.util.getAndCast
 import com.github.fribourgsdp.radio.util.getPlayerDoneMap
 import com.github.fribourgsdp.radio.util.getPlayerFoundMap
 import com.github.fribourgsdp.radio.util.getScoresOfRound
 import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.FieldValue
-import java.time.Duration
 
 const val NO_SINGER = ""
 

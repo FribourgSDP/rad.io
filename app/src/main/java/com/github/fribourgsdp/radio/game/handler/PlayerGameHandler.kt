@@ -168,7 +168,7 @@ class PlayerGameHandler(
         val deadline = snapshot.getTimestamp("round_deadline")
         if(songToGuess != null && deadline != null) {
             tts!!.readLyrics(getLyricsFromSnapshot(snapshot))
-            view.startTimer(deadline!!.toDate())
+            view.startTimer(deadline.toDate())
         } else{
             view.stopTimer()
             view.updateSinger(NO_SINGER)

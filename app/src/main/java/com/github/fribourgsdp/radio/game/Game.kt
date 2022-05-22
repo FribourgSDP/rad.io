@@ -6,7 +6,6 @@ import com.github.fribourgsdp.radio.data.User
 import com.github.fribourgsdp.radio.external.musixmatch.MusixmatchLyricsGetter
 import kotlinx.serialization.Serializable
 import java.util.*
-import java.util.function.Predicate
 import kotlin.math.max
 
 /**

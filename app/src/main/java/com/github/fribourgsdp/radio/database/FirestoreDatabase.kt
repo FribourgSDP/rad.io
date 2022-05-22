@@ -2,7 +2,6 @@ package com.github.fribourgsdp.radio.database
 
 import android.content.ContentValues
 import android.util.Log
-import com.github.fribourgsdp.radio.*
 import com.github.fribourgsdp.radio.data.*
 import com.github.fribourgsdp.radio.game.Game
 import com.github.fribourgsdp.radio.util.*
@@ -11,14 +10,11 @@ import com.google.android.gms.tasks.Tasks
 import com.google.firebase.Timestamp
 import com.google.firebase.firestore.DocumentReference
 import com.google.firebase.firestore.DocumentSnapshot
-import com.google.firebase.firestore.ktx.firestore
-import com.google.firebase.ktx.Firebase
 import com.google.firebase.firestore.EventListener
 import com.google.firebase.firestore.FieldValue
-import java.lang.Exception
+import com.google.firebase.firestore.ktx.firestore
+import com.google.firebase.ktx.Firebase
 import java.util.*
-import kotlin.collections.ArrayList
-import kotlin.collections.HashMap
 
 
 /**
@@ -91,7 +87,7 @@ class FirestoreDatabase(var refMake: FirestoreRef) : Database {
             "playlists" to playlistInfo
         )
         val docRef = refMake.getUserRef(userId)
-        Log.d(ContentValues.TAG, "DocumentSnapshot added with ID put: " + docRef.toString())
+        Log.d(ContentValues.TAG, "DocumentSnapshot added with ID put: $docRef")
         return docRef.set(userHash)
     }
 
