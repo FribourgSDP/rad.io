@@ -1,4 +1,4 @@
-package com.github.fribourgsdp.radio.external.google
+package com.github.fribourgsdp.radio.deprecated
 
 import android.app.Activity
 import android.content.Intent
