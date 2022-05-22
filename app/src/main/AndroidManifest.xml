@@ -84,7 +84,7 @@
             android:name=".game.prep.GameSettingsActivity"
             android:exported="false" />
         <activity
-            android:name=".external.google.GoogleSignInActivity"
+            android:name=".deprecated.GoogleSignInActivity"
             android:exported="false" />
         <activity
             android:name=".MainActivity"
@@ -129,10 +129,13 @@
             android:name=".mockimplementations.MockUserProfileActivity"
             android:exported="false" />
         <activity
-            android:name=".mockimplementations.GoogleUserMockUserProfileActivity"           android:exported="false" />
+            android:name=".mockimplementations.GoogleSignInTestMockUserProfileActivity"
+            android:exported="false" />
+        <activity
+            android:name=".mockimplementations.GoogleUserMockUserProfileActivity"
+            android:exported="false" />
         <activity
             android:name=".mockimplementations.MockSettingsActivity"
             android:exported="false" />
-    </application>
-
+           </application>
 </manifest>

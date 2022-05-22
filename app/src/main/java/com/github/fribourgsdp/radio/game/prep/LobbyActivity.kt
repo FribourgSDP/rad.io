@@ -328,6 +328,7 @@ open class LobbyActivity : MyAppCompatActivity(){
             putExtra(GAME_UID_KEY, gameID)
             putExtra(GAME_DURATION_KEY, gameDuration)
             putExtra(GAME_IS_NO_SING_MODE, noSing)
+            putExtra(GAME_HINT_KEY, withHint)
         }
 
         if (isHost && game != null) {
