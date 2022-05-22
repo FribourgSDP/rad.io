@@ -61,9 +61,4 @@ class UserPlaylistsFragment : MyFragment(R.layout.fragment_user_playlists_displa
         user = User.load(requireContext())
         userPlaylists = user.getPlaylists().toMutableList()
     }
-
-    override fun onResume() {
-        notifyUserChanged()
-        super.onResume()
-    }
 }
