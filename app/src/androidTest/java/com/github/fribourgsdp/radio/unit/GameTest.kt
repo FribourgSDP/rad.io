@@ -207,6 +207,20 @@ class GameTest {
     }
 
     @Test
+    fun getChoicesWithLyricsReturnsNull(){
+        val game = Game.Builder()
+            .setNoSing(true)
+            .setHost(User("Test User"))
+            .setPlaylist(Playlist("test pl", setOf(
+                Song("Stream of Consciousness", "Dream theater", MusixmatchLyricsGetter.LYRICS_NOT_FOUND_PLACEHOLDER),
+                Song("Hell\'s Kitchen", "Dream theater", MusixmatchLyricsGetter.BACKEND_ERROR_PLACEHOLDER)
+            ), Genre.NONE))
+            .build()
+        val choice = game.getChoiceWithLyrics()
+        assertNull(choice)
+    }
+
+    @Test
     fun getChoiceWithLyricsRotatesOnAllSongs(){
         val game = Game.Builder()
             .setNoSing(true)

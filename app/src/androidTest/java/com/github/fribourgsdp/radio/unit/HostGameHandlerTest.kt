@@ -179,4 +179,35 @@ class HostGameHandlerTest {
 
         assertEquals(2, game.currentRound)
     }
+
+    @Test
+    fun updateMapContainsSongChoices(){
+        val view = FakeGameView()
+        val game = Game.Builder()
+            .setNoSing(false)
+            .setHost(host)
+            .addUserId(otherPlayer.id)
+            .setPlaylist(Playlist("Test PL", setOf(
+                Song("a", "b", "c"),
+                Song("d", "e", "f")
+            ), Genre.NONE))
+            .build()
+        var choices : List<String> = listOf()
+        val db = mock(Database::class.java)
+        `when`(db.resetGameMetadata(anyLong(), anyString()))
+            .thenReturn(Tasks.forResult(null))
+        `when`(db.updateGame(anyLong(), anyMap()))
+            .then{i ->
+                val updatesMap = i.getArgument<Map<String, Any>>(1)
+                choices = ((updatesMap["song_choices"] as List<String>?)!!)
+                Tasks.forResult(null)
+            }
+        val handler = HostGameHandler(ctx, game, view, db, noSing = false)
+        handler.handleSnapshot(mockSnapshot)
+
+        Thread.sleep(sleepingTime)
+
+        assertTrue("$choices", choices.containsAll(
+            listOf("A", "D")))
+    }
 }

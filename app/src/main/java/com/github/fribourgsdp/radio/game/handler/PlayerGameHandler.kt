@@ -112,7 +112,7 @@ class PlayerGameHandler(
 
     private fun handleTimeoutOnGuess(userId: String) {
         if(noSing){
-            view.displaySong("Previous song was : ${songToGuess.toString()}")
+            view.displaySong(ctx.getString(R.string.previousSongDisplay) +songToGuess.toString())
         }
         db.playerEndTurn(gameID, userId, false)
             .addOnFailureListener {

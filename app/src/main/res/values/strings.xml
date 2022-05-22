@@ -127,6 +127,7 @@
     <string name="TextToSpeechInitializationFailed">Text-to-speech engine could not be initialized properly.</string>
     <string name="playlistLyricsLess">The selected playlist has no song with lyrics. Please select another one.</string>
     <string name="return_to_the_game">Return to the game</string>
+    <string name="previousSongDisplay">Previous song was :</string>
     <string-array name="dont_quit_now_messages">
         <item
             >"Don't quit now… we only just started!"</item>

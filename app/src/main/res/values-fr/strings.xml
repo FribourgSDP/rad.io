@@ -128,6 +128,7 @@
     <string name="TextToSpeechInitializationFailed">La synthèse vocale n\'a pas pu être initialisée.</string>
     <string name="playlistLyricsLess">La playlist sélectionnée ne contient aucune chanson avec des paroles. Choisis-en une autre.</string>
     <string name="return_to_the_game">Retournez à la partie</string>
+    <string name="previousSongDisplay">La chanson précédente était :</string>
     <string-array name="dont_quit_now_messages">
         <item
             >"Ne pars pas maintenant… on vient juste de commencer!"</item>

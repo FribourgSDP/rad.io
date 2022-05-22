@@ -161,7 +161,7 @@ class HostGameHandler(
             return hashMapOf(
                 "finished" to done,
                 "current_round" to game.currentRound,
-                "current_song" to nextChoices[0],// TODO:
+                "current_song" to nextChoices[0],
                 "round_deadline" to FieldValue.delete(),
                 "song_choices" to nextChoices.toList(),
                 "song_choices_lyrics" to nextChoicesLyrics,

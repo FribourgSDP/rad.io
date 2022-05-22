@@ -11,7 +11,7 @@ import java.util.*
 
 const val TTS_INITIALIZATION_RETRY_DELAY_MS = 1000
 
-class MyTextToSpeech(private val applicationContext: Context) : TextToSpeech.OnInitListener {
+open class MyTextToSpeech(private val applicationContext: Context) : TextToSpeech.OnInitListener {
     private var tts: TextToSpeech? = null
 
     override fun onInit(status: Int) {
@@ -47,7 +47,7 @@ class MyTextToSpeech(private val applicationContext: Context) : TextToSpeech.OnI
      * Reads the given lyrics, and display Toast messages accordingly.
      * If the TextToSpeech engine appears not to be initialized yet, spawns a new Thread and retries [TTS_INITIALIZATION_RETRY_DELAY_MS]ms later.
      */
-    fun readLyrics(lyrics : String){
+    open fun readLyrics(lyrics : String){
         toastDisplay("TTS")
         val speechStatus = tts?.speak(MusixmatchLyricsGetter.makeReadable(lyrics), TextToSpeech.QUEUE_FLUSH, null, "ID")
         if(speechStatus == TextToSpeech.ERROR){
