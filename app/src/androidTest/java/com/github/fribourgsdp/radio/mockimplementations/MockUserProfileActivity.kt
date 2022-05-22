@@ -8,6 +8,7 @@ import com.github.fribourgsdp.radio.data.Song
 import com.github.fribourgsdp.radio.data.User
 import com.github.fribourgsdp.radio.data.view.UserProfileActivity
 import com.github.fribourgsdp.radio.database.Database
+import com.github.fribourgsdp.radio.utils.KotlinAny
 import com.google.android.gms.tasks.Tasks
 import org.mockito.Mockito
 import org.mockito.Mockito.anyString
@@ -53,16 +54,11 @@ class GoogleUserMockUserProfileActivity : UserProfileActivity() {
         testUser.addPlaylist(playlist)
         testUser.isGoogleUser = true
         Mockito.`when`(db.getUser(anyString())).thenReturn(Tasks.forResult(testUser))
-        Mockito.`when`(db.setUser(anyString(),any())).thenReturn(Tasks.forResult(null))
+        Mockito.`when`(db.setUser(anyString(), KotlinAny.any())).thenReturn(Tasks.forResult(null))
         return db
     }
 
-    //this is usefull in order to be able to use any() from mockito
-    private fun <T> any(): T {
-        Mockito.any<T>()
-        return uninitialized()
-    }
-    private fun <T> uninitialized(): T = null as T
+
 
 
 }
@@ -94,16 +90,9 @@ open class MockUserProfileActivity : UserProfileActivity() {
         testUser.addPlaylist(playlist)
         testUser.isGoogleUser = true
         Mockito.`when`(db.getUser(anyString())).thenReturn(Tasks.forResult(testUser))
-        Mockito.`when`(db.setUser(anyString(),any())).thenReturn(Tasks.forResult(null))
+        Mockito.`when`(db.setUser(anyString(),KotlinAny.any())).thenReturn(Tasks.forResult(null))
         return db
     }
-
-    //this is usefull in order to be able to use any() from mockito
-    private fun <T> any(): T {
-        Mockito.any<T>()
-        return uninitialized()
-    }
-    private fun <T> uninitialized(): T = null as T
 
 
 }
