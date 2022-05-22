@@ -14,7 +14,7 @@ import androidx.test.espresso.matcher.ViewMatchers
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.github.fribourgsdp.radio.R
 import com.github.fribourgsdp.radio.data.view.UserProfileActivity
-import com.github.fribourgsdp.radio.external.google.GoogleSignInActivity
+import com.github.fribourgsdp.radio.deprecated.GoogleSignInActivity
 import com.google.android.gms.tasks.Tasks
 import com.google.firebase.auth.*
 import org.hamcrest.Matchers
@@ -82,7 +82,7 @@ class GoogleSignInActivityTest {
             val mockAdditionalUserInfo = makeMockAdditionalUserInfo(true)
             val mockUser = makeMockFirebaseUser()
             val mockAuthResult = makeMockAuthResult(mockAdditionalUserInfo,mockUser)
-            val mockFireBaseAuth = makeMockFireBaseAuth(false, mockAuthResult)
+            val mockFireBaseAuth = makeMockFireBaseAuth(false, mockAuthResult, mockUser)
             val mockAuthCredential: AuthCredential = makeMockAuthCredential()
 
             scenario.onActivity { a ->
@@ -112,7 +112,7 @@ class GoogleSignInActivityTest {
             val mockAdditionalUserInfo = makeMockAdditionalUserInfo(false)
             val mockUser = makeMockFirebaseUser()
             val mockAuthResult = makeMockAuthResult(mockAdditionalUserInfo,mockUser)
-            val mockFireBaseAuth = makeMockFireBaseAuth(false, mockAuthResult)
+            val mockFireBaseAuth = makeMockFireBaseAuth(false, mockAuthResult, mockUser)
             val mockAuthCredential: AuthCredential = makeMockAuthCredential()
 
             scenario.onActivity { a ->
@@ -140,7 +140,7 @@ class GoogleSignInActivityTest {
             val mockAdditionalUserInfo = makeMockAdditionalUserInfo(false)
             val mockUser = makeMockFirebaseUser()
             val mockAuthResult = makeMockAuthResult(mockAdditionalUserInfo,mockUser)
-            val mockFireBaseAuth = makeMockFireBaseAuth(true, mockAuthResult)
+            val mockFireBaseAuth = makeMockFireBaseAuth(true, mockAuthResult, mockUser)
             val mockAuthCredential: AuthCredential = makeMockAuthCredential()
 
             scenario.onActivity { a ->
@@ -197,7 +197,7 @@ class GoogleSignInActivityTest {
 
 
 
-fun makeMockFireBaseAuth(isFail: Boolean, mockAuthResult: AuthResult): FirebaseAuth {
+fun makeMockFireBaseAuth(isFail: Boolean, mockAuthResult: AuthResult, firebaseUser : FirebaseUser): FirebaseAuth {
     val firebaseAuth: FirebaseAuth = mock(FirebaseAuth::class.java)
     `when`(firebaseAuth.signInWithCredential(any())).thenReturn(
         if (isFail) {
@@ -207,6 +207,7 @@ fun makeMockFireBaseAuth(isFail: Boolean, mockAuthResult: AuthResult): FirebaseA
         } else {
         Tasks.forResult(mockAuthResult)
     })
+    `when`(firebaseAuth.currentUser).thenReturn(firebaseUser)
     return firebaseAuth
 }
 

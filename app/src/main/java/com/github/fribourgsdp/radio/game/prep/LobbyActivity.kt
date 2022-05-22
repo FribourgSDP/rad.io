@@ -322,6 +322,7 @@ open class LobbyActivity : MyAppCompatActivity(){
             putExtra(MAP_ID_NAME_KEY, mapIdToName)
             putExtra(GAME_UID_KEY, gameID)
             putExtra(GAME_DURATION_KEY, gameDuration)
+            putExtra(GAME_HINT_KEY, withHint)
         }
 
         if (isHost && game != null) {

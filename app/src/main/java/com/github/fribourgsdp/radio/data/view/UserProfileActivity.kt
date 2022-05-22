@@ -1,24 +1,19 @@
 package com.github.fribourgsdp.radio.data.view
 
-import android.content.ContentValues
-import android.content.Context
 import android.content.Intent
 import android.graphics.PorterDuff
 import android.graphics.PorterDuffColorFilter
 import android.os.Bundle
-import android.util.Log
-import android.view.KeyEvent
 import android.view.View
-import android.view.inputmethod.InputMethodManager
 import android.widget.Button
 import android.widget.EditText
 import android.widget.ImageView
 import android.widget.TextView
 import com.github.fribourgsdp.radio.*
+import com.github.fribourgsdp.radio.auth.*
 import com.github.fribourgsdp.radio.config.MyAppCompatActivity
 import com.github.fribourgsdp.radio.data.User
 import com.github.fribourgsdp.radio.database.DatabaseHolder
-import com.github.fribourgsdp.radio.external.google.GoogleSignInActivity
 import com.github.fribourgsdp.radio.util.MyFragment
 import com.google.android.gms.tasks.Task
 import com.google.android.gms.tasks.Tasks
@@ -47,8 +42,10 @@ open class UserProfileActivity : MyAppCompatActivity(), KeepOrDismissPlaylistDia
     private lateinit var userIcon : ImageView
     private var signedIn : Boolean = false
 
+
     private var db = initializeDatabase()
 
+    protected lateinit var googleSignIn : GoogleSignIn
 
     //firebase auth
     private lateinit var firebaseAuth: FirebaseAuth
@@ -56,9 +53,9 @@ open class UserProfileActivity : MyAppCompatActivity(), KeepOrDismissPlaylistDia
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_user_profile)
+        googleSignIn = GoogleSignIn(this, getString(R.string.default_web_client_id))
         instantiateViews()
 
-        val fromGoogle = intent.getBooleanExtra("FromGoogle",false)
 
         User.loadOrDefault(this).addOnSuccessListener { u ->
             user = u
@@ -71,10 +68,7 @@ open class UserProfileActivity : MyAppCompatActivity(), KeepOrDismissPlaylistDia
             val bundle = Bundle()
             bundle.putString(USER_DATA, Json.encodeToString(user))
             MyFragment.beginTransaction<UserPlaylistsFragment>(supportFragmentManager, bundle)
-            if(fromGoogle){
-                //check if the connection was sucessful, if yes, do the afterSignInProcedure
-                afterSignInProcedure()
-            }
+
         }
 
         launchSpotifyButton.setOnClickListener {
@@ -94,14 +88,19 @@ open class UserProfileActivity : MyAppCompatActivity(), KeepOrDismissPlaylistDia
         }
 
         googleSignInButton.setOnClickListener {
-            if (signedIn) {
-                signOut()
-            } else {
-                startActivity(Intent(this, GoogleSignInActivity::class.java))
-            }
+            signInOrOut()
         }
         findViewById<FloatingActionButton>(R.id.addPlaylistButton).setOnClickListener{startActivity(Intent(this, AddPlaylistActivity::class.java))}
 
+    }
+
+    open fun signInOrOut(){
+        if (signedIn) {
+            signOut()
+        } else {
+
+            googleSignIn.signIn()
+        }
     }
 
     private fun instantiateViews(){
@@ -230,8 +229,15 @@ open class UserProfileActivity : MyAppCompatActivity(), KeepOrDismissPlaylistDia
 
     }
 
-
-
+    /**
+     * Used to indicate that you are logging in from GoogleSignIn
+     * @param code Represents the result of the connection through Google SignIn (Fail, newuser, normalUser or Already connected)
+     */
+    open fun loginFromGoogle(code : GoogleSignInResult) {
+        if(code == GoogleSignInResult.NORMAL_USER || code == GoogleSignInResult.NEW_USER) {
+            afterSignInProcedure()
+        }
+    }
 
 
     //this should only happen on successful signIn,
@@ -241,8 +247,6 @@ open class UserProfileActivity : MyAppCompatActivity(), KeepOrDismissPlaylistDia
         user.save(this)
         val mergeDismissImportPlaylistPicker = MergeDismissImportPlaylistDialog(this)
         mergeDismissImportPlaylistPicker.show(supportFragmentManager, "mergeDismissImportPlaylistPicker")
-
-
     }
 
     private fun signOut(){
