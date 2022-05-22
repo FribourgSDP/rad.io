@@ -230,7 +230,8 @@ class FirestoreDatabase(var refMake: FirestoreRef) : Database {
             "players" to hashMapOf<String, String>(),
             "permissions" to hashMapOf<String, Boolean>(),
             "launched" to false,
-            "validity" to true
+            "validity" to true,
+            "noSing" to settings.noSing
         )
 
         val collection = db.collection("lobby")
@@ -292,9 +293,10 @@ class FirestoreDatabase(var refMake: FirestoreRef) : Database {
             val nbRounds = snapshot.getLong("nbRounds")!!
             val withHint = snapshot.getBoolean("withHint")!!
             val private = snapshot.getBoolean("private")!!
+            val noSing = snapshot.getBoolean("noSing")!!
 
             // Success
-            Game.Settings(host, name, playlist, nbRounds.toInt(), withHint, private)
+            Game.Settings(host, name, playlist, nbRounds.toInt(), withHint, private, noSing)
         }
     }
 
@@ -551,6 +553,7 @@ class FirestoreDatabase(var refMake: FirestoreRef) : Database {
         val roundDeadline = Date()
         //incrementBy is in seconds whereas we must add milliseconds to the time before deadline.
         roundDeadline.time += incrementBy*1000
+        Log.println(Log.ASSERT, "Firestore database", "assigning current song and deadline")
 
         val songUpdateMap = hashMapOf(
             "current_song" to songName,

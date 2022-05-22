@@ -53,7 +53,7 @@ open class MyTextToSpeech(private val applicationContext: Context) : TextToSpeec
         if(speechStatus == TextToSpeech.ERROR){
             toastDisplay(applicationContext.getString(R.string.cantUseTextToSpeech))
             val t = Thread {
-                Thread.sleep(TTS_INITIALIZATION_RETRY_DELAY_MS.toLong())
+                Thread.sleep(1000)
                 readLyrics(lyrics)
             }
         }

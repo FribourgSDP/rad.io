@@ -283,7 +283,7 @@ class Game private constructor(val id: Long, val name: String, val host: User, v
         * @return the [Settings] of the game currently building.
         */
         fun getSettings(): Settings {
-            return Settings(host.name, name, playlist.name, nbRounds, withHint, isPrivate)
+            return Settings(host.name, name, playlist.name, nbRounds, withHint, isPrivate, noSing)
         }
 
         /**
@@ -302,7 +302,8 @@ class Game private constructor(val id: Long, val name: String, val host: User, v
         val playlistName: String,
         val nbRounds: Int,
         val withHint: Boolean,
-        val isPrivate: Boolean
+        val isPrivate: Boolean,
+        val noSing : Boolean = false
     )
 
     companion object {

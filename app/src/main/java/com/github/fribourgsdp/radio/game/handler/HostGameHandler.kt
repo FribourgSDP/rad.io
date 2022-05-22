@@ -115,7 +115,18 @@ class HostGameHandler(
     }
 
     private fun assignSong(songName : String){
+        Log.println(Log.ASSERT, "***", "ASSIGNING SONG")
         db.updateCurrentSongOfGame(game.id, songName, singerDuration)
+            .addOnFailureListener {
+                Log.println(Log.ASSERT, "HostGameHandler Errooor" , it.message.toString())
+                view.displayError(ctx.getString(R.string.game_error))
+
+
+                db.updateCurrentSongOfGame(game.id, songName, singerDuration)
+                    .addOnFailureListener{
+                        view.gameOver(game.getAllScores(), true)
+                    }
+            }
     }
 
     override fun linkToDatabase() {

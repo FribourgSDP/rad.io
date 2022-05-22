@@ -166,11 +166,13 @@ class PlayerGameHandler(
 
     private fun updateViewNoSingMode(snapshot: DocumentSnapshot) {
         val deadline = snapshot.getTimestamp("round_deadline")
-        if(deadline != null) {
-            view.startTimer(deadline.toDate())
+        if(songToGuess != null && deadline != null) {
             tts!!.readLyrics(getLyricsFromSnapshot(snapshot))
+            view.startTimer(deadline!!.toDate())
+        } else{
+            view.stopTimer()
+            view.updateSinger(NO_SINGER)
         }
-        view.updateSinger("")
     }
     private fun updateViewForPlayer(snapshot: DocumentSnapshot, singerName : String){
         val deadline = snapshot.getTimestamp("round_deadline")
