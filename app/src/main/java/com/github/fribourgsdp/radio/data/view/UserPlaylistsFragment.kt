@@ -18,26 +18,18 @@ const val PLAYLIST_DATA = "com.github.fribourgsdp.radio.PLAYLIST_INNER_DATA"
 class UserPlaylistsFragment : MyFragment(R.layout.fragment_user_playlists_display),
     OnClickListener {
     private lateinit var user: User
-    private lateinit var userPlaylists: List<Playlist>
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        arguments?.let { args ->
-            args.getString(USER_DATA).let { serializedUser ->
-                user = Json.decodeFromString(serializedUser!!)
-                userPlaylists = user.getPlaylists().toList()
-            }
-        }
-    }
+    private lateinit var userPlaylists: MutableList<Playlist>
+    private lateinit var songDisplay: RecyclerView
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        loadData()
         initializeRecyclerView()
     }
 
     private fun initializeRecyclerView() {
-        val songDisplay : RecyclerView = requireView().findViewById(R.id.playlist_recycler_view)
-        songDisplay.adapter = PlaylistAdapter(user.getPlaylists().toList(), this)
+        songDisplay = requireView().findViewById(R.id.playlist_recycler_view)
+        songDisplay.adapter = PlaylistAdapter(userPlaylists, this)
         songDisplay.layoutManager = (LinearLayoutManager(activity))
         songDisplay.setHasFixedSize(true)
     }
@@ -48,5 +40,20 @@ class UserPlaylistsFragment : MyFragment(R.layout.fragment_user_playlists_displa
                 .putExtra(PLAYLIST_DATA, userPlaylists[position].name)
             startActivity(intent)
         }
+    }
+
+    fun notifyUserChanged() {
+        loadData()
+        songDisplay.adapter?.notifyDataSetChanged()
+    }
+
+    private fun loadData(){
+        user = User.load(requireContext())
+        userPlaylists = user.getPlaylists().toMutableList()
+    }
+
+    override fun onResume() {
+        notifyUserChanged()
+        super.onResume()
     }
 }
