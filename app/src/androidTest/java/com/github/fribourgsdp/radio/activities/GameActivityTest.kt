@@ -335,8 +335,9 @@ class GameActivityTest {
         ActivityScenario.launch<GameActivity>(testIntent).use { scenario ->
             scenario.onActivity {
                 it.updateSinger(NO_SINGER)
-                onView(withId(R.id.singerTextView)).check(matches(withText(ctx.getString(R.string.listen))))
+                it.displaySong("")
             }
+            onView(withId(R.id.singerTextView)).check(matches(withText(ctx.getString(R.string.listen))))
         }
     }
 }
