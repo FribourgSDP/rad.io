@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Resource file containing the different styles to apply to the UI elements in dark mode. -->
+<resources>
+    <!-- Style for settings options. -->
+    <style name="Text">
+        <item name="android:textColor">@color/white</item>
+    </style>
+</resources>

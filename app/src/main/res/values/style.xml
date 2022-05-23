@@ -1,23 +1,40 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!-- Resource file containing the different styles to apply to the UI elements. -->
 <resources>
-    <!-- Style for main menu buttons. -->
-    <style name="MainButtons">
+    <!-- Style for basic buttons -->
+    <style name="GradientButton">
+        <item name="android:textColor">@color/white</item>
+        <item name="android:background">@drawable/custom_button</item>
+        <item name="backgroundTint">@null</item>
+        <item name="android:paddingStart">32dp</item>
+        <item name="android:paddingEnd">32dp</item>
+    </style>
+    <!-- Style for large buttons -->
+    <style name="GradientButton.Large">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_marginBottom">40dp</item>
         <item name="android:textSize">24sp</item>
-        <item name="android:textColor">@color/white</item>
-        <item name="android:background">@drawable/custom_button</item>
+        <item name="android:paddingTop">10dp</item>
+        <item name="android:paddingBottom">10dp</item>
     </style>
-    <!-- Style for settings options. -->
-    <style name="SettingsText">
+    <!-- Style for text -->
+    <style name="Text">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
+        <item name="android:textColor">@color/black</item>
+    </style>
+    <!-- Style for titles -->
+    <style name="Text.Titles">
+        <item name="android:layout_marginStart">16dp</item>
+        <item name="android:layout_marginTop">16dp</item>
+        <item name="android:textSize">34sp</item>
+    </style>
+    <!-- Style for settings text -->
+    <style name="Text.Settings">
         <item name="android:layout_marginStart">32dp</item>
         <item name="android:layout_marginTop">16dp</item>
         <item name="android:textSize">16sp</item>
-        <item name="android:textColor">@color/design_default_color_on_secondary</item>
     </style>
     <!-- Style for Song picker choices -->
     <style name="SongChoices">
