@@ -261,7 +261,7 @@ open class GameActivity : AppCompatActivity(), GameView, Timer.Listener {
             val newIcon = if (voiceChannel.isMuted) R.drawable.ic_mute else R.drawable.ic_unmute
             muteButton.apply {
                 setImageResource(newIcon)
-                // we set the tag to have a trace of with drawable is used
+                // we set the tag to have a trace of which drawable is used
                 tag = newIcon
             }
         }
