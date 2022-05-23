@@ -5,6 +5,7 @@ import android.content.Context
 import android.util.Log
 import android.widget.ImageButton
 import com.github.fribourgsdp.radio.R
+import com.google.android.material.floatingactionbutton.FloatingActionButton
 import io.agora.rtc.IRtcEngineEventHandler
 import io.agora.rtc.RtcEngine
 import java.lang.Exception
@@ -80,7 +81,7 @@ class VoiceIpEngineDecorator : java.io.Serializable {
         return result
     }
 
-    fun mute(muteButton: ImageButton) {
+    fun mute(muteButton: FloatingActionButton) {
         val ret = voiceChatEngine.muteLocalAudioStream(isMuted xor true)
         if(ret == 0) {
             isMuted = isMuted xor true

@@ -39,11 +39,11 @@ open class UserProfileActivity : MyAppCompatActivity(), KeepOrDismissPlaylistDia
     private lateinit var saveChangeButton : Button
     private lateinit var launchSpotifyButton : Button
     private lateinit var googleSignInButton : Button
+    private lateinit var addButton: FloatingActionButton
     private lateinit var userIcon : ImageView
     private var signedIn : Boolean = false
 
-
-    private var db = initializeDatabase()
+    private var db = this.initializeDatabase()
 
     protected lateinit var googleSignIn : GoogleSignIn
 
@@ -90,7 +90,11 @@ open class UserProfileActivity : MyAppCompatActivity(), KeepOrDismissPlaylistDia
         googleSignInButton.setOnClickListener {
             signInOrOut()
         }
-        findViewById<FloatingActionButton>(R.id.addPlaylistButton).setOnClickListener{startActivity(Intent(this, AddPlaylistActivity::class.java))}
+
+
+        addButton.setOnClickListener{
+            startActivity(Intent(this, AddPlaylistActivity::class.java))
+        }
 
     }
 
@@ -111,6 +115,7 @@ open class UserProfileActivity : MyAppCompatActivity(), KeepOrDismissPlaylistDia
         usernameInitialText = findViewById(R.id.usernameInitial)
         spotifyStatusText = findViewById(R.id.spotifyStatus)
         googleSignInButton = findViewById(R.id.googleSignInButton)
+        addButton = findViewById(R.id.addPlaylistButton)
         userIcon = findViewById(R.id.userIcon)
     }
 

@@ -20,6 +20,7 @@ import com.github.fribourgsdp.radio.util.SongNameHint
 import com.github.fribourgsdp.radio.game.view.*
 import com.github.fribourgsdp.radio.voip.MyIRtcEngineEventHandler
 import com.github.fribourgsdp.radio.voip.VoiceIpEngineDecorator
+import com.google.android.material.floatingactionbutton.FloatingActionButton
 import io.agora.rtc.Constants
 import io.agora.rtc.RtcEngine
 import kotlinx.serialization.decodeFromString
@@ -46,7 +47,7 @@ open class GameActivity : AppCompatActivity(), GameView, Timer.Listener {
     private var lyricsPopup : LyricsPopup? = null
     private var cantQuitGamePopup : CannotQuitDialog? = null
     private lateinit var songGuessEditText : EditText
-    private lateinit var muteButton : ImageButton
+    private lateinit var muteButton : FloatingActionButton
     private lateinit var songGuessSubmitButton: Button
     private lateinit var timerProgressBarHandler: TimerProgressBarHandler
     private lateinit var showLyricsButton: Button
@@ -253,7 +254,7 @@ open class GameActivity : AppCompatActivity(), GameView, Timer.Listener {
             }
             false
         }
-        muteButton = findViewById<ImageButton>(R.id.muteChannelButton)
+        muteButton = findViewById(R.id.muteChannelButton)
         muteButton.setOnClickListener {
             voiceChannel.mute(muteButton)
         }
