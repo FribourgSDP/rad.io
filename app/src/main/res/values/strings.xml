@@ -122,5 +122,20 @@
     <string name="gameDurationFormat">Time singing: %d seconds </string>
     <string name="round_time_text">Round duration:</string>
     <string name="round_duration_format">%d seconds</string>
+    <string name="return_to_the_game">Return to the game</string>
+    <string-array name="dont_quit_now_messages">
+        <item
+            >"Don't quit now… we only just started!"</item>
+        <item
+            >"Are you really quitting because you're losing?"</item>
+        <item
+            >"Hmmm you may have misclicked on the quit button."</item>
+        <item
+            >"Nice try bud, you're staying here."</item>
+        <item
+            >"I doubt you really want to leave."</item>
+        <item
+            >"Quitting is for losers, we don't do that here."</item>
+    </string-array>
 </resources>
 

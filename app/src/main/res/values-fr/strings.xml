@@ -122,4 +122,19 @@
     <string name="gameDurationFormat">Durée du chanteur: %d secondes </string>
     <string name="round_time_text">Durée d\'un tour:</string>
     <string name="round_duration_format">%d secondes</string>
+    <string name="return_to_the_game">Retournez à la partie</string>
+    <string-array name="dont_quit_now_messages">
+        <item
+            >"Ne pars pas maintenant… on vient juste de commencer!"</item>
+        <item
+            >"Tu pars juste parce que tu perds?"</item>
+        <item
+            >"Hmmm tu dois avoir appuyé sur retour par erreur."</item>
+        <item
+            >"Bien essayé mais tu restes ici!"</item>
+        <item
+            >"Je doute que tu veuilles vraiment partir."</item>
+        <item
+            >"Seuls les losers quittent une partie, je doute que tu veuilles en être un"</item>
+    </string-array>
 </resources>
