@@ -120,7 +120,7 @@
         android:src="@drawable/ic_unmute"
         app:layout_constraintBottom_toBottomOf="@+id/scoresRecyclerView"
         app:layout_constraintEnd_toEndOf="@+id/scoresRecyclerView"
-        android:contentDescription="TODO" />
+        android:contentDescription="@string/mute_button_desc" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/scoresRecyclerView"
@@ -137,7 +137,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
         android:layout_marginStart="16dp"
-        android:text="Active speaker : None"
+        android:text="@string/active_speaker_format"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
 

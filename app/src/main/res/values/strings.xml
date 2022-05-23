@@ -123,6 +123,8 @@
     <string name="round_time_text">Round duration:</string>
     <string name="round_duration_format">%d seconds</string>
     <string name="return_to_the_game">Return to the game</string>
+    <string name="mute_button_desc">Mute button</string>
+    <string name="active_speaker_format">Active speaker: %s</string>
     <string-array name="dont_quit_now_messages">
         <item
             >"Don't quit now… we only just started!"</item>
