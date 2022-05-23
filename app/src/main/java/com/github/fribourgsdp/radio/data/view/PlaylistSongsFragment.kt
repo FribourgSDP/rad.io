@@ -65,6 +65,7 @@ open class PlaylistSongsFragment : MyFragment(R.layout.fragment_playlist_display
             //removes playlist from user playlists
             user.removePlaylist(playlist)
             user.save(requireContext())
+            user.onlineCopyAndSave()
             activity?.onBackPressed()
         }
 
@@ -74,8 +75,9 @@ open class PlaylistSongsFragment : MyFragment(R.layout.fragment_playlist_display
                 playlist.saveOnline()
             }.addOnSuccessListener {
                 user.save(requireContext())
-                val onlineUser = user.onlineCopy()
-                db.setUser(onlineUser.id,onlineUser)
+                user.onlineCopyAndSave()
+                //val onlineUser = user.onlineCopy()
+                //db.setUser(onlineUser.id,onlineUser)
                 saveOnlineButton.visibility = View.INVISIBLE
             }
         }
