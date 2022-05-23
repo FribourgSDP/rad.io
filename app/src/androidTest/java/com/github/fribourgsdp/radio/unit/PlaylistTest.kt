@@ -4,6 +4,7 @@ import com.github.fribourgsdp.radio.data.Genre
 import com.github.fribourgsdp.radio.data.Playlist
 import com.github.fribourgsdp.radio.data.Song
 import com.github.fribourgsdp.radio.database.Database
+import com.github.fribourgsdp.radio.utils.KotlinAny
 import com.google.android.gms.tasks.Tasks
 import org.junit.Test
 
@@ -163,21 +164,14 @@ internal class PlaylistTest {
 
     }
 
-    //this is usefull in order to be able to use any() from mockito
-    private fun <T> any(): T {
-        Mockito.any<T>()
-        return uninitialized()
-    }
-    private fun <T> uninitialized(): T = null as T
-
     @Test
     fun saveOnlineWorks(){
         val songSet = mutableSetOf<Song>(song1,song2,song3,song4)
         val mockDB = mock(Database::class.java)
         `when`(mockDB.generateSongIds(anyInt())).thenReturn(Tasks.forResult(Pair(0,songSet.size.toLong())))
         `when`(mockDB.generatePlaylistId()).thenReturn(Tasks.forResult(0))
-        `when`(mockDB.registerSong(any<Song>())).thenReturn(Tasks.forResult(null))
-        `when`(mockDB.registerPlaylist(any())).thenReturn(Tasks.forResult(null))
+        `when`(mockDB.registerSong(KotlinAny.any())).thenReturn(Tasks.forResult(null))
+        `when`(mockDB.registerPlaylist(KotlinAny.any())).thenReturn(Tasks.forResult(null))
 
 
         val playlist = Playlist("Test",songSet, Genre.NONE)
