@@ -27,9 +27,11 @@ import com.github.fribourgsdp.radio.game.prep.GAME_IS_HOST_KEY
 import com.github.fribourgsdp.radio.game.prep.GAME_KEY
 import com.github.fribourgsdp.radio.mockimplementations.MockGameActivity
 import com.github.fribourgsdp.radio.util.SongNameHint
+import com.github.fribourgsdp.radio.utils.CustomMatchers
 import com.github.fribourgsdp.radio.utils.CustomMatchers.Companion.atPosition
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
+import org.hamcrest.CoreMatchers.equalTo
 import org.hamcrest.Matchers.allOf
 import org.hamcrest.Matchers.not
 import org.junit.After
@@ -415,6 +417,19 @@ class GameActivityTest {
                     withText("song")
                 )
             )
+        }
+    }
+
+    @Test
+    fun clickOnMuteChangesIcon() {
+        val testIntent = Intent(ctx, MockGameActivity::class.java)
+        ActivityScenario.launch<MockGameActivity>(testIntent).use {
+            onView(withId(R.id.muteChannelButton))
+                .perform(ViewActions.click())
+                .check(matches(withTagValue(equalTo(R.drawable.ic_mute))))
+                // On second click it goes back to normal
+                .perform(ViewActions.click())
+                .check(matches(withTagValue(equalTo(R.drawable.ic_unmute))))
         }
     }
 }
