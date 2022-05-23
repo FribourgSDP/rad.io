@@ -6,10 +6,13 @@ import android.widget.Toast
 import com.github.fribourgsdp.radio.R
 import com.github.fribourgsdp.radio.config.language.LanguageManager
 import com.github.fribourgsdp.radio.external.musixmatch.MusixmatchLyricsGetter
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import java.util.*
 
 
-const val TTS_INITIALIZATION_RETRY_DELAY_MS = 1000
+const val TTS_INITIALIZATION_RETRY_DELAY_MS : Long = 1000
 
 open class MyTextToSpeech(private val applicationContext: Context) : TextToSpeech.OnInitListener {
     private var tts: TextToSpeech? = null
@@ -49,12 +52,13 @@ open class MyTextToSpeech(private val applicationContext: Context) : TextToSpeec
      */
     open fun readLyrics(lyrics : String){
         toastDisplay("TTS")
-        val speechStatus = tts?.speak(MusixmatchLyricsGetter.makeReadable(lyrics), TextToSpeech.QUEUE_FLUSH, null, "ID")
+        val readableLyrics = MusixmatchLyricsGetter.makeReadable(lyrics)
+        val speechStatus = tts?.speak(readableLyrics, TextToSpeech.QUEUE_FLUSH, null, "ID")
         if(speechStatus == TextToSpeech.ERROR){
             toastDisplay(applicationContext.getString(R.string.cantUseTextToSpeech))
-            val t = Thread {
-                Thread.sleep(1000)
-                readLyrics(lyrics)
+            GlobalScope.launch {
+                delay(TTS_INITIALIZATION_RETRY_DELAY_MS)
+                tts?.speak(readableLyrics, TextToSpeech.QUEUE_ADD, null, "ID")
             }
         }
     }
