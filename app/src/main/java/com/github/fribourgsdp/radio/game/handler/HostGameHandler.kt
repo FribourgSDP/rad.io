@@ -113,12 +113,10 @@ class HostGameHandler(
     }
 
     private fun assignSong(songName : String){
-        Log.println(Log.ASSERT, "***", "ASSIGNING SONG")
         db.updateCurrentSongOfGame(game.id, songName, singerDuration)
             .addOnFailureListener {
-                Log.println(Log.ASSERT, "HostGameHandler Errooor" , it.message.toString())
+                Log.e( "HostGameHandler Error" , it.message.toString())
                 view.displayError(ctx.getString(R.string.game_error))
-
 
                 db.updateCurrentSongOfGame(game.id, songName, singerDuration)
                     .addOnFailureListener{
@@ -139,43 +137,36 @@ class HostGameHandler(
         val nextChoices = MutableList<String>(0) { "" }
         val nextChoicesLyrics = HashMap<String, String>(3)
 
-        if(!noSing) {
+        if(!noSing){
             game.getChoices(3).stream()
                 .forEach { song ->
                     nextChoices.add(song.name)
                     nextChoicesLyrics[song.name] = lyricsGetter.markSongName(song.lyrics, song.name)
                 }
+        } else {
+            game.getChoiceWithLyrics().let {
+                nextChoices.add(it!!.name)
+                nextChoicesLyrics[it.name] = lyricsGetter.markSongName(it.lyrics, it.name)
+            }
+        }
 
+        val updatesMap = hashMapOf(
+            "finished" to done,
+            "current_round" to game.currentRound,
+            "round_deadline" to FieldValue.delete(),
+            "song_choices" to nextChoices.toList(),
+            "song_choices_lyrics" to nextChoicesLyrics,
+            "scores" to game.getAllScores()
+        )
+
+        return if(!noSing) {
             var nextUser = ""
             do {
                 nextUser = game.getUserToPlay()
             } while (!playerIdsOnDatabase.contains(nextUser))
-
-
-            return hashMapOf(
-                "finished" to done,
-                "current_round" to game.currentRound,
-                "current_song" to FieldValue.delete(),
-                "round_deadline" to FieldValue.delete(),
-                "singer" to nextUser,
-                "song_choices" to nextChoices.toList(),
-                "song_choices_lyrics" to nextChoicesLyrics,
-                "scores" to game.getAllScores()
-            )
+            updatesMap + ("current_song" to FieldValue.delete()) + ("singer" to nextUser)
         } else{
-            game.getChoiceWithLyrics().let{
-                nextChoices.add(it!!.name)
-                nextChoicesLyrics[it.name] = lyricsGetter.markSongName(it.lyrics, it.name)
-            }
-            return hashMapOf(
-                "finished" to done,
-                "current_round" to game.currentRound,
-                "current_song" to nextChoices[0],
-                "round_deadline" to FieldValue.delete(),
-                "song_choices" to nextChoices.toList(),
-                "song_choices_lyrics" to nextChoicesLyrics,
-                "scores" to game.getAllScores()
-            )
+            updatesMap + ("current_song" to nextChoices[0])
         }
     }
 

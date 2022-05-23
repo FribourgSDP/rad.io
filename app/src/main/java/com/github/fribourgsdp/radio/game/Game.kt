@@ -35,7 +35,7 @@ class Game private constructor(val id: Long, val name: String, val host: User, v
         if(!noSing)
             HashSet(playlist.getSongs())
         else
-            HashSet(playlist.getSongs().filter(songHasLyrics))
+            HashSet(playlist.getSongs().filter{s -> s.songHasLyrics()})
 
 
     /**
@@ -123,7 +123,7 @@ class Game private constructor(val id: Long, val name: String, val host: User, v
         //Also restart from the beginning if all songs have been done.
         if(songsNotDone.isEmpty()){
             songsNotDone.addAll(playlist.getSongs()
-                .filter(songHasLyrics))
+                .filter{s -> s.songHasLyrics()})
         }
         if(songsNotDone.isEmpty()){
             return null
@@ -327,15 +327,5 @@ class Game private constructor(val id: Long, val name: String, val host: User, v
                 }
             }
         }
-
-        /**
-         * Predicate that is true for songs that have lyrics, and false for songs whose lyrics are not defined due to
-         * - error in the backend
-         * - lyrics nonexistence
-         */
-        val songHasLyrics : (Song) -> Boolean = { song : Song ->
-            !(song.lyrics == MusixmatchLyricsGetter.BACKEND_ERROR_PLACEHOLDER || song.lyrics == MusixmatchLyricsGetter.LYRICS_NOT_FOUND_PLACEHOLDER)
-        }
-
     }
 }

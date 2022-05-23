@@ -178,7 +178,9 @@ object MusixmatchLyricsGetter : LyricsGetter {
     }
 
     /**
-     * Cancels the effect of previous function, replacing marked name of song with [REPLACEMENT_STRING]
+     * Replaces striked words with [REPLACEMENT_STRING] and HTML line breaks with standard line breaks.
+     * Used to make lyrics readable by the Text-to-Speech engine, after having called [markSongName] to include the HTML tags.
+     * @param lyrics The HTML-compatible lyrics to transform
      */
     fun makeReadable(lyrics: String) : String{
         return lyrics

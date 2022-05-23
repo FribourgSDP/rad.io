@@ -24,7 +24,7 @@ open class MyTextToSpeech(private val applicationContext: Context) : TextToSpeec
             } else {
                 Locale.UK
             }
-            val ttsLangStatus = tts!!.setLanguage(locale)
+            val ttsLangStatus = tts?.setLanguage(locale)
             // check if the language is supportable.
             if (ttsLangStatus == TextToSpeech.LANG_MISSING_DATA || ttsLangStatus == TextToSpeech.LANG_NOT_SUPPORTED) {
                 toastDisplay(applicationContext.getString(R.string.ttsWeCantSupportYourLanguage))
@@ -64,8 +64,8 @@ open class MyTextToSpeech(private val applicationContext: Context) : TextToSpeec
      */
     fun onPause(){
         if (tts != null) {
-            tts!!.stop()
-            tts!!.shutdown()
+            tts?.stop()
+            tts?.shutdown()
         }
     }
 

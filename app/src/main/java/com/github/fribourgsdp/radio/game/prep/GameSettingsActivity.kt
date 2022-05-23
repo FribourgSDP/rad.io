@@ -126,7 +126,7 @@ open class GameSettingsActivity : AppCompatActivity() {
 
     private fun startButtonBehavior() : View.OnClickListener {
         return View.OnClickListener {
-            if(noSingCheckBox.isChecked && selectedPlaylist.getSongs().none(Game.songHasLyrics)){
+            if(noSingCheckBox.isChecked && selectedPlaylist.getSongs().none{s -> s.songHasLyrics()}){
                 Toast.makeText(applicationContext, getString(R.string.playlistLyricsLess), Toast.LENGTH_LONG).show()
             } else {
                 val intent: Intent = Intent(this, LobbyActivity::class.java).apply {
