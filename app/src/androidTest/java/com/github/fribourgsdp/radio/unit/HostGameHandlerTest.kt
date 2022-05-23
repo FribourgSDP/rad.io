@@ -181,6 +181,33 @@ class HostGameHandlerTest {
     }
 
     @Test
+    fun assignSongDisplaysErrorOnDBError(){
+        val view = FakeGameView()
+        val game = Game.Builder()
+            .setNoSing(true)
+            .setHost(host)
+            .addUserId(otherPlayer.id)
+            .setPlaylist(Playlist("Test PL", setOf(Song("Test Song", "", "lalala")), Genre.NONE))
+            .build()
+        var choice : String = ""
+        val db = mock(Database::class.java)
+        `when`(db.updateGame(anyLong(), anyMap()))
+            .thenReturn(Tasks.forResult(null))
+        `when`(db.resetGameMetadata(anyLong(), anyString()))
+            .thenReturn(Tasks.forResult(null))
+        `when`(db.updateCurrentSongOfGame(anyLong(), anyString(), anyLong()))
+            .thenReturn(Tasks.forException(Exception()))
+        val handler = HostGameHandler(ctx, game, view, db, noSing = true)
+
+        handler.handleSnapshot(mockSnapshot)
+
+        // Wait for the task of the database to execute
+        Thread.sleep(sleepingTime)
+
+        assertEquals(view.error, ctx.getString(R.string.game_error))
+    }
+
+    @Test
     fun updateMapContainsSongChoices(){
         val view = FakeGameView()
         val game = Game.Builder()
