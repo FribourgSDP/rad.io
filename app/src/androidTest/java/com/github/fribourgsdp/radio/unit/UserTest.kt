@@ -5,9 +5,14 @@ import androidx.test.core.app.ApplicationProvider
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.platform.app.InstrumentationRegistry
 import com.github.fribourgsdp.radio.data.*
+import com.github.fribourgsdp.radio.database.Database
+import com.github.fribourgsdp.radio.utils.KotlinAny
+import com.google.android.gms.tasks.Tasks
 import org.junit.Assert.*
 import org.junit.Test
 import org.junit.runner.RunWith
+import org.mockito.ArgumentMatchers.anyString
+import org.mockito.Mockito
 
 
 @RunWith(AndroidJUnit4::class)
@@ -179,5 +184,24 @@ class UserTest {
         assertEquals("test3",user2.name)
         assertEquals("test1",user.name)
 
+    }
+
+
+    @Test
+    fun createDefaultUserWorksCorrectly(){
+        val db = Mockito.mock(Database::class.java)
+        Mockito.`when`(db.generateUserId()).thenReturn(Tasks.forResult(-3))
+        User.database = db
+        val user = Tasks.await(User.createDefaultUser())
+        assertEquals("-3",user.id)
+    }
+
+    @Test
+    fun onlineCopyAndSaveWorksCorrectly(){
+        val db = Mockito.mock(Database::class.java)
+        Mockito.`when`(db.setUser(anyString(),KotlinAny.any())).thenReturn(Tasks.forResult(null))
+        User.database = db
+        val user = User("test")
+        assertEquals(null,Tasks.await(user.onlineCopyAndSave()))
     }
 }
