@@ -49,17 +49,17 @@
         <Button
             android:id="@+id/playButton"
             android:text="@string/play_button_text"
-            style="@style/MainButtons" />
+            style="@style/GradientButton.Large" />
 
         <Button
             android:id="@+id/joinButton"
             android:text="@string/join_button_text"
-            style="@style/MainButtons" />
+            style="@style/GradientButton.Large" />
 
         <Button
             android:id="@+id/settingsButton"
             android:text="@string/settings_text"
-            style="@style/MainButtons" />
+            style="@style/GradientButton.Large" />
 
     </LinearLayout>
 

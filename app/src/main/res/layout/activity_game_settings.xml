@@ -8,13 +8,8 @@
 
     <TextView
         android:id="@+id/gameSettingsTitle"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="16dp"
+        style="@style/Text.Titles"
         android:text="@string/game_settings_text"
-        android:textColor="@color/design_default_color_primary"
-        android:textSize="34sp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -36,7 +31,7 @@
 
             <TextView
                 android:id="@+id/nameTextView"
-                style="@style/SettingsText"
+                style="@style/Text.Settings"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/name_settings_text"
@@ -66,7 +61,7 @@
 
             <TextView
                 android:id="@+id/playlist"
-                style="@style/SettingsText"
+                style="@style/Text.Settings"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/playlist_selection_text"
@@ -116,7 +111,7 @@
 
             <TextView
                 android:id="@+id/nbRoundsTextView"
-                style="@style/SettingsText"
+                style="@style/Text.Settings"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:labelFor="@id/nbRoundsInput"
@@ -147,7 +142,7 @@
 
             <TextView
                 android:id="@+id/roundTimeTextView"
-                style="@style/SettingsText"
+                style="@style/Text.Settings"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:labelFor="@id/nbRoundsInput"
@@ -158,6 +153,7 @@
 
             <Button
                 android:id="@+id/chooseTimeButton"
+                style="@style/GradientButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
@@ -165,20 +161,20 @@
                 android:textAllCaps="false"
                 app:icon="@drawable/ic_timer"
                 app:iconGravity="textStart"
+                app:layout_constraintBottom_toBottomOf="@id/roundTimeTextView"
                 app:layout_constraintStart_toEndOf="@id/roundTimeTextView"
-                app:layout_constraintTop_toTopOf="@id/roundTimeTextView"
-                app:layout_constraintBottom_toBottomOf="@id/roundTimeTextView" />
+                app:layout_constraintTop_toTopOf="@id/roundTimeTextView" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
         <CheckBox
             android:id="@+id/hintCheckBox"
-            style="@style/SettingsText"
+            style="@style/Text.Settings"
             android:text="@string/hint_option_text" />
 
         <CheckBox
             android:id="@+id/privacyCheckBox"
-            style="@style/SettingsText"
+            style="@style/Text.Settings"
             android:text="@string/private_option_text" />
 
 
@@ -186,6 +182,7 @@
 
     <Button
         android:id="@+id/startButton"
+        style="@style/GradientButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="16dp"
@@ -194,7 +191,6 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
-
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -35,7 +35,7 @@
 
             <TextView
                 android:id="@+id/languageTextView"
-                style="@style/SettingsText"
+                style="@style/Text.Settings"
                 android:text="@string/select_language"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
