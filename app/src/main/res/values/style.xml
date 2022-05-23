@@ -22,7 +22,7 @@
     <style name="Text">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
-        <item name="android:textColor">@color/black</item>
+        <item name="android:textColor">@android:color/secondary_text_light</item>
     </style>
     <!-- Style for titles -->
     <style name="Text.Titles">
@@ -30,18 +30,27 @@
         <item name="android:layout_marginTop">16dp</item>
         <item name="android:textSize">34sp</item>
     </style>
+    <!-- Style for subtitles -->
+    <style name="Text.Subtitles">
+        <item name="android:textSize">18sp</item>
+        <item name="android:textStyle">bold</item>
+    </style>
     <!-- Style for settings text -->
     <style name="Text.Settings">
-        <item name="android:layout_marginStart">32dp</item>
-        <item name="android:layout_marginTop">16dp</item>
+        <item name="android:layout_margin">32dp</item>
         <item name="android:textSize">16sp</item>
     </style>
+    <!-- Style for popup text -->
+    <style name="Text.Popup">
+        <item name="android:layout_marginStart">32dp</item>
+        <item name="android:layout_marginTop">16dp</item>
+        <item name="android:textSize">24sp</item>
+    </style>
     <!-- Style for Song picker choices -->
-    <style name="SongChoices">
+    <style name="GradientButton.Popup">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_marginBottom">12dp</item>
-        <item name="android:padding">12dp</item>
     </style>
     <!-- Style for recycler views -->
     <style name="RecyclerViews">
