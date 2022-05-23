@@ -11,6 +11,7 @@ import androidx.test.espresso.intent.matcher.IntentMatchers
 import com.github.fribourgsdp.radio.MainActivity
 import com.github.fribourgsdp.radio.deprecated.VoiceOverIPActivity
 import com.github.fribourgsdp.radio.voip.VoiceIpEngineDecorator
+import com.google.android.material.floatingactionbutton.FloatingActionButton
 import io.agora.rtc.IRtcEngineEventHandler
 import io.agora.rtc.RtcEngine
 import junit.framework.Assert.assertTrue
@@ -65,7 +66,7 @@ class VoiceOverIpEngineDecoratorTest {
             assertTrue(testEngineDecorator.setAudioProfile(3, 5) == 0)
             assertTrue(testEngineDecorator.leaveChannel() == 0)
             assertTrue(testEngineDecorator.muteLocalAudioStream(true) == 0)
-            val testImageButton = ImageButton(context)
+            val testImageButton = FloatingActionButton(context)
             testEngineDecorator.mute(testImageButton)
             testEngineDecorator.mute(testImageButton)
 
