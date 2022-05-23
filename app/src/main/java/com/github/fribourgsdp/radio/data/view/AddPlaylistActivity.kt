@@ -139,8 +139,7 @@ open class AddPlaylistActivity : DatabaseHolder, MyAppCompatActivity(), SavePlay
         playlistTask.addOnSuccessListener {
             user.addPlaylist(playlist)
             user.save(this)
-            val onlineUser = user.onlineCopy()
-            db.setUser(onlineUser.id,onlineUser)
+            user.onlineCopyAndSave()
             val intent = Intent(this@AddPlaylistActivity, UserProfileActivity::class.java)
             startActivity(intent)
         }
