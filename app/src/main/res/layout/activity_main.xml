@@ -22,15 +22,15 @@
     <ImageButton
         android:id="@+id/profileButton"
         style="@style/Widget.AppCompat.ImageButton"
-        android:layout_width="48dp"
-        android:layout_height="48dp"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
         android:layout_marginTop="24dp"
         android:layout_marginEnd="24dp"
         android:adjustViewBounds="true"
-        android:background="@drawable/round_button"
         android:contentDescription="@string/profile_picture_description"
-        android:scaleType="fitCenter"
-        android:src="@drawable/ic_login"
+        android:scaleType="center"
+        android:background="@drawable/ic_login"
+        android:backgroundTint="@color/red"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
   
@@ -60,13 +60,6 @@
             android:id="@+id/settingsButton"
             android:text="@string/settings_text"
             style="@style/MainButtons" />
-
-
-        <Button
-            android:id="@+id/VoiceOverIpButton"
-            style="@style/MainButtons"
-            android:text="Voice Call Demo!"
-             />
 
     </LinearLayout>
 
