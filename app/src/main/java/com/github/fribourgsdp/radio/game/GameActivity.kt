@@ -256,7 +256,14 @@ open class GameActivity : AppCompatActivity(), GameView, Timer.Listener {
         }
         muteButton = findViewById(R.id.muteChannelButton)
         muteButton.setOnClickListener {
-            voiceChannel.mute(muteButton)
+            voiceChannel.mute()
+
+            val newIcon = if (voiceChannel.isMuted) R.drawable.ic_mute else R.drawable.ic_unmute
+            muteButton.apply {
+                setImageResource(newIcon)
+                // we set the tag to have a trace of with drawable is used
+                tag = newIcon
+            }
         }
 
         // Init for the TimerProgressBarHolder

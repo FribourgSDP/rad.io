@@ -3,9 +3,6 @@ package com.github.fribourgsdp.radio.voip
 import RtcTokenBuilder.RtcTokenBuilder
 import android.content.Context
 import android.util.Log
-import android.widget.ImageButton
-import com.github.fribourgsdp.radio.R
-import com.google.android.material.floatingactionbutton.FloatingActionButton
 import io.agora.rtc.IRtcEngineEventHandler
 import io.agora.rtc.RtcEngine
 import java.lang.Exception
@@ -17,7 +14,8 @@ const val EXPIRATION_TIME = 10800
 class VoiceIpEngineDecorator : java.io.Serializable {
     private var voiceChatEngine: RtcEngine
     private val mRtcEventHandler : IRtcEngineEventHandler
-    private var isMuted: Boolean = false
+    var isMuted: Boolean = false
+        private set
     private val context : Context
 
 
@@ -81,15 +79,10 @@ class VoiceIpEngineDecorator : java.io.Serializable {
         return result
     }
 
-    fun mute(muteButton: FloatingActionButton) {
+    fun mute() {
         val ret = voiceChatEngine.muteLocalAudioStream(isMuted xor true)
         if(ret == 0) {
             isMuted = isMuted xor true
-            if(isMuted){
-                muteButton.setImageResource(R.drawable.ic_mute)
-            }else{
-                muteButton.setImageResource(R.drawable.ic_unmute)
-            }
         }
     }
 
