@@ -120,10 +120,9 @@ open class UserProfileActivity : MyAppCompatActivity(), KeepOrDismissPlaylistDia
         //at this point, the userId should be the firebaseUser.uid
         if(user.isGoogleUser){
             //remove all n
-
-
-            val onlineUser = user.onlineCopy()
-            db.setUser(onlineUser.id,onlineUser)
+            user.onlineCopyAndSave()
+            //val onlineUser = user.onlineCopy()
+            //db.setUser(onlineUser.id,onlineUser)
         }else{
             val userPlaylists = user.getPlaylists()
             val userWithoutPlaylist = user
@@ -178,17 +177,12 @@ open class UserProfileActivity : MyAppCompatActivity(), KeepOrDismissPlaylistDia
         }.addOnSuccessListener {
             user.save(this)
         }
-
     }
 
     private fun mergePlaylist() : Task<Unit>{
         return db.getUser(user.id).continueWith {
             user.addPlaylists(it.result.getPlaylists())
-            user.isGoogleUser = true
-            user.name = it.result.name
-            user.id = it.result.id
-            val onlineUser = user.onlineCopy()
-            db.setUser(onlineUser.id,onlineUser)
+            makeLocalModificationAndSaveOnline(it.result)
 
         }
     }
@@ -204,12 +198,15 @@ open class UserProfileActivity : MyAppCompatActivity(), KeepOrDismissPlaylistDia
 
     private fun dismissOnlinePlaylist() : Task<Unit>{
         return db.getUser(user.id).continueWith{
-            user.name = it.result.name
-            user.id = it.result.id
-            user.isGoogleUser = true
-            val onlineUser = user.onlineCopy()
-            db.setUser(onlineUser.id,onlineUser)
+            makeLocalModificationAndSaveOnline(it.result)
         }
+    }
+
+    private fun makeLocalModificationAndSaveOnline(remoteUser : User){
+        user.name = remoteUser.name
+        user.id = remoteUser.id
+        user.isGoogleUser = true
+        user.onlineCopyAndSave()
     }
 
     override fun onPick(choice: KeepOrDismissPlaylistDialog.Choice) {
