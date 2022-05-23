@@ -8,9 +8,14 @@ import com.github.fribourgsdp.radio.database.FirestoreDatabase
 import com.github.fribourgsdp.radio.database.FirestoreRef
 import com.github.fribourgsdp.radio.database.TransactionManager
 import com.github.fribourgsdp.radio.game.Game
+import com.google.android.gms.tasks.Task
 import com.google.android.gms.tasks.Tasks
 import com.google.firebase.firestore.DocumentReference
 import com.google.firebase.firestore.DocumentSnapshot
+import com.google.firebase.firestore.Transaction
+import com.google.firebase.firestore.ktx.firestore
+import com.google.firebase.ktx.Firebase
+import com.google.firestore.v1.FirestoreProto
 import org.junit.Test
 import java.util.concurrent.TimeUnit
 import org.junit.Assert.*
@@ -225,5 +230,5 @@ class FirestoreDatabaseTest {
         val result = db.modifyUserMicPermissions(37, User("nate"), true)
         assertEquals(null, Tasks.await(result))
     }
-
+    
 }

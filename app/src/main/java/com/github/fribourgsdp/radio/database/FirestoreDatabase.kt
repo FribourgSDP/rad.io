@@ -516,7 +516,7 @@ class FirestoreDatabase(var refMake: FirestoreRef, var transactionMgr: Transacti
     }
 
     override fun modifyUserMicPermissions(id: Long, user: User, newPermissions: Boolean): Task<Void> {
-        val docRef = db.collection("lobby").document(id.toString())
+        val docRef = refMake.getLobbyRef(id.toString())
         return transactionMgr.executeMicPermissionsTransaction(docRef, user.id, newPermissions, id)
     }
 
