@@ -12,7 +12,8 @@ class MyIRtcEngineEventHandler (private val appCompatActivity: AppCompatActivity
         super.onActiveSpeaker(uid)
         val activeSpeakerView : TextView = appCompatActivity.findViewById(R.id.activeSpeakerView)
         activeSpeakerView.invalidate()
-        val name = mapHashToName.getOrDefault(uid, "Null")
-        activeSpeakerView.setText("active speaker : $name")
+        activeSpeakerView.text = mapHashToName[uid]?.let {
+            appCompatActivity.getString(R.string.active_speaker_format, it)
+        } ?: ""
     }
 }
