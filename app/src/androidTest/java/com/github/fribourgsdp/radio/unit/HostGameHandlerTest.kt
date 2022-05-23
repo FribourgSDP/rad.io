@@ -205,8 +205,6 @@ class HostGameHandlerTest {
         val handler = HostGameHandler(ctx, game, view, db, noSing = false)
         handler.handleSnapshot(mockSnapshot)
 
-        Thread.sleep(sleepingTime)
-
         assertTrue("$choices", choices.containsAll(
             listOf("A", "D")))
     }

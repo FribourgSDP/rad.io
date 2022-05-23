@@ -115,7 +115,7 @@ class HostGameHandler(
     private fun assignSong(songName : String){
         db.updateCurrentSongOfGame(game.id, songName, singerDuration)
             .addOnFailureListener {
-                Log.e( "HostGameHandler Error" , it.message.toString())
+                Log.e("HostGameHandler Error", "Song assignment: ${it.message}", it)
                 view.displayError(ctx.getString(R.string.game_error))
 
                 db.updateCurrentSongOfGame(game.id, songName, singerDuration)
