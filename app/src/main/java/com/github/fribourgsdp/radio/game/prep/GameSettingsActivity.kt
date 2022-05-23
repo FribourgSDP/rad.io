@@ -124,11 +124,15 @@ open class GameSettingsActivity : AppCompatActivity() {
             .toTypedArray()
     }
 
+    private fun displayError(error : String){
+        errorText.text = error
+        errorText.visibility = View.VISIBLE
+    }
+
     private fun startButtonBehavior() : View.OnClickListener {
         return View.OnClickListener {
             if(noSingCheckBox.isChecked && selectedPlaylist.getSongs().none{s -> s.songHasLyrics()}){
-                errorText.text = getString(R.string.playlistLyricsLess)
-                errorText.visibility = View.VISIBLE
+                displayError(getString(R.string.playlistLyricsLess))
             } else {
                 val intent: Intent = Intent(this, LobbyActivity::class.java).apply {
                     putExtra(
@@ -165,8 +169,7 @@ open class GameSettingsActivity : AppCompatActivity() {
                 startButton.isEnabled = true
                 errorText.visibility = View.GONE
             } else {
-                errorText.text = getString(R.string.playlist_error_format, query)
-                errorText.visibility = View.VISIBLE
+                displayError(getString(R.string.playlist_error_format, query))
                 startButton.isEnabled = false
             }
 
