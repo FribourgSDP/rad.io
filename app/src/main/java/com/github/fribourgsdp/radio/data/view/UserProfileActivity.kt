@@ -125,9 +125,11 @@ open class UserProfileActivity : MyAppCompatActivity(), KeepOrDismissPlaylistDia
             val onlineUser = user.onlineCopy()
             db.setUser(onlineUser.id,onlineUser)
         }else{
+            val userPlaylists = user.getPlaylists()
             val userWithoutPlaylist = user
-            userWithoutPlaylist.removePlaylists(user.getPlaylists())
+            userWithoutPlaylist.removePlaylists(userPlaylists)
             db.setUser(user.id,userWithoutPlaylist)
+            user.addPlaylists(userPlaylists)
         }
         user.save(this)
         usernameInitialText.text = user.initial.uppercaseChar().toString()
