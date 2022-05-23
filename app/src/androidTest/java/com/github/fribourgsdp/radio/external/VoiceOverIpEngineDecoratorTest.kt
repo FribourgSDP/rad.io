@@ -54,27 +54,20 @@ class VoiceOverIpEngineDecoratorTest {
     }
 
     @Test
-    fun allFunctionsWeNeedToCallReturnSuccess(){
+    fun allFunctionsWeNeedToCallReturnSuccess() {
         val context: Context = ApplicationProvider.getApplicationContext()
 
         val intent: Intent = Intent(context, VoiceOverIPActivity::class.java)
 
         ActivityScenario.launch<VoiceOverIPActivity>(intent).use { scenario ->
-            val testEngineDecorator = VoiceIpEngineDecorator(context, makeMockIRtcEngineEventHandler(), makeMockRtcEngine())
+            val testEngineDecorator =
+                VoiceIpEngineDecorator(context, makeMockIRtcEngineEventHandler(), makeMockRtcEngine())
             assertTrue(testEngineDecorator.joinChannel(null, null, null, 3) == 0)
             assertTrue(testEngineDecorator.enableAudioVolumeIndication(5, 3, true) == 0)
             assertTrue(testEngineDecorator.setAudioProfile(3, 5) == 0)
             assertTrue(testEngineDecorator.leaveChannel() == 0)
             assertTrue(testEngineDecorator.muteLocalAudioStream(true) == 0)
-            val testImageButton = FloatingActionButton(context)
-            testEngineDecorator.mute(testImageButton)
-            testEngineDecorator.mute(testImageButton)
-
         }
-
-
-
-
     }
 
 }
