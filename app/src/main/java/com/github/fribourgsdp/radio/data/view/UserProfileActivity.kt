@@ -119,10 +119,7 @@ open class UserProfileActivity : MyAppCompatActivity(), KeepOrDismissPlaylistDia
         user.name = usernameField.text.toString()
         //at this point, the userId should be the firebaseUser.uid
         if(user.isGoogleUser){
-            //remove all n
             user.onlineCopyAndSave()
-            //val onlineUser = user.onlineCopy()
-            //db.setUser(onlineUser.id,onlineUser)
         }else{
             val userPlaylists = user.getPlaylists()
             val userWithoutPlaylist = user
