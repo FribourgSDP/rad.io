@@ -124,7 +124,7 @@
     <string name="round_duration_format">%d secondes</string>
     <string name="return_to_the_game">Retournez à la partie</string>
     <string name="mute_button_desc">Bouton pour éteindre le micro</string>
-    <string name="active_speaker_format">%s a la parole</string>
+    <string name="active_speaker_format">%s parle</string>
     <string-array name="dont_quit_now_messages">
         <item
             >"Ne pars pas maintenant… on vient juste de commencer!"</item>
