@@ -19,6 +19,8 @@ import org.mockito.ArgumentMatcher
 import org.mockito.ArgumentMatchers
 import org.mockito.ArgumentMatchers.anyString
 import org.mockito.Mockito.*
+import java.io.Serializable
+
 //import java.lang.Exception
 class FirestoreDatabaseTest {
     private val userNameTest = "BakerTest"
@@ -199,6 +201,19 @@ class FirestoreDatabaseTest {
     @Test
     fun openGameWorks() {
         db.openGame(3L)
+    }
+
+    @Test
+    fun openLobbyWorks() {
+        `when`(mockTransactionManager.openLobbyTransaction(any(), any(), anyLong(), any(), any())).thenReturn(Tasks.forResult(null))
+        var mockDocumentReference2 = mock(DocumentReference::class.java)
+        `when`(mockFirestoreRef.getPublicLobbiesRef()).thenReturn(mockDocumentReference2)
+
+
+        `when`(mockSnapshot.exists()).thenReturn(true)
+        val fakeSettings = Game.Settings("host22", "gameName", "playlistBla", 3, false, true)
+
+        db.openLobby(3L, fakeSettings)
     }
 
     @Test

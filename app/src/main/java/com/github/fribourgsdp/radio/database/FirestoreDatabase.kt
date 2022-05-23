@@ -13,6 +13,7 @@ import com.google.firebase.firestore.*
 import com.google.firebase.firestore.EventListener
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
+import java.io.Serializable
 import java.lang.Exception
 import java.util.*
 import kotlin.collections.ArrayList
@@ -40,6 +41,9 @@ open class FirestoreRef {
     }
     open fun getGameRef(gameId: String) : DocumentReference {
         return db.collection("games").document(gameId)
+    }
+    open fun getPublicLobbiesRef() : DocumentReference {
+        return db.collection("lobby").document("public")
     }
     open fun getGameMetadataRef(gameId: String) : DocumentReference {
         return db.collection("games_metadata").document(gameId)
@@ -90,6 +94,37 @@ open class TransactionManager() {
 
             transaction.update(docRef, "permissions", playerPermissions)
 
+            // Success
+            null
+        }
+    }
+
+    open fun openLobbyTransaction(lobbyRef: DocumentReference?, publicLobbiesRef: DocumentReference?, id: Long, gameData: HashMap<String, Serializable>?, settings: Game.Settings?): Task<Void> {
+        return db.runTransaction { transaction ->
+            val lobbySnapshot = transaction.get(lobbyRef!!)
+            val publicLobbiesSnapshot = publicLobbiesRef?.let { transaction.get(it) }
+
+            if (!lobbySnapshot.exists()) {
+                throw IllegalArgumentException("Document $id not found.")
+            }
+
+            // If the game is public (the snapshot not null), but we can't find the public snapshot:
+            // throw an exception
+            if (publicLobbiesSnapshot != null && !publicLobbiesSnapshot.exists()) {
+                throw IllegalArgumentException("The public lobbies could not be reached.")
+            }
+
+            transaction.set(lobbyRef, gameData!!)
+
+            if (publicLobbiesRef != null) {
+                transaction.update(
+                    publicLobbiesRef, id.toString(),
+                    hashMapOf(
+                        "name" to settings!!.name,
+                        "host" to settings!!.hostName
+                    )
+                )
+            }
             // Success
             null
         }
@@ -280,43 +315,12 @@ class FirestoreDatabase(var refMake: FirestoreRef, var transactionMgr: Transacti
             "validity" to true
         )
 
-        val collection = db.collection("lobby")
-        val lobbyRef = collection.document(id.toString())
+        val lobbyRef = refMake.getLobbyRef(id.toString())
 
         // get the public lobbies only if the game is public
-        val publicLobbiesRef = if (settings.isPrivate) null else collection.document("public")
+        val publicLobbiesRef = if (settings.isPrivate) null else refMake.getPublicLobbiesRef()
 
-        return db.runTransaction { transaction ->
-            val lobbySnapshot = transaction.get(lobbyRef)
-            val publicLobbiesSnapshot = publicLobbiesRef?.let { transaction.get(it) }
-
-            if (!lobbySnapshot.exists()) {
-                throw IllegalArgumentException("Document $id not found.")
-            }
-
-            // If the game is public (the snapshot not null), but we can't find the public snapshot:
-            // throw an exception
-            if (publicLobbiesSnapshot != null && !publicLobbiesSnapshot.exists()) {
-                throw IllegalArgumentException("The public lobbies could not be reached.")
-            }
-
-            transaction.set(lobbyRef, gameData)
-
-            if (publicLobbiesRef != null) {
-                transaction.update(
-                    publicLobbiesRef, id.toString(),
-                    hashMapOf(
-                        "name" to settings.name,
-                        "host" to settings.hostName
-                    )
-                )
-            }
-
-            // Success
-            null
-        }
-
-
+        return transactionMgr.openLobbyTransaction(lobbyRef, publicLobbiesRef, id, gameData, settings)
     }
 
     override fun listenToLobbyUpdate(id: Long, listener: EventListener<DocumentSnapshot>) {
