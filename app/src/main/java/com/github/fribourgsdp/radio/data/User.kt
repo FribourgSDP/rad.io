@@ -147,6 +147,15 @@ data class User (var name: String, val color: Int) : SavesToFileSystem<User>(USE
     }
 
     /**
+     *Save the online version of the [User] in the database.
+     * Online version means that only playlists that are/can be stored online are in the user.
+     * @return [Task] the result of the database operation
+     */
+    fun onlineCopyAndSave():Task<Void>{
+        val onlineUser = onlineCopy()
+        return database.setUser(onlineUser.id,onlineUser)
+    }
+    /**
      * Removes a playlist given by its name from the user's set of playlists
      * If multiple playlist share the same name, which should never happen, they will all be deleted.
      *
