@@ -51,7 +51,6 @@ open class MyTextToSpeech(private val applicationContext: Context) : TextToSpeec
      * If the TextToSpeech engine appears not to be initialized yet, spawns a new Thread and retries [TTS_INITIALIZATION_RETRY_DELAY_MS]ms later.
      */
     open fun readLyrics(lyrics : String){
-        toastDisplay("TTS")
         val readableLyrics = MusixmatchLyricsGetter.makeReadable(lyrics)
         val speechStatus = tts?.speak(readableLyrics, TextToSpeech.QUEUE_FLUSH, null, "ID")
         if(speechStatus == TextToSpeech.ERROR){
