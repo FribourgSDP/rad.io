@@ -128,18 +128,19 @@ class AddPlaylistActivityTest {
             }
         }
     }
-    @Test
-    fun addAndRemoveSong(){
 
-        initializeSardouPlaylist()
-
-        onView(withId(R.id.list_playlist_creation))
-            .perform(RecyclerViewActions.actionOnItemAtPosition<ViewHolder>(0, ViewActions.click()))
-
-        onView(withId(R.id.list_playlist_creation))
-            .check(ViewAssertions.matches(ViewMatchers.hasChildCount(2)))
-
-    }
+//    @Test
+//    fun addAndRemoveSong(){
+//
+//        initializeSardouPlaylist()
+//
+//        onView(withId(R.id.list_playlist_creation))
+//            .perform(RecyclerViewActions.actionOnItemAtPosition<ViewHolder>(0, ViewActions.click()))
+//
+//        onView(withId(R.id.list_playlist_creation))
+//            .check(ViewAssertions.matches(ViewMatchers.hasChildCount(2)))
+//
+//    }
 
     @Test
     fun pressingBackWhenNothingHasBeenModifiedGoesToUserProfile(){
