@@ -121,9 +121,11 @@ open class UserProfileActivity : MyAppCompatActivity(), KeepOrDismissPlaylistDia
         if(user.isGoogleUser){
             db.setUser(user.id,user)
         }else{
+            val userPlaylists = user.getPlaylists()
             val userWithoutPlaylist = user
-            userWithoutPlaylist.removePlaylists(user.getPlaylists())
+            userWithoutPlaylist.removePlaylists(userPlaylists)
             db.setUser(user.id,userWithoutPlaylist)
+            user.addPlaylists(userPlaylists)
         }
         user.save(this)
         usernameInitialText.text = user.initial.uppercaseChar().toString()
