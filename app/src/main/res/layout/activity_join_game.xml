@@ -56,6 +56,7 @@
 
     <Button
         android:id="@+id/joinGameButton"
+        style="@style/GradientButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="16dp"
@@ -67,12 +68,12 @@
 
     <TextView
         android:id="@+id/joinPublicLobbies"
+        style="@style/Text.Subtitles"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
         android:layout_marginTop="32dp"
         android:text="@string/public_lobbies"
-        android:textSize="18sp"
         android:textStyle="bold"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/joinErrorView" />

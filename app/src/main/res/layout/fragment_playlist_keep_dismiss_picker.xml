@@ -5,10 +5,8 @@
     android:layout_height="match_parent">
     <TextView
         android:id="@+id/KeepPlaylistLocally"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        style="@style/Text.Popup"
         android:text="@string/KeepPlaylistLocallyText"
-        android:textSize="24sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -27,13 +25,13 @@
 
         <Button
             android:id="@+id/keepPlaylistButton"
-            style="@style/SongChoices"
+            style="@style/GradientButton.Popup"
             android:layout_height="wrap_content"
             android:text="@string/keepPlaylist" />
 
         <Button
             android:id="@+id/dismissPlaylistButton"
-            style="@style/SongChoices"
+            style="@style/GradientButton.Popup"
             android:text="@string/dismissPlaylist" />
 
     </LinearLayout>

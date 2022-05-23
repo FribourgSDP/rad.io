@@ -6,10 +6,8 @@
 
     <TextView
         android:id="@+id/MergeImportDismissPlaylist"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        style="@style/Text.Popup"
         android:text="@string/MergeImportDismissPlaylistText"
-        android:textSize="24sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -28,17 +26,17 @@
 
         <Button
             android:id="@+id/mergePlaylistButton"
-            style="@style/SongChoices"
+            style="@style/GradientButton.Popup"
             android:layout_height="wrap_content"
             android:text="@string/mergePlaylist" />
 
         <Button
             android:id="@+id/importPlaylistButton"
-            style="@style/SongChoices"
+            style="@style/GradientButton.Popup"
             android:text="@string/importPlaylist" />
         <Button
             android:id="@+id/dismissOnlineButton"
-            style="@style/SongChoices"
+            style="@style/GradientButton.Popup"
             android:text="@string/dismissOnlinePlaylist" />
 
     </LinearLayout>

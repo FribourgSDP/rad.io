@@ -14,8 +14,7 @@
 
     <Button
         android:id="@+id/cancel_button"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        style="@style/GradientButton.Popup"
         android:layout_gravity="bottom"
         android:layout_marginStart="20dp"
         android:layout_marginTop="30dp"

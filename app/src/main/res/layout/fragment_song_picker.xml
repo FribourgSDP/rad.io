@@ -29,17 +29,17 @@
 
         <Button
             android:id="@+id/songPick0"
-            style="@style/SongChoices"
+            style="@style/GradientButton.Popup"
             android:text="" />
 
         <Button
             android:id="@+id/songPick1"
-            style="@style/SongChoices"
+            style="@style/GradientButton.Popup"
             android:text="" />
 
         <Button
             android:id="@+id/songPick2"
-            style="@style/SongChoices"
+            style="@style/GradientButton.Popup"
             android:text="" />
 
     </LinearLayout>

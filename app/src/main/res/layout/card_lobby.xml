@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/card_lobby"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
@@ -16,8 +15,7 @@
 
         <TextView
             android:id="@+id/lobbyIdTextView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            style="@style/Text"
             android:layout_marginStart="32dp"
             android:textSize="32sp"
             android:text="@string/default_lobby_id"
@@ -37,15 +35,13 @@
 
             <TextView
                 android:id="@+id/lobbyNameTextView"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                style="@style/Text"
                 android:layout_marginBottom="8dp"
                 android:text="@string/game_name_format" />
 
             <TextView
                 android:id="@+id/lobbyHostNameTextView"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                style="@style/Text"
                 android:text="@string/host_name_format" />
         </LinearLayout>
 
