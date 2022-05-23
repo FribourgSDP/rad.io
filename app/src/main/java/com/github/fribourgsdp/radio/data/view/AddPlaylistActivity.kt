@@ -48,8 +48,8 @@ class AddPlaylistActivity : MyAppCompatActivity(), SavePlaylistOnlinePickerDialo
         recyclerView = findViewById(R.id.list_playlist_creation)
         listAdapter = SongAdapter(listSongs, object : OnClickListener {
             override fun onItemClick(position: Int) {
-                listSongs.removeAt(position)
-                listAdapter.notifyItemRemoved(position)
+//                listSongs.removeAt(position)
+//                listAdapter.notifyItemRemoved(position)
             }
         })
 
