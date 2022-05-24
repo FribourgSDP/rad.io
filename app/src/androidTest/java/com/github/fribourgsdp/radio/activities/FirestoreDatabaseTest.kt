@@ -8,6 +8,7 @@ import com.github.fribourgsdp.radio.database.FirestoreDatabase
 import com.github.fribourgsdp.radio.database.FirestoreRef
 import com.github.fribourgsdp.radio.database.TransactionManager
 import com.github.fribourgsdp.radio.game.Game
+import com.github.fribourgsdp.radio.util.getPermissions
 import com.google.android.gms.tasks.Task
 import com.google.android.gms.tasks.Tasks
 import com.google.firebase.firestore.DocumentReference
@@ -230,5 +231,26 @@ class FirestoreDatabaseTest {
         val result = db.modifyUserMicPermissions(37, User("nate"), true)
         assertEquals(null, Tasks.await(result))
     }
-    
+
+    @Test
+    fun testMicPermissionsOnTransactionMgr() {
+        val fireDb = FirestoreDatabase()
+        var user = User("nate")
+        user.id = "testUser1"
+        fireDb.modifyUserMicPermissions(123321, user, true)
+        fireDb.refMake.getLobbyRef("123321").get().addOnCompleteListener { snapshot ->
+            println("In here")
+            val newPermissions = snapshot.result.getPermissions()
+            assertEquals(true, newPermissions["testUser1"])
+        }
+    }
+
+    @Test
+    fun getGameSettingsFromLobbyWorks() {
+        val fireDb = FirestoreDatabase()
+        var expected = Game.Settings("testHost", "A test lobby for testing", "testPlaylist", 3, false, true)
+        val result = fireDb.getGameSettingsFromLobby(123321)
+        assertEquals(expected, Tasks.await(result))
+    }
+
 }
