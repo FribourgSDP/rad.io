@@ -338,7 +338,6 @@ class FirestoreDatabaseTest {
         //Revert changes
         fireDb.addUserToLobby(testingLobbyId, user, false)
     }
-
     @Test
     fun disableGameWorks() {
         val gameId = testingLobbyId
