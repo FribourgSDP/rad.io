@@ -14,6 +14,12 @@
         <item name="errorTextColor">@color/red</item>
     </style>
 
+    <!-- Theme for the splash screen -->
+    <style name="Theme.Radio.Splash">
+        <!-- Navigation bar color. -->
+        <item name="android:navigationBarColor" tools:targetApi="l">?attr/colorPrimary</item>
+    </style>
+
     <style name="Theme.Radio.NoActionBar">
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
