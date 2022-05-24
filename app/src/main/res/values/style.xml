@@ -74,12 +74,23 @@
         <item name="elevation">12dp</item>
         <item name="tint">#FFFFFF</item>
     </style>
-    <!-- Style for background top -->
-    <style name="BackgroundTop">
+    <!-- Style for background -->
+    <style name="Background">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:scaleType">centerInside</item>
         <item name="android:adjustViewBounds">true</item>
+    </style>
+    <!-- Style for background top -->
+    <style name="Background.Top">
         <item name="srcCompat">@drawable/ic_background_top</item>
+    </style>
+    <!-- Style for background game -->
+    <style name="Background.Game">
+        <item name="srcCompat">@drawable/ic_background_game</item>
+    </style>
+    <!-- Style for background user -->
+    <style name="Background.User">
+        <item name="srcCompat">@drawable/ic_background_user</item>
     </style>
 </resources>
