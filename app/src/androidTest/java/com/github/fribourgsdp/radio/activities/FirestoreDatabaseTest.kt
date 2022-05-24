@@ -33,6 +33,12 @@ class FirestoreDatabaseTest {
     private val userIdTest = "ID124Test"
     private val songTest = "fakeSongDoesNotExist"
     private val playlistTest = "fakePlaylistDoesNotExist"
+    private val fireDb = FirestoreDatabase()
+    private var user1 = User("nate")
+    private var user2 = User("nate2")
+    private val unusedId = 987987L
+    private val testingLobbyId = 123321L
+    private val unusedLobbyForPublic = 123456789L
 
     private val song1 = Song("song1","artist1","lyricsTest1","idTest1")
     private val song2 = Song("song2","artist2","lyricsTest2","idTest2")
@@ -58,6 +64,8 @@ class FirestoreDatabaseTest {
         mockDocumentReference = mock(DocumentReference::class.java)
         mockTransactionManager = mock(TransactionManager::class.java)
         db = FirestoreDatabase(mockFirestoreRef, mockTransactionManager)
+        user1.id = "testUser1"
+        user2.id = "testUser2"
 
         //this handling is always the same, what changes is what the document snapshot returns
         `when`(mockDocumentReference.get()).thenReturn(Tasks.forResult(mockSnapshot))
@@ -134,7 +142,6 @@ class FirestoreDatabaseTest {
 
     @Test(expected = Exception::class)
     fun registerPlaylistWithSongWithNoNameThrowsException() {
-        val fireDb = FirestoreDatabase()
         var fakePlaylist = Playlist("fake")
         fakePlaylist.addSong(Song("", ""))
         Tasks.await(fireDb.registerPlaylist(fakePlaylist))
@@ -149,68 +156,57 @@ class FirestoreDatabaseTest {
 
     @Test(expected = Exception::class)
     fun getNonExistingGameSettingsFails() {
-        val fireDb = FirestoreDatabase()
         Tasks.await(fireDb.getGameSettingsFromLobby(3333))
     }
 
     @Test(expected = Exception::class)
     fun addingUserToNonExistingLobbyFails() {
-        val fireDb = FirestoreDatabase()
         var user = User("suh")
-        user.id = "987987"
-        Tasks.await(fireDb.addUserToLobby(3333,user, true))
+        user.id = unusedId.toString()
+        Tasks.await(fireDb.addUserToLobby(unusedId,user, true))
     }
 
     @Test(expected = Exception::class)
     fun addingUserAlreadyInLobbyFails() {
-        val fireDb = FirestoreDatabase()
-        var user = User("nate")
-        user.id = "testUser1"
-        Tasks.await(fireDb.addUserToLobby(123321 ,user, true))
+        var user = user1
+        Tasks.await(fireDb.addUserToLobby(testingLobbyId ,user, true))
     }
 
     @Test(expected = Exception::class)
     fun removingUserNotInLobbyFails() {
-        val fireDb = FirestoreDatabase()
         var user = User("nate3")
         user.id = "testUser3"
-        Tasks.await(fireDb.removeUserFromLobby(123321 ,user))
+        Tasks.await(fireDb.removeUserFromLobby(testingLobbyId ,user))
     }
 
     @Test(expected = Exception::class)
     fun disablingGameFailsIfWrongId() {
-        val fireDb = FirestoreDatabase()
-        Tasks.await(fireDb.disableGame(987987))
+        Tasks.await(fireDb.disableGame(unusedId))
     }
 
     @Test(expected = Exception::class)
     fun disablingLobbyFailsIfWrongId() {
-        val fireDb = FirestoreDatabase()
-        Tasks.await(fireDb.disableLobby(987987))
+        Tasks.await(fireDb.disableLobby(unusedId))
     }
 
     @Test(expected = Exception::class)
     fun makeSingerDoneFailsIfWrongId() {
-        val fireDb = FirestoreDatabase()
-        Tasks.await(fireDb.makeSingerDone(987987, "123"))
+        Tasks.await(fireDb.makeSingerDone(unusedId, "123"))
     }
 
     @Test(expected = Exception::class)
     fun launchGameFailsIfWrongId() {
-        val fireDb = FirestoreDatabase()
-        Tasks.await(fireDb.launchGame(987987))
+        Tasks.await(fireDb.launchGame(unusedId))
     }
 
     @Test(expected = Exception::class)
     fun playerEndTurnFailsIfWrongId() {
-        val fireDb = FirestoreDatabase()
-        Tasks.await(fireDb.playerEndTurn(987987, "123", false))
+        Tasks.await(fireDb.playerEndTurn(unusedId, "123", false))
     }
 
     @Test(expected = Exception::class)
     fun resetGameMetadataFailsIfWrongId() {
-        val fireDb = FirestoreDatabase()
-        Tasks.await(fireDb.resetGameMetadata(987987, "123"))
+        Tasks.await(fireDb.resetGameMetadata(unusedId, "123"))
     }
 
     @Test
@@ -319,12 +315,9 @@ class FirestoreDatabaseTest {
 
     @Test
     fun testMicPermissionsOnTransactionMgr() {
-        val fireDb = FirestoreDatabase()
-        var user = User("nate")
-        user.id = "testUser1"
-        fireDb.modifyUserMicPermissions(123321, user, true)
-        fireDb.refMake.getLobbyRef("123321").get().addOnCompleteListener { snapshot ->
-            println("In here")
+        var user = user1
+        fireDb.modifyUserMicPermissions(testingLobbyId, user, true)
+        fireDb.refMake.getLobbyRef(testingLobbyId.toString()).get().addOnCompleteListener { snapshot ->
             val newPermissions = snapshot.result.getPermissions()
             assertEquals(true, newPermissions["testUser1"])
         }
@@ -332,27 +325,23 @@ class FirestoreDatabaseTest {
 
     @Test
     fun getGameSettingsFromLobbyWorks() {
-        val fireDb = FirestoreDatabase()
         var expected = Game.Settings("testHost", "A test lobby for testing", "testPlaylist", 3, false, true)
-        val result = fireDb.getGameSettingsFromLobby(123321)
+        val result = fireDb.getGameSettingsFromLobby(testingLobbyId)
         assertEquals(expected, Tasks.await(result))
     }
 
     @Test
     fun removeUserFromLobbyWorks() {
-        val fireDb = FirestoreDatabase()
-        var user = User("nate2")
-        user.id = "testUser2"
-        val result = fireDb.removeUserFromLobby(123321, user)
+        var user = user2
+        val result = fireDb.removeUserFromLobby(testingLobbyId, user)
         assertEquals(null, Tasks.await(result))
         //Revert changes
-        fireDb.addUserToLobby(123321, user, false)
+        fireDb.addUserToLobby(testingLobbyId, user, false)
     }
 
     @Test
     fun disableGameWorks() {
-        val fireDb = FirestoreDatabase()
-        val gameId = 123321L
+        val gameId = testingLobbyId
         val result = fireDb.disableGame(gameId)
         assertEquals(null, Tasks.await(result))
         //Revert changes
@@ -367,8 +356,7 @@ class FirestoreDatabaseTest {
 
     @Test
     fun disableLobbyWorks() {
-        val fireDb = FirestoreDatabase()
-        val gameId = 123321L
+        val gameId = testingLobbyId
         val result = fireDb.disableLobby(gameId)
         assertEquals(null, Tasks.await(result))
         //Revert changes
@@ -383,11 +371,8 @@ class FirestoreDatabaseTest {
 
     @Test
     fun removePlayerFromGameWorks() {
-        val fireDb = FirestoreDatabase()
-        var user = User("nate2")
-        user.id = "testUser2"
-        val gameId = 123321L
-        val result = fireDb.removePlayerFromGame(gameId, user)
+        val gameId = testingLobbyId
+        val result = fireDb.removePlayerFromGame(gameId, user2)
         assertEquals(null, Tasks.await(result))
         //Revert changes
         fireDb.transactionMgr.db.runTransaction {
@@ -408,9 +393,8 @@ class FirestoreDatabaseTest {
 
     @Test
     fun openGameMetadataWorks() {
-        val fireDb = FirestoreDatabase()
         val users = listOf("testUser1", "testUser2")
-        val gameId = 123321L
+        val gameId = testingLobbyId
         val result = fireDb.openGameMetadata(gameId, users)
         assertEquals(null, Tasks.await(result))
         fireDb.transactionMgr.db.runTransaction {
@@ -426,8 +410,7 @@ class FirestoreDatabaseTest {
 
     @Test
     fun launchGameWorks() {
-        val fireDb = FirestoreDatabase()
-        val gameId = 123321L
+        val gameId = testingLobbyId
         val result = fireDb.launchGame(gameId)
         assertEquals(null, Tasks.await(result))
         //Revert changes
@@ -443,10 +426,8 @@ class FirestoreDatabaseTest {
 
     @Test
     fun makeSingerDoneWorks() {
-        val fireDb = FirestoreDatabase()
-        var user = User("nate2")
-        user.id = "testUser2"
-        val gameId = 123321L
+        var user = user2
+        val gameId = testingLobbyId
         val result = fireDb.makeSingerDone(gameId, user.id)
         assertEquals(null, Tasks.await(result))
         //Revert changes
@@ -464,10 +445,8 @@ class FirestoreDatabaseTest {
 
     @Test
     fun playerEndTurnWorksHasFound() {
-        val fireDb = FirestoreDatabase()
-        var user = User("nate2")
-        user.id = "testUser2"
-        val gameId = 123321L
+        var user = user2
+        val gameId = testingLobbyId
         val result = fireDb.playerEndTurn(gameId, user.id, true)
         assertEquals(null, Tasks.await(result))
         fireDb.transactionMgr.db.runTransaction {
@@ -482,10 +461,8 @@ class FirestoreDatabaseTest {
 
     @Test
     fun playerEndTurnWorksHasNotFound() {
-        val fireDb = FirestoreDatabase()
-        var user = User("nate2")
-        user.id = "testUser2"
-        val gameId = 123321L
+        var user = user2
+        val gameId = testingLobbyId
         val result = fireDb.playerEndTurn(gameId, user.id, false)
         assertEquals(null, Tasks.await(result))
         fireDb.transactionMgr.db.runTransaction {
@@ -500,10 +477,8 @@ class FirestoreDatabaseTest {
 
     @Test
     fun resetGameMetadataWorks() {
-        val fireDb = FirestoreDatabase()
-        var user = User("nate2")
-        user.id = "testUser2"
-        val gameId = 123321L
+        var user = user2
+        val gameId = testingLobbyId
         val result = fireDb.resetGameMetadata(gameId, user.id)
         assertEquals(null, Tasks.await(result))
         fireDb.transactionMgr.db.runTransaction {
@@ -529,10 +504,8 @@ class FirestoreDatabaseTest {
 
     @Test
     fun updateCurrentSongOfGameWorks() {
-        val fireDb = FirestoreDatabase()
-        var user = User("nate2")
-        user.id = "testUser2"
-        val gameId = 123321L
+        var user = user2
+        val gameId = testingLobbyId
         val newSongName = "songiSonga"
         val result = fireDb.updateCurrentSongOfGame(gameId, newSongName, 5)
         assertEquals(null, Tasks.await(result))
@@ -548,8 +521,7 @@ class FirestoreDatabaseTest {
 
     @Test
     fun addGetAndRemovePublicLobbiesWorks() {
-        val fireDb = FirestoreDatabase()
-        val lobbyId = 123456789L
+        val lobbyId = unusedLobbyForPublic
         val fakeSettings = Game.Settings("host22", "lobbyName", "playlistBla", 3, false, false)
         Tasks.await(fireDb.openLobby(lobbyId, fakeSettings))
         var publicLobbies = Tasks.await(fireDb.getPublicLobbies())
