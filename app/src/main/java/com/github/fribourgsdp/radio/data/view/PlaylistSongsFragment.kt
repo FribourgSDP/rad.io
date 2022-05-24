@@ -2,6 +2,7 @@ package com.github.fribourgsdp.radio.data.view
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.widget.Button
 import android.widget.TextView
@@ -13,8 +14,12 @@ import com.github.fribourgsdp.radio.data.Song
 import com.github.fribourgsdp.radio.data.User
 import com.github.fribourgsdp.radio.database.Database
 import com.github.fribourgsdp.radio.database.DatabaseHolder
+import com.github.fribourgsdp.radio.external.musixmatch.LyricsGetter
+import com.github.fribourgsdp.radio.external.musixmatch.MusixmatchLyricsGetter
 import com.github.fribourgsdp.radio.util.MyFragment
 import com.github.fribourgsdp.radio.util.OnClickListener
+import com.google.android.gms.tasks.Task
+import com.google.android.gms.tasks.Tasks
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 
@@ -31,6 +36,7 @@ open class PlaylistSongsFragment : MyFragment(R.layout.fragment_playlist_display
     private lateinit var editButton: Button
     private lateinit var deleteButton: Button
     private lateinit var saveOnlineButton : Button
+    private lateinit var importLyricsButton : Button
     private lateinit var user : User
     
     var db : Database = initializeDatabase()
@@ -78,6 +84,23 @@ open class PlaylistSongsFragment : MyFragment(R.layout.fragment_playlist_display
             }
         }
 
+        importLyricsButton = requireView().findViewById(R.id.ImportLyricsButton)
+        importLyricsButton.setOnClickListener {
+            loadLyrics(playlist).addOnSuccessListener {
+                playlist = it
+                user.addPlaylist(playlist)
+                user.save(requireContext())
+                if(playlist.savedOnline){
+                   //user.
+                }
+                Log.i("oui",playlist.getSongs().toList()[0].lyrics.toString())
+                //TODO("save this playlist a bit more that just this")
+
+            }
+        }
+
+
+
 
     }
 
@@ -91,6 +114,9 @@ open class PlaylistSongsFragment : MyFragment(R.layout.fragment_playlist_display
             if(playlist.savedOnline){
                 saveOnlineButton.visibility = View.INVISIBLE
             }
+            if(playlist.allSongsHaveLyrics()){
+                importLyricsButton.visibility = View.INVISIBLE
+            }
         }.addOnSuccessListener {
             if(!playlist.savedLocally){
                db.getPlaylist(playlist.id).addOnSuccessListener {
@@ -99,6 +125,26 @@ open class PlaylistSongsFragment : MyFragment(R.layout.fragment_playlist_display
                     initializeRecyclerView()
                 }
             }
+        }
+    }
+
+    protected fun loadLyrics(playlist : Playlist, lyricsGetter: LyricsGetter = MusixmatchLyricsGetter) : Task<Playlist> {
+        //this one should only import lyrics for song that have no lyrics
+        val playlistWithLyrics = Playlist(playlist.name,playlist.genre)
+        val tasks = mutableListOf<Task<Void>>()
+        for (song in playlist.getSongs()){
+            if(song.lyrics == "") {
+                lyricsGetter.getLyrics(song.name,song.artist)
+                tasks.add(
+                    Tasks.forResult(lyricsGetter.getLyrics(song.name, song.artist).thenAccept { f ->
+                    val songWithLyrics = Song(song.name, song.artist, f)
+                    playlistWithLyrics.addSong(songWithLyrics)
+                }.join()
+                ))
+            }
+        }
+        return Tasks.whenAllComplete(tasks).continueWith {
+            playlistWithLyrics
         }
     }
 
