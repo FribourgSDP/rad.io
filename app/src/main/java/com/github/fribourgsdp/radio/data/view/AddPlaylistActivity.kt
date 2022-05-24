@@ -17,10 +17,13 @@ import com.github.fribourgsdp.radio.data.Genre
 import com.github.fribourgsdp.radio.data.Song
 import com.github.fribourgsdp.radio.data.Playlist
 import com.github.fribourgsdp.radio.data.User
+import com.github.fribourgsdp.radio.database.Database
+import com.github.fribourgsdp.radio.database.DatabaseHolder
+import com.github.fribourgsdp.radio.database.FirestoreDatabase
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.json.Json
 
-class AddPlaylistActivity : MyAppCompatActivity(), SavePlaylistOnlinePickerDialog.OnPickListener {
+open class AddPlaylistActivity : DatabaseHolder, MyAppCompatActivity(), SavePlaylistOnlinePickerDialog.OnPickListener {
 
     private val listSongs = ArrayList<Song>()
     private var listNames = ArrayList<String>()
@@ -29,6 +32,7 @@ class AddPlaylistActivity : MyAppCompatActivity(), SavePlaylistOnlinePickerDialo
     private lateinit var errorTextView : TextView
     private lateinit var genreSpinner: Spinner
     lateinit var user : User
+    private var db : Database = initializeDatabase()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -135,6 +139,7 @@ class AddPlaylistActivity : MyAppCompatActivity(), SavePlaylistOnlinePickerDialo
         playlistTask.addOnSuccessListener {
             user.addPlaylist(playlist)
             user.save(this)
+            user.onlineCopyAndSave()
             val intent = Intent(this@AddPlaylistActivity, UserProfileActivity::class.java)
             startActivity(intent)
         }

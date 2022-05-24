@@ -5,9 +5,14 @@ import androidx.test.core.app.ApplicationProvider
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.platform.app.InstrumentationRegistry
 import com.github.fribourgsdp.radio.data.*
+import com.github.fribourgsdp.radio.database.Database
+import com.github.fribourgsdp.radio.utils.KotlinAny
+import com.google.android.gms.tasks.Tasks
 import org.junit.Assert.*
 import org.junit.Test
 import org.junit.runner.RunWith
+import org.mockito.ArgumentMatchers.anyString
+import org.mockito.Mockito
 
 
 @RunWith(AndroidJUnit4::class)
@@ -160,5 +165,43 @@ class UserTest {
         val playlist3 = Playlist("test3", Genre.ROCK)
         user.addPlaylists(setOf(playlist1,playlist2, playlist3))
         user.getPlaylistWithName("doesNotExist")
+    }
+
+    @Test
+    fun onlineCopyReturnsUserWithOnlyOnlinePlaylists(){
+        val user = User("test1")
+        val playlist1 = Playlist("test", Genre.ROCK)
+        val playlist2 = Playlist("test2", Genre.POP)
+        playlist1.savedOnline = true
+        user.addPlaylist(playlist1)
+        user.addPlaylist(playlist2)
+        val user2 = user.onlineCopy()
+
+        assertEquals(1,user2.getPlaylists().size)
+        assertEquals("test",user2.getPlaylists().toList()[0].name)
+        assertEquals(2,user.getPlaylists().size)
+        user2.name = "test3"
+        assertEquals("test3",user2.name)
+        assertEquals("test1",user.name)
+
+    }
+
+
+    @Test
+    fun createDefaultUserWorksCorrectly(){
+        val db = Mockito.mock(Database::class.java)
+        Mockito.`when`(db.generateUserId()).thenReturn(Tasks.forResult(-3))
+        User.database = db
+        val user = Tasks.await(User.createDefaultUser())
+        assertEquals("-3",user.id)
+    }
+
+    @Test
+    fun onlineCopyAndSaveWorksCorrectly(){
+        val db = Mockito.mock(Database::class.java)
+        Mockito.`when`(db.setUser(anyString(),KotlinAny.any())).thenReturn(Tasks.forResult(null))
+        User.database = db
+        val user = User("test")
+        assertEquals(null,Tasks.await(user.onlineCopyAndSave()))
     }
 }

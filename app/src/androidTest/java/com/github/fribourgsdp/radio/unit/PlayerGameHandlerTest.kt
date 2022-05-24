@@ -326,6 +326,7 @@ class PlayerGameHandlerTest {
         handler.handleSnapshot(mockSnapshot)
 
         assertTrue(view.gameOver)
+        assertFalse(view.crashed)
     }
 
     @Test
@@ -410,6 +411,19 @@ class PlayerGameHandlerTest {
         Thread.sleep(sleepingTime)
 
         // Game crashed
+        assertTrue(view.gameOver)
+        assertTrue(view.crashed)
+    }
+
+    @Test
+    fun gameCrashedOnGameNotValid() {
+        val view = FakeGameView()
+        val handler = PlayerGameHandler(ctx, 0, view)
+
+        `when`(mockSnapshot.getBoolean("validity")).thenReturn(false)
+
+        handler.handleSnapshot(mockSnapshot)
+
         assertTrue(view.gameOver)
         assertTrue(view.crashed)
     }
