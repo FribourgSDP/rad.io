@@ -17,12 +17,16 @@
     <ImageView
         android:id="@+id/mainLogo"
         android:layout_width="wrap_content"
-        android:layout_height="200dp"
+        android:layout_height="wrap_content"
+        android:adjustViewBounds="true"
+        android:maxHeight="200dp"
         android:padding="20dp"
-        app:layout_constraintBottom_toTopOf="@id/buttonsLayout"
+        android:scaleType="fitCenter"
+        app:layout_constraintBottom_toTopOf="@id/mainText"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/topImage"
+        app:layout_constraintVertical_bias="0.0"
         app:srcCompat="@drawable/ic_logo"
         tools:ignore="ContentDescription" />
 
@@ -33,6 +37,7 @@
         android:text="@string/app_name"
         android:textAllCaps="false"
         android:textSize="40sp"
+        app:layout_constraintBottom_toTopOf="@+id/buttonsLayout"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toBottomOf="@id/mainLogo" />
@@ -57,12 +62,14 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:padding="64dp"
+        android:paddingHorizontal="64dp"
+        android:paddingVertical="12dp"
         android:textSize="24sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/mainText">
+        app:layout_constraintTop_toBottomOf="@+id/topImage"
+        app:layout_constraintVertical_bias="0.77">
 
         <Button
             android:id="@+id/playButton"
@@ -77,6 +84,7 @@
         <Button
             android:id="@+id/settingsButton"
             style="@style/GradientButton.Large"
+            android:layout_marginBottom="0dp"
             android:text="@string/settings_text" />
 
     </LinearLayout>
