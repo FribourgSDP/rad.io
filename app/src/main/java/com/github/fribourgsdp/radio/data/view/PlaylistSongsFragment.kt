@@ -66,7 +66,8 @@ open class PlaylistSongsFragment : MyFragment(R.layout.fragment_playlist_display
             user.removePlaylist(playlist)
             user.save(requireContext())
             user.onlineCopyAndSave()
-            activity?.onBackPressed()
+            activity?.setResult(0)
+            activity?.finish()
         }
 
         saveOnlineButton = requireView().findViewById(R.id.SaveOnlineButton)
