@@ -3,10 +3,7 @@ package com.github.fribourgsdp.radio.data.view
 import android.content.Intent
 import android.os.Bundle
 import android.view.View
-import android.widget.ArrayAdapter
-import android.widget.EditText
-import android.widget.Spinner
-import android.widget.TextView
+import android.widget.*
 import com.google.android.gms.tasks.Tasks
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -17,6 +14,9 @@ import com.github.fribourgsdp.radio.data.Genre
 import com.github.fribourgsdp.radio.data.Song
 import com.github.fribourgsdp.radio.data.Playlist
 import com.github.fribourgsdp.radio.data.User
+import com.github.fribourgsdp.radio.external.musixmatch.LyricsGetter
+import com.github.fribourgsdp.radio.external.musixmatch.MusixmatchLyricsGetter
+import com.google.android.gms.tasks.Task
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.json.Json
 
@@ -28,12 +28,13 @@ class AddPlaylistActivity : MyAppCompatActivity(), SavePlaylistOnlinePickerDialo
     private lateinit var recyclerView : RecyclerView
     private lateinit var errorTextView : TextView
     private lateinit var genreSpinner: Spinner
+    private lateinit var generateLyricsCheckBox : CheckBox
     lateinit var user : User
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_add_playlist)
-
+        generateLyricsCheckBox = findViewById(R.id.generateLyricsCheckBox)
         genreSpinner = findViewById(R.id.genreSpinner)
         genreSpinner.adapter = ArrayAdapter(this, android.R.layout.simple_spinner_item, Genre.values())
         errorTextView = findViewById(R.id.addPlaylistErrorTextView)
@@ -107,6 +108,22 @@ class AddPlaylistActivity : MyAppCompatActivity(), SavePlaylistOnlinePickerDialo
 
     }
 
+
+    protected fun loadLyrics(playlist : Playlist, lyricsGetter: LyricsGetter = MusixmatchLyricsGetter) : Task<Playlist> {
+            val playlistWithLyrics = Playlist(playlist.name,playlist.genre)
+            val tasks = mutableListOf<Task<Void>>()
+            for (song in playlist.getSongs()){
+                    lyricsGetter.getLyrics(song.name,song.artist)
+                    tasks.add(Tasks.forResult(lyricsGetter.getLyrics(song.name, song.artist).thenAccept { f ->
+                        val songWithLyrics = Song(song.name, song.artist, f)
+                        playlistWithLyrics.addSong(songWithLyrics)
+                      }.join()
+                    ))
+            }
+        return Tasks.whenAllComplete(tasks).continueWith {
+            playlistWithLyrics
+        }
+    }
     /**
      * Fills error text view
      */
@@ -126,18 +143,29 @@ class AddPlaylistActivity : MyAppCompatActivity(), SavePlaylistOnlinePickerDialo
     override fun onPick(online: Boolean) {
         val playlistName : String = findViewById<EditText>(R.id.newPlaylistName).text.toString()
         val genre : Genre = genreSpinner.selectedItem as Genre
-        val playlist = Playlist(playlistName,listSongs.toSet(),genre)
-        val playlistTask = if (online) playlist.transformToOnline().addOnSuccessListener {
-            playlist.saveOnline()
-        } else Tasks.forResult(playlist)
-
-
-        playlistTask.addOnSuccessListener {
-            user.addPlaylist(playlist)
-            user.save(this)
-            val intent = Intent(this@AddPlaylistActivity, UserProfileActivity::class.java)
-            startActivity(intent)
+        var playlist = Playlist(playlistName,listSongs.toSet(),genre)
+        val t = if(generateLyricsCheckBox.isChecked){
+             loadLyrics(playlist)
+        }else{
+            Tasks.forResult(playlist)
         }
+        t.continueWith {
+            playlist = it.result
+            val playlistTask = if (online) playlist.transformToOnline().addOnSuccessListener {
+                playlist.saveOnline()
+            } else Tasks.forResult(playlist)
+
+            playlistTask.addOnSuccessListener {
+                user.addPlaylist(playlist)
+                user.save(this)
+                val intent = Intent(this@AddPlaylistActivity, UserProfileActivity::class.java)
+                startActivity(intent)
+            }
+        }
+
+
+
+
     }
 
     private fun allFieldsEmpty(): Boolean {
