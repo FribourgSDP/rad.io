@@ -1,24 +1,19 @@
 package com.github.fribourgsdp.radio.data.view
 
-import android.content.ContentValues
-import android.content.Context
 import android.content.Intent
 import android.graphics.PorterDuff
 import android.graphics.PorterDuffColorFilter
 import android.os.Bundle
-import android.util.Log
-import android.view.KeyEvent
 import android.view.View
-import android.view.inputmethod.InputMethodManager
 import android.widget.Button
 import android.widget.EditText
 import android.widget.ImageView
 import android.widget.TextView
 import com.github.fribourgsdp.radio.*
+import com.github.fribourgsdp.radio.auth.*
 import com.github.fribourgsdp.radio.config.MyAppCompatActivity
 import com.github.fribourgsdp.radio.data.User
 import com.github.fribourgsdp.radio.database.DatabaseHolder
-import com.github.fribourgsdp.radio.external.google.GoogleSignInActivity
 import com.github.fribourgsdp.radio.util.MyFragment
 import com.google.android.gms.tasks.Task
 import com.google.android.gms.tasks.Tasks
@@ -35,6 +30,7 @@ const val REDIRECT_URI = "com.github.fribourgsdp.radio://callback"
 const val SCOPES = "playlist-read-private,playlist-read-collaborative"
 const val RECREATE_USER = "com.github.fribourgsdp.radio.avoidRecreatingUser"
 const val USER_DATA = "com.github.fribourgsdp.radio.data.view.USER_DATA"
+const val FRAGMENT_TAG = "playlistsRVFragment"
 
 open class UserProfileActivity : MyAppCompatActivity(), KeepOrDismissPlaylistDialog.OnPickListener, MergeDismissImportPlaylistDialog.OnPickListener, DatabaseHolder {
     private lateinit var user : User
@@ -47,8 +43,10 @@ open class UserProfileActivity : MyAppCompatActivity(), KeepOrDismissPlaylistDia
     private lateinit var userIcon : ImageView
     private var signedIn : Boolean = false
 
+
     private var db = initializeDatabase()
 
+    protected lateinit var googleSignIn : GoogleSignIn
 
     //firebase auth
     private lateinit var firebaseAuth: FirebaseAuth
@@ -56,9 +54,9 @@ open class UserProfileActivity : MyAppCompatActivity(), KeepOrDismissPlaylistDia
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_user_profile)
+        googleSignIn = GoogleSignIn(this, getString(R.string.default_web_client_id))
         instantiateViews()
 
-        val fromGoogle = intent.getBooleanExtra("FromGoogle",false)
 
         User.loadOrDefault(this).addOnSuccessListener { u ->
             user = u
@@ -68,13 +66,9 @@ open class UserProfileActivity : MyAppCompatActivity(), KeepOrDismissPlaylistDia
             spotifyStatusText.apply { text = if (user.linkedSpotify) getString(R.string.spotify_linked) else getString(R.string.spotify_unlinked) }
             userIcon.colorFilter = PorterDuffColorFilter(user.color, PorterDuff.Mode.ADD)
             //initialise playlists recycler view fragment
-            val bundle = Bundle()
-            bundle.putString(USER_DATA, Json.encodeToString(user))
-            MyFragment.beginTransaction<UserPlaylistsFragment>(supportFragmentManager, bundle)
-            if(fromGoogle){
-                //check if the connection was sucessful, if yes, do the afterSignInProcedure
-                afterSignInProcedure()
-            }
+            supportFragmentManager.beginTransaction()
+                .replace(R.id.container, UserPlaylistsFragment::class.java, Bundle(), FRAGMENT_TAG)
+                .commit()
         }
 
         launchSpotifyButton.setOnClickListener {
@@ -94,14 +88,19 @@ open class UserProfileActivity : MyAppCompatActivity(), KeepOrDismissPlaylistDia
         }
 
         googleSignInButton.setOnClickListener {
-            if (signedIn) {
-                signOut()
-            } else {
-                startActivity(Intent(this, GoogleSignInActivity::class.java))
-            }
+            signInOrOut()
         }
         findViewById<FloatingActionButton>(R.id.addPlaylistButton).setOnClickListener{startActivity(Intent(this, AddPlaylistActivity::class.java))}
 
+    }
+
+    open fun signInOrOut(){
+        if (signedIn) {
+            signOut()
+        } else {
+
+            googleSignIn.signIn()
+        }
     }
 
     private fun instantiateViews(){
@@ -115,16 +114,22 @@ open class UserProfileActivity : MyAppCompatActivity(), KeepOrDismissPlaylistDia
         userIcon = findViewById(R.id.userIcon)
     }
 
+    private fun updateFragment() {
+        val fragment = supportFragmentManager.findFragmentByTag(FRAGMENT_TAG)!! as UserPlaylistsFragment
+        fragment.notifyUserChanged()
+    }
 
     private fun updateUser(){
         user.name = usernameField.text.toString()
         //at this point, the userId should be the firebaseUser.uid
         if(user.isGoogleUser){
-            db.setUser(user.id,user)
+            user.onlineCopyAndSave()
         }else{
+            val userPlaylists = user.getPlaylists()
             val userWithoutPlaylist = user
-            userWithoutPlaylist.removePlaylists(user.getPlaylists())
+            userWithoutPlaylist.removePlaylists(userPlaylists)
             db.setUser(user.id,userWithoutPlaylist)
+            user.addPlaylists(userPlaylists)
         }
         user.save(this)
         usernameInitialText.text = user.initial.uppercaseChar().toString()
@@ -173,16 +178,13 @@ open class UserProfileActivity : MyAppCompatActivity(), KeepOrDismissPlaylistDia
         }.addOnSuccessListener {
             user.save(this)
         }
-
     }
 
     private fun mergePlaylist() : Task<Unit>{
         return db.getUser(user.id).continueWith {
             user.addPlaylists(it.result.getPlaylists())
-            user.isGoogleUser = true
-            user.name = it.result.name
-            user.id = it.result.id
-            db.setUser(user.id,user)
+            makeLocalModificationAndSaveOnline(it.result)
+
         }
     }
     private fun importPlaylist() : Task<Unit>{
@@ -197,11 +199,15 @@ open class UserProfileActivity : MyAppCompatActivity(), KeepOrDismissPlaylistDia
 
     private fun dismissOnlinePlaylist() : Task<Unit>{
         return db.getUser(user.id).continueWith{
-            user.name = it.result.name
-            user.id = it.result.id
-            user.isGoogleUser = true
-            db.setUser(user.id,user)
+            makeLocalModificationAndSaveOnline(it.result)
         }
+    }
+
+    private fun makeLocalModificationAndSaveOnline(remoteUser : User){
+        user.name = remoteUser.name
+        user.id = remoteUser.id
+        user.isGoogleUser = true
+        user.onlineCopyAndSave()
     }
 
     override fun onPick(choice: KeepOrDismissPlaylistDialog.Choice) {
@@ -228,8 +234,15 @@ open class UserProfileActivity : MyAppCompatActivity(), KeepOrDismissPlaylistDia
 
     }
 
-
-
+    /**
+     * Used to indicate that you are logging in from GoogleSignIn
+     * @param code Represents the result of the connection through Google SignIn (Fail, newuser, normalUser or Already connected)
+     */
+    open fun loginFromGoogle(code : GoogleSignInResult) {
+        if(code == GoogleSignInResult.NORMAL_USER || code == GoogleSignInResult.NEW_USER) {
+            afterSignInProcedure()
+        }
+    }
 
 
     //this should only happen on successful signIn,
@@ -239,8 +252,6 @@ open class UserProfileActivity : MyAppCompatActivity(), KeepOrDismissPlaylistDia
         user.save(this)
         val mergeDismissImportPlaylistPicker = MergeDismissImportPlaylistDialog(this)
         mergeDismissImportPlaylistPicker.show(supportFragmentManager, "mergeDismissImportPlaylistPicker")
-
-
     }
 
     private fun signOut(){

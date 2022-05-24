@@ -14,17 +14,10 @@ import com.github.fribourgsdp.radio.data.User
 import com.github.fribourgsdp.radio.external.musixmatch.MusixmatchLyricsGetter.LYRICS_NOT_FOUND_PLACEHOLDER
 import com.github.fribourgsdp.radio.game.handler.HostGameHandler
 import com.github.fribourgsdp.radio.game.handler.PlayerGameHandler
-import com.github.fribourgsdp.radio.game.prep.DEFAULT_GAME_DURATION
-import com.github.fribourgsdp.radio.game.prep.MAP_ID_NAME_KEY
-import com.github.fribourgsdp.radio.game.prep.GAME_KEY
-import com.github.fribourgsdp.radio.game.prep.GAME_UID_KEY
-import com.github.fribourgsdp.radio.game.prep.GAME_DURATION_KEY
-import com.github.fribourgsdp.radio.game.prep.GAME_IS_HOST_KEY
+import com.github.fribourgsdp.radio.game.prep.*
 import com.github.fribourgsdp.radio.game.timer.TimerProgressBarHandler
-import com.github.fribourgsdp.radio.game.view.LyricsPopup
-import com.github.fribourgsdp.radio.game.view.QuitGameOrLobbyDialog
-import com.github.fribourgsdp.radio.game.view.ScoresAdapter
-import com.github.fribourgsdp.radio.game.view.SongPickerDialog
+import com.github.fribourgsdp.radio.util.SongNameHint
+import com.github.fribourgsdp.radio.game.view.*
 import com.github.fribourgsdp.radio.voip.MyIRtcEngineEventHandler
 import com.github.fribourgsdp.radio.voip.VoiceIpEngineDecorator
 import io.agora.rtc.Constants
@@ -33,10 +26,12 @@ import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.json.Json
 import java.util.*
 import kotlin.math.absoluteValue
+import kotlin.math.ceil
 
 
 const val SCORES_KEY = "com.github.fribourgsdp.radio.SCORES"
 const val GAME_CRASH_KEY = "com.github.fribourgsdp.radio.GAME_CRASH"
+const val HINT_FRACTION = 1.0/3
 
 open class GameActivity : AppCompatActivity(), GameView, Timer.Listener {
     private lateinit var user: User
@@ -46,8 +41,10 @@ open class GameActivity : AppCompatActivity(), GameView, Timer.Listener {
     private lateinit var currentRoundTextView : TextView
     private lateinit var singerTextView : TextView
     private lateinit var songTextView : TextView
+    private lateinit var hintTextView : TextView
     private lateinit var errorOrFailureTextView : TextView
     private var lyricsPopup : LyricsPopup? = null
+    private var cantQuitGamePopup : CannotQuitDialog? = null
     private lateinit var songGuessEditText : EditText
     private lateinit var muteButton : ImageButton
     private lateinit var songGuessSubmitButton: Button
@@ -56,6 +53,9 @@ open class GameActivity : AppCompatActivity(), GameView, Timer.Listener {
 
     private lateinit var scoresRecyclerView: RecyclerView
     private val scoresAdapter = ScoresAdapter()
+    private var withHint = false
+    private lateinit var songNameHint : SongNameHint
+    private var lastTime = 0
 
     private lateinit var mapIdToName: HashMap<String, String>
     protected lateinit var voiceChannel: VoiceIpEngineDecorator
@@ -71,6 +71,8 @@ open class GameActivity : AppCompatActivity(), GameView, Timer.Listener {
         } ?: HashMap()
         isHost = intent.getBooleanExtra(GAME_IS_HOST_KEY, false)
         gameDuration = intent.getLongExtra(GAME_DURATION_KEY, DEFAULT_GAME_DURATION)
+
+        withHint = intent.getBooleanExtra(GAME_HINT_KEY, false)
         initViews()
 
         val gameUid = intent.getLongExtra(GAME_UID_KEY, -1L)
@@ -114,8 +116,8 @@ open class GameActivity : AppCompatActivity(), GameView, Timer.Listener {
     }
 
     override fun displaySong(songName: String) {
-        // Close the lyrics popup if already open
-        closeLyricsPopup()
+        //Close any active popup if open
+        closePopups()
 
         // Hide the edit text and the submit button
         songGuessEditText.visibility = View.GONE
@@ -130,14 +132,19 @@ open class GameActivity : AppCompatActivity(), GameView, Timer.Listener {
             text = songName
             visibility = View.VISIBLE
         }
+
+        if(withHint) {
+            hintTextView.visibility = View.GONE
+        }
     }
 
     override fun displayGuessInput() {
-        // Close the lyrics popup if already open
-        closeLyricsPopup()
+        //Close any active popup if open
+        closePopups()
 
         // Hide the song view
         songTextView.visibility = View.GONE
+
 
         showLyricsButton.visibility = View.GONE
 
@@ -150,8 +157,8 @@ open class GameActivity : AppCompatActivity(), GameView, Timer.Listener {
     }
 
     override fun displayError(errorMessage: String) {
-        // Close the lyrics popup if already open
-        closeLyricsPopup()
+        //Close any active popup if open
+        closePopups()
 
         // Show the error
         errorOrFailureTextView.apply {
@@ -175,8 +182,8 @@ open class GameActivity : AppCompatActivity(), GameView, Timer.Listener {
     }
 
     override fun displayPlayerScores(playerScores: Map<String, Long>) {
-        // Close the lyrics popup if already open
-        closeLyricsPopup()
+        //Close any active popup if open
+        closePopups()
 
         scoresAdapter.updateScore(
             // Replace ids by names
@@ -226,6 +233,7 @@ open class GameActivity : AppCompatActivity(), GameView, Timer.Listener {
         currentRoundTextView = findViewById(R.id.currentRoundView)
         singerTextView = findViewById(R.id.singerTextView)
         songTextView = findViewById(R.id.songTextView)
+        hintTextView = findViewById(R.id.hintTextView)
         errorOrFailureTextView = findViewById(R.id.errorOrFailureTextView)
 
         scoresRecyclerView = findViewById(R.id.scoresRecyclerView)
@@ -255,10 +263,9 @@ open class GameActivity : AppCompatActivity(), GameView, Timer.Listener {
     }
 
     protected open fun initVoiceChat(gameUid: Long) {
-
-        val map = mapIdToName.mapKeys { it.hashCode().absoluteValue }
+        val map = mapIdToName.mapKeys { it.key.hashCode().absoluteValue }
         if (!this::voiceChannel.isInitialized) voiceChannel = VoiceIpEngineDecorator(this, MyIRtcEngineEventHandler(this, map))
-        val userId = user.name.hashCode().absoluteValue
+        val userId = user.id.hashCode().absoluteValue
         voiceChannel.setAudioProfile(Constants.AUDIO_PROFILE_MUSIC_STANDARD, Constants.AUDIO_SCENARIO_CHATROOM_ENTERTAINMENT);
         voiceChannel.enableAudioVolumeIndication(200,3,true)
         voiceChannel.setDefaultAudioRoutetoSpeakerphone(true)
@@ -276,6 +283,9 @@ open class GameActivity : AppCompatActivity(), GameView, Timer.Listener {
     }
 
     override fun onUpdate(timeInSeconds: Long) {
+
+        updateHint(timeInSeconds.toInt())
+
         // Run on main thread
         runOnUiThread {
             timerProgressBarHandler.progressBar.setProgress(timeInSeconds.toInt(), true)
@@ -283,27 +293,61 @@ open class GameActivity : AppCompatActivity(), GameView, Timer.Listener {
     }
 
     override fun onBackPressed() {
-        val warningDisplay = QuitGameOrLobbyDialog(this)
-        warningDisplay.show(supportFragmentManager, "warningForQuittingLobby")
-        supportFragmentManager
-            .setFragmentResultListener("quitRequest", this) { _, bundle ->
-                val hasQuit = bundle.getBoolean("hasQuit")
-                if (hasQuit) {
-                    returnToMainMenu()
+        if (isHost) {
+            val warningDisplay = QuitGameOrLobbyDialog(this)
+            warningDisplay.show(supportFragmentManager, "warningForQuittingLobby")
+            supportFragmentManager
+                .setFragmentResultListener("quitRequest", this) { _, bundle ->
+                    val hasQuit = bundle.getBoolean("hasQuit")
+                    if (hasQuit) {
+                        returnToMainMenu()
+                    }
                 }
-            }
+        }
+        else {
+            cantQuitGamePopup = CannotQuitDialog(this)
+            cantQuitGamePopup?.show(supportFragmentManager, "cannotQuitGame")
+        }
     }
     
     override fun updateLyrics(lyrics : String) {
-        // Close the lyrics popup if already open
-        closeLyricsPopup()
+        //Close any active popup if open
+        closePopups()
         
         lyricsPopup = if(lyrics.isNotEmpty() && lyrics != LYRICS_NOT_FOUND_PLACEHOLDER)  LyricsPopup(lyrics)
             else null
     }
 
-    private fun closeLyricsPopup() {
+
+    override fun addHint(songNameHint: SongNameHint) {
+        if(withHint) {
+            hintTextView.visibility = View.VISIBLE
+            this.songNameHint = songNameHint
+            lastTime = 0
+            hintTextView.text = this.songNameHint.toString()
+        }
+    }
+
+    fun updateHint(timeInSeconds: Int){
+        if(withHint && hintTextView.visibility == View.VISIBLE) {
+            val limit = ceil(gameDuration/ (ceil(songNameHint.length()* HINT_FRACTION)+1))
+            if(timeInSeconds - lastTime >= limit) {
+                songNameHint.addALetter()
+                hintTextView.text = this.songNameHint.toString()
+                lastTime = timeInSeconds
+            }
+        }
+    }
+
+
+
+    private fun closePopups() {
         lyricsPopup?.let {
+            if (it.isVisible) {
+                it.dismiss()
+            }
+        }
+        cantQuitGamePopup?.let {
             if (it.isVisible) {
                 it.dismiss()
             }

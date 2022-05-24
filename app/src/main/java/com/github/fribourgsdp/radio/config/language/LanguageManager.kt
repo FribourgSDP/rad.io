@@ -7,15 +7,9 @@ import android.content.res.Resources
 import android.util.DisplayMetrics
 import java.util.*
 
-class LanguageManager {
+open class LanguageManager(private var context: Context) {
 
-    private lateinit var context: Context
-    private lateinit var sharedPreferences: SharedPreferences
-
-    constructor(context : Context){
-        this.context = context
-        sharedPreferences = context.getSharedPreferences("LANG", Context.MODE_PRIVATE)
-    }
+    private var sharedPreferences: SharedPreferences = context.getSharedPreferences("LANG", Context.MODE_PRIVATE)
 
     fun updateResource(code: String){
         val locale = Locale(code)
@@ -28,11 +22,11 @@ class LanguageManager {
         setLang(code)
     }
 
-    fun getLang() : String? {
+    open fun getLang() : String? {
         return sharedPreferences.getString("lang", "en")
     }
 
-    fun setLang(code :String){
+    open fun setLang(code :String){
         val editor : SharedPreferences.Editor = sharedPreferences.edit()
         editor.putString("lang", code)
         editor.commit()
