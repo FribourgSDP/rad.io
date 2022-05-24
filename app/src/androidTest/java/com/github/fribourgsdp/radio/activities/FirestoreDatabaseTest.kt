@@ -65,11 +65,6 @@ class FirestoreDatabaseTest {
         `when`(mockFirestoreRef.getSongRef(anyString())).thenReturn(mockDocumentReference)
         `when`(mockFirestoreRef.getPlaylistRef((anyString()))).thenReturn(mockDocumentReference)
         `when`(mockFirestoreRef.getLobbyRef((anyString()))).thenReturn(mockDocumentReference)
-        `when`(mockFirestoreRef.getGameRef((anyString()))).thenReturn(mockDocumentReference)
-        `when`(mockFirestoreRef.getGameMetadataRef((anyString()))).thenReturn(mockDocumentReference)
-        `when`(mockFirestoreRef.getPlaylistInfoMetadataRef()).thenReturn(mockDocumentReference)
-        `when`(mockFirestoreRef.getSongInfoMetadataRef()).thenReturn(mockDocumentReference)
-        `when`(mockFirestoreRef.getUserInfoMetadataRef()).thenReturn(mockDocumentReference)
         `when`(mockFirestoreRef.getGenericIdRef(anyString(), anyString())).thenReturn(mockDocumentReference)
     }
     @Test
@@ -253,4 +248,127 @@ class FirestoreDatabaseTest {
         assertEquals(expected, Tasks.await(result))
     }
 
+    @Test
+    fun removeUserFromLobbyWorks() {
+        val fireDb = FirestoreDatabase()
+        var user = User("nate2")
+        user.id = "testUser2"
+        val result = fireDb.removeUserFromLobby(123321, user)
+        assertEquals(null, Tasks.await(result))
+        //Revert changes
+        fireDb.addUserToLobby(123321, user, false)
+    }
+
+    @Test
+    fun disableGameWorks() {
+        val fireDb = FirestoreDatabase()
+        val gameId = 123321L
+        val result = fireDb.disableGame(gameId)
+        assertEquals(null, Tasks.await(result))
+        //Revert changes
+        fireDb.transactionMgr.db.runTransaction {
+            val collection = fireDb.transactionMgr.db.collection("games")
+            val gameRef = collection.document(gameId.toString())
+            assertEquals(false, it.get(gameRef)["validity"] as Boolean)
+            it.update(gameRef, "validity", true)
+            null
+        }
+    }
+
+    @Test
+    fun disableLobbyWorks() {
+        val fireDb = FirestoreDatabase()
+        val gameId = 123321L
+        val result = fireDb.disableLobby(gameId)
+        assertEquals(null, Tasks.await(result))
+        //Revert changes
+        fireDb.transactionMgr.db.runTransaction {
+            val collection = fireDb.transactionMgr.db.collection("lobby")
+            val lobbyRef = collection.document(gameId.toString())
+            assertEquals(false, it.get(lobbyRef)["validity"] as Boolean)
+            it.update(lobbyRef, "validity", true)
+            null
+        }
+    }
+
+    @Test
+    fun removePlayerFromGameWorks() {
+        val fireDb = FirestoreDatabase()
+        var user = User("nate2")
+        user.id = "testUser2"
+        val gameId = 123321L
+        val result = fireDb.removePlayerFromGame(gameId, user)
+        assertEquals(null, Tasks.await(result))
+        //Revert changes
+        fireDb.transactionMgr.db.runTransaction {
+            val collection = fireDb.transactionMgr.db.collection("games_metadata")
+            val gameMetaRef = collection.document(gameId.toString())
+            val snapshot = it.get(gameMetaRef)
+            val playerDoneMap = snapshot.get("player_done_map")!! as HashMap<String, Boolean>
+            val playerFoundMap = snapshot.get("player_found_map")!! as HashMap<String, Boolean>
+            assertEquals(false, playerDoneMap.containsKey("testUser2"))
+            assertEquals(false, playerFoundMap.containsKey("testUser2"))
+            playerDoneMap.put("testUser2", true)
+            playerFoundMap.put("testUser2", true)
+            it.update(gameMetaRef, "player_done_map", playerDoneMap)
+            it.update(gameMetaRef, "player_found_map", playerFoundMap)
+            null
+        }
+    }
+
+    @Test
+    fun openGameMetadataWorks() {
+        val fireDb = FirestoreDatabase()
+        val users = listOf("testUser1", "testUser2")
+        val gameId = 123321L
+        val result = fireDb.openGameMetadata(gameId, users)
+        assertEquals(null, Tasks.await(result))
+        fireDb.transactionMgr.db.runTransaction {
+            val collection = fireDb.transactionMgr.db.collection("games_metadata")
+            val gameMetaRef = collection.document(gameId.toString())
+            val snapshot = it.get(gameMetaRef)
+            assertEquals(users.size, (snapshot.get("player_done_map") as HashMap<String, Boolean>).size)
+            assertEquals(users.size, (snapshot.get("player_found_map") as HashMap<String, Boolean>).size)
+            assertEquals(users.size, (snapshot.get("scores_of_round") as HashMap<String, Boolean>).size)
+            null
+        }
+    }
+
+    @Test
+    fun launchGameWorks() {
+        val fireDb = FirestoreDatabase()
+        val gameId = 123321L
+        val result = fireDb.launchGame(gameId)
+        assertEquals(null, Tasks.await(result))
+        //Revert changes
+        fireDb.transactionMgr.db.runTransaction {
+            val collection = fireDb.transactionMgr.db.collection("lobby")
+            val lobbyRef = collection.document(gameId.toString())
+            val snapshot = it.get(lobbyRef)
+            assertEquals(true, snapshot.get("launched"))
+            it.update(lobbyRef, "launched", false)
+            null
+        }
+    }
+
+    @Test
+    fun makeSingerDoneWorks() {
+        val fireDb = FirestoreDatabase()
+        var user = User("nate2")
+        user.id = "testUser2"
+        val gameId = 123321L
+        val result = fireDb.makeSingerDone(gameId, user.id)
+        assertEquals(null, Tasks.await(result))
+        //Revert changes
+        fireDb.transactionMgr.db.runTransaction {
+            val collection = fireDb.transactionMgr.db.collection("games_metadata")
+            val gameRef = collection.document(gameId.toString())
+            val snapshot = it.get(gameRef)
+            val playerDoneMap = snapshot.get("player_done_map")!! as HashMap<String, Boolean>
+            assertEquals(true, playerDoneMap["testUser2"])
+            playerDoneMap["testUser2"] = false
+            it.update(gameRef, "player_done_map", playerDoneMap)
+            null
+        }
+    }
 }
