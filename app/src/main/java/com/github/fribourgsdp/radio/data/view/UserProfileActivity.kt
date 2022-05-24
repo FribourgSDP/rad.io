@@ -67,7 +67,7 @@ open class UserProfileActivity : MyAppCompatActivity(), KeepOrDismissPlaylistDia
             userIcon.colorFilter = PorterDuffColorFilter(user.color, PorterDuff.Mode.ADD)
             //initialise playlists recycler view fragment
             supportFragmentManager.beginTransaction()
-                .replace(R.id.container, UserPlaylistsFragment::class.java, Bundle(), "playlistsFragment")
+                .replace(R.id.container, UserPlaylistsFragment::class.java, Bundle(), FRAGMENT_TAG)
                 .commit()
         }
 
