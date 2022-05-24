@@ -10,6 +10,7 @@ import com.github.fribourgsdp.radio.game.GameView
 import com.github.fribourgsdp.radio.game.prep.DEFAULT_GAME_DURATION
 import com.github.fribourgsdp.radio.game.timer.Timer
 import com.github.fribourgsdp.radio.util.NOT_THE_SAME
+import com.github.fribourgsdp.radio.util.SongNameHint
 import com.github.fribourgsdp.radio.util.StringComparisons
 import com.google.firebase.firestore.DocumentSnapshot
 
@@ -40,7 +41,7 @@ class PlayerGameHandler(
             val gameStillValid = snapshot.getBoolean("validity")!!
             scores = snapshot.get("scores") as HashMap<String, Long>
             if (snapshot.getBoolean("finished")!! || !gameStillValid) {
-                view.gameOver(scores!!, gameStillValid)
+                view.gameOver(scores!!, !gameStillValid)
                 return
             }
 
@@ -167,6 +168,7 @@ class PlayerGameHandler(
 
             if (songToGuess != null) {
                 // The singer picked a song so the player can guess
+                view.addHint(SongNameHint(songToGuess!!))
                 view.displayGuessInput()
                 view.startTimer(deadline!!.toDate())
 

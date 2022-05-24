@@ -17,10 +17,13 @@ import com.github.fribourgsdp.radio.data.User
 import com.github.fribourgsdp.radio.external.musixmatch.LyricsGetter
 import com.github.fribourgsdp.radio.external.musixmatch.MusixmatchLyricsGetter
 import com.google.android.gms.tasks.Task
+import com.github.fribourgsdp.radio.database.Database
+import com.github.fribourgsdp.radio.database.DatabaseHolder
+import com.github.fribourgsdp.radio.database.FirestoreDatabase
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.json.Json
 
-class AddPlaylistActivity : MyAppCompatActivity(), SavePlaylistOnlinePickerDialog.OnPickListener {
+open class AddPlaylistActivity : DatabaseHolder, MyAppCompatActivity(), SavePlaylistOnlinePickerDialog.OnPickListener {
 
     private val listSongs = ArrayList<Song>()
     private var listNames = ArrayList<String>()
@@ -30,6 +33,7 @@ class AddPlaylistActivity : MyAppCompatActivity(), SavePlaylistOnlinePickerDialo
     private lateinit var genreSpinner: Spinner
     private lateinit var generateLyricsCheckBox : CheckBox
     lateinit var user : User
+    private var db : Database = initializeDatabase()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -141,12 +145,12 @@ class AddPlaylistActivity : MyAppCompatActivity(), SavePlaylistOnlinePickerDialo
 
 
     override fun onPick(online: Boolean) {
-        val playlistName : String = findViewById<EditText>(R.id.newPlaylistName).text.toString()
-        val genre : Genre = genreSpinner.selectedItem as Genre
-        var playlist = Playlist(playlistName,listSongs.toSet(),genre)
-        val t = if(generateLyricsCheckBox.isChecked){
-             loadLyrics(playlist)
-        }else{
+        val playlistName: String = findViewById<EditText>(R.id.newPlaylistName).text.toString()
+        val genre: Genre = genreSpinner.selectedItem as Genre
+        var playlist = Playlist(playlistName, listSongs.toSet(), genre)
+        val t = if (generateLyricsCheckBox.isChecked) {
+            loadLyrics(playlist)
+        } else {
             Tasks.forResult(playlist)
         }
         t.continueWith {
@@ -158,16 +162,12 @@ class AddPlaylistActivity : MyAppCompatActivity(), SavePlaylistOnlinePickerDialo
             playlistTask.addOnSuccessListener {
                 user.addPlaylist(playlist)
                 user.save(this)
+                user.onlineCopyAndSave()
                 val intent = Intent(this@AddPlaylistActivity, UserProfileActivity::class.java)
                 startActivity(intent)
             }
         }
-
-
-
-
     }
-
     private fun allFieldsEmpty(): Boolean {
         if (findViewById<EditText>(R.id.newPlaylistName).text.toString().isNotBlank()){
             return false

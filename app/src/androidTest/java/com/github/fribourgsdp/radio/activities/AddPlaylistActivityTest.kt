@@ -24,6 +24,7 @@ import com.github.fribourgsdp.radio.data.Genre
 import com.github.fribourgsdp.radio.data.User
 import com.github.fribourgsdp.radio.data.view.AddPlaylistActivity
 import com.github.fribourgsdp.radio.data.view.UserProfileActivity
+import com.github.fribourgsdp.radio.mockimplementations.MockAddPlaylistActivity
 import com.github.fribourgsdp.radio.util.ViewHolder
 import com.google.android.gms.tasks.Tasks
 import org.hamcrest.Matchers
@@ -39,7 +40,7 @@ import org.junit.runner.RunWith
 class AddPlaylistActivityTest {
 
     @get:Rule
-    var addPlaylistActivityRule = ActivityScenarioRule(AddPlaylistActivity::class.java)
+    var addPlaylistActivityRule = ActivityScenarioRule(MockAddPlaylistActivity::class.java)
     private val ctx: Context = ApplicationProvider.getApplicationContext()
 
     @Before
