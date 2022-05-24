@@ -1,9 +1,6 @@
 package com.github.fribourgsdp.radio.activities
 
-import com.github.fribourgsdp.radio.data.Genre
-import com.github.fribourgsdp.radio.data.Playlist
-import com.github.fribourgsdp.radio.data.Song
-import com.github.fribourgsdp.radio.data.User
+import com.github.fribourgsdp.radio.data.*
 import com.github.fribourgsdp.radio.database.FirestoreDatabase
 import com.github.fribourgsdp.radio.database.FirestoreRef
 import com.github.fribourgsdp.radio.database.TransactionManager
@@ -457,5 +454,18 @@ class FirestoreDatabaseTest {
             assertEquals(newSongName, snapshot.get("current_song"))
             null
         }
+    }
+
+    @Test
+    fun addGetAndRemovePublicLobbiesWorks() {
+        val fireDb = FirestoreDatabase()
+        val lobbyId = 123456789L
+        val fakeSettings = Game.Settings("host22", "lobbyName", "playlistBla", 3, false, false)
+        Tasks.await(fireDb.openLobby(lobbyId, fakeSettings))
+        var publicLobbies = Tasks.await(fireDb.getPublicLobbies())
+        assertEquals(true, publicLobbies.contains(LobbyData(lobbyId, "lobbyName", "host22")))
+        Tasks.await(fireDb.removeLobbyFromPublic(lobbyId))
+        val newPublicLobbies = Tasks.await(fireDb.getPublicLobbies())
+        assertEquals(false, newPublicLobbies.contains(LobbyData(lobbyId, "lobbyName", "host22")))
     }
 }
