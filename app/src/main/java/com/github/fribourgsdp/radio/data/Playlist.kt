@@ -120,6 +120,13 @@ data class Playlist (override var name: String, var genre: Genre) : Nameable {
         return db.registerPlaylist(this)
     }
 
+    fun allSongsHaveLyrics(): Boolean{
+        return songs.all { it.lyrics != "" }
+    }
+    fun noSongHaveLyrics(): Boolean{
+        return songs.all { it.lyrics == "" || it.lyrics == "---"}
+    }
+
 
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
