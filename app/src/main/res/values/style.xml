@@ -47,6 +47,11 @@
         <item name="android:layout_marginTop">16dp</item>
         <item name="android:textSize">24sp</item>
     </style>
+    <!-- Style for popup text -->
+    <style name="Text.OnPrimary">
+        <item name="android:textColor">?attr/colorOnPrimary</item>
+    </style>
+
     <!-- Style for Song picker choices -->
     <style name="GradientButton.Popup">
         <item name="android:layout_width">match_parent</item>
