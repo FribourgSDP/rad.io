@@ -1,6 +1,5 @@
 package com.github.fribourgsdp.radio.data.view
 
-import android.content.Intent
 import android.os.Bundle
 import com.github.fribourgsdp.radio.config.MyAppCompatActivity
 import com.github.fribourgsdp.radio.util.MyFragment
