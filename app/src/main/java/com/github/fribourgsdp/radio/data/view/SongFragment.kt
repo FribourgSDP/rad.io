@@ -71,7 +71,7 @@ open class SongFragment : MyFragment(R.layout.fragment_song) {
         initialLyrics = song.lyrics
         currentLyrics = initialLyrics
         if(song.lyrics == ""){
-            fetchLyrics(getLyricsGetter())
+           // fetchLyrics(getLyricsGetter())
         }
 
         songTitle.text = song.name
