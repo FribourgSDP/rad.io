@@ -39,6 +39,8 @@ class FirestoreDatabaseTest {
     private val unusedId = 987987L
     private val testingLobbyId = 123321L
     private val unusedLobbyForPublic = 123456789L
+    private val openGameTestId = 6666L
+    private val unusedUserId = "thisUserIdIsSuperLongAndHasNoChanceOfBeingUsed"
 
     private val song1 = Song("song1","artist1","lyricsTest1","idTest1")
     private val song2 = Song("song2","artist2","lyricsTest2","idTest2")
@@ -191,7 +193,7 @@ class FirestoreDatabaseTest {
 
     @Test(expected = Exception::class)
     fun makeSingerDoneFailsIfWrongId() {
-        Tasks.await(fireDb.makeSingerDone(unusedId, "123"))
+        Tasks.await(fireDb.makeSingerDone(unusedId, unusedUserId))
     }
 
     @Test(expected = Exception::class)
@@ -201,12 +203,12 @@ class FirestoreDatabaseTest {
 
     @Test(expected = Exception::class)
     fun playerEndTurnFailsIfWrongId() {
-        Tasks.await(fireDb.playerEndTurn(unusedId, "123", false))
+        Tasks.await(fireDb.playerEndTurn(unusedId, unusedUserId, false))
     }
 
     @Test(expected = Exception::class)
     fun resetGameMetadataFailsIfWrongId() {
-        Tasks.await(fireDb.resetGameMetadata(unusedId, "123"))
+        Tasks.await(fireDb.resetGameMetadata(unusedId, unusedUserId))
     }
 
     @Test
@@ -287,7 +289,22 @@ class FirestoreDatabaseTest {
 
     @Test
     fun openGameWorks() {
-        db.openGame(3L)
+        Tasks.await(db.openGame(openGameTestId))
+        fireDb.transactionMgr.db.runTransaction {
+            val collection = fireDb.transactionMgr.db.collection("games")
+            val gameMetaRef = collection.document(openGameTestId.toString())
+            val snapshot = it.get(gameMetaRef)
+            assertEquals(false, snapshot.get("finished") as Boolean)
+            assertEquals(0L, snapshot.get("current_round") as Long)
+            assertEquals("", snapshot.get("singer") as String)
+            assertEquals(ArrayList<String>(), snapshot.get("song_choices") as ArrayList<String>)
+            assertEquals(HashMap<String, Int>(), snapshot.get("scores") as HashMap<String, Int>)
+            assertEquals(true, snapshot.get("validity") as Boolean)
+            assertEquals(HashMap<String, String>(), snapshot.get("song_choices_lyrics") as HashMap<String, String>)
+            null
+        }
+
+
     }
 
     @Test
