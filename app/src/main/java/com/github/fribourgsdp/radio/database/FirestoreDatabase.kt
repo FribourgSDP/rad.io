@@ -39,23 +39,8 @@ open class FirestoreRef {
     open fun getLobbyRef(lobbyId: String) : DocumentReference {
         return db.collection("lobby").document(lobbyId)
     }
-    open fun getGameRef(gameId: String) : DocumentReference {
-        return db.collection("games").document(gameId)
-    }
     open fun getPublicLobbiesRef() : DocumentReference {
         return db.collection("lobby").document("public")
-    }
-    open fun getGameMetadataRef(gameId: String) : DocumentReference {
-        return db.collection("games_metadata").document(gameId)
-    }
-    open fun getPlaylistInfoMetadataRef() : DocumentReference {
-        return db.collection("metadata").document("PlaylistInfo")
-    }
-    open fun getSongInfoMetadataRef() : DocumentReference {
-        return db.collection("metadata").document("SongInfo")
-    }
-    open fun getUserInfoMetadataRef() : DocumentReference {
-        return db.collection("metadata").document("UserInfo")
     }
     open fun getGenericIdRef(collectionPath : String, documentPath : String) : DocumentReference {
         return db.collection(collectionPath).document(documentPath)
@@ -496,7 +481,7 @@ class FirestoreDatabase(var refMake: FirestoreRef, var transactionMgr: Transacti
     }
 
     override fun makeSingerDone(gameID: Long, singerId: String): Task<Void> {
-        val docRef = db.collection("game_metadata").document(gameID.toString())
+        val docRef = db.collection("games_metadata").document(gameID.toString())
 
         return db.runTransaction { transaction ->
             val snapshot = transaction.get(docRef)
