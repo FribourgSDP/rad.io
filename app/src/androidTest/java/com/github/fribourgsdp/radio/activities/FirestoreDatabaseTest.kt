@@ -9,6 +9,9 @@ import com.github.fribourgsdp.radio.database.FirestoreRef
 import com.github.fribourgsdp.radio.database.TransactionManager
 import com.github.fribourgsdp.radio.game.Game
 import com.github.fribourgsdp.radio.util.getPermissions
+import com.github.fribourgsdp.radio.util.getPlayerDoneMap
+import com.github.fribourgsdp.radio.util.getPlayerFoundMap
+import com.github.fribourgsdp.radio.util.getScoresOfRound
 import com.google.android.gms.tasks.Task
 import com.google.android.gms.tasks.Tasks
 import com.google.firebase.firestore.DocumentReference
@@ -368,6 +371,90 @@ class FirestoreDatabaseTest {
             assertEquals(true, playerDoneMap["testUser2"])
             playerDoneMap["testUser2"] = false
             it.update(gameRef, "player_done_map", playerDoneMap)
+            null
+        }
+    }
+
+    @Test
+    fun playerEndTurnWorksHasFound() {
+        val fireDb = FirestoreDatabase()
+        var user = User("nate2")
+        user.id = "testUser2"
+        val gameId = 123321L
+        val result = fireDb.playerEndTurn(gameId, user.id, true)
+        assertEquals(null, Tasks.await(result))
+        fireDb.transactionMgr.db.runTransaction {
+            val collection = fireDb.transactionMgr.db.collection("games_metadata")
+            val gameRef = collection.document(gameId.toString())
+            val snapshot = it.get(gameRef)
+            assertNotEquals(0, (snapshot.get("scores_of_round") as HashMap<String, Int>)["testUser2"])
+            null
+        }
+        fireDb.resetGameMetadata(gameId, "testUser1")
+    }
+
+    @Test
+    fun playerEndTurnWorksHasNotFound() {
+        val fireDb = FirestoreDatabase()
+        var user = User("nate2")
+        user.id = "testUser2"
+        val gameId = 123321L
+        val result = fireDb.playerEndTurn(gameId, user.id, false)
+        assertEquals(null, Tasks.await(result))
+        fireDb.transactionMgr.db.runTransaction {
+            val collection = fireDb.transactionMgr.db.collection("games_metadata")
+            val gameRef = collection.document(gameId.toString())
+            val snapshot = it.get(gameRef)
+            assertEquals(0, (snapshot.get("scores_of_round") as HashMap<String, Int>)["testUser2"])
+            null
+        }
+        fireDb.resetGameMetadata(gameId, "testUser1")
+    }
+
+    @Test
+    fun resetGameMetadataWorks() {
+        val fireDb = FirestoreDatabase()
+        var user = User("nate2")
+        user.id = "testUser2"
+        val gameId = 123321L
+        val result = fireDb.resetGameMetadata(gameId, user.id)
+        assertEquals(null, Tasks.await(result))
+        fireDb.transactionMgr.db.runTransaction {
+            val collection = fireDb.transactionMgr.db.collection("games_metadata")
+            val gameRef = collection.document(gameId.toString())
+            val snapshot = it.get(gameRef)
+            val updatedDoneMap = snapshot.getPlayerDoneMap()
+            for ((id, done) in updatedDoneMap) {
+                assertEquals(id == user.id, done)
+            }
+            val updatedFoundMap = snapshot.getPlayerFoundMap()
+            for ((_, found) in updatedFoundMap) {
+                assertEquals(false, found)
+            }
+            val scoresOfRound = snapshot.getScoresOfRound<Long>()
+            for ((_, score) in scoresOfRound) {
+                assertEquals(0, score)
+            }
+            assertEquals(0, (snapshot.get("scores_of_round") as HashMap<String, Int>)["testUser2"])
+            null
+        }
+    }
+
+    @Test
+    fun updateCurrentSongOfGameWorks() {
+        val fireDb = FirestoreDatabase()
+        var user = User("nate2")
+        user.id = "testUser2"
+        val gameId = 123321L
+        val newSongName = "songiSonga"
+        val result = fireDb.updateCurrentSongOfGame(gameId, newSongName, 5)
+        assertEquals(null, Tasks.await(result))
+        fireDb.transactionMgr.db.runTransaction {
+            val collection = fireDb.transactionMgr.db.collection("games")
+            val gameRef = collection.document(gameId.toString())
+            val snapshot = it.get(gameRef)
+            assertNotEquals(null, snapshot.get("round_deadline"))
+            assertEquals(newSongName, snapshot.get("current_song"))
             null
         }
     }
