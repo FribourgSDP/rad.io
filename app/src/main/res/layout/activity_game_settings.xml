@@ -6,12 +6,20 @@
     android:layout_height="match_parent"
     tools:context=".game.prep.GameSettingsActivity">
 
+    <ImageView
+        android:id="@+id/topImage"
+        style="@style/BackgroundTop"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:ignore="ContentDescription" />
+
     <TextView
         android:id="@+id/gameSettingsTitle"
         style="@style/Text.Titles"
         android:text="@string/game_settings_text"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintStart_toStartOf="@id/topImage"
+        app:layout_constraintTop_toTopOf="@id/topImage"/>
 
     <LinearLayout
         android:id="@+id/linearLayout2"
@@ -22,7 +30,7 @@
         app:layout_constraintBottom_toTopOf="@+id/startButton"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/gameSettingsTitle"
+        app:layout_constraintTop_toBottomOf="@+id/topImage"
         app:layout_constraintVertical_bias="0.0">
 
         <androidx.constraintlayout.widget.ConstraintLayout

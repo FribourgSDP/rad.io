@@ -8,12 +8,20 @@
     tools:context=".config.SettingsActivity"
     tools:ignore="ExtraText">
 
+    <ImageView
+        android:id="@+id/topImage"
+        style="@style/BackgroundTop"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:ignore="ContentDescription" />
+
     <TextView
         android:id="@+id/settingsTitle"
         style="@style/Text.Titles"
         android:text="@string/settings_text"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintStart_toStartOf="@id/topImage"
+        app:layout_constraintTop_toTopOf="@id/topImage" />
 
     <LinearLayout
         android:layout_width="0dp"
@@ -22,7 +30,7 @@
         android:orientation="vertical"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/settingsTitle">
+        app:layout_constraintTop_toBottomOf="@+id/topImage">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
