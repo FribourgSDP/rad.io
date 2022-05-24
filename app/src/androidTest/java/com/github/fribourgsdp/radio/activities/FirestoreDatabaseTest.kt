@@ -31,6 +31,8 @@ import java.io.Serializable
 class FirestoreDatabaseTest {
     private val userNameTest = "BakerTest"
     private val userIdTest = "ID124Test"
+    private val songTest = "fakeSongDoesNotExist"
+    private val playlistTest = "fakePlaylistDoesNotExist"
 
     private val song1 = Song("song1","artist1","lyricsTest1","idTest1")
     private val song2 = Song("song2","artist2","lyricsTest2","idTest2")
@@ -92,7 +94,7 @@ class FirestoreDatabaseTest {
     }
 
     @Test
-    fun  registerSongAndFetchingItWorks(){
+    fun registerSongAndFetchingItWorks(){
         `when`(mockSnapshot.exists()).thenReturn(true)
 
         `when`(mockSnapshot.get("songName")).thenReturn("song1")
@@ -103,6 +105,13 @@ class FirestoreDatabaseTest {
         db.registerSong(song1)
         val song = Tasks.await(db.getSong("idTest1"))
         assertEquals(song1,song)
+    }
+
+    @Test
+    fun getUnregisteredSongReturnsNull() {
+        `when`(mockSnapshot.exists()).thenReturn(false)
+        val song = Tasks.withTimeout(db.getSong(songTest),10,TimeUnit.SECONDS)
+        assertEquals( null,Tasks.await(song))
     }
    
 
@@ -121,6 +130,87 @@ class FirestoreDatabaseTest {
         val t1 = db.getPlaylist("playlist1.id")
         assertEquals(playlist1,Tasks.await(t1))
 
+    }
+
+    @Test(expected = Exception::class)
+    fun registerPlaylistWithSongWithNoNameThrowsException() {
+        val fireDb = FirestoreDatabase()
+        var fakePlaylist = Playlist("fake")
+        fakePlaylist.addSong(Song("", ""))
+        Tasks.await(fireDb.registerPlaylist(fakePlaylist))
+    }
+
+    @Test
+    fun getUnregisteredPlaylistReturnsNull() {
+        `when`(mockSnapshot.exists()).thenReturn(false)
+        val playlist = Tasks.withTimeout(db.getPlaylist(playlistTest),10,TimeUnit.SECONDS)
+        assertEquals( null,Tasks.await(playlist))
+    }
+
+    @Test(expected = Exception::class)
+    fun getNonExistingGameSettingsFails() {
+        val fireDb = FirestoreDatabase()
+        Tasks.await(fireDb.getGameSettingsFromLobby(3333))
+    }
+
+    @Test(expected = Exception::class)
+    fun addingUserToNonExistingLobbyFails() {
+        val fireDb = FirestoreDatabase()
+        var user = User("suh")
+        user.id = "987987"
+        Tasks.await(fireDb.addUserToLobby(3333,user, true))
+    }
+
+    @Test(expected = Exception::class)
+    fun addingUserAlreadyInLobbyFails() {
+        val fireDb = FirestoreDatabase()
+        var user = User("nate")
+        user.id = "testUser1"
+        Tasks.await(fireDb.addUserToLobby(123321 ,user, true))
+    }
+
+    @Test(expected = Exception::class)
+    fun removingUserNotInLobbyFails() {
+        val fireDb = FirestoreDatabase()
+        var user = User("nate3")
+        user.id = "testUser3"
+        Tasks.await(fireDb.removeUserFromLobby(123321 ,user))
+    }
+
+    @Test(expected = Exception::class)
+    fun disablingGameFailsIfWrongId() {
+        val fireDb = FirestoreDatabase()
+        Tasks.await(fireDb.disableGame(987987))
+    }
+
+    @Test(expected = Exception::class)
+    fun disablingLobbyFailsIfWrongId() {
+        val fireDb = FirestoreDatabase()
+        Tasks.await(fireDb.disableLobby(987987))
+    }
+
+    @Test(expected = Exception::class)
+    fun makeSingerDoneFailsIfWrongId() {
+        val fireDb = FirestoreDatabase()
+        Tasks.await(fireDb.makeSingerDone(987987, "123"))
+    }
+
+    @Test(expected = Exception::class)
+    fun launchGameFailsIfWrongId() {
+        val fireDb = FirestoreDatabase()
+        Tasks.await(fireDb.launchGame(987987))
+    }
+
+    @Test(expected = Exception::class)
+    fun playerEndTurnFailsIfWrongId() {
+        val fireDb = FirestoreDatabase()
+        Tasks.await(fireDb.playerEndTurn(987987, "123", false))
+    }
+
+    @Test(expected = Exception::class)
+    fun resetGameMetadataFailsIfWrongId() {
+        val fireDb = FirestoreDatabase()
+        Tasks.await(fireDb.resetGameMetadata(987987, "123"))
     }
 
     @Test
