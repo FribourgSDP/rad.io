@@ -30,6 +30,7 @@ const val REDIRECT_URI = "com.github.fribourgsdp.radio://callback"
 const val SCOPES = "playlist-read-private,playlist-read-collaborative"
 const val RECREATE_USER = "com.github.fribourgsdp.radio.avoidRecreatingUser"
 const val USER_DATA = "com.github.fribourgsdp.radio.data.view.USER_DATA"
+const val FRAGMENT_TAG = "playlistsRVFragment"
 
 open class UserProfileActivity : MyAppCompatActivity(), KeepOrDismissPlaylistDialog.OnPickListener, MergeDismissImportPlaylistDialog.OnPickListener, DatabaseHolder {
     private lateinit var user : User
@@ -65,10 +66,9 @@ open class UserProfileActivity : MyAppCompatActivity(), KeepOrDismissPlaylistDia
             spotifyStatusText.apply { text = if (user.linkedSpotify) getString(R.string.spotify_linked) else getString(R.string.spotify_unlinked) }
             userIcon.colorFilter = PorterDuffColorFilter(user.color, PorterDuff.Mode.ADD)
             //initialise playlists recycler view fragment
-            val bundle = Bundle()
-            bundle.putString(USER_DATA, Json.encodeToString(user))
-            MyFragment.beginTransaction<UserPlaylistsFragment>(supportFragmentManager, bundle)
-
+            supportFragmentManager.beginTransaction()
+                .replace(R.id.container, UserPlaylistsFragment::class.java, Bundle(), FRAGMENT_TAG)
+                .commit()
         }
 
         launchSpotifyButton.setOnClickListener {
@@ -114,6 +114,10 @@ open class UserProfileActivity : MyAppCompatActivity(), KeepOrDismissPlaylistDia
         userIcon = findViewById(R.id.userIcon)
     }
 
+    private fun updateFragment() {
+        val fragment = supportFragmentManager.findFragmentByTag(FRAGMENT_TAG)!! as UserPlaylistsFragment
+        fragment.notifyUserChanged()
+    }
 
     private fun updateUser(){
         user.name = usernameField.text.toString()
