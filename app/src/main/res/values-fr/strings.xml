@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">Rad.io</string>
+    <string name="app_name">rad.io</string>
     <string name="play_button_text">Jouer</string>
     <string name="settings_text">Paramètres</string>
     <string name="game_settings_text">Paramètre du jeu</string>

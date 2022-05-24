@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Rad.io</string>
+    <string name="app_name">rad.io</string>
     <string name="play_button_text">Play</string>
     <string name="settings_text">Settings</string>
     <string name="game_settings_text">Game Settings</string>
