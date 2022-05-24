@@ -73,4 +73,12 @@
         <item name="elevation">12dp</item>
         <item name="tint">#FFFFFF</item>
     </style>
+    <!-- Style for background top -->
+    <style name="BackgroundTop">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:scaleType">centerInside</item>
+        <item name="android:adjustViewBounds">true</item>
+        <item name="srcCompat">@drawable/ic_background_top</item>
+    </style>
 </resources>
