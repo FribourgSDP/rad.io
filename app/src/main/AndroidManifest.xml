@@ -126,6 +126,9 @@
             android:name=".mockimplementations.MockUserProfileActivity"
             android:exported="false" />
         <activity
+            android:name=".mockimplementations.MockAddPlaylistActivity"
+            android:exported="false" />
+        <activity
             android:name=".mockimplementations.GoogleSignInTestMockUserProfileActivity"
             android:exported="false" />
         <activity

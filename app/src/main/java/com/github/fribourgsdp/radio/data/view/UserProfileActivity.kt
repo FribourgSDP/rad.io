@@ -123,11 +123,13 @@ open class UserProfileActivity : MyAppCompatActivity(), KeepOrDismissPlaylistDia
         user.name = usernameField.text.toString()
         //at this point, the userId should be the firebaseUser.uid
         if(user.isGoogleUser){
-            db.setUser(user.id,user)
+            user.onlineCopyAndSave()
         }else{
+            val userPlaylists = user.getPlaylists()
             val userWithoutPlaylist = user
-            userWithoutPlaylist.removePlaylists(user.getPlaylists())
+            userWithoutPlaylist.removePlaylists(userPlaylists)
             db.setUser(user.id,userWithoutPlaylist)
+            user.addPlaylists(userPlaylists)
         }
         user.save(this)
         usernameInitialText.text = user.initial.uppercaseChar().toString()
@@ -176,16 +178,13 @@ open class UserProfileActivity : MyAppCompatActivity(), KeepOrDismissPlaylistDia
         }.addOnSuccessListener {
             user.save(this)
         }
-
     }
 
     private fun mergePlaylist() : Task<Unit>{
         return db.getUser(user.id).continueWith {
             user.addPlaylists(it.result.getPlaylists())
-            user.isGoogleUser = true
-            user.name = it.result.name
-            user.id = it.result.id
-            db.setUser(user.id,user)
+            makeLocalModificationAndSaveOnline(it.result)
+
         }
     }
     private fun importPlaylist() : Task<Unit>{
@@ -200,11 +199,15 @@ open class UserProfileActivity : MyAppCompatActivity(), KeepOrDismissPlaylistDia
 
     private fun dismissOnlinePlaylist() : Task<Unit>{
         return db.getUser(user.id).continueWith{
-            user.name = it.result.name
-            user.id = it.result.id
-            user.isGoogleUser = true
-            db.setUser(user.id,user)
+            makeLocalModificationAndSaveOnline(it.result)
         }
+    }
+
+    private fun makeLocalModificationAndSaveOnline(remoteUser : User){
+        user.name = remoteUser.name
+        user.id = remoteUser.id
+        user.isGoogleUser = true
+        user.onlineCopyAndSave()
     }
 
     override fun onPick(choice: KeepOrDismissPlaylistDialog.Choice) {
