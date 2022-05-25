@@ -24,7 +24,7 @@ interface Database {
      * Gets the [Song], wrapped in a [Task], given its [songName]
      * @return [Song], wrapped in a [Task], the [Song] is null if it doesn't exist
      */
-    fun getSong(songName: String): Task<Song>
+    fun getSong(songId: String): Task<Song>
 
     /**
      * Register the [Song] in the database
