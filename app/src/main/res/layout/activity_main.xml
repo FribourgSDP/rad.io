@@ -51,9 +51,11 @@
         android:layout_marginEnd="24dp"
         android:adjustViewBounds="true"
         android:contentDescription="@string/profile_picture_description"
-        android:scaleType="center"
-        android:background="@drawable/ic_login"
-        android:backgroundTint="@color/red"
+        android:scaleType="fitCenter"
+        android:src="@drawable/ic_login"
+        app:tint="@color/red"
+        android:background="@drawable/circle"
+        android:backgroundTint="@color/white"
         app:layout_constraintEnd_toEndOf="@+id/topImage"
         app:layout_constraintTop_toTopOf="@+id/topImage" />
 
