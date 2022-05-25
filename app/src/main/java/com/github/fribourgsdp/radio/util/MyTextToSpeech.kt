@@ -18,6 +18,7 @@ open class MyTextToSpeech(private val applicationContext: Context) : TextToSpeec
     private var tts: TextToSpeech? = null
 
     override fun onInit(status: Int) {
+        toastDisplay(applicationContext.getString(R.string.ttsInitSuccessful))
         // check the results in status variable.
         if (status == TextToSpeech.SUCCESS) {
             // setting the language to the default phone language.
@@ -73,6 +74,6 @@ open class MyTextToSpeech(private val applicationContext: Context) : TextToSpeec
     }
 
     private fun toastDisplay(text : String){
-        Toast.makeText(applicationContext, text, Toast.LENGTH_LONG).show()
+        Toast.makeText(applicationContext, text, Toast.LENGTH_SHORT).show()
     }
 }

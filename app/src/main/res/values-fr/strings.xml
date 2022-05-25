@@ -123,12 +123,13 @@
     <string name="noSingModeCheckbox">Paroles lues par un robot !</string>
     <string name="with_singer_format">Avec chanteur : %b</string>
     <string name="listen">Ecoute !</string>
-    <string name="cantUseTextToSpeech">La synthèse vocale est en train de démarrer...</string>
+    <string name="cantUseTextToSpeech">La synthèse vocale est en train de démarrer…</string>
     <string name="ttsWeCantSupportYourLanguage">Cette langue n\'est pas supportée sur cet appareil.</string>
     <string name="TextToSpeechInitializationFailed">La synthèse vocale n\'a pas pu être initialisée.</string>
     <string name="playlistLyricsLess">La playlist sélectionnée ne contient aucune chanson avec des paroles. Choisis-en une autre.</string>
     <string name="return_to_the_game">Retournez à la partie</string>
     <string name="previousSongDisplay">La chanson précédente était :</string>
+    <string name="ttsInitSuccessful">La synthèse vocale a été initialisée avec succès.</string>
     <string-array name="dont_quit_now_messages">
         <item
             >"Ne pars pas maintenant… on vient juste de commencer!"</item>

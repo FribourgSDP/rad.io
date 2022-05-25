@@ -122,12 +122,13 @@
     <string name="noSingModeCheckbox">Lyrics read by bot !</string>
     <string name="with_singer_format">With singer : %b</string>
     <string name="listen">Listen !</string>
-    <string name="cantUseTextToSpeech">Please wait while Text-to-speech engine is starting...</string>
+    <string name="cantUseTextToSpeech">Please wait while Text-to-speech engine is starting…</string>
     <string name="ttsWeCantSupportYourLanguage">We can\'t support your language on this device.</string>
     <string name="TextToSpeechInitializationFailed">Text-to-speech engine could not be initialized properly.</string>
     <string name="playlistLyricsLess">The selected playlist has no song with lyrics. Please select another one.</string>
     <string name="return_to_the_game">Return to the game</string>
     <string name="previousSongDisplay">Previous song was :</string>
+    <string name="ttsInitSuccessful">Text-to-speech init successful</string>
     <string-array name="dont_quit_now_messages">
         <item
             >"Don't quit now… we only just started!"</item>
