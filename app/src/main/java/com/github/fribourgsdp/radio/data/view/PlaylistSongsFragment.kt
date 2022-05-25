@@ -94,8 +94,9 @@ open class PlaylistSongsFragment : MyFragment(R.layout.fragment_playlist_display
                 user.addPlaylist(playlist)
                 user.save(requireContext())
                 if(playlist.savedOnline){
-                   //user.
+                   user.onlineCopyAndSave()
                 }
+                importLyricsButton.visibility = View.INVISIBLE
                 Log.i("oui",playlist.getSongs().toList()[0].lyrics.toString())
                 //TODO("save this playlist a bit more that just this")
 
