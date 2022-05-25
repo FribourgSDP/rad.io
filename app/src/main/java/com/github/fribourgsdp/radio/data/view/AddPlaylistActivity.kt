@@ -113,7 +113,7 @@ open class AddPlaylistActivity : DatabaseHolder, MyAppCompatActivity(), SavePlay
     }
 
 
-    protected fun loadLyrics(playlist : Playlist, lyricsGetter: LyricsGetter = MusixmatchLyricsGetter) : Task<Playlist> {
+    /*protected fun loadLyrics(playlist : Playlist, lyricsGetter: LyricsGetter = MusixmatchLyricsGetter) : Task<Playlist> {
             val playlistWithLyrics = Playlist(playlist.name,playlist.genre)
             val tasks = mutableListOf<Task<Void>>()
             for (song in playlist.getSongs()){
@@ -127,7 +127,7 @@ open class AddPlaylistActivity : DatabaseHolder, MyAppCompatActivity(), SavePlay
         return Tasks.whenAllComplete(tasks).continueWith {
             playlistWithLyrics
         }
-    }
+    }*/
     /**
      * Fills error text view
      */
@@ -149,12 +149,13 @@ open class AddPlaylistActivity : DatabaseHolder, MyAppCompatActivity(), SavePlay
         val genre: Genre = genreSpinner.selectedItem as Genre
         var playlist = Playlist(playlistName, listSongs.toSet(), genre)
         val t = if (generateLyricsCheckBox.isChecked) {
-            loadLyrics(playlist)
+            playlist.loadLyrics()
+            //loadLyrics(playlist)
         } else {
-            Tasks.forResult(playlist)
+            Tasks.forResult(null)
         }
         t.continueWith {
-            playlist = it.result
+            //playlist = it.result
             val playlistTask = if (online) playlist.transformToOnline().addOnSuccessListener {
                 playlist.saveOnline()
             } else Tasks.forResult(playlist)
