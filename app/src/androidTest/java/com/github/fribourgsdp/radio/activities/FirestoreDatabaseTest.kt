@@ -40,6 +40,7 @@ class FirestoreDatabaseTest {
     private val testingLobbyId = 123321L
     private val unusedLobbyForPublic = 123456789L
     private val openGameTestId = 6666L
+    private val idForOpenLobby = 6667L
     private val unusedUserId = "thisUserIdIsSuperLongAndHasNoChanceOfBeingUsed"
 
     private val song1 = Song("song1","artist1","lyricsTest1","idTest1")
@@ -163,7 +164,7 @@ class FirestoreDatabaseTest {
 
     @Test(expected = Exception::class)
     fun addingUserToNonExistingLobbyFails() {
-        var user = User("suh")
+        var user = User("unusedUser")
         user.id = unusedId.toString()
         Tasks.await(fireDb.addUserToLobby(unusedId,user, true))
     }
@@ -303,8 +304,6 @@ class FirestoreDatabaseTest {
             assertEquals(HashMap<String, String>(), snapshot.get("song_choices_lyrics") as HashMap<String, String>)
             null
         }
-
-
     }
 
     @Test
@@ -317,7 +316,8 @@ class FirestoreDatabaseTest {
         `when`(mockSnapshot.exists()).thenReturn(true)
         val fakeSettings = Game.Settings("host22", "gameName", "playlistBla", 3, false, true)
 
-        db.openLobby(3L, fakeSettings)
+        val result = db.openLobby(idForOpenLobby, fakeSettings)
+        assertEquals(null, Tasks.await(result))
     }
 
     @Test
@@ -326,7 +326,7 @@ class FirestoreDatabaseTest {
         val mockPermissions = hashMapOf(Pair("user1", true), Pair("user2", false))
         `when`(mockSnapshot.get("permissions")).thenReturn(mockPermissions)
         `when`(mockTransactionManager.executeMicPermissionsTransaction(any(), anyString(), anyBoolean(), anyLong())).thenReturn(Tasks.forResult(null))
-        val result = db.modifyUserMicPermissions(37, User("nate"), true)
+        val result = db.modifyUserMicPermissions(unusedId, User("nate"), true)
         assertEquals(null, Tasks.await(result))
     }
 
@@ -520,7 +520,6 @@ class FirestoreDatabaseTest {
 
     @Test
     fun updateCurrentSongOfGameWorks() {
-        var user = user2
         val gameId = testingLobbyId
         val newSongName = "songiSonga"
         val result = fireDb.updateCurrentSongOfGame(gameId, newSongName, 5)
