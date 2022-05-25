@@ -89,8 +89,9 @@ open class PlaylistSongsFragment : MyFragment(R.layout.fragment_playlist_display
 
         importLyricsButton = requireView().findViewById(R.id.ImportLyricsButton)
         importLyricsButton.setOnClickListener {
-            loadLyrics(playlist).addOnSuccessListener {
-                playlist = it
+            //loadLyrics(playlist).addOnSuccessListener {
+              playlist.loadLyrics().addOnSuccessListener {
+                //playlist = it
                 user.addPlaylist(playlist)
                 user.save(requireContext())
                 if(playlist.savedOnline){
@@ -132,7 +133,7 @@ open class PlaylistSongsFragment : MyFragment(R.layout.fragment_playlist_display
         }
     }
 
-    protected fun loadLyrics(playlist : Playlist, lyricsGetter: LyricsGetter = MusixmatchLyricsGetter) : Task<Playlist> {
+    /*protected fun loadLyrics(playlist : Playlist, lyricsGetter: LyricsGetter = MusixmatchLyricsGetter) : Task<Playlist> {
         //this one should only import lyrics for song that have no lyrics
         val playlistWithLyrics = Playlist(playlist.name,playlist.genre)
         val tasks = mutableListOf<Task<Void>>()
@@ -150,7 +151,7 @@ open class PlaylistSongsFragment : MyFragment(R.layout.fragment_playlist_display
         return Tasks.whenAllComplete(tasks).continueWith {
             playlistWithLyrics
         }
-    }
+    }*/
 
     private fun initializeRecyclerView() {
         val songDisplay : RecyclerView = requireView().findViewById(R.id.SongRecyclerView)
