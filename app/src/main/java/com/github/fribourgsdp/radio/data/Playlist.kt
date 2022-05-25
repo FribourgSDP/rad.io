@@ -2,6 +2,8 @@ package com.github.fribourgsdp.radio.data
 
 import com.github.fribourgsdp.radio.database.Database
 import com.github.fribourgsdp.radio.database.FirestoreDatabase
+import com.github.fribourgsdp.radio.external.musixmatch.LyricsGetter
+import com.github.fribourgsdp.radio.external.musixmatch.MusixmatchLyricsGetter
 import com.github.fribourgsdp.radio.util.SetUtility
 import com.google.android.gms.tasks.Task
 import com.google.android.gms.tasks.Tasks
@@ -112,6 +114,21 @@ data class Playlist (override var name: String, var genre: Genre) : Nameable {
         return Tasks.whenAll(songTask,playlistId)
     }
 
+    fun loadLyrics(lyricsGetter: LyricsGetter = MusixmatchLyricsGetter) : Task<Void>{
+
+        val tasks = mutableListOf<Task<Void>>()
+        for (song in songs){
+            if(song.lyrics == "") {
+                tasks.add(
+                    Tasks.forResult(lyricsGetter.getLyrics(song.name, song.artist).thenAccept {
+                        song.lyrics = it
+                    }.join())
+                )
+            }
+        }
+        return Tasks.whenAll(tasks)
+
+    }
     fun saveOnline(db : Database = FirestoreDatabase()): Task<Void>{
         for( song in songs){
             db.registerSong(song)
