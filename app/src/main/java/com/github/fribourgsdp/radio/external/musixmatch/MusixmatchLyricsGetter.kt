@@ -16,7 +16,7 @@ const val TRACK_SEARCH = "track.search"
 const val QUERY_TRACK_FIELD = "q_track"
 const val QUERY_ARTIST_FIELD = "q_artist"
 const val SORT_CONDITION = "s_artist_rating=desc"
-const val REPLACEMENT_STRING = "tralala"
+const val REPLACEMENT_STRING = "bip"
 
 interface LyricsGetter{
     fun getLyrics(songName: String,artistName: String = "",client: OkHttpClient = OkHttpClient(),parser: JSONParser = JSONStandardParser()): CompletableFuture<String>
