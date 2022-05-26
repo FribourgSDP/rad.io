@@ -81,7 +81,7 @@ class SongFragmentTest {
         Espresso.onView(ViewMatchers.withId(R.id.editTextLyrics))
             .check(ViewAssertions.matches(ViewMatchers.withText(lyrics)))
     }
-    /*@Test
+    @Test
     fun getLyricsInSongFragment() {
         val bundle = Bundle()
         val user : User = User("Test User")
@@ -100,8 +100,8 @@ class SongFragmentTest {
         Espresso.onView(ViewMatchers.withId(R.id.editTextLyrics))
             .check(ViewAssertions.matches(
                 ViewMatchers.withText(MockLyricsGetter.truckfightersLyrics)))
-    }*/
-    /*
+    }
+
     @Test
     fun goodHintForSongWithoutLyrics(){
         val bundle = Bundle()
@@ -118,5 +118,5 @@ class SongFragmentTest {
         val scenario = launchFragmentInContainer<SongFragment>(bundle)
         Espresso.onView(ViewMatchers.withId(R.id.editTextLyrics))
             .check(ViewAssertions.matches(ViewMatchers.withHint(R.string.add_your_lyrics)))
-    }*/
+    }
 }
