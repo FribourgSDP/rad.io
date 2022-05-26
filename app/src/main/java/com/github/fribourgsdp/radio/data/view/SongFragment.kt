@@ -10,13 +10,13 @@ import com.github.fribourgsdp.radio.external.musixmatch.LyricsGetter
 import com.github.fribourgsdp.radio.external.musixmatch.MusixmatchLyricsGetter
 import com.github.fribourgsdp.radio.util.MyFragment
 import com.github.fribourgsdp.radio.R
-import com.github.fribourgsdp.radio.config.ConnectivityHolder
+import com.github.fribourgsdp.radio.config.ConnectivityChecker
 import com.github.fribourgsdp.radio.data.Playlist
 import com.github.fribourgsdp.radio.data.Song
 import com.github.fribourgsdp.radio.data.User
 import com.github.fribourgsdp.radio.database.DatabaseHolder
 
-open class SongFragment : MyFragment(R.layout.fragment_song),ConnectivityHolder,DatabaseHolder {
+open class SongFragment : MyFragment(R.layout.fragment_song),ConnectivityChecker,DatabaseHolder {
     private lateinit var initialLyrics : String
     private lateinit var currentLyrics : String
     private lateinit var playlistName : String

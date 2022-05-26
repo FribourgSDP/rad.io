@@ -8,7 +8,7 @@ import android.widget.TextView
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.github.fribourgsdp.radio.*
-import com.github.fribourgsdp.radio.config.ConnectivityHolder
+import com.github.fribourgsdp.radio.config.ConnectivityChecker
 import com.github.fribourgsdp.radio.data.Playlist
 import com.github.fribourgsdp.radio.data.Song
 import com.github.fribourgsdp.radio.data.User
@@ -27,7 +27,7 @@ const val SONG_ARTIST_INDEX = 1
 const val PLAYLIST_TO_MODIFY = "com.github.fribourgsdp.radio.data.view.PLAYLIST_TO_MODIFY"
 
 open class PlaylistSongsFragment : MyFragment(R.layout.fragment_playlist_display),
-    ConnectivityHolder,OnClickListener,
+    ConnectivityChecker,OnClickListener,
     DatabaseHolder {
     private lateinit var playlist: Playlist
     private lateinit var songs: List<Song>

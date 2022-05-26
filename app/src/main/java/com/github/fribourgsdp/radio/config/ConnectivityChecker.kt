@@ -4,7 +4,7 @@ import android.content.Context
 import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
 
-interface ConnectivityHolder {
+interface ConnectivityChecker {
 
     open fun hasConnectivity(context: Context): Boolean {
 

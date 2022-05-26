@@ -8,7 +8,7 @@ import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import com.github.fribourgsdp.radio.config.language.LanguageManager
 
-open class MyAppCompatActivity : AppCompatActivity(),ConnectivityHolder {
+open class MyAppCompatActivity : AppCompatActivity(),ConnectivityChecker {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         val languageManager = LanguageManager(this)
