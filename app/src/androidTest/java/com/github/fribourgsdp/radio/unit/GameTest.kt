@@ -4,6 +4,7 @@ import com.github.fribourgsdp.radio.data.Genre
 import com.github.fribourgsdp.radio.data.Playlist
 import com.github.fribourgsdp.radio.data.Song
 import com.github.fribourgsdp.radio.data.User
+import com.github.fribourgsdp.radio.external.musixmatch.MusixmatchLyricsGetter
 import com.github.fribourgsdp.radio.game.Game
 import org.junit.Test
 
@@ -29,6 +30,7 @@ class GameTest {
     private val nbRounds = 3
     private val withHint = true
     private val isPrivate = false
+    private val noSing = false
 
     private val gameBuilder = Game.Builder().setHost(host)
         .setName(name)
@@ -37,6 +39,7 @@ class GameTest {
         .setNbRounds(nbRounds)
         .setPrivacy(isPrivate)
         .addUserId(otherId)
+        .setNoSing(noSing)
 
     @Test
     fun builderWorksCorrectlyWithCorrectArgs() {
@@ -152,6 +155,17 @@ class GameTest {
         assertTrue(game.isDone())
 
     }
+    @Test
+    fun gameDoneAtRightTimeNoSingMode(){
+        val game = gameBuilder
+            .setNoSing(true)
+            .build()
+        for(i in 1..nbRounds){
+            assertFalse(game.isDone())
+            game.incrementCurrentRound()
+        }
+        assertTrue(game.isDone())
+    }
 
     @Test
     fun tooManySongAsked() {
@@ -174,5 +188,58 @@ class GameTest {
         assertEquals(10, Game.computeScore(15))
         assertEquals(10, Game.computeScore(16))
         assertEquals(10, Game.computeScore(160))
+    }
+
+    @Test
+    fun getChoiceWithLyricsReturnsTheOnlySongWithLyrics(){
+        val game = Game.Builder()
+            .setNoSing(true)
+            .setHost(User("Test User"))
+            .setPlaylist(Playlist("test pl", setOf(
+                Song("Stream of Consciousness", "Dream theater", MusixmatchLyricsGetter.LYRICS_NOT_FOUND_PLACEHOLDER),
+                Song("Hell\'s Kitchen", "Dream theater", MusixmatchLyricsGetter.BACKEND_ERROR_PLACEHOLDER),
+                Song("Tequila", "Britain's got talent", "Tequila !")
+            ), Genre.NONE))
+            .build()
+        val choice = game.getChoiceWithLyrics()
+        assertNotNull(choice)
+        assertEquals(choice?.lyrics, "Tequila !")
+    }
+
+    @Test
+    fun getChoicesWithLyricsReturnsNull(){
+        val game = Game.Builder()
+            .setNoSing(true)
+            .setHost(User("Test User"))
+            .setPlaylist(Playlist("test pl", setOf(
+                Song("Stream of Consciousness", "Dream theater", MusixmatchLyricsGetter.LYRICS_NOT_FOUND_PLACEHOLDER),
+                Song("Hell\'s Kitchen", "Dream theater", MusixmatchLyricsGetter.BACKEND_ERROR_PLACEHOLDER)
+            ), Genre.NONE))
+            .build()
+        val choice = game.getChoiceWithLyrics()
+        assertNull(choice)
+    }
+
+    @Test
+    fun getChoiceWithLyricsRotatesOnAllSongs(){
+        val game = Game.Builder()
+            .setNoSing(true)
+            .setHost(User("Test User"))
+            .setPlaylist(Playlist("test pl", setOf(
+                Song("a", "a", "a"),
+                Song("b", "b", "b"),
+                Song("c", "c", "c"),
+            ), Genre.NONE))
+            .build()
+        val choices = mutableListOf<Song>()
+        for(i in 0 until 3){
+            choices += game.getChoiceWithLyrics()!!
+        }
+        assertTrue(choices.containsAll(game.playlist.getSongs()))
+        val choices2 = mutableListOf<Song>()
+        for(i in 0 until 3){
+            choices2 += game.getChoiceWithLyrics()!!
+        }
+        assertTrue(choices2.containsAll(choices))
     }
 }

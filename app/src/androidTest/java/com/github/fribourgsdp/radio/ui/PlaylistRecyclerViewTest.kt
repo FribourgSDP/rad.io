@@ -102,4 +102,31 @@ class PlaylistRecyclerViewTest {
                 .check(ViewAssertions.matches(ViewMatchers.withText(songName)))
         }
     }
+
+    @Test
+    fun recyclerViewTestDeleteUpdatesInstantly() {
+        val firebaseAuth = FirebaseAuth.getInstance()
+        val task = Tasks.withTimeout(
+            firebaseAuth.signInWithEmailAndPassword(
+                "test@test.com",
+                "test123!!!"
+            ), 10, TimeUnit.SECONDS
+        )
+        Tasks.await(task)
+
+        val context: Context = ApplicationProvider.getApplicationContext()
+
+        val intent = Intent(context, MockUserProfileActivity::class.java)
+
+        ActivityScenario.launch<MockUserProfileActivity>(intent).use { scenario ->
+            Espresso.onView(withId(R.id.playlist_recycler_view))
+                .check(matches(hasChildCount(1)))
+            Espresso.onView(withId(R.id.playlist_recycler_view))
+                .perform(RecyclerViewActions.actionOnItemAtPosition<ViewHolder>(0, click()))
+            Espresso.onView(withId(R.id.deleteButton))
+                .perform(click())
+            Espresso.onView(withId(R.id.playlist_recycler_view))
+                .check(matches(hasChildCount(0)))
+        }
+    }
 }

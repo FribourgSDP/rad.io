@@ -15,6 +15,8 @@ import com.github.fribourgsdp.radio.database.Database
 import com.github.fribourgsdp.radio.database.DatabaseHolder
 import com.github.fribourgsdp.radio.util.MyFragment
 import com.github.fribourgsdp.radio.util.OnClickListener
+import com.google.android.gms.tasks.Task
+import com.google.android.gms.tasks.Tasks
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 
@@ -31,6 +33,7 @@ open class PlaylistSongsFragment : MyFragment(R.layout.fragment_playlist_display
     private lateinit var editButton: Button
     private lateinit var deleteButton: Button
     private lateinit var saveOnlineButton : Button
+    private lateinit var importLyricsButton : Button
     private lateinit var user : User
     
     var db : Database = initializeDatabase()
@@ -65,7 +68,9 @@ open class PlaylistSongsFragment : MyFragment(R.layout.fragment_playlist_display
             //removes playlist from user playlists
             user.removePlaylist(playlist)
             user.save(requireContext())
-            activity?.onBackPressed()
+            user.onlineCopyAndSave()
+            activity?.setResult(0)
+            activity?.finish()
         }
 
         saveOnlineButton = requireView().findViewById(R.id.SaveOnlineButton)
@@ -74,14 +79,31 @@ open class PlaylistSongsFragment : MyFragment(R.layout.fragment_playlist_display
                 playlist.saveOnline()
             }.addOnSuccessListener {
                 user.save(requireContext())
+                user.onlineCopyAndSave()
                 saveOnlineButton.visibility = View.INVISIBLE
             }
         }
 
-
+        importLyricsButton = requireView().findViewById(R.id.ImportLyricsButton)
+        importLyricsButton.setOnClickListener {
+            importLyricsButton.text = getString(R.string.Loading_lyrics_text)
+              loadLyrics(playlist).addOnSuccessListener {
+                user.addPlaylist(playlist)
+                user.save(requireContext())
+                if(playlist.savedOnline){
+                   user.onlineCopyAndSave()
+                }
+                importLyricsButton.visibility = View.INVISIBLE
+            }
+        }
     }
 
-
+    /**
+     * this method serve to be able to mock the loadLyrics behavior
+     */
+    open fun loadLyrics(playlist: Playlist) : Task<Void>{
+    return playlist.loadLyrics()
+}
     private fun loadPlaylist(){
         User.loadOrDefault(requireContext()).addOnSuccessListener { l ->
             user = l
@@ -91,12 +113,30 @@ open class PlaylistSongsFragment : MyFragment(R.layout.fragment_playlist_display
             if(playlist.savedOnline){
                 saveOnlineButton.visibility = View.INVISIBLE
             }
+            if(playlist.allSongsHaveLyricsOrHaveTriedFetchingSome()){
+                importLyricsButton.visibility = View.INVISIBLE
+            }
         }.addOnSuccessListener {
             if(!playlist.savedLocally){
                db.getPlaylist(playlist.id).addOnSuccessListener {
+
                     playlist = it
-                    songs = playlist.getSongs().toList()
-                    initializeRecyclerView()
+                    songs = it.getSongs().toList()
+                  // playlist.addSongs(songs.toSet())
+                    //initializeRecyclerView()
+                   val tasks = mutableListOf<Task<Void>>()
+                   for(song in songs){
+                       tasks.add(db.getSong(song.id).continueWith { s ->
+                           song.lyrics = s.result.lyrics
+                           null
+                       })
+                   }
+                   Tasks.whenAllComplete(tasks).addOnSuccessListener {
+                      // playlist.addSongs(songs.toSet())
+                       user.addPlaylist(playlist)
+                       user.save(requireContext())
+                       initializeRecyclerView()
+                   }
                 }
             }
         }

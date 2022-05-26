@@ -1,5 +1,6 @@
 package com.github.fribourgsdp.radio.data
 
+import com.github.fribourgsdp.radio.external.musixmatch.MusixmatchLyricsGetter
 import java.util.*
 import kotlinx.serialization.Serializable
 import java.util.concurrent.CompletableFuture
@@ -55,5 +56,14 @@ class Song (private val rawName: String, private val rawArtist: String, var lyri
 
     override fun hashCode(): Int {
         return Objects.hash(name, artist)
+    }
+
+    /**
+     * Predicate that is true for songs that have lyrics, and false for songs whose lyrics are not defined due to
+     * - error in the backend
+     * - lyrics nonexistence
+     */
+    fun songHasLyrics() : Boolean {
+        return !(this.lyrics == MusixmatchLyricsGetter.BACKEND_ERROR_PLACEHOLDER || this.lyrics == MusixmatchLyricsGetter.LYRICS_NOT_FOUND_PLACEHOLDER)
     }
 }

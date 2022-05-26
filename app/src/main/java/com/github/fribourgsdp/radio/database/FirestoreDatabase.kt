@@ -2,23 +2,22 @@ package com.github.fribourgsdp.radio.database
 
 import android.content.ContentValues
 import android.util.Log
-import com.github.fribourgsdp.radio.*
 import com.github.fribourgsdp.radio.data.*
 import com.github.fribourgsdp.radio.game.Game
 import com.github.fribourgsdp.radio.util.*
 import com.google.android.gms.tasks.Task
 import com.google.android.gms.tasks.Tasks
 import com.google.firebase.Timestamp
+import com.google.firebase.firestore.*
+import com.google.firebase.firestore.EventListener
 import com.google.firebase.firestore.DocumentReference
 import com.google.firebase.firestore.DocumentSnapshot
+import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
-import com.google.firebase.firestore.EventListener
-import com.google.firebase.firestore.FieldValue
+import java.io.Serializable
 import java.lang.Exception
 import java.util.*
-import kotlin.collections.ArrayList
-import kotlin.collections.HashMap
 
 
 /**
@@ -27,15 +26,93 @@ import kotlin.collections.HashMap
  *
  */
 open class FirestoreRef {
-    val db = Firebase.firestore
-    open fun getUserRef(userId : String) : DocumentReference{
+    lateinit var db: FirebaseFirestore
+    open fun getUserRef(userId : String) : DocumentReference {
         return db.collection("user").document(userId)
     }
-    open fun getSongRef(songId : String) : DocumentReference{
+    open fun getSongRef(songId : String) : DocumentReference {
         return db.collection("songs").document(songId)
     }
-    open fun getPlaylistRef(playlistId : String) : DocumentReference{
+    open fun getPlaylistRef(playlistId : String) : DocumentReference {
         return db.collection("playlists").document(playlistId)
+    }
+    open fun getLobbyRef(lobbyId: String) : DocumentReference {
+        return db.collection("lobby").document(lobbyId)
+    }
+    open fun getPublicLobbiesRef() : DocumentReference {
+        return db.collection("lobby").document("public")
+    }
+    open fun getGenericIdRef(collectionPath : String, documentPath : String) : DocumentReference {
+        return db.collection(collectionPath).document(documentPath)
+    }
+}
+
+open class TransactionManager() {
+    lateinit var db: FirebaseFirestore
+    open fun executeIdTransaction(docRef: DocumentReference?, keyID: String, keyMax: String, number: Int) : Task<Pair<Long, Long>> {
+        return db.runTransaction { transaction ->
+            val snapshot = transaction.get(docRef!!)
+
+            if (!snapshot.exists()) {
+                throw Exception("Document not found.")
+            }
+
+            val id = snapshot.getLong(keyID)!!
+            val nextId = (id + number) % snapshot.getLong(keyMax)!!
+
+            transaction.update(docRef, keyID, nextId)
+
+            // Success
+            Pair(id,nextId)
+        }
+    }
+    open fun executeMicPermissionsTransaction(docRef: DocumentReference?, userId: String, newPermissions: Boolean, id: Long): Task<Void> {
+        return db.runTransaction { transaction ->
+            val snapshot = transaction.get(docRef!!)
+
+            if (!snapshot.exists()) {
+                throw IllegalArgumentException("Document $id not found.")
+            }
+
+            val playerPermissions = snapshot.getPermissions()
+            playerPermissions[userId] = newPermissions
+
+            transaction.update(docRef, "permissions", playerPermissions)
+
+            // Success
+            null
+        }
+    }
+
+    open fun openLobbyTransaction(lobbyRef: DocumentReference?, publicLobbiesRef: DocumentReference?, id: Long, gameData: HashMap<String, Serializable>?, settings: Game.Settings?): Task<Void> {
+        return db.runTransaction { transaction ->
+            val lobbySnapshot = transaction.get(lobbyRef!!)
+            val publicLobbiesSnapshot = publicLobbiesRef?.let { transaction.get(it) }
+
+            if (!lobbySnapshot.exists()) {
+                throw IllegalArgumentException("Document $id not found.")
+            }
+
+            // If the game is public (the snapshot not null), but we can't find the public snapshot:
+            // throw an exception
+            if (publicLobbiesSnapshot != null && !publicLobbiesSnapshot.exists()) {
+                throw IllegalArgumentException("The public lobbies could not be reached.")
+            }
+
+            transaction.set(lobbyRef, gameData!!)
+
+            if (publicLobbiesRef != null) {
+                transaction.update(
+                    publicLobbiesRef, id.toString(),
+                    hashMapOf(
+                        "name" to settings!!.name,
+                        "host" to settings!!.hostName
+                    )
+                )
+            }
+            // Success
+            null
+        }
     }
 }
 /**
@@ -45,9 +122,13 @@ open class FirestoreRef {
  *
  * @constructor Creates a database linked to Firestore
  */
-class FirestoreDatabase(var refMake: FirestoreRef) : Database {
+class FirestoreDatabase(var refMake: FirestoreRef, var transactionMgr: TransactionManager) : Database {
     private val db = Firebase.firestore
-    constructor():this(FirestoreRef())
+    init {
+        refMake.db = db
+        transactionMgr.db = db
+    }
+    constructor():this(FirestoreRef(), TransactionManager())
 
     override fun getUser(userId : String): Task<User> {
         return  refMake.getUserRef(userId).get().continueWith { l ->
@@ -91,7 +172,7 @@ class FirestoreDatabase(var refMake: FirestoreRef) : Database {
             "playlists" to playlistInfo
         )
         val docRef = refMake.getUserRef(userId)
-        Log.d(ContentValues.TAG, "DocumentSnapshot added with ID put: " + docRef.toString())
+        Log.d(ContentValues.TAG, "DocumentSnapshot added with ID put: $docRef")
         return docRef.set(userHash)
     }
 
@@ -197,23 +278,9 @@ class FirestoreDatabase(var refMake: FirestoreRef) : Database {
         val keyID = "current_id"
         val keyMax = "max_id"
 
-        val docRef = db.collection(collectionPath).document(documentPath)
+        val docRef = refMake.getGenericIdRef(collectionPath, documentPath)
 
-        return db.runTransaction { transaction ->
-            val snapshot = transaction.get(docRef)
-
-            if (!snapshot.exists()) {
-                throw Exception("Document not found.")
-            }
-
-            val id = snapshot.getLong(keyID)!!
-            val nextId = (id + number) % snapshot.getLong(keyMax)!!
-
-            transaction.update(docRef, keyID, nextId)
-
-            // Success
-            Pair(id,nextId)
-        }
+        return transactionMgr.executeIdTransaction(docRef, keyID, keyMax, number)
     }
 
 
@@ -230,46 +297,16 @@ class FirestoreDatabase(var refMake: FirestoreRef) : Database {
             "players" to hashMapOf<String, String>(),
             "permissions" to hashMapOf<String, Boolean>(),
             "launched" to false,
-            "validity" to true
+            "validity" to true,
+            "noSing" to settings.noSing
         )
 
-        val collection = db.collection("lobby")
-        val lobbyRef = collection.document(id.toString())
+        val lobbyRef = refMake.getLobbyRef(id.toString())
 
         // get the public lobbies only if the game is public
-        val publicLobbiesRef = if (settings.isPrivate) null else collection.document("public")
+        val publicLobbiesRef = if (settings.isPrivate) null else refMake.getPublicLobbiesRef()
 
-        return db.runTransaction { transaction ->
-            val lobbySnapshot = transaction.get(lobbyRef)
-            val publicLobbiesSnapshot = publicLobbiesRef?.let { transaction.get(it) }
-
-            if (!lobbySnapshot.exists()) {
-                throw IllegalArgumentException("Document $id not found.")
-            }
-
-            // If the game is public (the snapshot not null), but we can't find the public snapshot:
-            // throw an exception
-            if (publicLobbiesSnapshot != null && !publicLobbiesSnapshot.exists()) {
-                throw IllegalArgumentException("The public lobbies could not be reached.")
-            }
-
-            transaction.set(lobbyRef, gameData)
-
-            if (publicLobbiesRef != null) {
-                transaction.update(
-                    publicLobbiesRef, id.toString(),
-                    hashMapOf(
-                        "name" to settings.name,
-                        "host" to settings.hostName
-                    )
-                )
-            }
-
-            // Success
-            null
-        }
-
-
+        return transactionMgr.openLobbyTransaction(lobbyRef, publicLobbiesRef, id, gameData, settings)
     }
 
     override fun listenToLobbyUpdate(id: Long, listener: EventListener<DocumentSnapshot>) {
@@ -277,7 +314,7 @@ class FirestoreDatabase(var refMake: FirestoreRef) : Database {
     }
 
     override fun getGameSettingsFromLobby(id: Long) :Task<Game.Settings> {
-        val docRef = db.collection("lobby").document(id.toString())
+        val docRef = refMake.getGenericIdRef("lobby", id.toString())
 
         return db.runTransaction { transaction ->
             val snapshot = transaction.get(docRef)
@@ -292,9 +329,10 @@ class FirestoreDatabase(var refMake: FirestoreRef) : Database {
             val nbRounds = snapshot.getLong("nbRounds")!!
             val withHint = snapshot.getBoolean("withHint")!!
             val private = snapshot.getBoolean("private")!!
+            val noSing = snapshot.getBoolean("noSing") ?: false
 
             // Success
-            Game.Settings(host, name, playlist, nbRounds.toInt(), withHint, private)
+            Game.Settings(host, name, playlist, nbRounds.toInt(), withHint, private, noSing)
         }
     }
 
@@ -445,7 +483,7 @@ class FirestoreDatabase(var refMake: FirestoreRef) : Database {
     }
 
     override fun makeSingerDone(gameID: Long, singerId: String): Task<Void> {
-        val docRef = db.collection("game_metadata").document(gameID.toString())
+        val docRef = db.collection("games_metadata").document(gameID.toString())
 
         return db.runTransaction { transaction ->
             val snapshot = transaction.get(docRef)
@@ -465,27 +503,12 @@ class FirestoreDatabase(var refMake: FirestoreRef) : Database {
     }
 
     override fun modifyUserMicPermissions(id: Long, user: User, newPermissions: Boolean): Task<Void> {
-        val docRef = db.collection("lobby").document(id.toString())
-
-        return db.runTransaction { transaction ->
-            val snapshot = transaction.get(docRef)
-
-            if (!snapshot.exists()) {
-                throw IllegalArgumentException("Document $id not found.")
-            }
-
-            val playerPermissions = snapshot.getPermissions()
-            playerPermissions[user.id] = newPermissions
-
-            transaction.update(docRef, "permissions", playerPermissions)
-
-            // Success
-            null
-        }
+        val docRef = refMake.getLobbyRef(id.toString())
+        return transactionMgr.executeMicPermissionsTransaction(docRef, user.id, newPermissions, id)
     }
 
     override fun openGame(id: Long): Task<Void> {
-        return db.collection("games").document(id.toString())
+        return refMake.getGenericIdRef("games", id.toString())
             .set(
                 hashMapOf(
                     "finished" to false,
@@ -551,6 +574,7 @@ class FirestoreDatabase(var refMake: FirestoreRef) : Database {
         val roundDeadline = Date()
         //incrementBy is in seconds whereas we must add milliseconds to the time before deadline.
         roundDeadline.time += incrementBy*1000
+        
 
         val songUpdateMap = hashMapOf(
             "current_song" to songName,

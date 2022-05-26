@@ -45,7 +45,10 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="horizontal">
-
+            <CheckBox
+                android:id="@+id/generateLyricsCheckBox"
+                style="@style/SettingsText"
+                android:text="@string/generateLyricsCheckBoxText" />
             <EditText
                 android:id="@+id/addSongToPlaylistSongName"
                 android:layout_width="wrap_content"

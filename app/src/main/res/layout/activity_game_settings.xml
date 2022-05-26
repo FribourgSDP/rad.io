@@ -142,6 +142,11 @@
         </androidx.constraintlayout.widget.ConstraintLayout>
 
         <CheckBox
+            android:id="@+id/noSingCheckbox"
+            android:text="@string/noSingModeCheckbox"
+            style="@style/SettingsText"/>
+
+        <CheckBox
             android:id="@+id/hintCheckBox"
             style="@style/SettingsText"
             android:text="@string/hint_option_text" />
