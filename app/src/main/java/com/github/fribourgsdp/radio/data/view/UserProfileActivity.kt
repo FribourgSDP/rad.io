@@ -5,10 +5,7 @@ import android.graphics.PorterDuff
 import android.graphics.PorterDuffColorFilter
 import android.os.Bundle
 import android.view.View
-import android.widget.Button
-import android.widget.EditText
-import android.widget.ImageView
-import android.widget.TextView
+import android.widget.*
 import com.github.fribourgsdp.radio.*
 import com.github.fribourgsdp.radio.auth.*
 import com.github.fribourgsdp.radio.config.MyAppCompatActivity
@@ -96,7 +93,6 @@ open class UserProfileActivity : MyAppCompatActivity(), KeepOrDismissPlaylistDia
         if(!hasConnectivity(this)){
             launchSpotifyButton.visibility = View.INVISIBLE
             googleSignInButton.visibility = View.INVISIBLE
-
         }
     }
 
@@ -104,7 +100,6 @@ open class UserProfileActivity : MyAppCompatActivity(), KeepOrDismissPlaylistDia
         if (signedIn) {
             signOut()
         } else {
-
             googleSignIn.signIn()
         }
     }
@@ -127,20 +122,27 @@ open class UserProfileActivity : MyAppCompatActivity(), KeepOrDismissPlaylistDia
 
     private fun updateUser(){
         if(usernameField.text.toString() != ""){
-            user.name = usernameField.text.toString()
+
             //at this point, the userId should be the firebaseUser.uid
             if(user.isGoogleUser && hasConnectivity(this)){
+                user.name = usernameField.text.toString()
                 user.onlineCopyAndSave()
+            }else if(user.isGoogleUser && !hasConnectivity(this)) {
+                Toast.makeText(this,"Cannot change username while offline",Toast.LENGTH_SHORT).show()
+                usernameField.setText(user.name)
+            }else {
+                user.name = usernameField.text.toString()
             }// else{
-            //val userPlaylists = user.getPlaylists()
-            //val userWithoutPlaylist = user
-            //userWithoutPlaylist.removePlaylists(userPlaylists)
-            //db.setUser(user.id,userWithoutPlaylist) this can be removed as we don't want to save non google user online
-            //user.addPlaylists(userPlaylists)
-            // }
+                    //val userPlaylists = user.getPlaylists()
+                    //val userWithoutPlaylist = user
+                    //userWithoutPlaylist.removePlaylists(userPlaylists)
+                    //db.setUser(user.id,userWithoutPlaylist) this can be removed as we don't want to save non google user online
+                    //user.addPlaylists(userPlaylists)
+                    // }
             user.save(this)
             usernameInitialText.text = user.initial.uppercaseChar().toString()
         }
+
 
     }
 
