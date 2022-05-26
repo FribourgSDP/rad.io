@@ -12,20 +12,15 @@
         <!-- Customize your theme here. -->
         <item name="colorOnSurface">@color/dark_grey</item>
         <item name="errorTextColor">@color/red</item>
+        <item name="android:fontFamily">@font/jost</item>
     </style>
+
+    <!-- Main application theme. -->
+    <style name="Theme.Radio.Main" />
 
     <!-- Theme for the splash screen -->
     <style name="Theme.Radio.Splash">
         <!-- Navigation bar color. -->
         <item name="android:navigationBarColor" tools:targetApi="l">?attr/colorPrimary</item>
     </style>
-
-    <style name="Theme.Radio.NoActionBar">
-        <item name="windowActionBar">false</item>
-        <item name="windowNoTitle">true</item>
-    </style>
-
-    <style name="Theme.Radio.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
-
-    <style name="Theme.Radio.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
 </resources>
