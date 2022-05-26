@@ -574,7 +574,7 @@ class FirestoreDatabase(var refMake: FirestoreRef, var transactionMgr: Transacti
         val roundDeadline = Date()
         //incrementBy is in seconds whereas we must add milliseconds to the time before deadline.
         roundDeadline.time += incrementBy*1000
-        Log.println(Log.ASSERT, "Firestore database", "assigning current song and deadline")
+        
 
         val songUpdateMap = hashMapOf(
             "current_song" to songName,
