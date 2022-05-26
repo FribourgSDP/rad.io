@@ -329,7 +329,7 @@ class FirestoreDatabase(var refMake: FirestoreRef, var transactionMgr: Transacti
             val nbRounds = snapshot.getLong("nbRounds")!!
             val withHint = snapshot.getBoolean("withHint")!!
             val private = snapshot.getBoolean("private")!!
-            val noSing = snapshot.getBoolean("noSing")!!
+            val noSing = snapshot.getBoolean("noSing") ?: false
 
             // Success
             Game.Settings(host, name, playlist, nbRounds.toInt(), withHint, private, noSing)
