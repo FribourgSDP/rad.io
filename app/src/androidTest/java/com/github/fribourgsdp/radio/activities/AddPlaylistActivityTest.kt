@@ -4,7 +4,7 @@ import android.content.Context
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.espresso.Espresso
 import androidx.test.espresso.Espresso.*
-import androidx.test.espresso.action.ViewActions
+import androidx.test.espresso.action.*
 import androidx.test.espresso.action.ViewActions.click
 import androidx.test.espresso.assertion.ViewAssertions
 import androidx.test.espresso.assertion.ViewAssertions.matches
@@ -15,8 +15,7 @@ import androidx.test.espresso.intent.matcher.IntentMatchers.hasComponent
 import androidx.test.espresso.matcher.RootMatchers
 import androidx.test.espresso.matcher.RootMatchers.isDialog
 import androidx.test.espresso.matcher.ViewMatchers
-import androidx.test.espresso.matcher.ViewMatchers.isDisplayed
-import androidx.test.espresso.matcher.ViewMatchers.withId
+import androidx.test.espresso.matcher.ViewMatchers.*
 import androidx.test.ext.junit.rules.ActivityScenarioRule
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.github.fribourgsdp.radio.R
@@ -130,18 +129,80 @@ class AddPlaylistActivityTest {
         }
     }
 
-//    @Test
-//    fun addAndRemoveSong(){
-//
-//        initializeSardouPlaylist()
-//
-//        onView(withId(R.id.list_playlist_creation))
-//            .perform(RecyclerViewActions.actionOnItemAtPosition<ViewHolder>(0, ViewActions.click()))
-//
-//        onView(withId(R.id.list_playlist_creation))
-//            .check(ViewAssertions.matches(ViewMatchers.hasChildCount(2)))
-//
-//    }
+    @Test
+    fun clickingDoesNothing(){
+
+        onView(withId(R.id.addSongToPlaylistSongName))
+            .perform(ViewActions.typeText("Rouge"))
+        closeSoftKeyboard()
+        onView(withId(R.id.addSongToPlaylistArtistName))
+            .perform(ViewActions.typeText("Sardou"))
+        closeSoftKeyboard()
+        onView(withId(R.id.addSongToPlaylistBtn))
+            .perform(ViewActions.click())
+
+        onView(withId(R.id.list_playlist_creation))
+            .perform(RecyclerViewActions.actionOnItemAtPosition<ViewHolder>(0, ViewActions.click()))
+
+        onView(withId(R.id.list_playlist_creation))
+            .check(matches(hasChildCount(1)))
+    }
+
+
+    @Test
+    fun swipingToDeleteWorks(){
+        onView(withId(R.id.addSongToPlaylistSongName))
+            .perform(ViewActions.typeText("Rouge"))
+        closeSoftKeyboard()
+        onView(withId(R.id.addSongToPlaylistArtistName))
+            .perform(ViewActions.typeText("Sardou"))
+        closeSoftKeyboard()
+        onView(withId(R.id.addSongToPlaylistBtn))
+            .perform(ViewActions.click())
+
+        onView(withId(R.id.list_playlist_creation))
+            .perform(RecyclerViewActions.actionOnItemAtPosition<ViewHolder>(0,
+            GeneralSwipeAction(Swipe.FAST,
+                GeneralLocation.CENTER_RIGHT, GeneralLocation.CENTER_LEFT, Press.FINGER)))
+
+        onView(withId(R.id.snackbar_text)).check(matches(withText(R.string.deleteConfirmationQuestion)))
+        onView(withId(R.id.snackbar_action)).perform(click())
+        onView(withId(R.id.list_playlist_creation))
+            .check(matches(hasChildCount(0)))
+    }
+
+    @Test
+    fun swipingToDeleteIsCancellable(){
+        onView(withId(R.id.addSongToPlaylistSongName))
+            .perform(ViewActions.typeText("Rouge"))
+        closeSoftKeyboard()
+        onView(withId(R.id.addSongToPlaylistArtistName))
+            .perform(ViewActions.typeText("Sardou"))
+        closeSoftKeyboard()
+        onView(withId(R.id.addSongToPlaylistBtn))
+            .perform(ViewActions.click())
+
+        onView(withId(R.id.list_playlist_creation))
+            .perform(RecyclerViewActions.actionOnItemAtPosition<ViewHolder>(0,
+                GeneralSwipeAction(Swipe.FAST,
+                    GeneralLocation.CENTER_RIGHT, GeneralLocation.CENTER_LEFT, Press.FINGER)))
+
+        onView(withId(R.id.snackbar_text)).check(matches(withText(R.string.deleteConfirmationQuestion)))
+
+        onView(withId(R.id.list_playlist_creation)).perform(click())
+
+        onView(withId(R.id.list_playlist_creation))
+            .check(matches(hasChildCount(1)))
+
+        onView(withId(R.id.list_playlist_creation))
+            .perform(RecyclerViewActions.actionOnItemAtPosition<ViewHolder>(0,
+                GeneralSwipeAction(Swipe.FAST,
+                    GeneralLocation.CENTER_RIGHT, GeneralLocation.CENTER_LEFT, Press.FINGER)))
+
+        onView(withId(R.id.snackbar_text)).check(matches(withText(R.string.deleteConfirmationQuestion)))
+
+        onView(withId(R.id.action_bar_root)).perform(click())
+    }
 
     @Test
     fun pressingBackWhenNothingHasBeenModifiedGoesToUserProfile(){
