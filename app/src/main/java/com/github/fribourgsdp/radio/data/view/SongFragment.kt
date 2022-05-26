@@ -41,14 +41,14 @@ open class SongFragment : MyFragment(R.layout.fragment_song) {
         return MusixmatchLyricsGetter
     }
 
-    private fun fetchLyrics(lyricsGetter: LyricsGetter) {
+    /*private fun fetchLyrics(lyricsGetter: LyricsGetter) {
         lyricsGetter.getLyrics(song.name, song.artist)
             .thenAccept{f ->
                 currentLyrics = f
                 doSaveLyrics = true
                 updateLyrics(requireView().findViewById(R.id.editTextLyrics))
             }
-    }
+    }*/
 
     private fun updateLyrics(lyricsEditText : EditText){
         if (currentLyrics == MusixmatchLyricsGetter.LYRICS_NOT_FOUND_PLACEHOLDER || currentLyrics.isEmpty()){
@@ -70,9 +70,9 @@ open class SongFragment : MyFragment(R.layout.fragment_song) {
         song = playlist.getSong(songName, songArtist)
         initialLyrics = song.lyrics
         currentLyrics = initialLyrics
-        if(song.lyrics == ""){
+       /* if(song.lyrics == ""){
            // fetchLyrics(getLyricsGetter())
-        }
+        }*/
 
         songTitle.text = song.name
         artistTitle.text = song.artist
