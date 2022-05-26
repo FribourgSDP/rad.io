@@ -13,9 +13,14 @@
         app:layout_constraintTop_toTopOf="parent"
         tools:ignore="ContentDescription" />
 
+    <!--
+        NB: Here I need to specify the text color without the use the attributes
+        as it causes the tests to fail due to the inflater
+    -->
     <TextView
         android:id="@+id/PlaylistName"
         style="@style/Text.Titles"
+        android:textColor="@color/white"
         android:text="@string/playlist_name_placeholder"
         app:layout_constraintStart_toStartOf="@id/topImage"
         app:layout_constraintTop_toTopOf="@id/topImage" />
