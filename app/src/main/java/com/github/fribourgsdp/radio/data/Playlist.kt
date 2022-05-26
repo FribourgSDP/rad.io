@@ -167,16 +167,14 @@ data class Playlist (override var name: String, var genre: Genre) : Nameable {
      * @return true if all song has lyrics
      */
     fun allSongHaveLyrics(): Boolean{
-        return songs.all { it.lyrics != MusixmatchLyricsGetter.BACKEND_ERROR_PLACEHOLDER
-                && it.lyrics != MusixmatchLyricsGetter.LYRICS_NOT_FOUND_PLACEHOLDER}
+        return songs.all { it.songHasLyrics()}
     }
 
     /**
      * @return true if no song has lyrics
      */
     fun noSongHaveLyrics(): Boolean{
-        return songs.all { it.lyrics == MusixmatchLyricsGetter.BACKEND_ERROR_PLACEHOLDER
-                || it.lyrics == MusixmatchLyricsGetter.LYRICS_NOT_FOUND_PLACEHOLDER}
+        return songs.all { !it.songHasLyrics()}
     }
 
 
