@@ -86,6 +86,7 @@ open class PlaylistSongsFragment : MyFragment(R.layout.fragment_playlist_display
 
         importLyricsButton = requireView().findViewById(R.id.ImportLyricsButton)
         importLyricsButton.setOnClickListener {
+            importLyricsButton.text = getString(R.string.Loading_lyrics_text)
               loadLyrics(playlist).addOnSuccessListener {
                 user.addPlaylist(playlist)
                 user.save(requireContext())
