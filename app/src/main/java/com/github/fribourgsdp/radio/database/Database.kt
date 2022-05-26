@@ -192,13 +192,13 @@ interface Database {
     fun disableGame(id: Long): Task<Void>
 
     /**
-     * Disable lobby with [id] on the database: set validity to false.
+     * Disable lobby with [gameID] on the database: set validity to false.
      * @return a task void so we know the lobby was correctly disabled.
      */
     fun disableLobby(gameID: Long): Task<Void>
 
     /**
-     * Removes [user] from game with [id] on the database.
+     * Removes [user] from game with [gameID] on the database.
      * @return a task void so we know the user was correctly removed.
      */
     fun removePlayerFromGame(gameID: Long, user: User): Task<Void>
