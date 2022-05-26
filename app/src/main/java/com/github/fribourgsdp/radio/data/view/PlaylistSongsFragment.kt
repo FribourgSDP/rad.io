@@ -89,18 +89,13 @@ open class PlaylistSongsFragment : MyFragment(R.layout.fragment_playlist_display
 
         importLyricsButton = requireView().findViewById(R.id.ImportLyricsButton)
         importLyricsButton.setOnClickListener {
-            //loadLyrics(playlist).addOnSuccessListener {
               playlist.loadLyrics().addOnSuccessListener {
-                //playlist = it
                 user.addPlaylist(playlist)
                 user.save(requireContext())
                 if(playlist.savedOnline){
                    user.onlineCopyAndSave()
                 }
                 importLyricsButton.visibility = View.INVISIBLE
-                Log.i("oui",playlist.getSongs().toList()[0].lyrics.toString())
-                //TODO("save this playlist a bit more that just this")
-
             }
         }
     }
