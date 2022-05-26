@@ -33,8 +33,6 @@
     <Button
         android:id="@+id/confirmBtn"
         style="@style/GradientButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
         android:onClick="createPlaylist"
         android:text="@string/create_playlist"
@@ -135,7 +133,6 @@
             android:id="@+id/addSongToPlaylistBtn"
             style="@style/GradientButton"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
             android:layout_marginBottom="8dp"
             android:onClick="addItems"
             android:text="@string/add_song" />

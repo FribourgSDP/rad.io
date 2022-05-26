@@ -3,6 +3,8 @@
 <resources>
     <!-- Style for basic buttons -->
     <style name="GradientButton">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
         <item name="android:textColor">@color/button_text_color</item>
         <item name="android:background">@drawable/custom_button</item>
         <item name="backgroundTint">@null</item>

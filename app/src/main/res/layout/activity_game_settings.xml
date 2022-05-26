@@ -162,8 +162,6 @@
             <Button
                 android:id="@+id/chooseTimeButton"
                 style="@style/GradientButton"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
                 android:text="@string/round_duration_format"
                 android:textAllCaps="false"
@@ -191,8 +189,6 @@
     <Button
         android:id="@+id/startButton"
         style="@style/GradientButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
         android:layout_marginBottom="16dp"
         android:text="@string/start_button_text"
         android:enabled="false"
