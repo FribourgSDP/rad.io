@@ -1,6 +1,7 @@
 package com.github.fribourgsdp.radio.game.prep
 
 import android.content.Intent
+import android.content.res.Resources
 import android.os.Bundle
 import android.view.View
 import android.widget.*
@@ -80,7 +81,7 @@ open class GameSettingsActivity : AppCompatActivity() {
                 setTitle(R.string.timerSelectTime)
                 setPrefix(R.string.timerMinutes)
                 setSuffix(R.string.timerSeconds)
-                setThemeColor(R.color.purple_200)
+                setThemeColor(R.color.red)
                 setPreselectedTime(TimeValue(0, DEFAULT_GAME_DURATION.toInt()))
                 setSelectableTimeRange(TimeRange(TimeValue(0, 5), TimeValue(2, 0)))
             }.build().apply {
