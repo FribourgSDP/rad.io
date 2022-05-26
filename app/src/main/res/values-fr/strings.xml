@@ -138,6 +138,8 @@
     <string name="creating_playlist_toast">Création de la playlist....</string>
     <string name="previousSongDisplay">La chanson précédente était :</string>
     <string name="ttsInitSuccessful">La synthèse vocale a été initialisée avec succès.</string>
+    <string name="save_online">Enregistrer en ligne</string>
+    <string name="edit_playlist">Editer la playlist</string>
     <string-array name="dont_quit_now_messages">
         <item
             >"Ne pars pas maintenant… on vient juste de commencer!"</item>

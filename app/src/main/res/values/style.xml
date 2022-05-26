@@ -1,7 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!-- Resource file containing the different styles to apply to the UI elements. -->
 <resources>
-    <!-- Style for basic buttons -->
+    <!-- Style for basic button -->
+    <style name="Button">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+    </style>
+    <!-- Style for gradient basic buttons -->
     <style name="GradientButton">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
@@ -19,6 +24,28 @@
         <item name="android:textSize">24sp</item>
         <item name="android:paddingTop">10dp</item>
         <item name="android:paddingBottom">10dp</item>
+    </style>
+    <!-- Style for floating button -->
+    <style name="FloatingButtons">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_marginEnd">8dp</item>
+        <item name="android:layout_marginBottom">8dp</item>
+        <item name="android:scaleType">center</item>
+        <item name="android:adjustViewBounds">true</item>
+        <item name="backgroundTint">@color/red</item>
+        <item name="elevation">12dp</item>
+        <item name="tint">#FFFFFF</item>
+    </style>
+    <!-- Style for icon buttons -->
+    <style name="Button.Icon">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:padding">12dp</item>
+        <item name="android:background">@null</item>
+        <item name="android:backgroundTint">@null</item>
+        <item name="android:layout_marginStart">24dp</item>
+        <item name="android:layout_marginEnd">24dp</item>
     </style>
     <!-- Style for text -->
     <style name="Text">
@@ -73,18 +100,6 @@
         <item name="android:layout_marginStart">24dp</item>
         <item name="android:layout_marginEnd">24dp</item>
         <item name="android:layout_marginBottom">12dp</item>
-    </style>
-    <!-- Style for floating button -->
-    <style name="FloatingButtons">
-        <item name="android:layout_width">wrap_content</item>
-        <item name="android:layout_height">wrap_content</item>
-        <item name="android:layout_marginEnd">8dp</item>
-        <item name="android:layout_marginBottom">8dp</item>
-        <item name="android:scaleType">center</item>
-        <item name="android:adjustViewBounds">true</item>
-        <item name="backgroundTint">@color/red</item>
-        <item name="elevation">12dp</item>
-        <item name="tint">#FFFFFF</item>
     </style>
     <!-- Style for background -->
     <style name="Background">

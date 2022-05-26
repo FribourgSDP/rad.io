@@ -137,6 +137,8 @@
     <string name="creating_playlist_toast">Creating playlist</string>
     <string name="previousSongDisplay">Previous song was :</string>
     <string name="ttsInitSuccessful">Text-to-speech init successful</string>
+    <string name="save_online">Save online</string>
+    <string name="edit_playlist">Edit playlist</string>
     <string-array name="dont_quit_now_messages">
         <item
             >"Don't quit now… we only just started!"</item>
