@@ -143,5 +143,9 @@
         <activity
             android:name=".activities.MockMainActivity"
             android:exported="false" />
+        <activity
+            android:name=".mockimplementations.MockAddPlaylistActivityNoConnection"
+            android:exported="false" />
+
            </application>
 </manifest>
