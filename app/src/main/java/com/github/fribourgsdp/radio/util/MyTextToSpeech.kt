@@ -13,6 +13,7 @@ import java.util.*
 
 
 const val TTS_INITIALIZATION_RETRY_DELAY_MS : Long = 1000
+const val SPEECH_RATE : Float = 0.8f
 
 open class MyTextToSpeech(private val applicationContext: Context) : TextToSpeech.OnInitListener {
     private var tts: TextToSpeech? = null
@@ -29,6 +30,7 @@ open class MyTextToSpeech(private val applicationContext: Context) : TextToSpeec
                 Locale.UK
             }
             val ttsLangStatus = tts?.setLanguage(locale)
+            tts?.setSpeechRate(SPEECH_RATE)
             // check if the language is supportable.
             if (ttsLangStatus == TextToSpeech.LANG_MISSING_DATA || ttsLangStatus == TextToSpeech.LANG_NOT_SUPPORTED) {
                 toastDisplay(applicationContext.getString(R.string.ttsWeCantSupportYourLanguage))
