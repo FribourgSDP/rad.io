@@ -28,7 +28,7 @@ import com.github.fribourgsdp.radio.database.FirestoreDatabase
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.json.Json
 
-class AddPlaylistActivity : MyAppCompatActivity(), SavePlaylistOnlinePickerDialog.OnPickListener {
+class AddPlaylistActivity : MyAppCompatActivity(), SavePlaylistOnlinePickerDialog.OnPickListener, DatabaseHolder {
 
     private val listSongs = ArrayList<Song>()
     private var listNames = ArrayList<String>()
@@ -56,10 +56,8 @@ class AddPlaylistActivity : MyAppCompatActivity(), SavePlaylistOnlinePickerDialo
         processIntent(intent)
 
         recyclerView = findViewById(R.id.list_playlist_creation)
-        listAdapter = SongAdapter(listSongs, object : OnClickListener { //TODO REMOVE
+        listAdapter = SongAdapter(listSongs, object : OnClickListener {
             override fun onItemClick(position: Int) {
-//                listSongs.removeAt(position)
-//                listAdapter.notifyItemRemoved(position)
             }
         })
 
