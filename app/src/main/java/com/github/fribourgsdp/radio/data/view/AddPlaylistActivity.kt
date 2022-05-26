@@ -127,6 +127,7 @@ open class AddPlaylistActivity : DatabaseHolder, MyAppCompatActivity(), SavePlay
     override fun onPick(online: Boolean) {
         val playlistName: String = findViewById<EditText>(R.id.newPlaylistName).text.toString()
         val genre: Genre = genreSpinner.selectedItem as Genre
+        Toast.makeText(this, R.string.creating_playlist_toast, Toast.LENGTH_LONG).show()
         var playlist = Playlist(playlistName, listSongs.toSet(), genre)
         val t = if (generateLyricsCheckBox.isChecked) {
             playlist.loadLyrics()
