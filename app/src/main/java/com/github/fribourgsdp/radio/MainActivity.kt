@@ -20,7 +20,7 @@ import com.github.fribourgsdp.radio.deprecated.VoiceOverIPActivity
 import com.github.fribourgsdp.radio.game.prep.GameSettingsActivity
 import com.github.fribourgsdp.radio.game.prep.JoinGameActivity
 
-class MainActivity : MyAppCompatActivity() {
+open class MainActivity : MyAppCompatActivity() {
     private val db = FirestoreDatabase()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
