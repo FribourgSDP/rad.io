@@ -1,15 +1,18 @@
 package com.github.fribourgsdp.radio.data.view
 
 import android.annotation.SuppressLint
+import android.content.Context
 import android.view.MotionEvent
 import android.view.View
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.ItemTouchHelper.LEFT
+import com.github.fribourgsdp.radio.R
 import com.github.fribourgsdp.radio.data.Song
 import com.google.android.material.snackbar.Snackbar
 
-class SongSwipeHelper (val recyclerView: RecyclerView, private val songList : MutableList<Song>, val rootView: View) : ItemTouchHelper.Callback() {
+class SongSwipeHelper (val recyclerView: RecyclerView, private val songList : MutableList<Song>,
+                       val rootView: View, val context: Context) : ItemTouchHelper.Callback() {
     override fun getMovementFlags(
         recyclerView: RecyclerView,
         viewHolder: RecyclerView.ViewHolder
@@ -29,7 +32,8 @@ class SongSwipeHelper (val recyclerView: RecyclerView, private val songList : Mu
         val position = viewHolder.absoluteAdapterPosition
 
         val deleteConfirmation = Snackbar.make(recyclerView,
-            "Do you want to delete this song ?", Snackbar.LENGTH_LONG) //TODO use strings
+            context.resources.getString(R.string.deleteConfirmationQuestion),
+            Snackbar.LENGTH_LONG)
         deleteConfirmation.addCallback(object : Snackbar.Callback () {
             @SuppressLint("ClickableViewAccessibility")
             override fun onShown(sb: Snackbar?) {
@@ -48,9 +52,10 @@ class SongSwipeHelper (val recyclerView: RecyclerView, private val songList : Mu
                 super.onDismissed(transientBottomBar, event)
             }
         })
-        deleteConfirmation.setAction("Delete", View.OnClickListener {
-            songList.removeAt(position)
-            recyclerView.adapter!!.notifyItemRemoved(position)
+        deleteConfirmation.setAction(context.resources.getString(R.string.deleteConfirmationAnswer),
+            View.OnClickListener {
+                songList.removeAt(position)
+                recyclerView.adapter!!.notifyItemRemoved(position)
         })
         deleteConfirmation.show()
     }

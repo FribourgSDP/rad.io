@@ -148,5 +148,7 @@
         <item
             >"Seuls les losers quittent une partie, je doute que tu veuilles en être un"</item>
     </string-array>
+    <string name="deleteConfirmationAnswer">Supprimer</string>
+    <string name="deleteConfirmationQuestion">Voulez-vous vraiment supprimer ?</string>
 
 </resources>

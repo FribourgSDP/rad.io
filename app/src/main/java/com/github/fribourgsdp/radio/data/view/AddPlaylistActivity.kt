@@ -28,7 +28,8 @@ import com.github.fribourgsdp.radio.database.FirestoreDatabase
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.json.Json
 
-class AddPlaylistActivity : MyAppCompatActivity(), SavePlaylistOnlinePickerDialog.OnPickListener, DatabaseHolder {
+class AddPlaylistActivity : MyAppCompatActivity(), SavePlaylistOnlinePickerDialog.OnPickListener,
+                                                                                    DatabaseHolder {
 
     private val listSongs = ArrayList<Song>()
     private var listNames = ArrayList<String>()
@@ -62,7 +63,7 @@ class AddPlaylistActivity : MyAppCompatActivity(), SavePlaylistOnlinePickerDialo
         })
 
         val itemTouchHelper = ItemTouchHelper(SongSwipeHelper(recyclerView, listSongs,
-            findViewById(R.id.AddPlaylistRootView)))
+            findViewById(R.id.AddPlaylistRootView), this))
         recyclerView.adapter = listAdapter
         itemTouchHelper.attachToRecyclerView(recyclerView)
 
