@@ -65,7 +65,7 @@ open class AddPlaylistActivity : DatabaseHolder, MyAppCompatActivity(), SavePlay
         errorTextView = findViewById(R.id.addPlaylistErrorTextView)
 
         if(!hasConnectivity(this)){
-            generateLyricsCheckBox.visibility = View.INVISIBLE
+            generateLyricsCheckBox.isEnabled = false
         }
 
     }

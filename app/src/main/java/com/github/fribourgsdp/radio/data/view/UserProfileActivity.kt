@@ -91,8 +91,8 @@ open class UserProfileActivity : MyAppCompatActivity(), KeepOrDismissPlaylistDia
 
 
         if(!hasConnectivity(this)){
-            launchSpotifyButton.visibility = View.INVISIBLE
-            googleSignInButton.visibility = View.INVISIBLE
+            launchSpotifyButton.isEnabled = false
+            googleSignInButton.isEnabled = false
         }
     }
 
@@ -128,7 +128,7 @@ open class UserProfileActivity : MyAppCompatActivity(), KeepOrDismissPlaylistDia
                 user.name = usernameField.text.toString()
                 user.onlineCopyAndSave()
             }else if(user.isGoogleUser && !hasConnectivity(this)) {
-                Toast.makeText(this,"Cannot change username while offline",Toast.LENGTH_SHORT).show()
+                Toast.makeText(this,"Cannot make online related changes without connection",Toast.LENGTH_SHORT).show()
                 usernameField.setText(user.name)
             }else {
                 user.name = usernameField.text.toString()

@@ -8,6 +8,7 @@ import android.widget.TextView
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.github.fribourgsdp.radio.*
+import com.github.fribourgsdp.radio.config.ConnectivityHolder
 import com.github.fribourgsdp.radio.data.Playlist
 import com.github.fribourgsdp.radio.data.Song
 import com.github.fribourgsdp.radio.data.User
@@ -25,7 +26,8 @@ const val SONG_NAME_INDEX = 0
 const val SONG_ARTIST_INDEX = 1
 const val PLAYLIST_TO_MODIFY = "com.github.fribourgsdp.radio.data.view.PLAYLIST_TO_MODIFY"
 
-open class PlaylistSongsFragment : MyFragment(R.layout.fragment_playlist_display), OnClickListener,
+open class PlaylistSongsFragment : MyFragment(R.layout.fragment_playlist_display),
+    ConnectivityHolder,OnClickListener,
     DatabaseHolder {
     private lateinit var playlist: Playlist
     private lateinit var songs: List<Song>
@@ -95,6 +97,12 @@ open class PlaylistSongsFragment : MyFragment(R.layout.fragment_playlist_display
                 }
                 importLyricsButton.visibility = View.INVISIBLE
             }
+        }
+
+
+        if(!hasConnectivity(requireContext())){
+            importLyricsButton.isEnabled = false
+            saveOnlineButton.isEnabled = false
         }
     }
 
