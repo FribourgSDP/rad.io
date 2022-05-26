@@ -7,6 +7,8 @@ import com.github.fribourgsdp.radio.R
 import com.github.fribourgsdp.radio.database.Database
 import com.github.fribourgsdp.radio.game.handler.PlayerGameHandler
 import com.github.fribourgsdp.radio.mockimplementations.FakeGameView
+import com.github.fribourgsdp.radio.util.MyTextToSpeech
+import com.github.fribourgsdp.radio.util.getAndCast
 import com.google.android.gms.tasks.Tasks
 import com.google.firebase.Timestamp
 import com.google.firebase.firestore.DocumentSnapshot
@@ -426,6 +428,24 @@ class PlayerGameHandlerTest {
 
         assertTrue(view.gameOver)
         assertTrue(view.crashed)
+    }
+
+    @Test
+    fun displayPreviousSongOnTimeoutNoSingMode(){
+        val view = FakeGameView()
+        val tts = object : MyTextToSpeech(ctx) {
+            override fun readLyrics(lyrics : String){
+
+            }
+        }
+        val handler = PlayerGameHandler(ctx, 0, view, noSing = true, tts = tts)
+        `when`(mockSnapshot.getString("current_song"))
+            .thenReturn("Lithium")
+        `when`(mockSnapshot.get("song_choices_lyrics"))
+            .thenReturn(mapOf("Lithium" to "Whatever"))
+        handler.handleSnapshot(mockSnapshot)
+        handler.handleGuess("", "", timeout = true)
+        assertEquals(view.song, ctx.getString(R.string.previousSongDisplay) + "Lithium")
     }
 
 }

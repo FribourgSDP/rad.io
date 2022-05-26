@@ -9,16 +9,20 @@ import com.github.fribourgsdp.radio.data.User
 import com.github.fribourgsdp.radio.game.GameView
 import com.github.fribourgsdp.radio.game.prep.DEFAULT_GAME_DURATION
 import com.github.fribourgsdp.radio.game.timer.Timer
+import com.github.fribourgsdp.radio.util.MyTextToSpeech
 import com.github.fribourgsdp.radio.util.NOT_THE_SAME
 import com.github.fribourgsdp.radio.util.SongNameHint
 import com.github.fribourgsdp.radio.util.StringComparisons
+import com.github.fribourgsdp.radio.util.getAndCast
 import com.google.firebase.firestore.DocumentSnapshot
 
 class PlayerGameHandler(
     private val ctx: Context,
     private val gameID: Long,
     private val view: GameView,
-    db: Database = FirestoreDatabase()
+    db: Database = FirestoreDatabase(),
+    private val noSing : Boolean = false,
+    private val tts : MyTextToSpeech? = null
 ): GameHandler(ctx, view, db), GameView.OnPickListener {
 
     private var songToGuess: String? = null
@@ -45,9 +49,6 @@ class PlayerGameHandler(
                 return
             }
 
-            val singerName = snapshot.getString("singer")!!
-
-            view.updateSinger(singerName)
             view.updateRound(snapshot.getLong("current_round")!!)
 
             // update the score
@@ -57,7 +58,13 @@ class PlayerGameHandler(
             // It's not null when there is one.
             songToGuess = snapshot.getString("current_song")
 
-            updateViewForPlayer(snapshot, singerName)
+            if(!noSing) {
+                val singerName = snapshot.getString("singer")!!
+                view.updateSinger(singerName)
+                updateViewForPlayer(snapshot, singerName)
+            } else{
+                updateViewNoSingMode(snapshot)
+            }
 
             // Start the stop timer to stop everything if something fails
             stopTimer.start()
@@ -104,6 +111,9 @@ class PlayerGameHandler(
     }
 
     private fun handleTimeoutOnGuess(userId: String) {
+        if(noSing){
+            view.displaySong(ctx.getString(R.string.previousSongDisplay) +songToGuess.toString())
+        }
         db.playerEndTurn(gameID, userId, false)
             .addOnFailureListener {
                 Log.e("PlayerGameHandler Error", "In end turn with timeout: ${it.message}", it)
@@ -139,17 +149,31 @@ class PlayerGameHandler(
     }
 
     private fun updateLyrics(snapshot: DocumentSnapshot){
+        view.updateLyrics(getLyricsFromSnapshot(snapshot))
+    }
+
+
+    private fun getLyricsFromSnapshot(snapshot: DocumentSnapshot) : String {
         val lyricsHashMap =
-            snapshot.get("song_choices_lyrics")!! as Map<String, String>
-        val lyrics = lyricsHashMap[songToGuess!!]
-        view.updateLyrics(lyrics!!)
+            snapshot.getAndCast<Map<String, String>>("song_choices_lyrics")
+        return lyricsHashMap[songToGuess!!]!!
     }
 
     private fun chooseSong(snapshot: DocumentSnapshot){
-        val choices = snapshot.get("song_choices")!! as ArrayList<String>
+        val choices = snapshot.getAndCast<ArrayList<String>>("song_choices")
         view.chooseSong(choices, this)
     }
 
+    private fun updateViewNoSingMode(snapshot: DocumentSnapshot) {
+        val deadline = snapshot.getTimestamp("round_deadline")
+        if(songToGuess != null && deadline != null) {
+            tts!!.readLyrics(getLyricsFromSnapshot(snapshot))
+            view.startTimer(deadline.toDate())
+        } else{
+            view.stopTimer()
+            view.updateSinger(NO_SINGER)
+        }
+    }
     private fun updateViewForPlayer(snapshot: DocumentSnapshot, singerName : String){
         val deadline = snapshot.getTimestamp("round_deadline")
 
