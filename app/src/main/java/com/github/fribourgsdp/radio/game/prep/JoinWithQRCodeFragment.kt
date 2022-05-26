@@ -24,10 +24,12 @@ open class JoinWithQRCodeFragment(val ctx: Context, val activity: Activity): Dia
 
     protected lateinit var rootView : View
     protected lateinit var camera: ScannerLiveView
-    protected lateinit var scannedTV: TextView
     protected lateinit var cancelButton : Button
 
     override fun onCreateView(inflater: LayoutInflater,container: ViewGroup?,savedInstanceState: Bundle?): View {
+
+        isCancelable = false
+
         rootView= inflater.inflate(R.layout.fragment_join_with_qr_code, container, false)
         // check permission method is to check that the
         // camera permission is granted by user or not.
@@ -43,7 +45,6 @@ open class JoinWithQRCodeFragment(val ctx: Context, val activity: Activity): Dia
         cancelButton.setOnClickListener{
             dismiss()
         }
-        scannedTV = rootView.findViewById(R.id.idTVscanned)
         initializeCamera()
 
         return rootView
@@ -82,7 +83,6 @@ open class JoinWithQRCodeFragment(val ctx: Context, val activity: Activity): Dia
     }
 
     protected fun actOnScannedData(data :String){
-        scannedTV.setText(data)
         if(checkScanFormat(data)){
             setFragmentResult("idRequest", bundleOf("id" to data.toLong()))
             dismiss()

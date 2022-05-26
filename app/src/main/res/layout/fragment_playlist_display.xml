@@ -5,74 +5,70 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
+    <ImageView
+        android:id="@+id/topImage"
+        style="@style/Background.Top"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:ignore="ContentDescription" />
+
+    <!--
+        NB: Here I need to specify the text color without the use the attributes
+        as it causes the tests to fail due to the inflater
+    -->
     <TextView
         android:id="@+id/PlaylistName"
+        style="@style/Text.Titles"
+        android:textColor="@color/white"
+        android:text="@string/playlist_name_placeholder"
+        app:layout_constraintStart_toStartOf="@id/topImage"
+        app:layout_constraintTop_toTopOf="@id/topImage" />
+
+    <LinearLayout
+        android:id="@+id/buttonsLayout"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="28dp"
-        android:text="@string/playlist_name_placeholder"
-        android:textSize="24sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.101"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        android:orientation="horizontal"
+        app:layout_constraintTop_toBottomOf="@id/topImage"
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <ImageButton
+            android:id="@+id/editButton"
+            style="@style/Button.Icon"
+            android:src="@drawable/ic_baseline_edit_24"
+            android:contentDescription="@string/edit_playlist" />
+
+        <ImageButton
+            android:id="@+id/SaveOnlineButton"
+            style="@style/Button.Icon"
+            android:src="@drawable/ic_baseline_cloud_upload_24"
+            android:contentDescription="@string/save_online"/>
+
+        <ImageButton
+            android:id="@+id/deleteButton"
+            style="@style/Button.Icon"
+            android:src="@drawable/ic_baseline_delete_forever_24"
+            app:tint="@color/red"
+            android:contentDescription="@string/deletePlaylist" />
+    </LinearLayout>
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/SongRecyclerView"
-        android:layout_width="match_parent"
-        android:layout_marginTop="0sp"
-        android:layout_height="0dp"
-        app:layout_constraintBottom_toBottomOf="parent"
+        style="@style/RecyclerViews"
+        app:layout_constraintBottom_toTopOf="@id/ImportLyricsButton"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/PlaylistName"
-        android:padding="4dp"
-        tools:listitem="@layout/song_item"
-        tools:layout_editor_absoluteX="1dp" />
-
-    <Button
-        android:id="@+id/editButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="16dp"
-        android:text="@string/editPlaylist"
-        app:layout_constraintBottom_toTopOf="@+id/SongRecyclerView"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="1.0" />
-
-    <Button
-        android:id="@+id/deleteButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="8dp"
-        android:backgroundTint="#B71C1C"
-        android:text="@string/deletePlaylist"
-        app:layout_constraintBottom_toTopOf="@+id/SongRecyclerView"
-        app:layout_constraintEnd_toStartOf="@+id/editButton"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="1.0" />
-    <Button
-        android:id="@+id/SaveOnlineButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="8dp"
-        android:backgroundTint="#B71C1C"
-        android:text="Save Online"
-        app:layout_constraintBottom_toTopOf="@+id/SongRecyclerView"
-        app:layout_constraintEnd_toStartOf="@+id/deleteButton"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="1.0" />
+        app:layout_constraintTop_toBottomOf="@id/buttonsLayout"
+        tools:listitem="@layout/song_item" />
 
     <Button
         android:id="@+id/ImportLyricsButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="72dp"
-        android:backgroundTint="#B71C1C"
-        android:text="@string/import_lyrics_button_text"
-        app:layout_constraintBottom_toTopOf="@+id/SongRecyclerView"
-        app:layout_constraintEnd_toStartOf="@+id/deleteButton"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="1.0" />
+        style="@style/GradientButton"
+        android:layout_marginBottom="12dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:text="@string/import_lyrics_button_text" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -72,9 +72,9 @@ class GameSettingsActivityTest {
 
     @Test
     fun timerDialogHasDefaultValue45Seconds() {
-        onView(withId(R.id.timerTextView))
+        onView(withId(R.id.chooseTimeButton))
             .check(ViewAssertions.matches(
-                ViewMatchers.withText("45s")
+                ViewMatchers.withText(ctx.getString(R.string.round_duration_format, 45))
             ))
     }
 
@@ -95,8 +95,8 @@ class GameSettingsActivityTest {
             .perform(ViewActions.click())
 
 
-        val chosenTime = getText(withId(R.id.timerTextView))
-        val chosenTimeInSeconds = chosenTime?.take((chosenTime!!.length - 1))?.toLong()
+        val chosenTime = getText(withId(R.id.chooseTimeButton))
+        val chosenTimeInSeconds = chosenTime?.takeWhile { c -> c.isDigit() }?.toLong()
 
         onView(withId(R.id.nameInput))
             .perform(ViewActions.typeText(testName))

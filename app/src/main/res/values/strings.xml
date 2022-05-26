@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Rad.io</string>
+    <string name="app_name">rad.io</string>
     <string name="play_button_text">Play</string>
     <string name="settings_text">Settings</string>
     <string name="game_settings_text">Game Settings</string>
@@ -119,6 +119,11 @@
     <string name="timerMinutes">Minutes</string>
     <string name="timerSeconds">Seconds</string>
     <string name="gameDurationFormat">Time singing: %d seconds </string>
+    <string name="round_time_text">Round duration:</string>
+    <string name="round_duration_format">%d seconds</string>
+    <string name="return_to_the_game">Return to the game</string>
+    <string name="mute_button_desc">Mute button</string>
+    <string name="active_speaker_format">Active speaker: %s</string>
     <string name="noSingModeCheckbox">Lyrics read by bot !</string>
     <string name="with_singer_format">With singer : %b</string>
     <string name="listen">Listen !</string>
@@ -126,13 +131,14 @@
     <string name="ttsWeCantSupportYourLanguage">We can\'t support your language on this device.</string>
     <string name="TextToSpeechInitializationFailed">Text-to-speech engine could not be initialized properly.</string>
     <string name="playlistLyricsLess">The selected playlist has no song with lyrics. Please select another one.</string>
-    <string name="return_to_the_game">Return to the game</string>
     <string name="generateLyricsCheckBoxText">Generate lyrics</string>
     <string name="import_lyrics_button_text">Import lyrics</string>
     <string name="Loading_lyrics_text">Loading Lyrics</string>
     <string name="creating_playlist_toast">Creating playlist</string>
     <string name="previousSongDisplay">Previous song was :</string>
     <string name="ttsInitSuccessful">Text-to-speech init successful</string>
+    <string name="save_online">Save online</string>
+    <string name="edit_playlist">Edit playlist</string>
     <string-array name="dont_quit_now_messages">
         <item
             >"Don't quit now… we only just started!"</item>

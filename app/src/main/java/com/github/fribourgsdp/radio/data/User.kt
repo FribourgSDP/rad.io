@@ -28,7 +28,6 @@ import kotlinx.serialization.json.Json
  *
  * @property name name of the user (immutable)
  * @property color color associated to the user for use in game (immutable)
- * @property linkedSpotify true if User has successfully linked their spotify account
  * @property initial the initial of the user's name to use as visual user identification with their color
  *
  * @constructor creates a User
@@ -42,7 +41,6 @@ data class User (var name: String, val color: Int) : SavesToFileSystem<User>(USE
 
     private val playlists = mutableSetOf<Playlist>()
     private val playlistNamesToSpotifyId = mutableMapOf<String, String>()
-    var linkedSpotify: Boolean = false
     val initial get(): Char = name.elementAt(0)
     var id : String = "def"
     var isGoogleUser = false

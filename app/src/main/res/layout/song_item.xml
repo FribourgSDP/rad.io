@@ -12,19 +12,16 @@
 
         <TextView
             android:id="@+id/song_title_view"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            style="@style/Text"
             android:layout_alignParentStart="true"
             android:layout_marginStart="8dp"
             android:text="@string/song_card_text1"
-            android:textColor="@android:color/black"
             android:textSize="18sp"
             android:textStyle="bold" />
 
         <TextView
             android:id="@+id/song_subtitle_view"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            style="@style/Text"
             android:layout_below="@id/song_title_view"
             android:layout_alignStart="@+id/song_title_view"
             android:layout_marginStart="8sp"

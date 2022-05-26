@@ -6,15 +6,22 @@
     android:layout_height="match_parent"
     tools:context=".game.prep.JoinGameActivity">
 
+    <ImageView
+        android:id="@+id/topImage"
+        style="@style/Background.Top"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:ignore="ContentDescription" />
+
     <TextView
         android:id="@+id/textView4"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="32dp"
+        style="@style/Text"
+        android:layout_marginTop="8dp"
         android:text="@string/join_game_text"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toBottomOf="@id/topImage" />
 
     <EditText
         android:id="@+id/gameToJoinID"
@@ -56,8 +63,7 @@
 
     <Button
         android:id="@+id/joinGameButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        style="@style/GradientButton"
         android:layout_marginBottom="16dp"
         android:text="@string/join_button_text"
         android:enabled="false"
@@ -67,12 +73,12 @@
 
     <TextView
         android:id="@+id/joinPublicLobbies"
+        style="@style/Text.Subtitles"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
         android:layout_marginTop="32dp"
         android:text="@string/public_lobbies"
-        android:textSize="18sp"
         android:textStyle="bold"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/joinErrorView" />

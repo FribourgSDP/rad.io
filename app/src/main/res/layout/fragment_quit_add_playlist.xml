@@ -6,10 +6,8 @@
 
     <TextView
         android:id="@+id/warningQuitAddPlaylist"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        style="@style/Text.Popup"
         android:text="@string/warningMessageQuitAddPlaylist"
-        android:textSize="24sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -28,14 +26,13 @@
 
         <Button
             android:id="@+id/validateQuitAddPlaylist"
-            style="@style/SongChoices"
+            style="@style/GradientButton.Popup"
             android:layout_height="wrap_content"
-            android:backgroundTint="#D61010"
             android:text="@string/validateMessageQuitAddPlaylist" />
 
         <Button
             android:id="@+id/cancelQuitAddPlaylist"
-            style="@style/SongChoices"
+            style="@style/GradientButton.Popup"
             android:text="@string/cancelMessageQuitAddPlaylist" />
 
     </LinearLayout>
