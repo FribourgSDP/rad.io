@@ -101,6 +101,7 @@ class SongFragmentTest {
             .check(ViewAssertions.matches(
                 ViewMatchers.withText(MockLyricsGetter.truckfightersLyrics)))
     }
+
     @Test
     fun goodHintForSongWithoutLyrics(){
         val bundle = Bundle()

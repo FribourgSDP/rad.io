@@ -3,11 +3,9 @@ package com.github.fribourgsdp.radio.game
 import com.github.fribourgsdp.radio.data.Playlist
 import com.github.fribourgsdp.radio.data.Song
 import com.github.fribourgsdp.radio.data.User
-import java.util.*
-import kotlin.collections.ArrayList
-import kotlin.collections.HashMap
-import kotlin.collections.HashSet
+import com.github.fribourgsdp.radio.external.musixmatch.MusixmatchLyricsGetter
 import kotlinx.serialization.Serializable
+import java.util.*
 import kotlin.math.max
 
 /**
@@ -24,7 +22,8 @@ import kotlin.math.max
  */
 @Serializable
 class Game private constructor(val id: Long, val name: String, val host: User, val playlist: Playlist, val nbRounds: Int,
-                               val withHint: Boolean, val isPrivate: Boolean, private val listUser: List<String>) {
+                               val withHint: Boolean, val isPrivate: Boolean, private val listUser: List<String>,
+                               private val noSing : Boolean) {
 
     private val scoreMap = HashMap(listUser.associateWith { 0L })
     private var usersToPlay = listUser.size
@@ -32,7 +31,12 @@ class Game private constructor(val id: Long, val name: String, val host: User, v
     var currentRound = 1
         private set
 
-    private val songsNotDone = HashSet(playlist.getSongs())
+    private val songsNotDone =
+        if(!noSing)
+            HashSet(playlist.getSongs())
+        else
+            HashSet(playlist.getSongs().filter{s -> s.songHasLyrics()})
+
 
     /**
      * Return the score of a user.
@@ -112,15 +116,44 @@ class Game private constructor(val id: Long, val name: String, val host: User, v
     }
 
     /**
+     * Similar as [getChoices], but only returns one song selected among the songs that have lyrics.
+     * @return null if no song has lyrics
+     */
+    fun getChoiceWithLyrics() : Song? {
+        //Also restart from the beginning if all songs have been done.
+        if(songsNotDone.isEmpty()){
+            songsNotDone.addAll(playlist.getSongs()
+                .filter{s -> s.songHasLyrics()})
+        }
+        if(songsNotDone.isEmpty()){
+            return null
+        }
+        val chosen = songsNotDone.random()
+        songsNotDone.remove(chosen)
+        return chosen
+    }
+
+    /**
      * Return whether the game is done or not.
      * @return whether the game is done or not.
      */
     fun isDone(): Boolean {
-        return nbRounds <= currentRound && usersToPlay <= 0
+        return if(!noSing) {
+            nbRounds <= currentRound && usersToPlay <= 0
+        } else{
+            nbRounds < currentRound
+        }
     }
 
     fun getAllPlayersId(): List<String> {
         return ArrayList(listUser)
+    }
+
+    /**
+     * Increments the current round by 1. Used in No-Sing mode
+     */
+    fun incrementCurrentRound(){
+        ++currentRound
     }
 
     /**
@@ -135,6 +168,7 @@ class Game private constructor(val id: Long, val name: String, val host: User, v
         private var withHint  = false
         private var isPrivate = false
         private var list = ArrayList<String>()
+        private var noSing = false
 
         /**
          * Set the [id] of the game.
@@ -233,11 +267,22 @@ class Game private constructor(val id: Long, val name: String, val host: User, v
         }
 
         /**
+         * Sets the game mode. If noSing = true, there will be no rotation of players and the textToSpeech engine will read the lyrics.
+         * Else the game is normal.
+         * @return the [Builder]
+         */
+        fun setNoSing(noSing : Boolean) : Builder {
+            this.noSing = noSing
+            return this
+        }
+
+
+        /**
         * Return the [Settings] of the game currently building.
         * @return the [Settings] of the game currently building.
         */
         fun getSettings(): Settings {
-            return Settings(host.name, name, playlist.name, nbRounds, withHint, isPrivate)
+            return Settings(host.name, name, playlist.name, nbRounds, withHint, isPrivate, noSing)
         }
 
         /**
@@ -245,7 +290,7 @@ class Game private constructor(val id: Long, val name: String, val host: User, v
          * @return the [Game] built with the previously given parameters.
          */
         fun build() : Game {
-            return Game(id, name, host, playlist, nbRounds, withHint, isPrivate, list)
+            return Game(id, name, host, playlist, nbRounds, withHint, isPrivate, list, noSing)
         }
 
     }
@@ -256,7 +301,8 @@ class Game private constructor(val id: Long, val name: String, val host: User, v
         val playlistName: String,
         val nbRounds: Int,
         val withHint: Boolean,
-        val isPrivate: Boolean
+        val isPrivate: Boolean,
+        val noSing : Boolean = false
     )
 
     companion object {
@@ -281,6 +327,5 @@ class Game private constructor(val id: Long, val name: String, val host: User, v
                 }
             }
         }
-
     }
 }

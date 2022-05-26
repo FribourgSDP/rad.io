@@ -4,12 +4,13 @@ import com.github.fribourgsdp.radio.data.Genre
 import com.github.fribourgsdp.radio.data.Playlist
 import com.github.fribourgsdp.radio.data.Song
 import com.github.fribourgsdp.radio.database.Database
+import com.github.fribourgsdp.radio.external.musixmatch.MusixmatchLyricsGetter
+import com.github.fribourgsdp.radio.mockimplementations.MockLyricsGetter
 import com.github.fribourgsdp.radio.utils.KotlinAny
 import com.google.android.gms.tasks.Tasks
 import org.junit.Test
 
 import org.junit.Assert.*
-import org.mockito.Mockito
 import org.mockito.Mockito.*
 
 internal class PlaylistTest {
@@ -18,6 +19,10 @@ internal class PlaylistTest {
     val song2 = Song("Back in black", "ACDC")
     val song3 = Song("i got a feeling", "black eyed pees")
     val song4 = Song("  party rock anthem", "lmfao")
+    val song1Lyrics = "Lyrics1"
+    val song2Lyrics = "Lyrics2"
+    val song3Lyrics = "Lyrics3"
+    val song4Lyrics = "Lyrics4"
 
     @Test
     fun primaryConstructor(){
@@ -178,7 +183,36 @@ internal class PlaylistTest {
         Tasks.await(playlist.transformToOnline(mockDB))
         playlist.saveOnline()
         assertEquals(true,playlist.savedOnline)
+    }
 
+    @Test
+    fun loadLyricsLoadsLyricsAndUpdateSongInPlaylist(){
+        val songSet = mutableSetOf<Song>(song1,song2,song3,song4)
+        val playlist = Playlist("First",songSet,Genre.JAZZ)
+
+        Tasks.await(playlist.loadLyrics(MockLyricsGetter))
+        assertEquals(MockLyricsGetter.truckfightersLyrics,playlist.getSong(song1.name,song1.artist).lyrics)
+        assertEquals(MockLyricsGetter.truckfightersLyrics,playlist.getSong(song2.name,song2.artist).lyrics)
+        assertEquals(MockLyricsGetter.truckfightersLyrics,playlist.getSong(song3.name,song3.artist).lyrics)
+        assertEquals(MockLyricsGetter.truckfightersLyrics,playlist.getSong(song4.name,song4.artist).lyrics)
+
+    }
+
+    @Test
+    fun allSongsAndNoSongHaveLyricsWorks(){
+        val songSet = mutableSetOf<Song>(song1,song2,song3,song4)
+        val playlist = Playlist("First",songSet,Genre.JAZZ)
+        song4.lyrics = MusixmatchLyricsGetter.BACKEND_ERROR_PLACEHOLDER
+        assertTrue(playlist.noSongHaveLyrics())
+        song1.lyrics = song1Lyrics
+        song2.lyrics = song2Lyrics
+        song3.lyrics = song3Lyrics
+        assertFalse(playlist.noSongHaveLyrics())
+        assertFalse(playlist.allSongsHaveLyricsOrHaveTriedFetchingSome())
+        song4.lyrics = MusixmatchLyricsGetter.LYRICS_NOT_FOUND_PLACEHOLDER
+        assertTrue(playlist.allSongsHaveLyricsOrHaveTriedFetchingSome())
+        song4.lyrics = song4Lyrics
+        assertTrue(playlist.allSongHaveLyrics())
 
     }
 }

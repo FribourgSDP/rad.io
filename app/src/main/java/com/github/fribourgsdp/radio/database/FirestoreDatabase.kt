@@ -2,7 +2,6 @@ package com.github.fribourgsdp.radio.database
 
 import android.content.ContentValues
 import android.util.Log
-import com.github.fribourgsdp.radio.*
 import com.github.fribourgsdp.radio.data.*
 import com.github.fribourgsdp.radio.game.Game
 import com.github.fribourgsdp.radio.util.*
@@ -11,13 +10,14 @@ import com.google.android.gms.tasks.Tasks
 import com.google.firebase.Timestamp
 import com.google.firebase.firestore.*
 import com.google.firebase.firestore.EventListener
+import com.google.firebase.firestore.DocumentReference
+import com.google.firebase.firestore.DocumentSnapshot
+import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import java.io.Serializable
 import java.lang.Exception
 import java.util.*
-import kotlin.collections.ArrayList
-import kotlin.collections.HashMap
 
 
 /**
@@ -172,7 +172,7 @@ class FirestoreDatabase(var refMake: FirestoreRef, var transactionMgr: Transacti
             "playlists" to playlistInfo
         )
         val docRef = refMake.getUserRef(userId)
-        Log.d(ContentValues.TAG, "DocumentSnapshot added with ID put: " + docRef.toString())
+        Log.d(ContentValues.TAG, "DocumentSnapshot added with ID put: $docRef")
         return docRef.set(userHash)
     }
 
@@ -297,7 +297,8 @@ class FirestoreDatabase(var refMake: FirestoreRef, var transactionMgr: Transacti
             "players" to hashMapOf<String, String>(),
             "permissions" to hashMapOf<String, Boolean>(),
             "launched" to false,
-            "validity" to true
+            "validity" to true,
+            "noSing" to settings.noSing
         )
 
         val lobbyRef = refMake.getLobbyRef(id.toString())
@@ -328,9 +329,10 @@ class FirestoreDatabase(var refMake: FirestoreRef, var transactionMgr: Transacti
             val nbRounds = snapshot.getLong("nbRounds")!!
             val withHint = snapshot.getBoolean("withHint")!!
             val private = snapshot.getBoolean("private")!!
+            val noSing = snapshot.getBoolean("noSing") ?: false
 
             // Success
-            Game.Settings(host, name, playlist, nbRounds.toInt(), withHint, private)
+            Game.Settings(host, name, playlist, nbRounds.toInt(), withHint, private, noSing)
         }
     }
 
@@ -572,6 +574,7 @@ class FirestoreDatabase(var refMake: FirestoreRef, var transactionMgr: Transacti
         val roundDeadline = Date()
         //incrementBy is in seconds whereas we must add milliseconds to the time before deadline.
         roundDeadline.time += incrementBy*1000
+        
 
         val songUpdateMap = hashMapOf(
             "current_song" to songName,

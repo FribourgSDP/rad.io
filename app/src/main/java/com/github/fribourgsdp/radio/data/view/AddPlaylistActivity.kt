@@ -3,10 +3,7 @@ package com.github.fribourgsdp.radio.data.view
 import android.content.Intent
 import android.os.Bundle
 import android.view.View
-import android.widget.ArrayAdapter
-import android.widget.EditText
-import android.widget.Spinner
-import android.widget.TextView
+import android.widget.*
 import com.google.android.gms.tasks.Tasks
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -17,6 +14,9 @@ import com.github.fribourgsdp.radio.data.Genre
 import com.github.fribourgsdp.radio.data.Song
 import com.github.fribourgsdp.radio.data.Playlist
 import com.github.fribourgsdp.radio.data.User
+import com.github.fribourgsdp.radio.external.musixmatch.LyricsGetter
+import com.github.fribourgsdp.radio.external.musixmatch.MusixmatchLyricsGetter
+import com.google.android.gms.tasks.Task
 import com.github.fribourgsdp.radio.database.Database
 import com.github.fribourgsdp.radio.database.DatabaseHolder
 import com.github.fribourgsdp.radio.database.FirestoreDatabase
@@ -31,13 +31,14 @@ open class AddPlaylistActivity : DatabaseHolder, MyAppCompatActivity(), SavePlay
     private lateinit var recyclerView : RecyclerView
     private lateinit var errorTextView : TextView
     private lateinit var genreSpinner: Spinner
+    private lateinit var generateLyricsCheckBox : CheckBox
     lateinit var user : User
     private var db : Database = initializeDatabase()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_add_playlist)
-
+        generateLyricsCheckBox = findViewById(R.id.generateLyricsCheckBox)
         genreSpinner = findViewById(R.id.genreSpinner)
         genreSpinner.adapter = ArrayAdapter(this, android.R.layout.simple_spinner_item, Genre.values())
         errorTextView = findViewById(R.id.addPlaylistErrorTextView)
@@ -114,10 +115,6 @@ open class AddPlaylistActivity : DatabaseHolder, MyAppCompatActivity(), SavePlay
 
             }
         }
-
-
-
-
     }
 
     /**
@@ -146,23 +143,31 @@ open class AddPlaylistActivity : DatabaseHolder, MyAppCompatActivity(), SavePlay
         startActivity(intent)
     }
     override fun onPick(online: Boolean) {
-        val playlistName : String = findViewById<EditText>(R.id.newPlaylistName).text.toString()
-        val genre : Genre = genreSpinner.selectedItem as Genre
-        val playlist = Playlist(playlistName,listSongs.toSet(),genre)
-        val playlistTask = if (online) playlist.transformToOnline().addOnSuccessListener {
-            playlist.saveOnline()
-        } else Tasks.forResult(playlist)
+        val playlistName: String = findViewById<EditText>(R.id.newPlaylistName).text.toString()
+        val genre: Genre = genreSpinner.selectedItem as Genre
+        Toast.makeText(this, R.string.creating_playlist_toast, Toast.LENGTH_LONG).show()
+        var playlist = Playlist(playlistName, listSongs.toSet(), genre)
+        val t = if (generateLyricsCheckBox.isChecked) {
+            playlist.loadLyrics()
+            //loadLyrics(playlist)
+        } else {
+            Tasks.forResult(null)
+        }
+        t.continueWith {
+            //playlist = it.result
+            val playlistTask = if (online) playlist.transformToOnline().addOnSuccessListener {
+                playlist.saveOnline()
+            } else Tasks.forResult(playlist)
 
-
-        playlistTask.addOnSuccessListener {
-            user.addPlaylist(playlist)
-            user.save(this)
-            user.onlineCopyAndSave()
-            val intent = Intent(this@AddPlaylistActivity, UserProfileActivity::class.java)
-            startActivity(intent)
+            playlistTask.addOnSuccessListener {
+                user.addPlaylist(playlist)
+                user.save(this)
+                user.onlineCopyAndSave()
+                val intent = Intent(this@AddPlaylistActivity, UserProfileActivity::class.java)
+                startActivity(intent)
+            }
         }
     }
-
     private fun allFieldsEmpty(): Boolean {
         if (findViewById<EditText>(R.id.newPlaylistName).text.toString().isNotBlank()){
             return false

@@ -2,6 +2,8 @@ package com.github.fribourgsdp.radio.data
 
 import com.github.fribourgsdp.radio.database.Database
 import com.github.fribourgsdp.radio.database.FirestoreDatabase
+import com.github.fribourgsdp.radio.external.musixmatch.LyricsGetter
+import com.github.fribourgsdp.radio.external.musixmatch.MusixmatchLyricsGetter
 import com.github.fribourgsdp.radio.util.SetUtility
 import com.google.android.gms.tasks.Task
 import com.google.android.gms.tasks.Tasks
@@ -100,6 +102,12 @@ data class Playlist (override var name: String, var genre: Genre) : Nameable {
         return SetUtility.getNamedFromSet(songs, Song(name, artist))
     }
 
+    /**
+     * This method transforms the playlist to a playlist that can be stored online
+     * by generating id's for all songs and the playlist itself
+     * @param db the database to fetch the id from, by default FirestoreDatabase
+     * @return [Task] indicating containing all tasks received from the database
+     */
     fun transformToOnline(db : Database = FirestoreDatabase()): Task<Void> {
         val songTask =  db.generateSongIds(songs.size).continueWith {songIdRange ->
             for ((i, song) in songs.withIndex()) {
@@ -112,12 +120,61 @@ data class Playlist (override var name: String, var genre: Genre) : Nameable {
         return Tasks.whenAll(songTask,playlistId)
     }
 
-    fun saveOnline(db : Database = FirestoreDatabase()): Task<Void>{
-        for( song in songs){
-            db.registerSong(song)
+    /**
+     * Loads the lyrics of all the songs of the playlist that don't have lyrics
+     * @param [lyricsGetter] the lyricsGetter that provides the lyrics, by default Musixmatch
+     */
+    fun loadLyrics(lyricsGetter: LyricsGetter = MusixmatchLyricsGetter) : Task<Void>{
+
+        val tasks = mutableListOf<Task<Void>>()
+        for (song in songs){
+            if(song.lyrics == "") {
+                tasks.add(
+                    Tasks.forResult(lyricsGetter.getLyrics(song.name, song.artist).thenAccept {
+                        song.lyrics = it
+                    }.join())
+                )
+            }
         }
+        return Tasks.whenAll(tasks)
+
+    }
+    
+    /**
+     * Save the playlist and its songs online
+     * @param db the database where the playlist will be saved, by default FirestoreDatabase
+     * @return [Task] the task of the registration of the playlist
+     */
+    fun saveOnline(db : Database = FirestoreDatabase()): Task<Void>{
+        val tasks = mutableListOf<Task<Void>>()
+        for( song in songs){
+            tasks.add(db.registerSong(song))
+        }
+        tasks.add(db.registerPlaylist(this))
         savedOnline = true
-        return db.registerPlaylist(this)
+        return Tasks.whenAllComplete(tasks).continueWith { null }
+
+    }
+
+    /**
+     * @return true if all songs have lyrics or have tried to fetch lyrics from Musixmatch
+     */
+    fun allSongsHaveLyricsOrHaveTriedFetchingSome(): Boolean{
+        return songs.all { it.lyrics != MusixmatchLyricsGetter.BACKEND_ERROR_PLACEHOLDER  }
+    }
+
+    /**
+     * @return true if all song has lyrics
+     */
+    fun allSongHaveLyrics(): Boolean{
+        return songs.all { it.songHasLyrics()}
+    }
+
+    /**
+     * @return true if no song has lyrics
+     */
+    fun noSongHaveLyrics(): Boolean{
+        return songs.all { !it.songHasLyrics()}
     }
 
 

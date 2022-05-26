@@ -48,6 +48,7 @@ open class LobbyActivity : MyAppCompatActivity(){
     private var withHint: Boolean = false
     private var isPrivate: Boolean = false
     private var isHost: Boolean = false
+    private var noSing : Boolean = false
     private var hasVoiceIdPermissions : Boolean = false
     private var gameLobbyId: Long = -1L
     private var gameDuration: Long = DEFAULT_GAME_DURATION
@@ -59,6 +60,7 @@ open class LobbyActivity : MyAppCompatActivity(){
     private lateinit var nbRoundsTextView : TextView
     private lateinit var withHintTextView : TextView
     private lateinit var privateTextView  : TextView
+    private lateinit var noSingTextView  : TextView
     private lateinit var singerDurationTextView : TextView
 
     private lateinit var launchGameButton: Button
@@ -153,6 +155,7 @@ open class LobbyActivity : MyAppCompatActivity(){
         }
 
         isHost = intent.getBooleanExtra(GAME_IS_HOST_KEY, false)
+        noSing = intent.getBooleanExtra(GAME_IS_NO_SING_MODE, false)
 
         // if user is not the host, get the name from the intent
         hostName = if (isHost) user.name else intent.getStringExtra(GAME_HOST_NAME_KEY)
@@ -179,7 +182,7 @@ open class LobbyActivity : MyAppCompatActivity(){
         nbRoundsTextView = findViewById(R.id.nbRoundsText)
         withHintTextView = findViewById(R.id.withHintText)
         privateTextView  = findViewById(R.id.privateText)
-        privateTextView  = findViewById(R.id.privateText)
+        noSingTextView   = findViewById(R.id.noSingText)
         singerDurationTextView = findViewById(R.id.singerDurationLobbyText)
         layoutManager = LinearLayoutManager(this)
         val recyclerView = findViewById<RecyclerView>(R.id.lobbyRecyclerView)
@@ -227,6 +230,7 @@ open class LobbyActivity : MyAppCompatActivity(){
         withHintTextView.text = getString(R.string.hints_enabled_format, withHint)
         privateTextView.text  = getString(R.string.private_format, isPrivate)
         singerDurationTextView.text = getString(R.string.gameDurationFormat, gameDuration)
+        noSingTextView.text = getString(R.string.with_singer_format, !noSing)
     }
 
     private fun linkToDatabase(uid: Long) {
@@ -239,6 +243,7 @@ open class LobbyActivity : MyAppCompatActivity(){
                     .setNbRounds(nbRounds)
                     .setWithHint(withHint)
                     .setPrivacy(isPrivate)
+                    .setNoSing(noSing)
 
 
                 openLobby(uid)
@@ -322,6 +327,7 @@ open class LobbyActivity : MyAppCompatActivity(){
             putExtra(MAP_ID_NAME_KEY, mapIdToName)
             putExtra(GAME_UID_KEY, gameID)
             putExtra(GAME_DURATION_KEY, gameDuration)
+            putExtra(GAME_IS_NO_SING_MODE, noSing)
             putExtra(GAME_HINT_KEY, withHint)
         }
 
