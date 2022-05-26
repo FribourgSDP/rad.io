@@ -126,19 +126,22 @@ open class UserProfileActivity : MyAppCompatActivity(), KeepOrDismissPlaylistDia
     }
 
     private fun updateUser(){
-        user.name = usernameField.text.toString()
-        //at this point, the userId should be the firebaseUser.uid
-        if(user.isGoogleUser){
-            user.onlineCopyAndSave()
-        }else{
-            val userPlaylists = user.getPlaylists()
-            val userWithoutPlaylist = user
-            userWithoutPlaylist.removePlaylists(userPlaylists)
-            db.setUser(user.id,userWithoutPlaylist)
-            user.addPlaylists(userPlaylists)
+        if(usernameField.text.toString() != ""){
+            user.name = usernameField.text.toString()
+            //at this point, the userId should be the firebaseUser.uid
+            if(user.isGoogleUser && hasConnectivity(this)){
+                user.onlineCopyAndSave()
+            }// else{
+            //val userPlaylists = user.getPlaylists()
+            //val userWithoutPlaylist = user
+            //userWithoutPlaylist.removePlaylists(userPlaylists)
+            //db.setUser(user.id,userWithoutPlaylist) this can be removed as we don't want to save non google user online
+            //user.addPlaylists(userPlaylists)
+            // }
+            user.save(this)
+            usernameInitialText.text = user.initial.uppercaseChar().toString()
         }
-        user.save(this)
-        usernameInitialText.text = user.initial.uppercaseChar().toString()
+
     }
 
     /**
