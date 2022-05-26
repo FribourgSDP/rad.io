@@ -13,8 +13,9 @@ import com.github.fribourgsdp.radio.R
 import com.github.fribourgsdp.radio.data.Playlist
 import com.github.fribourgsdp.radio.data.Song
 import com.github.fribourgsdp.radio.data.User
+import com.github.fribourgsdp.radio.database.DatabaseHolder
 
-open class SongFragment : MyFragment(R.layout.fragment_song) {
+open class SongFragment : MyFragment(R.layout.fragment_song),DatabaseHolder {
     private lateinit var initialLyrics : String
     private lateinit var currentLyrics : String
     private lateinit var playlistName : String
@@ -23,6 +24,7 @@ open class SongFragment : MyFragment(R.layout.fragment_song) {
     private lateinit var playlist: Playlist
     private lateinit var song: Song
     private var doSaveLyrics : Boolean = false
+    private var db = initializeDatabase()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -40,7 +42,14 @@ open class SongFragment : MyFragment(R.layout.fragment_song) {
     protected open fun getLyricsGetter(): LyricsGetter {
         return MusixmatchLyricsGetter
     }
-
+    private fun fetchLyrics(lyricsGetter: LyricsGetter) {
+        lyricsGetter.getLyrics(song.name, song.artist)
+            .thenAccept{f ->
+                currentLyrics = f
+                doSaveLyrics = true
+                updateLyrics(requireView().findViewById(R.id.editTextLyrics))
+            }
+    }
     private fun updateLyrics(lyricsEditText : EditText){
         if (currentLyrics == MusixmatchLyricsGetter.LYRICS_NOT_FOUND_PLACEHOLDER || currentLyrics.isEmpty()){
             lyricsEditText.hint = resources.getString(R.string.add_your_lyrics)
@@ -61,7 +70,9 @@ open class SongFragment : MyFragment(R.layout.fragment_song) {
         song = playlist.getSong(songName, songArtist)
         initialLyrics = song.lyrics
         currentLyrics = initialLyrics
-
+        if(song.lyrics == MusixmatchLyricsGetter.BACKEND_ERROR_PLACEHOLDER){
+            fetchLyrics(getLyricsGetter())
+        }
         songTitle.text = song.name
         artistTitle.text = song.artist
         updateLyrics(lyricsEditText)
@@ -85,6 +96,9 @@ open class SongFragment : MyFragment(R.layout.fragment_song) {
             val user = User.load(requireView().context)
             song.lyrics = currentLyrics
             user.updateSongInPlaylist(playlist, song)
+            if(playlist.savedOnline){
+                db.registerSong(song)
+            }
             user.save(requireView().context)
         }
     }
