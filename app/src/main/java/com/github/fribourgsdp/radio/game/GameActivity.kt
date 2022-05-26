@@ -38,7 +38,6 @@ import kotlin.math.ceil
 const val SCORES_KEY = "com.github.fribourgsdp.radio.SCORES"
 const val GAME_CRASH_KEY = "com.github.fribourgsdp.radio.GAME_CRASH"
 const val HINT_FRACTION = 1.0/3
-const val GAME_OVER_SCREEN_DELAY : Long = 1000
 
 open class GameActivity : AppCompatActivity(), GameView, Timer.Listener {
     private lateinit var user: User
@@ -227,9 +226,6 @@ open class GameActivity : AppCompatActivity(), GameView, Timer.Listener {
 
             putExtra(GAME_CRASH_KEY, hasCrashed)
         }
-
-        //delays last screen
-        Thread.sleep(GAME_OVER_SCREEN_DELAY)
         startActivity(intent)
     }
 
