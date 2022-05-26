@@ -21,6 +21,10 @@ internal class PlaylistTest {
     val song2 = Song("Back in black", "ACDC")
     val song3 = Song("i got a feeling", "black eyed pees")
     val song4 = Song("  party rock anthem", "lmfao")
+    val song1Lyrics = "Lyrics1"
+    val song2Lyrics = "Lyrics2"
+    val song3Lyrics = "Lyrics3"
+    val song4Lyrics = "Lyrics4"
 
     @Test
     fun primaryConstructor(){
@@ -194,5 +198,19 @@ internal class PlaylistTest {
         assertEquals(MockLyricsGetter.truckfightersLyrics,playlist.getSong(song3.name,song3.artist).lyrics)
         assertEquals(MockLyricsGetter.truckfightersLyrics,playlist.getSong(song4.name,song4.artist).lyrics)
 
+    }
+
+    @Test
+    fun allSongsAndNoSongHaveLyricsWorks(){
+        val songSet = mutableSetOf<Song>(song1,song2,song3,song4)
+        val playlist = Playlist("First",songSet,Genre.JAZZ)
+        assertTrue(playlist.noSongHaveLyrics())
+        song1.lyrics = song1Lyrics
+        song2.lyrics = song2Lyrics
+        song3.lyrics = song3Lyrics
+        assertFalse(playlist.noSongHaveLyrics())
+        assertFalse(playlist.allSongsHaveLyrics())
+        song4.lyrics = song4Lyrics
+        assertTrue(playlist.allSongsHaveLyrics())
     }
 }
