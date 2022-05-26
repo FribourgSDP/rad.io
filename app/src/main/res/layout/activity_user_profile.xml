@@ -50,7 +50,7 @@
         android:id="@+id/userButtonLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="12dp"
+        android:layout_marginTop="24dp"
         android:orientation="horizontal"
         android:paddingHorizontal="32dp"
         app:layout_constraintTop_toBottomOf="@id/topImage"
@@ -67,22 +67,28 @@
 
         <Button
             android:id="@+id/launchSpotifyButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:backgroundTint="#168A25"
-            android:text="Connect to Spotify"
-            app:iconTint="#9E3434"
+            style="@style/GradientButton"
+            android:paddingStart="20dp"
+            android:paddingEnd="20dp"
             android:layout_alignParentStart="true"
-            android:layout_toStartOf="@+id/centerHelper"/>
-
+            android:layout_toStartOf="@+id/centerHelper"
+            android:backgroundTint="@color/spotify_green"
+            android:text="Spotify"
+            app:icon="@drawable/ic_spotify_logo"
+            app:iconGravity="start" />
 
         <Button
             android:id="@+id/googleSignInButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="SignIn"
+            style="@style/GradientButton"
+            android:paddingStart="20dp"
+            android:paddingEnd="20dp"
+            android:backgroundTint="@color/red"
+            app:icon="@drawable/googleg_disabled_color_18"
+            app:iconGravity="start"
+            android:text="@string/sign_in_message"
             android:layout_alignParentEnd="true"
             android:layout_toEndOf="@+id/centerHelper" />
+
     </RelativeLayout>
 
     <androidx.fragment.app.FragmentContainerView
