@@ -89,7 +89,7 @@ open class PlaylistSongsFragment : MyFragment(R.layout.fragment_playlist_display
 
         importLyricsButton = requireView().findViewById(R.id.ImportLyricsButton)
         importLyricsButton.setOnClickListener {
-              playlist.loadLyrics().addOnSuccessListener {
+              loadLyrics(playlist).addOnSuccessListener {
                 user.addPlaylist(playlist)
                 user.save(requireContext())
                 if(playlist.savedOnline){
@@ -100,7 +100,12 @@ open class PlaylistSongsFragment : MyFragment(R.layout.fragment_playlist_display
         }
     }
 
-
+    /**
+     * this method serve to be able to mock the loadLyrics behavior
+     */
+    open fun loadLyrics(playlist: Playlist) : Task<Void>{
+    return playlist.loadLyrics()
+}
     private fun loadPlaylist(){
         User.loadOrDefault(requireContext()).addOnSuccessListener { l ->
             user = l
