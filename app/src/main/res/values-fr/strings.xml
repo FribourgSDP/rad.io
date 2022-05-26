@@ -71,7 +71,7 @@
     <string name="editPlaylist">Modifier</string>
     <string name="sign_in_message">Se connecter</string>
     <string name="sign_out_message">Se déconnecter</string>
-    <string name="click_on_a_song_to_delete_it">Clique sur une chanson pour la supprimer.</string>
+    <string name="swipe_a_song_to_delete">Glissez une chanson pour la supprimer.</string>
     <string name="wait_for_pick_format">%s est en train de choisir une chanson…</string>
     <string name="congrats">Félicitations !</string>
     <string name="micPermissionError">Les permissions du micro n\'ont pas pu être mises à jour.</string>
