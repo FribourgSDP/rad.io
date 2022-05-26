@@ -124,6 +124,7 @@
     <string name="generateLyricsCheckBoxText">Generate lyrics</string>
     <string name="import_lyrics_button_text">Import lyrics</string>
     <string name="Loading_lyrics_text">Loading Lyrics</string>
+    <string name="creating_playlist_toast">Creating playlist</string>
     <string-array name="dont_quit_now_messages">
         <item
             >"Don't quit now… we only just started!"</item>
