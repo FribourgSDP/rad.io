@@ -16,8 +16,6 @@ import com.github.fribourgsdp.radio.util.StringComparisons
 import com.github.fribourgsdp.radio.util.getAndCast
 import com.google.firebase.firestore.DocumentSnapshot
 
-const val GAME_OVER_SCREEN_DELAY : Long = 1000
-
 class PlayerGameHandler(
     private val ctx: Context,
     private val gameID: Long,
@@ -47,8 +45,6 @@ class PlayerGameHandler(
             val gameStillValid = snapshot.getBoolean("validity")!!
             scores = snapshot.get("scores") as HashMap<String, Long>
             if (snapshot.getBoolean("finished")!! || !gameStillValid) {
-                //delays last screen
-                Thread.sleep(GAME_OVER_SCREEN_DELAY)
                 view.gameOver(scores!!, !gameStillValid)
                 return
             }
