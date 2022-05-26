@@ -60,4 +60,16 @@
         app:layout_constraintEnd_toStartOf="@+id/deleteButton"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="1.0" />
+
+    <Button
+        android:id="@+id/ImportLyricsButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="72dp"
+        android:backgroundTint="#B71C1C"
+        android:text="@string/import_lyrics_button_text"
+        app:layout_constraintBottom_toTopOf="@+id/SongRecyclerView"
+        app:layout_constraintEnd_toStartOf="@+id/deleteButton"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="1.0" />
 </androidx.constraintlayout.widget.ConstraintLayout>

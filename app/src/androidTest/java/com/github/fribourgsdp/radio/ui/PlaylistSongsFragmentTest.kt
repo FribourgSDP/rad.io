@@ -27,6 +27,7 @@ import com.github.fribourgsdp.radio.data.view.AddPlaylistActivity
 import com.github.fribourgsdp.radio.data.view.PLAYLIST_DATA
 import com.github.fribourgsdp.radio.data.view.PlaylistSongsFragment
 import com.github.fribourgsdp.radio.database.Database
+import com.google.android.gms.tasks.Task
 import com.google.android.gms.tasks.Tasks
 import junit.framework.Assert.assertTrue
 import org.junit.Assert.assertEquals
@@ -144,6 +145,47 @@ class PlaylistSongsFragmentTest {
             onView(withId(R.id.SongRecyclerView)).check(matches(isDisplayed()))
             onView(withId(R.id.SongRecyclerView)).check(matches(hasChildCount(3)))
         }
+        val finalUser = User.load(context)
+        val pl = finalUser.getPlaylists()
+        assertEquals(1,pl.size)
+        assertEquals("lyrics1",pl.toList()[0].getSong("rouge","sardou").lyrics)
+        assertEquals("lyrics2",pl.toList()[0].getSong("salut","sardou").lyrics)
+        assertEquals("lyrics3",pl.toList()[0].getSong("Le France","sardou").lyrics)
+
+    }
+
+    @Test
+    fun clickingImportLyricsButtonImportLyrics(){
+        val bundle = Bundle()
+        val playlistName = "test"
+        val playlist : Playlist = Playlist(playlistName, Genre.NONE)
+        playlist.id = "TEST"
+        playlist.addSong(Song("rouge", "sardou"))
+        playlist.addSong(Song("salut", "sardou"))
+        playlist.addSong(Song("Le France", "sardou"))
+
+        bundle.putString(PLAYLIST_DATA, playlist.name)
+
+        var user : User = User("Test User")
+        user.addPlaylist(playlist)
+        val context: Context = ApplicationProvider.getApplicationContext()
+        user.save(context)
+        //assertEquals(0,user.getPlaylistWithName("test").getSongs().size)
+        val scenario = launchFragmentInContainer<MockPlaylistSongsFragment>(bundle)
+        scenario.use {
+            onView(withId(R.id.SongRecyclerView)).check(matches(isDisplayed()))
+            onView(withId(R.id.SongRecyclerView)).check(matches(hasChildCount(3)))
+            onView(withId(R.id.ImportLyricsButton)).perform(ViewActions.click())
+        }
+
+        val finalUser = User.load(context)
+        val pl = finalUser.getPlaylists()
+        assertEquals(1,pl.size)
+        assertEquals("lyrics1",pl.toList()[0].getSong("rouge","sardou").lyrics)
+        assertEquals("lyrics2",pl.toList()[0].getSong("salut","sardou").lyrics)
+        assertEquals("lyrics3",pl.toList()[0].getSong("Le France","sardou").lyrics)
+
+
 
 
     }
@@ -155,11 +197,24 @@ class PlaylistSongsFragmentTest {
             val playlistName = "test"
             val playlist : Playlist = Playlist(playlistName, Genre.NONE)
             playlist.id = "TEST"
-            playlist.addSong(Song("rouge", "sardou"))
-            playlist.addSong(Song("salut", "sardou"))
-            playlist.addSong(Song("Le France", "sardou"))
+            playlist.addSong(Song("rouge", "sardou","","1"))
+            playlist.addSong(Song("salut", "sardou","","2"))
+            playlist.addSong(Song("Le France", "sardou","","3"))
             `when`(db.getPlaylist(anyString())).thenReturn(Tasks.forResult(playlist))
+            `when`(db.getSong("1")).thenReturn(Tasks.forResult(Song("rouge", "sardou","lyrics1","1")))
+            `when`(db.getSong("2")).thenReturn(Tasks.forResult(Song("salut", "sardou","lyrics2","2")))
+            `when`(db.getSong("3")).thenReturn(Tasks.forResult(Song("Le France", "sardou","lyrics3","3")))
+
+
             return db
+        }
+
+        override fun loadLyrics(playlist: Playlist): Task<Void> {
+            playlist.getSong("rouge", "sardou").lyrics = "lyrics1"
+            playlist.getSong("salut", "sardou").lyrics = "lyrics2"
+            playlist.getSong("Le France", "sardou").lyrics = "lyrics3"
+
+            return Tasks.forResult(null)
         }
     }
 }
