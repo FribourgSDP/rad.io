@@ -54,7 +54,7 @@ class AddPlaylistActivity : MyAppCompatActivity(), SavePlaylistOnlinePickerDialo
             }
         })
 
-        val itemTouchHelper = ItemTouchHelper()
+        val itemTouchHelper = ItemTouchHelper(SongSwipeHelper(recyclerView))
         recyclerView.adapter = listAdapter
         itemTouchHelper.attachToRecyclerView(recyclerView)
 

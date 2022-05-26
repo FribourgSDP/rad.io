@@ -2,13 +2,14 @@ package com.github.fribourgsdp.radio.data.view
 
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
+import androidx.recyclerview.widget.ItemTouchHelper.LEFT
 
 class SongSwipeHelper (val recyclerView: RecyclerView) : ItemTouchHelper.Callback() {
     override fun getMovementFlags(
         recyclerView: RecyclerView,
         viewHolder: RecyclerView.ViewHolder
     ): Int {
-        TODO("Not yet implemented")
+        return makeMovementFlags(0, LEFT)
     }
 
     override fun onMove(
@@ -16,10 +17,10 @@ class SongSwipeHelper (val recyclerView: RecyclerView) : ItemTouchHelper.Callbac
         viewHolder: RecyclerView.ViewHolder,
         target: RecyclerView.ViewHolder
     ): Boolean {
-        TODO("Not yet implemented")
+        return false
     }
 
     override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
-        TODO("Not yet implemented")
+        println("swiped")
     }
 }
