@@ -103,10 +103,6 @@ open class PlaylistSongsFragment : MyFragment(R.layout.fragment_playlist_display
 
             }
         }
-
-
-
-
     }
 
 
@@ -125,9 +121,24 @@ open class PlaylistSongsFragment : MyFragment(R.layout.fragment_playlist_display
         }.addOnSuccessListener {
             if(!playlist.savedLocally){
                db.getPlaylist(playlist.id).addOnSuccessListener {
+
                     playlist = it
-                    songs = playlist.getSongs().toList()
-                    initializeRecyclerView()
+                    songs = it.getSongs().toList()
+                  // playlist.addSongs(songs.toSet())
+                    //initializeRecyclerView()
+                   val tasks = mutableListOf<Task<Void>>()
+                   for(song in songs){
+                       tasks.add(db.getSong(song.id).continueWith { s ->
+                           song.lyrics = s.result.lyrics
+                           null
+                       })
+                   }
+                   Tasks.whenAllComplete(tasks).addOnSuccessListener {
+                      // playlist.addSongs(songs.toSet())
+                       user.addPlaylist(playlist)
+                       user.save(requireContext())
+                       initializeRecyclerView()
+                   }
                 }
             }
         }
