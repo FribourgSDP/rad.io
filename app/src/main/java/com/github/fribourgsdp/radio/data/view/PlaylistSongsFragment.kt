@@ -139,26 +139,6 @@ open class PlaylistSongsFragment : MyFragment(R.layout.fragment_playlist_display
         }
     }
 
-    /*protected fun loadLyrics(playlist : Playlist, lyricsGetter: LyricsGetter = MusixmatchLyricsGetter) : Task<Playlist> {
-        //this one should only import lyrics for song that have no lyrics
-        val playlistWithLyrics = Playlist(playlist.name,playlist.genre)
-        val tasks = mutableListOf<Task<Void>>()
-        for (song in playlist.getSongs()){
-            if(song.lyrics == "") {
-                lyricsGetter.getLyrics(song.name,song.artist)
-                tasks.add(
-                    Tasks.forResult(lyricsGetter.getLyrics(song.name, song.artist).thenAccept { f ->
-                    val songWithLyrics = Song(song.name, song.artist, f)
-                    playlistWithLyrics.addSong(songWithLyrics)
-                }.join()
-                ))
-            }
-        }
-        return Tasks.whenAllComplete(tasks).continueWith {
-            playlistWithLyrics
-        }
-    }*/
-
     private fun initializeRecyclerView() {
         val songDisplay : RecyclerView = requireView().findViewById(R.id.SongRecyclerView)
         songDisplay.adapter = SongAdapter(songs, this)
