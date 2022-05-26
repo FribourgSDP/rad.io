@@ -4,6 +4,8 @@ package com.github.fribourgsdp.radio
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
+import android.view.View
 import android.widget.Button
 
 //import com.github.fribourgsdp.radio.databinding.ActivityMainBinding
@@ -38,6 +40,12 @@ class MainActivity : MyAppCompatActivity() {
             startActivity(Intent(this, UserProfileActivity::class.java))
         }
 
+        if(!hasConnectivity(this)) {
+            playButton.visibility = View.INVISIBLE
+            Log.w("WIFI", "Ici j'ai pas de wifi")
+        }else{
+            Log.w("WIFI", "Ici j'ai du wifi")
+        }
         /** this user allows quick demo's as it is data that is written to the app
          * specific storage and can be easily read without intents */
         try {
