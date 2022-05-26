@@ -175,17 +175,20 @@
 
         <CheckBox
             android:id="@+id/noSingCheckbox"
+            android:layout_margin="12dp"
             android:text="@string/noSingModeCheckbox"
             style="@style/Text.Settings"/>
 
         <CheckBox
             android:id="@+id/hintCheckBox"
             style="@style/Text.Settings"
+            android:layout_margin="12dp"
             android:text="@string/hint_option_text" />
 
         <CheckBox
             android:id="@+id/privacyCheckBox"
             style="@style/Text.Settings"
+            android:layout_margin="12dp"
             android:text="@string/private_option_text" />
 
 
