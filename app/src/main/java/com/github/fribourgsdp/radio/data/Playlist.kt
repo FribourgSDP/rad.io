@@ -102,6 +102,12 @@ data class Playlist (override var name: String, var genre: Genre) : Nameable {
         return SetUtility.getNamedFromSet(songs, Song(name, artist))
     }
 
+    /**
+     * This method transforms the playlist to a playlist that can be stored online
+     * by generating id's for all songs and the playlist itself
+     * @param db the database to fetch the id from, by default FirestoreDatabase
+     * @return [Task] indicating containing all tasks received from the database
+     */
     fun transformToOnline(db : Database = FirestoreDatabase()): Task<Void> {
         val songTask =  db.generateSongIds(songs.size).continueWith {songIdRange ->
             for ((i, song) in songs.withIndex()) {
@@ -114,6 +120,10 @@ data class Playlist (override var name: String, var genre: Genre) : Nameable {
         return Tasks.whenAll(songTask,playlistId)
     }
 
+    /**
+     * Loads the lyrics of all the songs of the playlist that don't have lyrics
+     * @param [lyricsGetter] the lyricsGetter that provides the lyrics, by default Musixmatch
+     */
     fun loadLyrics(lyricsGetter: LyricsGetter = MusixmatchLyricsGetter) : Task<Void>{
 
         val tasks = mutableListOf<Task<Void>>()
@@ -129,6 +139,12 @@ data class Playlist (override var name: String, var genre: Genre) : Nameable {
         return Tasks.whenAll(tasks)
 
     }
+    
+    /**
+     * Save the playlist and its songs online
+     * @param db the database where the playlist will be saved, by default FirestoreDatabase
+     * @return [Task] the task of the registration of the playlist
+     */
     fun saveOnline(db : Database = FirestoreDatabase()): Task<Void>{
         for( song in songs){
             db.registerSong(song)
@@ -137,9 +153,16 @@ data class Playlist (override var name: String, var genre: Genre) : Nameable {
         return db.registerPlaylist(this)
     }
 
+    /**
+     * @return true if all songs have lyrics
+     */
     fun allSongsHaveLyrics(): Boolean{
         return songs.all { it.lyrics != "" }
     }
+
+    /**
+     * @return true if no song has lyrics
+     */
     fun noSongHaveLyrics(): Boolean{
         return songs.all { it.lyrics == "" || it.lyrics == "---"}
     }
