@@ -4,6 +4,8 @@ import com.github.fribourgsdp.radio.data.Genre
 import com.github.fribourgsdp.radio.data.Playlist
 import com.github.fribourgsdp.radio.data.Song
 import com.github.fribourgsdp.radio.database.Database
+import com.github.fribourgsdp.radio.external.musixmatch.LyricsGetter
+import com.github.fribourgsdp.radio.mockimplementations.MockLyricsGetter
 import com.github.fribourgsdp.radio.utils.KotlinAny
 import com.google.android.gms.tasks.Tasks
 import org.junit.Test
@@ -11,6 +13,7 @@ import org.junit.Test
 import org.junit.Assert.*
 import org.mockito.Mockito
 import org.mockito.Mockito.*
+import java.util.concurrent.CompletableFuture
 
 internal class PlaylistTest {
 
@@ -178,7 +181,18 @@ internal class PlaylistTest {
         Tasks.await(playlist.transformToOnline(mockDB))
         playlist.saveOnline()
         assertEquals(true,playlist.savedOnline)
+    }
 
+    @Test
+    fun loadLyricsLoadsLyricsAndUpdateSongInPlaylist(){
+        val songSet = mutableSetOf<Song>(song1,song2,song3,song4)
+        val playlist = Playlist("First",songSet,Genre.JAZZ)
+
+        Tasks.await(playlist.loadLyrics(MockLyricsGetter))
+        assertEquals(MockLyricsGetter.truckfightersLyrics,playlist.getSong(song1.name,song1.artist).lyrics)
+        assertEquals(MockLyricsGetter.truckfightersLyrics,playlist.getSong(song2.name,song2.artist).lyrics)
+        assertEquals(MockLyricsGetter.truckfightersLyrics,playlist.getSong(song3.name,song3.artist).lyrics)
+        assertEquals(MockLyricsGetter.truckfightersLyrics,playlist.getSong(song4.name,song4.artist).lyrics)
 
     }
 }
