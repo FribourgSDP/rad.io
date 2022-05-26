@@ -259,6 +259,35 @@ class UserProfileActivityTest : TestCase() {
 
     }
 
+    @Test
+    fun buttonAreDisabledWhenOffline(){
+        val intent = Intent(ctx, MockUserProfileActivityOffline::class.java)
+
+        val db = Mockito.mock(Database::class.java)
+        //`when`(db.generateUserId()).thenReturn(Tasks.forResult(1))
+        User.database = db
+
+        ActivityScenario.launch<MockUserProfileActivityOffline>(intent).use {
+            Espresso.onView(withId(R.id.launchSpotifyButton))
+                .check(
+                    ViewAssertions.matches(
+                        ViewMatchers.isNotEnabled()
+                    )
+                )
+
+            Espresso.onView(withId(R.id.googleSignInButton))
+                .check(
+                    ViewAssertions.matches(
+                        ViewMatchers.isNotEnabled()
+                    )
+                )
+
+        }
+
+    }
+
+
+
 
 
 
