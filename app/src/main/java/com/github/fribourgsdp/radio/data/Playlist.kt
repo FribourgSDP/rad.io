@@ -156,17 +156,26 @@ data class Playlist (override var name: String, var genre: Genre) : Nameable {
     }
 
     /**
-     * @return true if all songs have lyrics
+     * @return true if all songs have lyrics or have tried to fetch lyrics from Musixmatch
      */
-    fun allSongsHaveLyrics(): Boolean{
-        return songs.all { it.lyrics != "" }
+    fun allSongsHaveLyricsOrHaveTriedFetchingSome(): Boolean{
+        return songs.all { it.lyrics != MusixmatchLyricsGetter.BACKEND_ERROR_PLACEHOLDER  }
+    }
+
+    /**
+     * @return true if all song has lyrics
+     */
+    fun allSongHaveLyrics(): Boolean{
+        return songs.all { it.lyrics != MusixmatchLyricsGetter.BACKEND_ERROR_PLACEHOLDER
+                && it.lyrics != MusixmatchLyricsGetter.LYRICS_NOT_FOUND_PLACEHOLDER}
     }
 
     /**
      * @return true if no song has lyrics
      */
     fun noSongHaveLyrics(): Boolean{
-        return songs.all { it.lyrics == "" || it.lyrics == "---"}
+        return songs.all { it.lyrics == MusixmatchLyricsGetter.BACKEND_ERROR_PLACEHOLDER
+                || it.lyrics == MusixmatchLyricsGetter.LYRICS_NOT_FOUND_PLACEHOLDER}
     }
 
 
