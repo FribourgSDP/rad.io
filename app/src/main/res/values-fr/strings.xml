@@ -123,7 +123,7 @@
     <string name="return_to_the_game">Retournez à la partie</string>
     <string name="generateLyricsCheckBoxText">Générer les paroles</string>
     <string name="import_lyrics_button_text">Importer les paroles</string>
-
+    <string name="Loading_lyrics_text">Chargement des paroles</string>
     <string-array name="dont_quit_now_messages">
         <item
             >"Ne pars pas maintenant… on vient juste de commencer!"</item>
