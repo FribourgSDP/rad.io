@@ -128,6 +128,10 @@
     <string name="TextToSpeechInitializationFailed">La synthèse vocale n\'a pas pu être initialisée.</string>
     <string name="playlistLyricsLess">La playlist sélectionnée ne contient aucune chanson avec des paroles. Choisis-en une autre.</string>
     <string name="return_to_the_game">Retournez à la partie</string>
+    <string name="generateLyricsCheckBoxText">Générer les paroles</string>
+    <string name="import_lyrics_button_text">Importer les paroles</string>
+    <string name="Loading_lyrics_text">Chargement des paroles</string>
+    <string name="creating_playlist_toast">Création de la playlist....</string>
     <string name="previousSongDisplay">La chanson précédente était :</string>
     <string name="ttsInitSuccessful">La synthèse vocale a été initialisée avec succès.</string>
     <string-array name="dont_quit_now_messages">
