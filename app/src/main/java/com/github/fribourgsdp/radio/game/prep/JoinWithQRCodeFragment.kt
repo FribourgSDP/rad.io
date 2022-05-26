@@ -27,6 +27,9 @@ open class JoinWithQRCodeFragment(val ctx: Context, val activity: Activity): Dia
     protected lateinit var cancelButton : Button
 
     override fun onCreateView(inflater: LayoutInflater,container: ViewGroup?,savedInstanceState: Bundle?): View {
+
+        isCancelable = false
+
         rootView= inflater.inflate(R.layout.fragment_join_with_qr_code, container, false)
         // check permission method is to check that the
         // camera permission is granted by user or not.

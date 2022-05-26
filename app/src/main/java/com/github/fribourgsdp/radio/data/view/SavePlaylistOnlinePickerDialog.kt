@@ -13,6 +13,8 @@ class SavePlaylistOnlinePickerDialog( private val listener: OnPickListener): Dia
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         val rootView: View = inflater.inflate(R.layout.fragment_playlist_save_online_picker, container, false)
 
+        isCancelable = false
+
         // Add the buttons of the view to the list
         rootView.findViewById<Button>(R.id.saveOnlinePlaylistYes).setOnClickListener{
             listener.onPick(true)
