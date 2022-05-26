@@ -148,4 +148,16 @@ open class MockUserProfileActivity : UserProfileActivity() {
 
 }
 
+open class MockUserProfileActivityOffline : UserProfileActivity() {
+
+    override fun initializeDatabase(): Database {
+        return   mock(Database::class.java)
+    }
+
+    override fun hasConnectivity(context: Context): Boolean {
+        return false
+    }
+}
+
+
 
