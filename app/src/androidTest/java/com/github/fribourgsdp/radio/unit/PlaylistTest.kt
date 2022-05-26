@@ -4,16 +4,14 @@ import com.github.fribourgsdp.radio.data.Genre
 import com.github.fribourgsdp.radio.data.Playlist
 import com.github.fribourgsdp.radio.data.Song
 import com.github.fribourgsdp.radio.database.Database
-import com.github.fribourgsdp.radio.external.musixmatch.LyricsGetter
+import com.github.fribourgsdp.radio.external.musixmatch.MusixmatchLyricsGetter
 import com.github.fribourgsdp.radio.mockimplementations.MockLyricsGetter
 import com.github.fribourgsdp.radio.utils.KotlinAny
 import com.google.android.gms.tasks.Tasks
 import org.junit.Test
 
 import org.junit.Assert.*
-import org.mockito.Mockito
 import org.mockito.Mockito.*
-import java.util.concurrent.CompletableFuture
 
 internal class PlaylistTest {
 
@@ -204,13 +202,17 @@ internal class PlaylistTest {
     fun allSongsAndNoSongHaveLyricsWorks(){
         val songSet = mutableSetOf<Song>(song1,song2,song3,song4)
         val playlist = Playlist("First",songSet,Genre.JAZZ)
+        song4.lyrics = MusixmatchLyricsGetter.BACKEND_ERROR_PLACEHOLDER
         assertTrue(playlist.noSongHaveLyrics())
         song1.lyrics = song1Lyrics
         song2.lyrics = song2Lyrics
         song3.lyrics = song3Lyrics
         assertFalse(playlist.noSongHaveLyrics())
-        assertFalse(playlist.allSongsHaveLyrics())
+        assertFalse(playlist.allSongsHaveLyricsOrHaveTriedFetchingSome())
+        song4.lyrics = MusixmatchLyricsGetter.LYRICS_NOT_FOUND_PLACEHOLDER
+        assertTrue(playlist.allSongsHaveLyricsOrHaveTriedFetchingSome())
         song4.lyrics = song4Lyrics
-        assertTrue(playlist.allSongsHaveLyrics())
+        assertTrue(playlist.allSongHaveLyrics())
+
     }
 }
