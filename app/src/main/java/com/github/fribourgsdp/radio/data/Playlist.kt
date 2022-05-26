@@ -151,6 +151,7 @@ data class Playlist (override var name: String, var genre: Genre) : Nameable {
             tasks.add(db.registerSong(song))
         }
         tasks.add(db.registerPlaylist(this))
+        savedOnline = true
         return Tasks.whenAllComplete(tasks).continueWith { null }
 
     }
