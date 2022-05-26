@@ -132,7 +132,6 @@
     <string name="ttsWeCantSupportYourLanguage">Cette langue n\'est pas supportée sur cet appareil.</string>
     <string name="TextToSpeechInitializationFailed">La synthèse vocale n\'a pas pu être initialisée.</string>
     <string name="playlistLyricsLess">La playlist sélectionnée ne contient aucune chanson avec des paroles. Choisis-en une autre.</string>
-    <string name="return_to_the_game">Retournez à la partie</string>
     <string name="previousSongDisplay">La chanson précédente était :</string>
     <string name="ttsInitSuccessful">La synthèse vocale a été initialisée avec succès.</string>
     <string-array name="dont_quit_now_messages">

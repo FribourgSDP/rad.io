@@ -176,7 +176,7 @@
         <CheckBox
             android:id="@+id/noSingCheckbox"
             android:text="@string/noSingModeCheckbox"
-            style="@style/SettingsText"/>
+            style="@style/Text.Settings"/>
 
         <CheckBox
             android:id="@+id/hintCheckBox"

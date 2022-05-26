@@ -131,7 +131,6 @@
     <string name="ttsWeCantSupportYourLanguage">We can\'t support your language on this device.</string>
     <string name="TextToSpeechInitializationFailed">Text-to-speech engine could not be initialized properly.</string>
     <string name="playlistLyricsLess">The selected playlist has no song with lyrics. Please select another one.</string>
-    <string name="return_to_the_game">Return to the game</string>
     <string name="previousSongDisplay">Previous song was :</string>
     <string name="ttsInitSuccessful">Text-to-speech init successful</string>
     <string-array name="dont_quit_now_messages">
