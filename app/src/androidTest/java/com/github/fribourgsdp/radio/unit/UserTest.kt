@@ -24,7 +24,6 @@ class UserTest {
         val user = User(string)
         assertEquals(string, user.name)
         assertTrue(user.getPlaylists().isEmpty())
-        assertFalse(user.linkedSpotify)
         assertEquals(string[0], user.initial)
     }
 

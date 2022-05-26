@@ -13,7 +13,6 @@ open class SettingsActivity : MyAppCompatActivity() {
 
 
     private lateinit var spinnerLanguage: Spinner
-    private lateinit var saveSettingsButton : Button
     private lateinit var settings : Settings
     private lateinit var settingsBuilder : SettingsBuilder
 
@@ -22,14 +21,11 @@ open class SettingsActivity : MyAppCompatActivity() {
         super.onCreate(savedInstanceState)
 
         setContentView(R.layout.activity_settings)
-        saveSettingsButton = findViewById(R.id.approveButton)
 
         val settings = Settings.loadOrDefault(this)
         this.settings = settings
         settingsBuilder = SettingsBuilder(settings)
         initLanguageSpinner(settings.language)
-
-        initSaveSettingsButton()
 
 
     }
@@ -39,16 +35,6 @@ open class SettingsActivity : MyAppCompatActivity() {
         val intent = Intent(this, MainActivity::class.java)
         startActivity(intent)
         finish()
-    }
-
-
-
-    private fun initSaveSettingsButton(){
-
-        saveSettingsButton.setOnClickListener{
-            settings = settingsBuilder.build()
-            settings.save(this)
-        }
     }
 
     private fun initLanguageSpinner(actualLanguage : Language){
