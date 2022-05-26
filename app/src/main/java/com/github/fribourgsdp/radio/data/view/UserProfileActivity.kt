@@ -92,6 +92,12 @@ open class UserProfileActivity : MyAppCompatActivity(), KeepOrDismissPlaylistDia
         }
         findViewById<FloatingActionButton>(R.id.addPlaylistButton).setOnClickListener{startActivity(Intent(this, AddPlaylistActivity::class.java))}
 
+
+        if(!hasConnectivity(this)){
+            launchSpotifyButton.visibility = View.INVISIBLE
+            googleSignInButton.visibility = View.INVISIBLE
+
+        }
     }
 
     open fun signInOrOut(){
@@ -144,7 +150,6 @@ open class UserProfileActivity : MyAppCompatActivity(), KeepOrDismissPlaylistDia
 
 
     open fun checkUser(){
-
         signedIn = user.isGoogleUser
         if(signedIn){
             googleSignInButton.text = getString(R.string.sign_out_message)
