@@ -30,8 +30,7 @@
 
         <TextView
             android:id="@+id/lyricsPopupTextView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            style="@style/Text"
             android:text="@string/very_long_text_placeholder"
             android:textSize="20sp" />
     </ScrollView>

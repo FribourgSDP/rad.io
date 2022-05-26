@@ -21,6 +21,8 @@ class KeepOrDismissPlaylistDialog (private val listener: OnPickListener) : Dialo
             false
         )
 
+        isCancelable = false
+
         // Add the buttons of the view to the list
         rootView.findViewById<Button>(R.id.keepPlaylistButton).setOnClickListener {
             listener.onPick(Choice.KEEP)

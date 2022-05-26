@@ -11,6 +11,7 @@ import androidx.test.espresso.intent.matcher.IntentMatchers
 import com.github.fribourgsdp.radio.MainActivity
 import com.github.fribourgsdp.radio.deprecated.VoiceOverIPActivity
 import com.github.fribourgsdp.radio.voip.VoiceIpEngineDecorator
+import com.google.android.material.floatingactionbutton.FloatingActionButton
 import io.agora.rtc.IRtcEngineEventHandler
 import io.agora.rtc.RtcEngine
 import junit.framework.Assert.assertTrue
@@ -53,27 +54,20 @@ class VoiceOverIpEngineDecoratorTest {
     }
 
     @Test
-    fun allFunctionsWeNeedToCallReturnSuccess(){
+    fun allFunctionsWeNeedToCallReturnSuccess() {
         val context: Context = ApplicationProvider.getApplicationContext()
 
         val intent: Intent = Intent(context, VoiceOverIPActivity::class.java)
 
         ActivityScenario.launch<VoiceOverIPActivity>(intent).use { scenario ->
-            val testEngineDecorator = VoiceIpEngineDecorator(context, makeMockIRtcEngineEventHandler(), makeMockRtcEngine())
+            val testEngineDecorator =
+                VoiceIpEngineDecorator(context, makeMockIRtcEngineEventHandler(), makeMockRtcEngine())
             assertTrue(testEngineDecorator.joinChannel(null, null, null, 3) == 0)
             assertTrue(testEngineDecorator.enableAudioVolumeIndication(5, 3, true) == 0)
             assertTrue(testEngineDecorator.setAudioProfile(3, 5) == 0)
             assertTrue(testEngineDecorator.leaveChannel() == 0)
             assertTrue(testEngineDecorator.muteLocalAudioStream(true) == 0)
-            val testImageButton = ImageButton(context)
-            testEngineDecorator.mute(testImageButton)
-            testEngineDecorator.mute(testImageButton)
-
         }
-
-
-
-
     }
 
 }

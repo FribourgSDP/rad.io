@@ -6,16 +6,23 @@
     android:layout_height="match_parent"
     tools:context=".game.EndGameActivity">
 
+    <ImageView
+        android:id="@+id/topImage"
+        style="@style/Background.Top"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:ignore="ContentDescription" />
+
     <TextView
         android:id="@+id/gameOverTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="32dp"
         android:text="@string/congrats"
         android:textSize="34sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toBottomOf="@id/topImage" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/endScoresRecyclerView"

@@ -80,12 +80,6 @@ class MainActivityTest {
     }
 
     @Test
-    fun correctTransitionToVoiceOverIpActivity(){
-        Espresso.onView(withId(R.id.VoiceOverIpButton)).perform(ViewActions.click())
-        Intents.intended(IntentMatchers.hasComponent(VoiceOverIPActivity::class.java.name))
-    }
-
-    @Test
     fun onBackPressedStaysOnMainActivity(){
         Espresso.pressBack()
         val newContext: Context = ApplicationProvider.getApplicationContext()

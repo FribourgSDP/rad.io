@@ -6,17 +6,20 @@
     android:layout_height="match_parent"
     tools:context=".game.prep.GameSettingsActivity">
 
+    <ImageView
+        android:id="@+id/topImage"
+        style="@style/Background.Top"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:ignore="ContentDescription" />
+
     <TextView
         android:id="@+id/gameSettingsTitle"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="16dp"
+        style="@style/Text.Titles"
         android:text="@string/game_settings_text"
-        android:textColor="@color/design_default_color_primary"
-        android:textSize="34sp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintStart_toStartOf="@id/topImage"
+        app:layout_constraintTop_toTopOf="@id/topImage"/>
 
     <LinearLayout
         android:id="@+id/linearLayout2"
@@ -27,7 +30,7 @@
         app:layout_constraintBottom_toTopOf="@+id/startButton"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/gameSettingsTitle"
+        app:layout_constraintTop_toBottomOf="@+id/topImage"
         app:layout_constraintVertical_bias="0.0">
 
         <androidx.constraintlayout.widget.ConstraintLayout
@@ -36,7 +39,7 @@
 
             <TextView
                 android:id="@+id/nameTextView"
-                style="@style/SettingsText"
+                style="@style/Text.Settings"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/name_settings_text"
@@ -66,7 +69,7 @@
 
             <TextView
                 android:id="@+id/playlist"
-                style="@style/SettingsText"
+                style="@style/Text.Settings"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/playlist_selection_text"
@@ -116,7 +119,7 @@
 
             <TextView
                 android:id="@+id/nbRoundsTextView"
-                style="@style/SettingsText"
+                style="@style/Text.Settings"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:labelFor="@id/nbRoundsInput"
@@ -141,69 +144,65 @@
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
-        <CheckBox
-            android:id="@+id/noSingCheckbox"
-            android:text="@string/noSingModeCheckbox"
-            style="@style/SettingsText"/>
-
-        <CheckBox
-            android:id="@+id/hintCheckBox"
-            style="@style/SettingsText"
-            android:text="@string/hint_option_text" />
-
-        <CheckBox
-            android:id="@+id/privacyCheckBox"
-            style="@style/SettingsText"
-            android:text="@string/private_option_text" />
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
-
-            <ImageButton
-                android:id="@+id/chooseTimeButton"
-                style="@style/Widget.AppCompat.ImageButton"
-                android:layout_width="48dp"
-                android:layout_height="48dp"
-                android:layout_alignParentBottom="true"
-                android:layout_centerHorizontal="true"
-                android:layout_marginStart="136dp"
-                android:adjustViewBounds="true"
-                android:background="@drawable/round_button"
-                android:contentDescription="@string/profile_picture_description"
-                android:scaleType="fitCenter"
-                android:src="@drawable/ic_timer"
+            <TextView
+                android:id="@+id/roundTimeTextView"
+                style="@style/Text.Settings"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:labelFor="@id/nbRoundsInput"
+                android:text="@string/round_time_text"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
-            <TextView
-                android:id="@+id/timerTextView"
-                style="@style/SettingsText"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="45s"
-                app:layout_constraintBottom_toBottomOf="@id/chooseTimeButton"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.1"
-                app:layout_constraintStart_toEndOf="@+id/chooseTimeButton"
-                app:layout_constraintTop_toTopOf="@id/chooseTimeButton" />
+
+            <Button
+                android:id="@+id/chooseTimeButton"
+                style="@style/GradientButton"
+                android:layout_marginStart="8dp"
+                android:text="@string/round_duration_format"
+                android:textAllCaps="false"
+                app:icon="@drawable/ic_timer"
+                app:iconGravity="textStart"
+                app:layout_constraintBottom_toBottomOf="@id/roundTimeTextView"
+                app:layout_constraintStart_toEndOf="@id/roundTimeTextView"
+                app:layout_constraintTop_toTopOf="@id/roundTimeTextView" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <CheckBox
+            android:id="@+id/noSingCheckbox"
+            android:layout_margin="12dp"
+            android:text="@string/noSingModeCheckbox"
+            style="@style/Text.Settings"/>
+
+        <CheckBox
+            android:id="@+id/hintCheckBox"
+            style="@style/Text.Settings"
+            android:layout_margin="12dp"
+            android:text="@string/hint_option_text" />
+
+        <CheckBox
+            android:id="@+id/privacyCheckBox"
+            style="@style/Text.Settings"
+            android:layout_margin="12dp"
+            android:text="@string/private_option_text" />
 
 
     </LinearLayout>
 
     <Button
         android:id="@+id/startButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        style="@style/GradientButton"
         android:layout_marginBottom="16dp"
         android:text="@string/start_button_text"
         android:enabled="false"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
-
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

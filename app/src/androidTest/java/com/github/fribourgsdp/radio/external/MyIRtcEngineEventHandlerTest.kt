@@ -17,6 +17,7 @@ import org.junit.Test
 
 class MyIRtcEngineEventHandlerTest {
 
+    private val context: Context = ApplicationProvider.getApplicationContext()
 
     @Before
     fun initIntent() {
@@ -29,8 +30,8 @@ class MyIRtcEngineEventHandlerTest {
     }
     @Test
     fun existingUserSpeak(){
-        val context: Context = ApplicationProvider.getApplicationContext()
 
+        val expected = Pair(1,"Pierre")
 
         val activeSpeakerView = Espresso.onView(ViewMatchers.withId(R.id.activeSpeakerView))
 
@@ -39,7 +40,7 @@ class MyIRtcEngineEventHandlerTest {
             scenario.onActivity { activity ->
 
 
-                val map = hashMapOf(Pair(1,"Pierre"))
+                val map = hashMapOf(expected)
                 val myIRtcEngineEventHandler = MyIRtcEngineEventHandler(activity,map)
                 myIRtcEngineEventHandler.onActiveSpeaker(1)
 
@@ -47,7 +48,7 @@ class MyIRtcEngineEventHandlerTest {
 
             activeSpeakerView.check(
                 ViewAssertions.matches(
-                    ViewMatchers.withText("active speaker : Pierre")
+                    ViewMatchers.withText(context.getString(R.string.active_speaker_format, expected.second))
                 )
             )
 
@@ -58,7 +59,6 @@ class MyIRtcEngineEventHandlerTest {
 
     @Test
     fun nonExistingUserSpeak(){
-        val context: Context = ApplicationProvider.getApplicationContext()
 
 
         val activeSpeakerView = Espresso.onView(ViewMatchers.withId(R.id.activeSpeakerView))
@@ -75,7 +75,7 @@ class MyIRtcEngineEventHandlerTest {
 
             activeSpeakerView.check(
                 ViewAssertions.matches(
-                    ViewMatchers.withText("active speaker : Null")
+                    ViewMatchers.withText("")
                 )
             )
         }
