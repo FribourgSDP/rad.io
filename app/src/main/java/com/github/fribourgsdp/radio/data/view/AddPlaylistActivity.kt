@@ -106,28 +106,8 @@ open class AddPlaylistActivity : DatabaseHolder, MyAppCompatActivity(), SavePlay
                 savePlaylistOnlinePicker.show(supportFragmentManager, "SavePlaylistOnlinePicker")
             }
         }
-
-
-
-
     }
 
-
-    /*protected fun loadLyrics(playlist : Playlist, lyricsGetter: LyricsGetter = MusixmatchLyricsGetter) : Task<Playlist> {
-            val playlistWithLyrics = Playlist(playlist.name,playlist.genre)
-            val tasks = mutableListOf<Task<Void>>()
-            for (song in playlist.getSongs()){
-                    lyricsGetter.getLyrics(song.name,song.artist)
-                    tasks.add(Tasks.forResult(lyricsGetter.getLyrics(song.name, song.artist).thenAccept { f ->
-                        val songWithLyrics = Song(song.name, song.artist, f)
-                        playlistWithLyrics.addSong(songWithLyrics)
-                      }.join()
-                    ))
-            }
-        return Tasks.whenAllComplete(tasks).continueWith {
-            playlistWithLyrics
-        }
-    }*/
     /**
      * Fills error text view
      */
