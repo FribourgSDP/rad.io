@@ -146,11 +146,13 @@ data class Playlist (override var name: String, var genre: Genre) : Nameable {
      * @return [Task] the task of the registration of the playlist
      */
     fun saveOnline(db : Database = FirestoreDatabase()): Task<Void>{
+        val tasks = mutableListOf<Task<Void>>()
         for( song in songs){
-            db.registerSong(song)
+            tasks.add(db.registerSong(song))
         }
-        savedOnline = true
-        return db.registerPlaylist(this)
+        tasks.add(db.registerPlaylist(this))
+        return Tasks.whenAllComplete(tasks).continueWith { null }
+
     }
 
     /**
