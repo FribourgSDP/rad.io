@@ -144,6 +144,19 @@ class PlaylistSongsFragmentTest {
             onView(withId(R.id.SongRecyclerView)).check(matches(isDisplayed()))
             onView(withId(R.id.SongRecyclerView)).check(matches(hasChildCount(3)))
         }
+        val finalUser = User.load(context)
+        val pl = finalUser.getPlaylists()
+        assertEquals(1,pl.size)
+        assertEquals("lyrics1",pl.toList()[0].getSong("rouge","sardou").lyrics)
+        assertEquals("lyrics2",pl.toList()[0].getSong("salut","sardou").lyrics)
+        assertEquals("lyrics3",pl.toList()[0].getSong("Le France","sardou").lyrics)
+
+    }
+
+    @Test
+    fun clickingImportLyricsButtonImportLyrics(){
+
+
 
 
     }
@@ -155,10 +168,15 @@ class PlaylistSongsFragmentTest {
             val playlistName = "test"
             val playlist : Playlist = Playlist(playlistName, Genre.NONE)
             playlist.id = "TEST"
-            playlist.addSong(Song("rouge", "sardou"))
-            playlist.addSong(Song("salut", "sardou"))
-            playlist.addSong(Song("Le France", "sardou"))
+            playlist.addSong(Song("rouge", "sardou","","1"))
+            playlist.addSong(Song("salut", "sardou","","2"))
+            playlist.addSong(Song("Le France", "sardou","","3"))
             `when`(db.getPlaylist(anyString())).thenReturn(Tasks.forResult(playlist))
+            `when`(db.getSong("1")).thenReturn(Tasks.forResult(Song("rouge", "sardou","lyrics1","1")))
+            `when`(db.getSong("2")).thenReturn(Tasks.forResult(Song("salut", "sardou","lyrics2","2")))
+            `when`(db.getSong("3")).thenReturn(Tasks.forResult(Song("Le France", "sardou","lyrics3","3")))
+
+
             return db
         }
     }
