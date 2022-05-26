@@ -140,5 +140,8 @@
         <activity
             android:name=".mockimplementations.MockSettingsActivity"
             android:exported="false" />
+        <activity
+            android:name=".activities.MockMainActivity"
+            android:exported="false" />
            </application>
 </manifest>
