@@ -4,7 +4,8 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import android.widget.*
-import com.github.fribourgsdp.radio.*
+import com.github.fribourgsdp.radio.MainActivity
+import com.github.fribourgsdp.radio.R
 import com.github.fribourgsdp.radio.config.language.Language
 import com.github.fribourgsdp.radio.config.language.LanguageManager
 
@@ -45,7 +46,7 @@ open class SettingsActivity : MyAppCompatActivity() {
 
         val adapter: ArrayAdapter<Language> = ArrayAdapter<Language>(this,android.R.layout.simple_spinner_item,languageList)
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        spinnerLanguage.setAdapter(adapter);
+        spinnerLanguage.adapter = adapter
         spinnerLanguage.setSelection(actualLanguage.ordinal, false);
         spinnerLanguage.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(parent: AdapterView<*>?,view: View?,position: Int,id: Long) {
@@ -71,10 +72,12 @@ open class SettingsActivity : MyAppCompatActivity() {
 
     private fun setLocale(language : String){
         val languageManager  = getLanguageManager()
-        languageManager.setLang(language)
-        val refresh = Intent(this, SettingsActivity::class.java)
-        finish()
-        startActivity(refresh)
+        if(languageManager.getLang() != language) {
+            languageManager.setLang(language)
+            val refresh = Intent(this, SettingsActivity::class.java)
+            finish()
+            startActivity(refresh)
+        }
     }
 
     protected open fun getLanguageManager() : LanguageManager{

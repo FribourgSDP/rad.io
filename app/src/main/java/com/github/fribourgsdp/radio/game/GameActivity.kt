@@ -2,22 +2,28 @@ package com.github.fribourgsdp.radio.game
 
 import android.content.Intent
 import android.os.Bundle
-import android.view.*
+import android.view.KeyEvent
+import android.view.View
 import android.view.inputmethod.EditorInfo
-import android.widget.*
+import android.widget.Button
+import android.widget.EditText
+import android.widget.ImageButton
+import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.github.fribourgsdp.radio.*
-import com.github.fribourgsdp.radio.game.timer.Timer
+import com.github.fribourgsdp.radio.MainActivity
+import com.github.fribourgsdp.radio.R
 import com.github.fribourgsdp.radio.data.User
 import com.github.fribourgsdp.radio.external.musixmatch.MusixmatchLyricsGetter.LYRICS_NOT_FOUND_PLACEHOLDER
 import com.github.fribourgsdp.radio.game.handler.HostGameHandler
 import com.github.fribourgsdp.radio.game.handler.PlayerGameHandler
 import com.github.fribourgsdp.radio.game.prep.*
+import com.github.fribourgsdp.radio.game.timer.Timer
 import com.github.fribourgsdp.radio.game.timer.TimerProgressBarHandler
-import com.github.fribourgsdp.radio.util.SongNameHint
 import com.github.fribourgsdp.radio.game.view.*
+import com.github.fribourgsdp.radio.util.MyTextToSpeech
+import com.github.fribourgsdp.radio.util.SongNameHint
 import com.github.fribourgsdp.radio.voip.MyIRtcEngineEventHandler
 import com.github.fribourgsdp.radio.voip.VoiceIpEngineDecorator
 import com.google.android.material.floatingactionbutton.FloatingActionButton
@@ -37,6 +43,7 @@ const val HINT_FRACTION = 1.0/3
 open class GameActivity : AppCompatActivity(), GameView, Timer.Listener {
     private lateinit var user: User
     private var isHost: Boolean = false
+    private var noSing = false
     private var gameDuration = DEFAULT_GAME_DURATION
 
     private lateinit var currentRoundTextView : TextView
@@ -63,6 +70,8 @@ open class GameActivity : AppCompatActivity(), GameView, Timer.Listener {
 
     private lateinit var playerGameHandler: PlayerGameHandler
 
+    private lateinit var tts : MyTextToSpeech
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_game)
@@ -71,6 +80,7 @@ open class GameActivity : AppCompatActivity(), GameView, Timer.Listener {
             it as HashMap<String, String>
         } ?: HashMap()
         isHost = intent.getBooleanExtra(GAME_IS_HOST_KEY, false)
+        noSing = intent.getBooleanExtra(GAME_IS_NO_SING_MODE, false)
         gameDuration = intent.getLongExtra(GAME_DURATION_KEY, DEFAULT_GAME_DURATION)
 
         withHint = intent.getBooleanExtra(GAME_HINT_KEY, false)
@@ -79,13 +89,11 @@ open class GameActivity : AppCompatActivity(), GameView, Timer.Listener {
         val gameUid = intent.getLongExtra(GAME_UID_KEY, -1L)
         initVoiceChat(gameUid)
 
-        if (isHost) {
-            val game = Json.decodeFromString(intent.getStringExtra(GAME_KEY)!!) as Game
-            val hostGameHandler = HostGameHandler(this, game, this)
-            hostGameHandler.linkToDatabase()
-        }
+        initHostGameHandler()
+        tts = MyTextToSpeech(applicationContext)
+        tts.initTextToSpeech(noSing)
 
-        playerGameHandler = PlayerGameHandler(this, gameUid, this)
+        playerGameHandler = PlayerGameHandler(this, gameUid, this, noSing=noSing, tts=tts)
         playerGameHandler.setSingerDuration(gameDuration)
 
         // On submit make the player game handler handle the guess
@@ -109,7 +117,12 @@ open class GameActivity : AppCompatActivity(), GameView, Timer.Listener {
     }
 
     override fun updateSinger(singerId: String) {
-        singerTextView.text = getString(R.string.singing_format, mapIdToName[singerId] ?: singerId)
+        if(noSing){
+            singerTextView.text = getString(R.string.listen)
+        } else {
+            singerTextView.text =
+                getString(R.string.singing_format, mapIdToName[singerId] ?: singerId)
+        }
     }
 
     override fun updateRound(currentRound: Long) {
@@ -121,8 +134,10 @@ open class GameActivity : AppCompatActivity(), GameView, Timer.Listener {
         closePopups()
 
         // Hide the edit text and the submit button
-        songGuessEditText.visibility = View.GONE
-        songGuessSubmitButton.visibility = View.GONE
+        if(!noSing) {
+            songGuessEditText.visibility = View.GONE
+            songGuessSubmitButton.visibility = View.GONE
+        }
 
         if (lyricsPopup != null) {
             showLyricsButton.visibility = View.VISIBLE
@@ -230,6 +245,15 @@ open class GameActivity : AppCompatActivity(), GameView, Timer.Listener {
 
     }
 
+    private fun initHostGameHandler(){
+        if (isHost) {
+            val game = Json.decodeFromString(intent.getStringExtra(GAME_KEY)!!) as Game
+            val hostGameHandler = HostGameHandler(this, game, this, noSing=noSing)
+            hostGameHandler.linkToDatabase()
+            hostGameHandler.setSingerDuration(gameDuration)
+        }
+    }
+
     private fun initViews() {
         currentRoundTextView = findViewById(R.id.currentRoundView)
         singerTextView = findViewById(R.id.singerTextView)
@@ -326,6 +350,10 @@ open class GameActivity : AppCompatActivity(), GameView, Timer.Listener {
             else null
     }
 
+    override fun onPause() {
+        tts.onPause()
+        super.onPause()
+    }
 
     override fun addHint(songNameHint: SongNameHint) {
         if(withHint) {
@@ -346,8 +374,6 @@ open class GameActivity : AppCompatActivity(), GameView, Timer.Listener {
             }
         }
     }
-
-
 
     private fun closePopups() {
         lyricsPopup?.let {

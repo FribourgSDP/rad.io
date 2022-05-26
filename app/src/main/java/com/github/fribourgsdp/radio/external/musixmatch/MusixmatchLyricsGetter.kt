@@ -16,6 +16,7 @@ const val TRACK_SEARCH = "track.search"
 const val QUERY_TRACK_FIELD = "q_track"
 const val QUERY_ARTIST_FIELD = "q_artist"
 const val SORT_CONDITION = "s_artist_rating=desc"
+const val REPLACEMENT_STRING = "bip"
 
 interface LyricsGetter{
     fun getLyrics(songName: String,artistName: String = "",client: OkHttpClient = OkHttpClient(),parser: JSONParser = JSONStandardParser()): CompletableFuture<String>
@@ -174,6 +175,17 @@ object MusixmatchLyricsGetter : LyricsGetter {
             lyrics
                 .replace(name, "<strike>${name[0].uppercase() + name.lowercase().substring(1)}</strike>", ignoreCase = true)
                 .replace("\n", "<br>")
+    }
+
+    /**
+     * Replaces striked words with [REPLACEMENT_STRING] and HTML line breaks with standard line breaks.
+     * Used to make lyrics readable by the Text-to-Speech engine, after having called [markSongName] to include the HTML tags.
+     * @param lyrics The HTML-compatible lyrics to transform
+     */
+    fun makeReadable(lyrics: String) : String{
+        return lyrics
+            .replace("<br>", "\n")
+            .replace(Regex("<strike>.+</strike>"), REPLACEMENT_STRING)
     }
 
     /**

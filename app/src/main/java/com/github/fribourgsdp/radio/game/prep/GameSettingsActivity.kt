@@ -1,10 +1,10 @@
 package com.github.fribourgsdp.radio.game.prep
 
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
 import android.widget.*
+import androidx.appcompat.app.AppCompatActivity
 import com.akexorcist.snaptimepicker.SnapTimePickerDialog
 import com.akexorcist.snaptimepicker.TimeRange
 import com.akexorcist.snaptimepicker.TimeValue
@@ -12,6 +12,7 @@ import com.github.fribourgsdp.radio.MainActivity
 import com.github.fribourgsdp.radio.R
 import com.github.fribourgsdp.radio.data.Playlist
 import com.github.fribourgsdp.radio.data.User
+import com.github.fribourgsdp.radio.game.Game
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 
@@ -22,6 +23,7 @@ const val GAME_NB_ROUNDS_KEY = "com.github.fribourgsdp.radio.GAME_NB_ROUNDS"
 const val GAME_HINT_KEY = "com.github.fribourgsdp.radio.GAME_HINT"
 const val GAME_PRIVACY_KEY = "com.github.fribourgsdp.radio.GAME_PRIVACY"
 const val GAME_IS_HOST_KEY = "com.github.fribourgsdp.radio.GAME_IS_HOST"
+const val GAME_IS_NO_SING_MODE = "com.github.fribourgsdp.radio.GAME_IS_NO_SING_MODE"
 const val GAME_DURATION_KEY = "com.github.fribourgsdp.radio.GAME_DURATION"
 
 const val DEFAULT_GAME_DURATION = 45L;
@@ -33,6 +35,7 @@ open class GameSettingsActivity : AppCompatActivity() {
     private lateinit var nbRoundsInput : EditText
     private lateinit var hintCheckBox : CheckBox
     private lateinit var privacyCheckBox : CheckBox
+    private lateinit var noSingCheckBox : CheckBox
     private lateinit var startButton : Button
     private lateinit var timerButton : Button
 
@@ -94,6 +97,7 @@ open class GameSettingsActivity : AppCompatActivity() {
         nbRoundsInput = findViewById(R.id.nbRoundsInput)
         hintCheckBox = findViewById(R.id.hintCheckBox)
         privacyCheckBox = findViewById(R.id.privacyCheckBox)
+        noSingCheckBox = findViewById(R.id.noSingCheckbox)
         startButton = findViewById(R.id.startButton)
         playlistSearchView = findViewById(R.id.playlistSearchView)
         playlistListView = findViewById(R.id.playlistListView)
@@ -120,18 +124,34 @@ open class GameSettingsActivity : AppCompatActivity() {
             .toTypedArray()
     }
 
+    private fun displayError(error : String){
+        errorText.text = error
+        errorText.visibility = View.VISIBLE
+    }
+
     private fun startButtonBehavior() : View.OnClickListener {
         return View.OnClickListener {
-            val intent: Intent = Intent(this, LobbyActivity::class.java).apply {
-                putExtra(GAME_NAME_KEY, nameInput.text.toString().ifEmpty { getString(R.string.default_game_name) })
-                putExtra(GAME_PLAYLIST_KEY, Json.encodeToString(selectedPlaylist))
-                putExtra(GAME_NB_ROUNDS_KEY, nbRoundsInput.text.toString().ifEmpty { getString(R.string.default_game_nb_rounds) }.toInt())
-                putExtra(GAME_HINT_KEY, hintCheckBox.isChecked)
-                putExtra(GAME_PRIVACY_KEY, privacyCheckBox.isChecked)
-                putExtra(GAME_IS_HOST_KEY, true)
-                putExtra(GAME_DURATION_KEY, gameTimeDuration)
+            if(noSingCheckBox.isChecked && selectedPlaylist.getSongs().none{s -> s.songHasLyrics()}){
+                displayError(getString(R.string.playlistLyricsLess))
+            } else {
+                val intent: Intent = Intent(this, LobbyActivity::class.java).apply {
+                    putExtra(
+                        GAME_NAME_KEY,
+                        nameInput.text.toString().ifEmpty { getString(R.string.default_game_name) })
+                    putExtra(GAME_PLAYLIST_KEY, Json.encodeToString(selectedPlaylist))
+                    putExtra(
+                        GAME_NB_ROUNDS_KEY,
+                        nbRoundsInput.text.toString()
+                            .ifEmpty { getString(R.string.default_game_nb_rounds) }.toInt()
+                    )
+                    putExtra(GAME_HINT_KEY, hintCheckBox.isChecked)
+                    putExtra(GAME_PRIVACY_KEY, privacyCheckBox.isChecked)
+                    putExtra(GAME_IS_HOST_KEY, true)
+                    putExtra(GAME_IS_NO_SING_MODE, noSingCheckBox.isChecked)
+                    putExtra(GAME_DURATION_KEY, gameTimeDuration)
+                }
+                startActivity(intent)
             }
-            startActivity(intent)
         }
     }
     private fun getPlaylist(name: String): Playlist {
@@ -149,8 +169,7 @@ open class GameSettingsActivity : AppCompatActivity() {
                 startButton.isEnabled = true
                 errorText.visibility = View.GONE
             } else {
-                errorText.text = getString(R.string.playlist_error_format, query)
-                errorText.visibility = View.VISIBLE
+                displayError(getString(R.string.playlist_error_format, query))
                 startButton.isEnabled = false
             }
 

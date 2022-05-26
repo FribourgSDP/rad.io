@@ -3,6 +3,7 @@ package com.github.fribourgsdp.radio.external
 import com.github.fribourgsdp.radio.external.musixmatch.MusixmatchLyricsGetter
 import com.github.fribourgsdp.radio.external.musixmatch.MusixmatchLyricsGetter.BACKEND_ERROR_PLACEHOLDER
 import com.github.fribourgsdp.radio.external.musixmatch.MusixmatchLyricsGetter.LYRICS_NOT_FOUND_PLACEHOLDER
+import com.github.fribourgsdp.radio.external.musixmatch.REPLACEMENT_STRING
 import com.github.fribourgsdp.radio.util.JSONParser
 import com.github.fribourgsdp.radio.util.JSONStandardParser
 import okhttp3.*
@@ -85,6 +86,12 @@ class MusixmatchLyricsGetterTest {
     fun emphasizeSongNameInLyrics(){
         val lyrics = MusixmatchLyricsGetter.markSongName(MusixmatchLyricsGetter.getLyrics("rouge", "sardou", MockOkHttpClient()).get(), "rouge")
         assertTrue("actual : $lyrics",lyrics.startsWith("<strike>Rouge</strike><br>Comme un soleil couchant de Méditerranée"))
+    }
+    @Test
+    fun replaceSongNameAndRemoveHTMLTags(){
+        val markedLyrics = "<strike>Rouge</strike><br>Comme un soleil couchant de Méditerranée"
+        val unMarkedLyrics = MusixmatchLyricsGetter.makeReadable(markedLyrics)
+        assertEquals(unMarkedLyrics, "${REPLACEMENT_STRING}\nComme un soleil couchant de Méditerranée")
     }
     class MockOkHttpClient : OkHttpClient(){
         override fun newCall(request1: Request): Call {
