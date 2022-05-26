@@ -41,7 +41,7 @@ class MainActivity : MyAppCompatActivity() {
         }
 
         if(!hasConnectivity(this)) {
-            playButton.visibility = View.INVISIBLE
+            playButton.isEnabled = false
             Log.w("WIFI", "Ici j'ai pas de wifi")
         }else{
             Log.w("WIFI", "Ici j'ai du wifi")
