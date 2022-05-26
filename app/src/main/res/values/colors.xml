@@ -14,6 +14,6 @@
     <color name="red">#FF0000</color>
     <color name="orange">#FF7000</color>
 
-    <!-- Specific colors-->
-    <color name="disabled_button">@color/light_grey</color>
+    <!-- Lower alpha colors-->
+    <color name="low_alpha_black">#66000000</color>
 </resources>

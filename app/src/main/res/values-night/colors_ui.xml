@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!-- Specific colors-->
+    <!-- Specific colors for ui -->
     <color name="disabled_button">@color/grey</color>
 </resources>

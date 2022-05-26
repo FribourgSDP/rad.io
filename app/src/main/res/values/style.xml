@@ -3,7 +3,7 @@
 <resources>
     <!-- Style for basic buttons -->
     <style name="GradientButton">
-        <item name="android:textColor">@color/white</item>
+        <item name="android:textColor">@color/button_text_color</item>
         <item name="android:background">@drawable/custom_button</item>
         <item name="backgroundTint">@null</item>
         <item name="android:paddingStart">32dp</item>
@@ -28,7 +28,7 @@
     <style name="Text.Titles">
         <item name="android:layout_marginStart">16dp</item>
         <item name="android:layout_marginTop">8dp</item>
-        <item name="android:textSize">32sp</item>
+        <item name="android:textSize">30sp</item>
         <item name="android:textColor">?attr/colorOnPrimary</item>
     </style>
     <!-- Style for subtitles -->
