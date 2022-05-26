@@ -63,6 +63,10 @@ open class AddPlaylistActivity : DatabaseHolder, MyAppCompatActivity(), SavePlay
         recyclerView.layoutManager = layoutManager
         errorTextView = findViewById(R.id.addPlaylistErrorTextView)
 
+        if(!hasConnectivity(this)){
+            //check
+        }
+
     }
 
     /**
@@ -101,8 +105,13 @@ open class AddPlaylistActivity : DatabaseHolder, MyAppCompatActivity(), SavePlay
                 displayError(R.string.playlist_is_empty)
             }
             else -> {
-                val savePlaylistOnlinePicker = SavePlaylistOnlinePickerDialog(this)
-                savePlaylistOnlinePicker.show(supportFragmentManager, "SavePlaylistOnlinePicker")
+                if(!hasConnectivity(this)){
+                    savePlaylistLocally()
+                }else{
+                    val savePlaylistOnlinePicker = SavePlaylistOnlinePickerDialog(this)
+                    savePlaylistOnlinePicker.show(supportFragmentManager, "SavePlaylistOnlinePicker")
+                }
+
             }
         }
 
@@ -127,6 +136,15 @@ open class AddPlaylistActivity : DatabaseHolder, MyAppCompatActivity(), SavePlay
     }
 
 
+    private fun savePlaylistLocally(){
+        val playlistName : String = findViewById<EditText>(R.id.newPlaylistName).text.toString()
+        val genre : Genre = genreSpinner.selectedItem as Genre
+        val playlist = Playlist(playlistName,listSongs.toSet(),genre)
+        user.addPlaylist(playlist)
+        user.save(this)
+        val intent = Intent(this@AddPlaylistActivity, UserProfileActivity::class.java)
+        startActivity(intent)
+    }
     override fun onPick(online: Boolean) {
         val playlistName : String = findViewById<EditText>(R.id.newPlaylistName).text.toString()
         val genre : Genre = genreSpinner.selectedItem as Genre
