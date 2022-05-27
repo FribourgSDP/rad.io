@@ -147,7 +147,6 @@ class AddPlaylistActivityTest {
             .check(matches(hasChildCount(1)))
     }
 
-
     @Test
     fun swipingToDeleteWorks(){
         onView(withId(R.id.addSongToPlaylistSongName))
@@ -161,17 +160,14 @@ class AddPlaylistActivityTest {
 
         onView(withId(R.id.list_playlist_creation))
             .perform(RecyclerViewActions.actionOnItemAtPosition<ViewHolder>(0,
-            GeneralSwipeAction(Swipe.FAST,
-                GeneralLocation.CENTER_RIGHT, GeneralLocation.CENTER_LEFT, Press.FINGER)))
-
-        onView(withId(R.id.snackbar_text)).check(matches(withText(R.string.deleteUndoQuestion)))
-        onView(withId(R.id.snackbar_action)).perform(click())
+                GeneralSwipeAction(Swipe.FAST,
+                    GeneralLocation.CENTER_RIGHT, GeneralLocation.CENTER_LEFT, Press.FINGER)))
         onView(withId(R.id.list_playlist_creation))
             .check(matches(hasChildCount(0)))
     }
 
     @Test
-    fun swipingToDeleteIsCancellable(){
+    fun swipingToDeleteUndoWorks(){
         onView(withId(R.id.addSongToPlaylistSongName))
             .perform(ViewActions.typeText("Rouge"))
         closeSoftKeyboard()
@@ -183,24 +179,14 @@ class AddPlaylistActivityTest {
 
         onView(withId(R.id.list_playlist_creation))
             .perform(RecyclerViewActions.actionOnItemAtPosition<ViewHolder>(0,
-                GeneralSwipeAction(Swipe.FAST,
-                    GeneralLocation.CENTER_RIGHT, GeneralLocation.CENTER_LEFT, Press.FINGER)))
-
+            GeneralSwipeAction(Swipe.FAST,
+                GeneralLocation.CENTER_RIGHT, GeneralLocation.CENTER_LEFT, Press.FINGER)))
+        onView(withId(R.id.list_playlist_creation))
+            .check(matches(hasChildCount(0)))
         onView(withId(R.id.snackbar_text)).check(matches(withText(R.string.deleteUndoQuestion)))
-
-        onView(withId(R.id.list_playlist_creation)).perform(click())
-
+        onView(withId(R.id.snackbar_action)).perform(click())
         onView(withId(R.id.list_playlist_creation))
             .check(matches(hasChildCount(1)))
-
-        onView(withId(R.id.list_playlist_creation))
-            .perform(RecyclerViewActions.actionOnItemAtPosition<ViewHolder>(0,
-                GeneralSwipeAction(Swipe.FAST,
-                    GeneralLocation.CENTER_RIGHT, GeneralLocation.CENTER_LEFT, Press.FINGER)))
-
-        onView(withId(R.id.snackbar_text)).check(matches(withText(R.string.deleteUndoQuestion)))
-
-        onView(withId(R.id.action_bar_root)).perform(click())
     }
 
     @Test
