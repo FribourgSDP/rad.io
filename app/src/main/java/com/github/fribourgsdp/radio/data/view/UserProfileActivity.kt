@@ -196,6 +196,9 @@ open class UserProfileActivity : MyAppCompatActivity(), KeepOrDismissPlaylistDia
             user.name = it.result.name
             user.id = it.result.id
             user.isGoogleUser = true
+            val refresh = Intent(this, this::class.java)
+            finish()
+            startActivity(refresh)
         }
     }
 
