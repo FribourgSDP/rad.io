@@ -21,7 +21,6 @@ import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.github.fribourgsdp.radio.R
 import com.github.fribourgsdp.radio.data.Genre
 import com.github.fribourgsdp.radio.data.User
-import com.github.fribourgsdp.radio.data.view.AddPlaylistActivity
 import com.github.fribourgsdp.radio.data.view.UserProfileActivity
 import com.github.fribourgsdp.radio.mockimplementations.MockAddPlaylistActivity
 import com.github.fribourgsdp.radio.util.ViewHolder
@@ -165,7 +164,7 @@ class AddPlaylistActivityTest {
             GeneralSwipeAction(Swipe.FAST,
                 GeneralLocation.CENTER_RIGHT, GeneralLocation.CENTER_LEFT, Press.FINGER)))
 
-        onView(withId(R.id.snackbar_text)).check(matches(withText(R.string.deleteConfirmationQuestion)))
+        onView(withId(R.id.snackbar_text)).check(matches(withText(R.string.deleteUndoQuestion)))
         onView(withId(R.id.snackbar_action)).perform(click())
         onView(withId(R.id.list_playlist_creation))
             .check(matches(hasChildCount(0)))
@@ -187,7 +186,7 @@ class AddPlaylistActivityTest {
                 GeneralSwipeAction(Swipe.FAST,
                     GeneralLocation.CENTER_RIGHT, GeneralLocation.CENTER_LEFT, Press.FINGER)))
 
-        onView(withId(R.id.snackbar_text)).check(matches(withText(R.string.deleteConfirmationQuestion)))
+        onView(withId(R.id.snackbar_text)).check(matches(withText(R.string.deleteUndoQuestion)))
 
         onView(withId(R.id.list_playlist_creation)).perform(click())
 
@@ -199,7 +198,7 @@ class AddPlaylistActivityTest {
                 GeneralSwipeAction(Swipe.FAST,
                     GeneralLocation.CENTER_RIGHT, GeneralLocation.CENTER_LEFT, Press.FINGER)))
 
-        onView(withId(R.id.snackbar_text)).check(matches(withText(R.string.deleteConfirmationQuestion)))
+        onView(withId(R.id.snackbar_text)).check(matches(withText(R.string.deleteUndoQuestion)))
 
         onView(withId(R.id.action_bar_root)).perform(click())
     }

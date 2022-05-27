@@ -1,8 +1,6 @@
 package com.github.fribourgsdp.radio.data.view
 
-import android.annotation.SuppressLint
 import android.content.Context
-import android.view.MotionEvent
 import android.view.View
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
@@ -30,48 +28,19 @@ class SongSwipeHelper (val recyclerView: RecyclerView, private val songList : Mu
 
     override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
         val position = viewHolder.absoluteAdapterPosition
+        val removedSong = songList[position]
+        songList.removeAt(position)
+        recyclerView.adapter!!.notifyItemRemoved(position)
 
-        val deleteConfirmation = Snackbar.make(recyclerView,
-            context.resources.getString(R.string.deleteConfirmationQuestion),
+        val undoDeletion = Snackbar.make(recyclerView,
+            context.resources.getString(R.string.deleteUndoQuestion),
             Snackbar.LENGTH_LONG)
-        deleteConfirmation.addCallback(object : Snackbar.Callback () {
-            @SuppressLint("ClickableViewAccessibility")
-            override fun onShown(sb: Snackbar?) {
-                rootView.setOnTouchListener(DismissTouchListener(deleteConfirmation, rootView))
-                recyclerView.setOnTouchListener(DismissTouchListener(deleteConfirmation, recyclerView))
-                super.onShown(sb)
-            }
 
-            @SuppressLint("ClickableViewAccessibility")
-            override fun onDismissed(transientBottomBar: Snackbar?, event: Int) {
-                // will emptily fire if item was removed but does not affect anything
-                recyclerView.adapter!!.notifyItemChanged(position)
-
-                rootView.setOnTouchListener(null)
-                recyclerView.setOnTouchListener(null)
-                super.onDismissed(transientBottomBar, event)
-            }
-        })
-        deleteConfirmation.setAction(context.resources.getString(R.string.deleteConfirmationAnswer),
+        undoDeletion.setAction(context.resources.getString(R.string.deleteUndoAnswer),
             View.OnClickListener {
-                songList.removeAt(position)
-                recyclerView.adapter!!.notifyItemRemoved(position)
+                songList.add(position, removedSong)
+                recyclerView.adapter!!.notifyItemInserted(position)
         })
-        deleteConfirmation.show()
-    }
-
-    /**
-     * This listener is used to dismiss the deletion snackBar (cancelling the deletion)
-     * if the user touches anything other than the snackBar.
-     * it can therefore be attached to onTouchlistener of any UI elements the user
-     * is susceptible of pressing if they want to cancel the deletion.
-     * The listener can be reversed with _..setOnTouchListener(null)
-     */
-    class DismissTouchListener(private val snackBar: Snackbar, private val view: View) : View.OnTouchListener {
-        override fun onTouch(p0: View?, p1: MotionEvent?): Boolean {
-            snackBar.dismiss()
-            view.performClick()
-            return true
-        }
+        undoDeletion.show()
     }
 }
