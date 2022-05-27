@@ -172,39 +172,6 @@ class AddPlaylistActivityTest {
     }
 
     @Test
-    fun swipingToDeleteIsCancellable(){
-        onView(withId(R.id.addSongToPlaylistSongName))
-            .perform(ViewActions.typeText("Rouge"))
-        closeSoftKeyboard()
-        onView(withId(R.id.addSongToPlaylistArtistName))
-            .perform(ViewActions.typeText("Sardou"))
-        closeSoftKeyboard()
-        onView(withId(R.id.addSongToPlaylistBtn))
-            .perform(ViewActions.click())
-
-        onView(withId(R.id.list_playlist_creation))
-            .perform(RecyclerViewActions.actionOnItemAtPosition<ViewHolder>(0,
-                GeneralSwipeAction(Swipe.FAST,
-                    GeneralLocation.CENTER_RIGHT, GeneralLocation.CENTER_LEFT, Press.FINGER)))
-
-        onView(withId(R.id.snackbar_text)).check(matches(withText(R.string.deleteConfirmationQuestion)))
-
-        onView(withId(R.id.list_playlist_creation)).perform(click())
-
-        onView(withId(R.id.list_playlist_creation))
-            .check(matches(hasChildCount(1)))
-
-        onView(withId(R.id.list_playlist_creation))
-            .perform(RecyclerViewActions.actionOnItemAtPosition<ViewHolder>(0,
-                GeneralSwipeAction(Swipe.FAST,
-                    GeneralLocation.CENTER_RIGHT, GeneralLocation.CENTER_LEFT, Press.FINGER)))
-
-        onView(withId(R.id.snackbar_text)).check(matches(withText(R.string.deleteConfirmationQuestion)))
-
-        onView(withId(R.id.action_bar_root)).perform(click())
-    }
-
-    @Test
     fun pressingBackWhenNothingHasBeenModifiedGoesToUserProfile(){
         Espresso.pressBack()
         Intents.intended(

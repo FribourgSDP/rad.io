@@ -30,28 +30,12 @@ class SongSwipeHelper (val recyclerView: RecyclerView, private val songList : Mu
 
     override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
         val position = viewHolder.absoluteAdapterPosition
+        // resets card position back into its slot
+        recyclerView.adapter!!.notifyItemChanged(position)
 
         val deleteConfirmation = Snackbar.make(recyclerView,
             context.resources.getString(R.string.deleteConfirmationQuestion),
             Snackbar.LENGTH_LONG)
-        deleteConfirmation.addCallback(object : Snackbar.Callback () {
-            @SuppressLint("ClickableViewAccessibility")
-            override fun onShown(sb: Snackbar?) {
-                rootView.setOnTouchListener(DismissTouchListener(deleteConfirmation, rootView))
-                recyclerView.setOnTouchListener(DismissTouchListener(deleteConfirmation, recyclerView))
-                super.onShown(sb)
-            }
-
-            @SuppressLint("ClickableViewAccessibility")
-            override fun onDismissed(transientBottomBar: Snackbar?, event: Int) {
-                // will emptily fire if item was removed but does not affect anything
-                recyclerView.adapter!!.notifyItemChanged(position)
-
-                rootView.setOnTouchListener(null)
-                recyclerView.setOnTouchListener(null)
-                super.onDismissed(transientBottomBar, event)
-            }
-        })
         deleteConfirmation.setAction(context.resources.getString(R.string.deleteConfirmationAnswer),
             View.OnClickListener {
                 songList.removeAt(position)
