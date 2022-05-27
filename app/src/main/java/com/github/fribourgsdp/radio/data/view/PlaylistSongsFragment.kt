@@ -4,6 +4,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import android.widget.Button
+import android.widget.ImageButton
 import android.widget.TextView
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -32,9 +33,9 @@ open class PlaylistSongsFragment : MyFragment(R.layout.fragment_playlist_display
     private lateinit var playlist: Playlist
     private lateinit var songs: List<Song>
     private lateinit var playlistName: String
-    private lateinit var editButton: Button
-    private lateinit var deleteButton: Button
-    private lateinit var saveOnlineButton : Button
+    private lateinit var editButton: ImageButton
+    private lateinit var deleteButton: ImageButton
+    private lateinit var saveOnlineButton : ImageButton
     private lateinit var importLyricsButton : Button
     private lateinit var user : User
     
@@ -82,7 +83,7 @@ open class PlaylistSongsFragment : MyFragment(R.layout.fragment_playlist_display
             }.addOnSuccessListener {
                 user.save(requireContext())
                 user.onlineCopyAndSave()
-                saveOnlineButton.visibility = View.INVISIBLE
+                saveOnlineButton.visibility = View.GONE
             }
         }
 
@@ -95,7 +96,7 @@ open class PlaylistSongsFragment : MyFragment(R.layout.fragment_playlist_display
                 if(playlist.savedOnline){
                    user.onlineCopyAndSave()
                 }
-                importLyricsButton.visibility = View.INVISIBLE
+                importLyricsButton.visibility = View.GONE
             }
         }
 
@@ -119,10 +120,10 @@ open class PlaylistSongsFragment : MyFragment(R.layout.fragment_playlist_display
             songs = playlist.getSongs().toList()
             initializeRecyclerView()
             if(playlist.savedOnline){
-                saveOnlineButton.visibility = View.INVISIBLE
+                saveOnlineButton.visibility = View.GONE
             }
             if(playlist.allSongsHaveLyricsOrHaveTriedFetchingSome()){
-                importLyricsButton.visibility = View.INVISIBLE
+                importLyricsButton.visibility = View.GONE
             }
         }.addOnSuccessListener {
             if(!playlist.savedLocally){

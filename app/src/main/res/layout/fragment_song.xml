@@ -7,8 +7,7 @@
 
     <TextView
         android:id="@+id/SongName"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        style="@style/Text"
         android:layout_marginTop="28dp"
         android:text="@string/song_name_placeholder"
         android:textSize="24sp"
@@ -19,9 +18,8 @@
 
     <TextView
         android:id="@+id/ArtistName"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="4sp"
+        style="@style/Text"
+        android:layout_marginTop="4dp"
         android:text="@string/artist_name_placeholder"
         android:textSize="18sp"
         app:layout_constraintStart_toStartOf="@+id/SongName"
@@ -29,26 +27,27 @@
 
     <TextView
         android:id="@+id/lyricsPresenter"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        style="@style/Text"
         android:layout_marginTop="4dp"
         android:text="@string/lyricsPresenter"
         android:textSize="16sp"
+        android:labelFor="@id/editTextLyrics"
         app:layout_constraintStart_toStartOf="@+id/SongName"
         app:layout_constraintTop_toBottomOf="@+id/ArtistName" />
 
     <EditText
         android:id="@+id/editTextLyrics"
-        android:layout_width="362dp"
-        android:layout_height="588dp"
-        android:layout_marginTop="12dp"
+        style="@style/Text"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_margin="12dp"
         android:ems="10"
         android:gravity="start|top"
         android:inputType="textMultiLine"
-        android:text="@string/long_text_placeholder"
+        android:autofillHints="Write your own lyrics!"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="@+id/SongName"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/lyricsPresenter" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

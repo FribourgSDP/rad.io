@@ -22,11 +22,21 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Radio"
         android:usesCleartextTraffic="true">
+        <activity
+            android:name=".SplashScreen"
+            android:theme="@style/Theme.Radio.Splash"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
 
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
         <activity
             android:name=".game.EndGameActivity"
             android:exported="false"
             android:parentActivityName=".MainActivity">
+
             <!-- The meta-data tag is required if you support API level 15 and lower -->
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
@@ -88,13 +98,10 @@
             android:exported="false" />
         <activity
             android:name=".MainActivity"
-            android:exported="true">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
+            android:exported="false">
+        </activity>
 
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity> <!-- Test implementations of activities -->
+        <!-- Test implementations of activities -->
         <activity
             android:name=".mockimplementations.MockGameSettingsActivity"
             android:exported="false" />
@@ -149,6 +156,8 @@
         <activity
             android:name=".mockimplementations.MockUserProfileActivityOffline"
             android:exported="false" />
-
-           </application>
+        <meta-data
+            android:name="preloaded_fonts"
+            android:resource="@array/preloaded_fonts" />
+    </application>
 </manifest>

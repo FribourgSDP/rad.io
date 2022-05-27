@@ -12,16 +12,15 @@
         android:id="@+id/relativeLobbyLayout">
 
         <ImageView
+            android:id="@+id/lobbyItemImage"
             android:layout_width="50dp"
             android:layout_height="50dp"
-            android:id="@+id/lobbyItemImage"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintLeft_toLeftOf="parent"/>
 
         <TextView
-            android:layout_width="236dp"
-            android:layout_height="39dp"
             android:id="@+id/lobbyUserName"
+            style="@style/Text"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintLeft_toRightOf="@+id/lobbyItemImage"
             android:textSize="20sp"/>

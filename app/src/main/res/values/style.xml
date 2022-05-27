@@ -1,27 +1,123 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!-- Resource file containing the different styles to apply to the UI elements. -->
 <resources>
-    <!-- Style for main menu buttons. -->
-    <style name="MainButtons">
-        <item name="android:layout_width">match_parent</item>
-        <item name="android:layout_height">wrap_content</item>
-        <item name="android:layout_marginBottom">12dp</item>
-        <item name="android:padding">16dp</item>
-    </style>
-    <!-- Style for settings options. -->
-    <style name="SettingsText">
+    <!-- Style for basic button -->
+    <style name="Button">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
+    </style>
+    <!-- Style for gradient basic buttons -->
+    <style name="GradientButton">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textColor">@color/button_text_color</item>
+        <item name="android:background">@drawable/custom_button</item>
+        <item name="backgroundTint">@null</item>
+        <item name="android:paddingStart">32dp</item>
+        <item name="android:paddingEnd">32dp</item>
+    </style>
+    <!-- Style for large buttons -->
+    <style name="GradientButton.Large">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_marginBottom">40dp</item>
+        <item name="android:textSize">24sp</item>
+        <item name="android:paddingTop">10dp</item>
+        <item name="android:paddingBottom">10dp</item>
+    </style>
+    <!-- Style for floating button -->
+    <style name="FloatingButtons">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_marginEnd">8dp</item>
+        <item name="android:layout_marginBottom">8dp</item>
+        <item name="android:scaleType">center</item>
+        <item name="android:adjustViewBounds">true</item>
+        <item name="backgroundTint">@color/red</item>
+        <item name="elevation">12dp</item>
+        <item name="tint">#FFFFFF</item>
+    </style>
+    <!-- Style for icon buttons -->
+    <style name="Button.Icon">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:padding">12dp</item>
+        <item name="android:background">@null</item>
+        <item name="android:backgroundTint">@null</item>
+        <item name="android:layout_marginStart">24dp</item>
+        <item name="android:layout_marginEnd">24dp</item>
+    </style>
+    <!-- Style for text -->
+    <style name="Text">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textColor">@android:color/secondary_text_light</item>
+    </style>
+    <!-- Style for the text logo -->
+    <style name="Text.Logo">
+        <item name="android:textColor">@color/black</item>
+        <item name="android:fontFamily">@font/jost_bold</item>
+    </style>
+    <!-- Style for titles -->
+    <style name="Text.Titles">
+        <item name="android:layout_marginStart">16dp</item>
+        <item name="android:layout_marginTop">8dp</item>
+        <item name="android:textSize">30sp</item>
+        <item name="android:textColor">?attr/colorOnPrimary</item>
+    </style>
+    <!-- Style for subtitles -->
+    <style name="Text.Subtitles">
+        <item name="android:textSize">18sp</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+    <!-- Style for settings text -->
+    <style name="Text.Settings">
+        <item name="android:layout_margin">32dp</item>
+        <item name="android:textSize">16sp</item>
+    </style>
+    <!-- Style for popup text -->
+    <style name="Text.Popup">
         <item name="android:layout_marginStart">32dp</item>
         <item name="android:layout_marginTop">16dp</item>
-        <item name="android:textSize">16sp</item>
-        <item name="android:textColor">@color/design_default_color_on_secondary</item>
+        <item name="android:textSize">24sp</item>
     </style>
+    <!-- Style for popup text -->
+    <style name="Text.OnPrimary">
+        <item name="android:textColor">?attr/colorOnPrimary</item>
+    </style>
+
     <!-- Style for Song picker choices -->
-    <style name="SongChoices">
+    <style name="GradientButton.Popup">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_marginBottom">12dp</item>
-        <item name="android:padding">12dp</item>
+    </style>
+    <!-- Style for recycler views -->
+    <style name="RecyclerViews">
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_height">0dp</item>
+        <item name="android:layout_marginTop">12dp</item>
+        <item name="android:layout_marginStart">24dp</item>
+        <item name="android:layout_marginEnd">24dp</item>
+        <item name="android:layout_marginBottom">12dp</item>
+    </style>
+    <!-- Style for background -->
+    <style name="Background">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:scaleType">centerInside</item>
+        <item name="android:adjustViewBounds">true</item>
+    </style>
+    <!-- Style for background top -->
+    <style name="Background.Top">
+        <item name="srcCompat">@drawable/ic_background_top</item>
+    </style>
+    <!-- Style for background game -->
+    <style name="Background.Game">
+        <item name="srcCompat">@drawable/ic_background_game</item>
+    </style>
+    <!-- Style for background user -->
+    <style name="Background.User">
+        <item name="srcCompat">@drawable/ic_background_user</item>
     </style>
 </resources>

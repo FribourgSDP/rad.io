@@ -26,9 +26,6 @@ open class MainActivity : MyAppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        val voiceOverIpButton = findViewById<Button>(R.id.VoiceOverIpButton)
-        voiceOverIpButton.setOnClickListener{startActivity(Intent(this, VoiceOverIPActivity::class.java))}
-
         val playButton = findViewById<Button>(R.id.playButton)
         playButton.setOnClickListener {startActivity(Intent(this, GameSettingsActivity::class.java))}
         val joinButton : Button = findViewById(R.id.joinButton)

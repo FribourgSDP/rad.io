@@ -16,6 +16,8 @@ class QuitAddPlaylistDialog(val ctx: Context): DialogFragment() {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         val rootView: View = inflater.inflate(R.layout.fragment_quit_add_playlist, container, false)
 
+        isCancelable = false
+
         // Add the buttons of the view to the list
         buttons.add(rootView.findViewById(R.id.cancelQuitAddPlaylist))
         buttons[0].setOnClickListener{

@@ -6,10 +6,8 @@
 
     <TextView
         android:id="@+id/SavePlaylistOnline"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        style="@style/Text.Popup"
         android:text="@string/saveOnlineQuestionText"
-        android:textSize="24sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -28,13 +26,13 @@
 
         <Button
             android:id="@+id/saveOnlinePlaylistYes"
-            style="@style/SongChoices"
+            style="@style/GradientButton.Popup"
             android:layout_height="wrap_content"
             android:text="@string/yes" />
 
         <Button
             android:id="@+id/saveOnlinePlaylistNo"
-            style="@style/SongChoices"
+            style="@style/GradientButton.Popup"
             android:text="@string/no" />
 
     </LinearLayout>

@@ -33,15 +33,14 @@ open class UserProfileActivity : MyAppCompatActivity(), KeepOrDismissPlaylistDia
     private lateinit var user : User
     private lateinit var usernameField : EditText
     private lateinit var usernameInitialText : TextView
-    private lateinit var spotifyStatusText : TextView
     private lateinit var saveChangeButton : Button
     private lateinit var launchSpotifyButton : Button
     private lateinit var googleSignInButton : Button
+    private lateinit var addButton: FloatingActionButton
     private lateinit var userIcon : ImageView
     private var signedIn : Boolean = false
 
-
-    private var db = initializeDatabase()
+    private var db = this.initializeDatabase()
 
     protected lateinit var googleSignIn : GoogleSignIn
 
@@ -60,7 +59,6 @@ open class UserProfileActivity : MyAppCompatActivity(), KeepOrDismissPlaylistDia
             checkUser()
             usernameField.setText(user.name)
             usernameInitialText.text = user.initial.uppercaseChar().toString()
-            spotifyStatusText.apply { text = if (user.linkedSpotify) getString(R.string.spotify_linked) else getString(R.string.spotify_unlinked) }
             userIcon.colorFilter = PorterDuffColorFilter(user.color, PorterDuff.Mode.ADD)
             //initialise playlists recycler view fragment
             supportFragmentManager.beginTransaction()
@@ -87,7 +85,11 @@ open class UserProfileActivity : MyAppCompatActivity(), KeepOrDismissPlaylistDia
         googleSignInButton.setOnClickListener {
             signInOrOut()
         }
-        findViewById<FloatingActionButton>(R.id.addPlaylistButton).setOnClickListener{startActivity(Intent(this, AddPlaylistActivity::class.java))}
+
+
+        addButton.setOnClickListener{
+            startActivity(Intent(this, AddPlaylistActivity::class.java))
+        }
 
 
         if(!hasConnectivity(this)){
@@ -110,8 +112,8 @@ open class UserProfileActivity : MyAppCompatActivity(), KeepOrDismissPlaylistDia
         launchSpotifyButton = findViewById(R.id.launchSpotifyButton)
         saveChangeButton = findViewById(R.id.saveUserButton)
         usernameInitialText = findViewById(R.id.usernameInitial)
-        spotifyStatusText = findViewById(R.id.spotifyStatus)
         googleSignInButton = findViewById(R.id.googleSignInButton)
+        addButton = findViewById(R.id.addPlaylistButton)
         userIcon = findViewById(R.id.userIcon)
     }
 
