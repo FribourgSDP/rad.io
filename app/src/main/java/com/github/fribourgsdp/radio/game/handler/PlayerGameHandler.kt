@@ -58,6 +58,7 @@ class PlayerGameHandler(
             // It's not null when there is one.
             songToGuess = snapshot.getString("current_song")
 
+            Log.println(Log.ASSERT, "UP", "handle snapshot : noSing=${noSing}")
             if(!noSing) {
                 val singerName = snapshot.getString("singer")!!
                 view.updateSinger(singerName)
@@ -166,12 +167,12 @@ class PlayerGameHandler(
 
     private fun updateViewNoSingMode(snapshot: DocumentSnapshot) {
         val deadline = snapshot.getTimestamp("round_deadline")
+        view.updateSinger(NO_SINGER)
         if(songToGuess != null && deadline != null) {
             tts!!.readLyrics(getLyricsFromSnapshot(snapshot))
             view.startTimer(deadline.toDate())
         } else{
             view.stopTimer()
-            view.updateSinger(NO_SINGER)
         }
     }
     private fun updateViewForPlayer(snapshot: DocumentSnapshot, singerName : String){
