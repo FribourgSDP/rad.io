@@ -84,6 +84,11 @@ open class UserProfileActivity : MyAppCompatActivity(), KeepOrDismissPlaylistDia
             saveChangeButton.visibility = View.VISIBLE
             false
         }
+        usernameField.onFocusChangeListener = View.OnFocusChangeListener {
+                _, hasFocus ->
+            println("change of focus$hasFocus")
+//            if (!hasFocus) usernameField.setText(user.name)
+        }
 
         googleSignInButton.setOnClickListener {
             signInOrOut()
@@ -261,7 +266,7 @@ open class UserProfileActivity : MyAppCompatActivity(), KeepOrDismissPlaylistDia
         keepDismissDialogPicker.show(supportFragmentManager, "keepDismissDialogPicker")
 
         firebaseAuth.signOut()
-        googleSignInButton.setText(getString(R.string.sign_in_message))
+        googleSignInButton.text = getString(R.string.sign_in_message)
         signedIn = false
 
     }
