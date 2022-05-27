@@ -4,6 +4,11 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import android.widget.*
+import android.widget.ArrayAdapter
+import android.widget.EditText
+import android.widget.Spinner
+import android.widget.TextView
+import androidx.recyclerview.widget.ItemTouchHelper
 import com.google.android.gms.tasks.Tasks
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -23,7 +28,8 @@ import com.github.fribourgsdp.radio.database.FirestoreDatabase
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.json.Json
 
-open class AddPlaylistActivity : DatabaseHolder, MyAppCompatActivity(), SavePlaylistOnlinePickerDialog.OnPickListener {
+open class AddPlaylistActivity : MyAppCompatActivity(), SavePlaylistOnlinePickerDialog.OnPickListener,
+                                                                                    DatabaseHolder {
 
     private val listSongs = ArrayList<Song>()
     private var listNames = ArrayList<String>()
@@ -53,12 +59,14 @@ open class AddPlaylistActivity : DatabaseHolder, MyAppCompatActivity(), SavePlay
         recyclerView = findViewById(R.id.list_playlist_creation)
         listAdapter = SongAdapter(listSongs, object : OnClickListener {
             override fun onItemClick(position: Int) {
-                listSongs.removeAt(position)
-                listAdapter.notifyItemRemoved(position)
             }
         })
 
+        val itemTouchHelper = ItemTouchHelper(SongSwipeHelper(recyclerView, listSongs,
+            findViewById(R.id.AddPlaylistRootView), this))
         recyclerView.adapter = listAdapter
+        itemTouchHelper.attachToRecyclerView(recyclerView)
+
         val layoutManager = LinearLayoutManager(this)
         layoutManager.stackFromEnd = true
         recyclerView.layoutManager = layoutManager
@@ -168,6 +176,7 @@ open class AddPlaylistActivity : DatabaseHolder, MyAppCompatActivity(), SavePlay
             }
         }
     }
+
     private fun allFieldsEmpty(): Boolean {
         if (findViewById<EditText>(R.id.newPlaylistName).text.toString().isNotBlank()){
             return false
