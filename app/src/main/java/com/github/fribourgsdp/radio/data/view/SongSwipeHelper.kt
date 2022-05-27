@@ -43,19 +43,4 @@ class SongSwipeHelper (val recyclerView: RecyclerView, private val songList : Mu
         })
         deleteConfirmation.show()
     }
-
-    /**
-     * This listener is used to dismiss the deletion snackBar (cancelling the deletion)
-     * if the user touches anything other than the snackBar.
-     * it can therefore be attached to onTouchlistener of any UI elements the user
-     * is susceptible of pressing if they want to cancel the deletion.
-     * The listener can be reversed with _..setOnTouchListener(null)
-     */
-    class DismissTouchListener(private val snackBar: Snackbar, private val view: View) : View.OnTouchListener {
-        override fun onTouch(p0: View?, p1: MotionEvent?): Boolean {
-            snackBar.dismiss()
-            view.performClick()
-            return true
-        }
-    }
 }
