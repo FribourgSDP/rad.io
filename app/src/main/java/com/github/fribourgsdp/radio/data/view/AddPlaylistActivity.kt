@@ -30,6 +30,7 @@ open class AddPlaylistActivity : DatabaseHolder, MyAppCompatActivity(), SavePlay
     private lateinit var listAdapter: SongAdapter
     private lateinit var recyclerView : RecyclerView
     private lateinit var errorTextView : TextView
+    private lateinit var confirmButton : Button
     private lateinit var genreSpinner: Spinner
     private lateinit var generateLyricsCheckBox : CheckBox
     lateinit var user : User
@@ -38,19 +39,15 @@ open class AddPlaylistActivity : DatabaseHolder, MyAppCompatActivity(), SavePlay
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_add_playlist)
-        generateLyricsCheckBox = findViewById(R.id.generateLyricsCheckBox)
-        genreSpinner = findViewById(R.id.genreSpinner)
+        initViews()
         genreSpinner.adapter = ArrayAdapter(this, android.R.layout.simple_spinner_item, Genre.values())
-        errorTextView = findViewById(R.id.addPlaylistErrorTextView)
 
         User.loadOrDefault(this).addOnSuccessListener { u ->
             user = u
         }
 
-
         processIntent(intent)
 
-        recyclerView = findViewById(R.id.list_playlist_creation)
         listAdapter = SongAdapter(listSongs, object : OnClickListener {
             override fun onItemClick(position: Int) {
                 listSongs.removeAt(position)
@@ -64,6 +61,14 @@ open class AddPlaylistActivity : DatabaseHolder, MyAppCompatActivity(), SavePlay
         recyclerView.layoutManager = layoutManager
         errorTextView = findViewById(R.id.addPlaylistErrorTextView)
 
+    }
+
+    private fun initViews(){
+        generateLyricsCheckBox = findViewById(R.id.generateLyricsCheckBox)
+        genreSpinner = findViewById(R.id.genreSpinner)
+        errorTextView = findViewById(R.id.addPlaylistErrorTextView)
+        confirmButton = findViewById(R.id.confirmBtn)
+        recyclerView = findViewById(R.id.list_playlist_creation)
     }
 
     /**
@@ -121,6 +126,11 @@ open class AddPlaylistActivity : DatabaseHolder, MyAppCompatActivity(), SavePlay
             listSongs.addAll(playlist.getSongs())
             findViewById<EditText>(R.id.newPlaylistName).setText(playlist.name)
         }
+        if(intent.getBooleanExtra(ADD_PLAYLIST_FLAG, true)){
+            confirmButton.text = getString(R.string.create_playlist)
+        } else{
+            confirmButton.text = getString(R.string.update_playlist)
+        }
     }
 
 
@@ -128,7 +138,7 @@ open class AddPlaylistActivity : DatabaseHolder, MyAppCompatActivity(), SavePlay
         val playlistName: String = findViewById<EditText>(R.id.newPlaylistName).text.toString()
         val genre: Genre = genreSpinner.selectedItem as Genre
         Toast.makeText(this, R.string.creating_playlist_toast, Toast.LENGTH_LONG).show()
-        var playlist = Playlist(playlistName, listSongs.toSet(), genre)
+        val playlist = Playlist(playlistName, listSongs.toSet(), genre)
         val t = if (generateLyricsCheckBox.isChecked) {
             playlist.loadLyrics()
             //loadLyrics(playlist)
