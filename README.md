@@ -45,3 +45,7 @@ You can create your own playlist with a selection of songs you like, or simply u
 Voice channel : https://www.agora.io/
 
 Lyrics provider : https://www.musixmatch.com/
+
+We use spotify to retrieve the playlists of a user : developer.spotify.com
+
+...and Firebase to store all data online : https://firebase.google.com
