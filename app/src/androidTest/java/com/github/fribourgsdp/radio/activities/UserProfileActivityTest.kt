@@ -303,16 +303,6 @@ class UserProfileActivityTest : TestCase() {
 
 
 
-            //check that clicking on online playlist doesn't do anything
-            Espresso.onView(withId(R.id.playlist_recycler_view))
-                .check(matches(ViewMatchers.hasChildCount(1)))
-            Espresso.onView(withId(R.id.playlist_recycler_view))
-                .perform(RecyclerViewActions.actionOnItemAtPosition<ViewHolder>(0, click()))
-
-            //this check wouldn't succeed if we changed activity
-            onView(withId(R.id.username)).check(matches(withText(userName)))
-
-
         }
 
     }
