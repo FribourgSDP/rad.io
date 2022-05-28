@@ -7,14 +7,18 @@ import androidx.test.core.app.ActivityScenario
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.espresso.Espresso
 import androidx.test.espresso.Espresso.onView
+import androidx.test.espresso.ViewAssertion
 import androidx.test.espresso.action.ViewActions
 import androidx.test.espresso.action.ViewActions.click
 import androidx.test.espresso.assertion.ViewAssertions
+import androidx.test.espresso.assertion.ViewAssertions.matches
+import androidx.test.espresso.contrib.RecyclerViewActions
 import androidx.test.espresso.intent.Intents
 import androidx.test.espresso.intent.matcher.IntentMatchers.hasComponent
 import androidx.test.espresso.matcher.RootMatchers
 import androidx.test.espresso.matcher.ViewMatchers
 import androidx.test.espresso.matcher.ViewMatchers.withId
+import androidx.test.espresso.matcher.ViewMatchers.withText
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.github.fribourgsdp.radio.MainActivity
 import com.github.fribourgsdp.radio.R
@@ -25,6 +29,7 @@ import com.github.fribourgsdp.radio.data.view.REDIRECT_URI
 import com.github.fribourgsdp.radio.data.view.UserProfileActivity
 import com.github.fribourgsdp.radio.database.Database
 import com.github.fribourgsdp.radio.mockimplementations.*
+import com.github.fribourgsdp.radio.util.ViewHolder
 import com.google.android.gms.tasks.Tasks
 import junit.framework.TestCase
 import org.hamcrest.Matchers.allOf
@@ -260,8 +265,9 @@ class UserProfileActivityTest : TestCase() {
     }
 
     @Test
-    fun buttonAreDisabledWhenOffline(){
+    fun buttonAreDisabledAndOnlineResourceCannotBeModifiedWhenOffline(){
         val intent = Intent(ctx, MockUserProfileActivityOffline::class.java)
+        val testName = "testModified"
 
         val db = Mockito.mock(Database::class.java)
         //`when`(db.generateUserId()).thenReturn(Tasks.forResult(1))
@@ -281,6 +287,31 @@ class UserProfileActivityTest : TestCase() {
                         ViewMatchers.isNotEnabled()
                     )
                 )
+
+            //try to change the username
+            onView(withId(R.id.saveUserButton)).check(ViewAssertions.matches(ViewMatchers.withEffectiveVisibility(ViewMatchers.Visibility.INVISIBLE)))
+            onView(withId(R.id.username)).perform(
+                ViewActions.clearText(),
+                ViewActions.typeText(testName),
+            )
+            onView(withId(R.id.saveUserButton)).check(ViewAssertions.matches(ViewMatchers.isDisplayed()))
+            Espresso.closeSoftKeyboard()
+            onView(withId(R.id.saveUserButton)).perform(click())
+            onView(withId(R.id.saveUserButton)).check(ViewAssertions.matches(ViewMatchers.withEffectiveVisibility(ViewMatchers.Visibility.INVISIBLE)))
+
+            onView(withId(R.id.username)).check(matches(withText(userName)))
+
+
+
+            //check that clicking on online playlist doesn't do anything
+            Espresso.onView(withId(R.id.playlist_recycler_view))
+                .check(matches(ViewMatchers.hasChildCount(1)))
+            Espresso.onView(withId(R.id.playlist_recycler_view))
+                .perform(RecyclerViewActions.actionOnItemAtPosition<ViewHolder>(0, click()))
+
+            //this check wouldn't succeed if we changed activity
+            onView(withId(R.id.username)).check(matches(withText(userName)))
+
 
         }
 
