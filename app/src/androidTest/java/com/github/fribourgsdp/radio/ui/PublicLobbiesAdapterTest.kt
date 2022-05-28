@@ -23,16 +23,19 @@ class PublicLobbiesAdapterTest {
 
         // id check
         adapter.sortBy(LobbyDataKeys.ID)
+        Thread.sleep(100)
         db.lobbies.sortedBy { it.id }
             .forEachIndexed(assertForEach)
 
         // name check
         adapter.sortBy(LobbyDataKeys.NAME)
+        Thread.sleep(100)
         db.lobbies.sortedBy { it.name }
             .forEachIndexed(assertForEach)
 
         // hostname check
         adapter.sortBy(LobbyDataKeys.HOSTNAME)
+        Thread.sleep(100)
         db.lobbies.sortedBy { it.hostName }
             .forEachIndexed(assertForEach)
     }
