@@ -58,7 +58,7 @@ class PlayerGameHandler(
             // It's not null when there is one.
             songToGuess = snapshot.getString("current_song")
 
-            Log.println(Log.ASSERT, "UP", "handle snapshot : noSing=${noSing}")
+            
             if(!noSing) {
                 val singerName = snapshot.getString("singer")!!
                 view.updateSinger(singerName)
