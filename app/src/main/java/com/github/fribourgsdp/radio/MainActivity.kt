@@ -39,9 +39,6 @@ open class MainActivity : MyAppCompatActivity() {
 
         if(!hasConnectivity(this)) {
             playButton.isEnabled = false
-            Log.w("WIFI", "Ici j'ai pas de wifi")
-        }else{
-            Log.w("WIFI", "Ici j'ai du wifi")
         }
         /** this user allows quick demo's as it is data that is written to the app
          * specific storage and can be easily read without intents */
