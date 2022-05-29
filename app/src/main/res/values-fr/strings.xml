@@ -157,5 +157,6 @@
     </string-array>
     <string name="deleteUndoAnswer">Annuler</string>
     <string name="deleteUndoQuestion">Annuler la suppression?</string>
-
+    <string name="offline_error_message_toast">Impossible d\'acceder à des ressources en ligne</string>
+    <string name="no_lyrics_generation_offline">Impossible de générer des paroles</string>
 </resources>
