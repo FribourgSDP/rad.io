@@ -20,10 +20,10 @@ object StarterPlaylists {
         }
     }
     private fun addSongArtistToPlaylist(playlist: Playlist, song: Pair<String, String>, lyrics : String) {
-        playlist.addSong(Song(song.first, song.second, processLyrics(lyrics)))
+        playlist.addSong(Song(song.first, song.second, lyrics))
     }
     private fun addArtistSongToPlaylist(playlist: Playlist, song: Pair<String, String>, lyrics : String) {
-        playlist.addSong(Song(song.second, song.first, processLyrics(lyrics)))
+        playlist.addSong(Song(song.second, song.first, lyrics))
     }
 
 
@@ -50,7 +50,7 @@ object StarterPlaylists {
         while (line != null) {
             val tuple = line.split(":")
             val lyrics = tuple[2].replace("\\n", "\n")
-            addingFunction.invoke(playlist, Pair(tuple[0], tuple[1]), lyrics)
+            addingFunction.invoke(playlist, Pair(tuple[0], tuple[1]), processLyrics(lyrics))
             line = reader.readLine();
         }
         reader.close()
