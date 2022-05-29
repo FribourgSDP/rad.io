@@ -116,6 +116,7 @@ open class AddPlaylistActivity : MyAppCompatActivity(), SavePlaylistOnlinePicker
             else -> {
                 if(!hasConnectivity(this)){
                     savePlaylistLocally()
+
                 }else{
                     val savePlaylistOnlinePicker = SavePlaylistOnlinePickerDialog(this)
                     savePlaylistOnlinePicker.show(supportFragmentManager, "SavePlaylistOnlinePicker")
@@ -142,6 +143,9 @@ open class AddPlaylistActivity : MyAppCompatActivity(), SavePlaylistOnlinePicker
 
 
     private fun savePlaylistLocally(){
+        if(generateLyricsCheckBox.isChecked){
+            Toast.makeText(this,getString(R.string.no_lyrics_generation_offline),Toast.LENGTH_SHORT).show()
+        }
         val playlistName : String = findViewById<EditText>(R.id.newPlaylistName).text.toString()
         val genre : Genre = genreSpinner.selectedItem as Genre
         val playlist = Playlist(playlistName,listSongs.toSet(),genre)
