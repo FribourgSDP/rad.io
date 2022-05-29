@@ -224,6 +224,9 @@ open class UserProfileActivity : MyAppCompatActivity(), KeepOrDismissPlaylistDia
                 user = it.result
                 user.addPlaylists(playlist)
                 user.save(this)
+                val refresh = Intent(this, UserProfileActivity::class.java)
+                finish()
+                startActivity(refresh)
             }
         }
 
