@@ -26,6 +26,7 @@ const val SONG_DATA = "com.github.fribourgsdp.radio.SONG_INNER_DATA"
 const val SONG_NAME_INDEX = 0
 const val SONG_ARTIST_INDEX = 1
 const val PLAYLIST_TO_MODIFY = "com.github.fribourgsdp.radio.data.view.PLAYLIST_TO_MODIFY"
+const val ADD_PLAYLIST_FLAG = "com.github.fribourgsdp.radio.data.view.ADD_PLAYLIST_FLAG"
 
 open class PlaylistSongsFragment : MyFragment(R.layout.fragment_playlist_display),
     ConnectivityChecker,OnClickListener,
@@ -58,6 +59,7 @@ open class PlaylistSongsFragment : MyFragment(R.layout.fragment_playlist_display
         editButton.setOnClickListener {
             val intent  = Intent(context, AddPlaylistActivity::class.java)
             intent.putExtra(PLAYLIST_TO_MODIFY, Json.encodeToString(playlist))
+            intent.putExtra(ADD_PLAYLIST_FLAG, false)
             startActivity(intent)
         }
 

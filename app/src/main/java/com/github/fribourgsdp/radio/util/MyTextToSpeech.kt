@@ -13,7 +13,7 @@ import java.util.*
 
 
 const val TTS_INITIALIZATION_RETRY_DELAY_MS : Long = 1000
-const val SPEECH_RATE : Float = 0.8f
+const val SPEECH_RATE : Float = 0.9f
 
 open class MyTextToSpeech(private val applicationContext: Context) : TextToSpeech.OnInitListener {
     private var tts: TextToSpeech? = null

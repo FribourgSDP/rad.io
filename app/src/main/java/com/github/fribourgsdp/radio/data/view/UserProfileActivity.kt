@@ -101,7 +101,9 @@ open class UserProfileActivity : MyAppCompatActivity(), KeepOrDismissPlaylistDia
 
 
         addButton.setOnClickListener{
-            startActivity(Intent(this, AddPlaylistActivity::class.java))
+            val intent = Intent(this, AddPlaylistActivity::class.java)
+            intent.putExtra(ADD_PLAYLIST_FLAG, true)
+            startActivity(intent)
         }
 
 
