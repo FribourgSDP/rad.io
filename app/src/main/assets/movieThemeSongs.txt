@@ -1,103 +1,103 @@
-E.T.:John Williams
-Jurassic Park:John Williams
-Star Wars:John Williams
-Pinocchio:Ned Washington & Leigh Harline
-Schindler's List:John Williams
-The Magnificent Seven:Elmer Bernstein
-The Bridge on the River Kwai:Malcolm Arnold
-The Italian Job:Quincy Jones
-The Terminator:Brad Fiedel
-Chitty Chitty Bang Bang:Sherman Brothers
-Gone with the Wind:Max Steiner
-Viva Las Vegas:Elvis Presley
-9 to 5:Dolly Parton
-Back to the Future:Huey Lewis & The News
-The Dam Busters:Eric Coates
-The Good, the Bad and the Ugly:Ennio Morricone
-The Great Escape:Elmer Bernstein
-Mars Attacks!:Danny Elfman
-Ghostbusters:Ray Parker Jr
-Robin Hood:Roger Miller
-Don't Look Now:Pino Donaggio
-Cape Fear:Bernard Herrmann
-Hatari:Henry Mancini
-The Sting:Scott Joplin
-The Pink Panther:Henry Mancini
-Lawrence of Arabia:Maurice Jarre
-The Witches:Stanley Myers
-Raiders of the Lost Ark:John Williams
-Dr. No:John Barry
-From Russia with Love:Matt Monro
-The King of Comedy:Van Morrison
-A Clockwork Orange:Walter Carlos
-Beauty and the Beast:Alan Menken & Howard Ashman
-Star Trek:Jerry Goldsmith
-Jaws:John Williams
-Taxi Driver:Bernard Herrmann
-Robin Hood:Bryan Adams
-Thunderball:Tom Jones
-GoldenEye:Tina Turner
-Goldfinger:Shirley Bassey
-Fiddler on the Roof:Topol
-Live and Let Die:Paul McCartney & Wings
-The French Connection:Don Ellis
-Braveheart:James Horner
-Airplane!:Elmer Bernstein
-The Eagle Has Landed:Lalo Schifrin
-The Big Country:Jerome Moross
-Babe:Nigel Westlake
-Blade Runner:Vangelis
-Get Carter:Roy Budd
-The Godfather:Nino Rota & Ennio Morricone
-Saving Private Ryan:John Williams
-Calamity Jane:Doris Day
-Mary Poppins:Sherman Brothers
-Halloween:John Carpenter
-Tom and Jerry:Henry Mancini
-The Little Shop of Horrors:Fred Katz & Ronald Stein
-Hook:John Williams
-Jailhouse Rock:Elvis Presley
-Sweet Sweetback's Baadass Song:Melvin Van Peebles
-A Hard Day's Night:Beatles
-The Jungle Book:George Bruns & the Sherman Brothers
-Saturday Night Fever:Bee Gees
-Labyrinth:David Bowie
-West Side Story:Saul Chaplin, Johnny Green, Sid Ramin and Irwin Kostal
-Close Encounters of the Third Kind:John Williams
-The Hunchback of Notre Dame:Paul Kandel
-Chicken Run:John Powell & Harry Gregson Williams
-Team America World Police:Marc Shairman
-The Sword in the Stone:George Bruns & The Sherman Brothers
-The AristoCats:Maurice Chevalier
-Amistad:John Williams
-Ace Ventura Pet Detective:Ira Newborn
-On Her Majesty's Secret Service:John Barry
-Dirty Harry:Lalo Schrifin
-The Wizard of Oz:Judy Garland
-Catch Me If You Can:John Williams
-The Man with the Golden Gun:Lulu
-Diamonds Are Forever:Shirley Bassey
-Flash Gordon:Queen
-JFK:John Williams
-The Triplets of Belleville:Benoit Charest & Sylvain Chomet
-South Park:Trey Parker, Matt Stone & Mary Kay Bergman
-Superman:John Williams
-Tokyo Drifter:So Kaburagi
-2001 A Space Odyssey:Alex North
-The Sound of Music:Julie Andrews
-The Towering Inferno:John Williams
-The Living Daylights:A'ha
-For Your Eyes Only:Sheena Easton
-Moonraker:Shirley Bassey
-The Lord of the Rings:Howard Shore
-Sweeney Todd:Stephen Sondheim
-The Poseidon Adventure:John Williams
-Zulu:John Barry
-Alice in Wonderland:Oliver Wallace
-Sleeping Beauty:Tchaikovsky
-Harry Potter:
-La soupe aux choux:
-Interstallar:Hans Zimmer
-Pirate of the Caribbean:Hans Zimmer
-Mission Impossible:
-Indiana Jones:John Williams
+E.T.:John Williams:
+Jurassic Park:John Williams:
+Star Wars:John Williams:
+Pinocchio:Ned Washington & Leigh Harline:
+Schindler's List:John Williams:
+The Magnificent Seven:Elmer Bernstein:
+The Bridge on the River Kwai:Malcolm Arnold:
+The Italian Job:Quincy Jones:
+The Terminator:Brad Fiedel:
+Chitty Chitty Bang Bang:Sherman Brothers:
+Gone with the Wind:Max Steiner:
+Viva Las Vegas:Elvis Presley:right light city gonna set my soul\nGonna set my soul on fire\nGot a whole lot of money that's ready to burn\nSo get those stakes up higher\n\nThere's a thousand pretty women waitin' out there\nAnd they're all livin' devil may care\nAnd I'm just the devil with love to spare\nViva Las Vegas, viva Las Vegas\n\nHow I wish that there were more\nThan the twenty-four hours in the day\n'Cause even if there were forty more
+9 to 5:Dolly Parton:Tumble outta bed and I stumble to the kitchen\nPour myself a cup of ambition\nAnd yawn and stretch and try to come to life\n\nJump in the shower and the blood starts pumpin'\nOut on the street, the traffic starts jumpin'\nThe folks like me on the job from 9 to 5\n\nWorkin' 9 to 5, what a way to make a livin'\nBarely gettin' by, it's all takin' and no givin'\nThey just use your mind\nAnd they never give you credit\nIt's enough to drive you crazy if you let it\n\n9 to 5, for service and devotion\nYou would think that I\nWould deserve a fair promotion\nWant to move ahead\nBut the boss won't seem to let me\nI swear sometimes that man is out to get me
+Back to the Future:Huey Lewis & The News:
+The Dam Busters:Eric Coates:
+The Good, the Bad and the Ugly:Ennio Morricone:
+The Great Escape:Elmer Bernstein:
+Mars Attacks!:Danny Elfman:
+Ghostbusters:Ray Parker Jr:Ghostbusters!\n\nIf there's somethin' strange\nIn your neighborhood\nWho ya gonna call?\n(Ghostbusters!)\n\nIf it's somethin' weird\nAnd it don't look good\nWho ya gonna call?\n(Ghostbusters!)\n\nI ain't afraid of no ghost\nI ain't afraid of no ghost\n\nIf you're seein' things\nRunnin' through your head\nWho can you call?\n(Ghostbusters!)\n\nAn invisible man\nSleepin' in your bed\nOh, who ya gonna call?\n(Ghostbusters!)\n
+Robin Hood:Roger Miller:
+Don't Look Now:Pino Donaggio:
+Cape Fear:Bernard Herrmann:
+Hatari:Henry Mancini:
+The Sting:Scott Joplin:
+The Pink Panther:Henry Mancini:
+Lawrence of Arabia:Maurice Jarre:
+The Witches:Stanley Myers:
+Raiders of the Lost Ark:John Williams:
+Dr. No:John Barry:
+From Russia with Love:Matt Monro:From Russia with love, I fly to you\nMuch wiser since my goodbye to you\nI've travelled the world to learn\nI must return\nFrom Russia with love
+The King of Comedy:Van Morrison:
+A Clockwork Orange:Walter Carlos:
+Beauty and the Beast:Alan Menken & Howard Ashman:
+Star Trek:Jerry Goldsmith:
+Jaws:John Williams:
+Taxi Driver:Bernard Herrmann:
+Robin Hood:Bryan Adams:
+Thunderball:Tom Jones:He always runs while others walk\nHe acts while other men just talk\nHe looks at this world and wants it all\nSo he strikes like Thunderball\n\nHe knows the meaning of success
+GoldenEye:Tina Turner:See reflections on the water\nMore than darkness in the depths\nSee him surface in every shadow\nOn the wind I feel his breath\n\nGoldeneye I found his weakness\nGoldeneye he'll do what I please\nGoldeneye no time for sweetness\nBut a bitter kiss will bring him to his knees\n\nYou'll never know how I watched you\nFrom the shadows as a child\nYou'll never know how it feels to be the one
+Goldfinger:Shirley Bassey:Goldfinger\nHe's the man\nThe man with a Midas touch\nA Spider's touch\n\nSuch a cold finger\nBeckons you\nTo enter his web of sin\nBut don't go in\n\nGolden words he will pull in your ear\nBut his lies can't disguise what you fear\nFor a golden girl
+Fiddler on the Roof:Topol:If I were a rich man,\nYubby dibby dibby dibby dibby dibby dibby dum.\nAll day long I'd biddy biddy bum.\nIf I were a wealthy man.\nI wouldn't have to work hard.\nYa ha deedle deedle, bubba bubba deedle deedle dum.\nIf I were a biddy biddy rich,\nIdle-diddle-daidle-daidle man.\n\nI'd build a big tall house with rooms by the dozen,\nRight in the middle of the town.\nA fine tin roof with real wooden floors below.\nThere would be one long staircase just going up,\nAnd one even longer coming down,\nAnd one more leading nowhere, just for show.\n\nI'd fill my yard with chicks and turkeys and geese and ducks\nFor the town to see and hear.\n(Insert)Squawking just as noisily as they can. (End Insert)\nWith each loud \"cheep\" \"swaqwk\" \"honk\" \"quack\"\nWould land like a trumpet on the ear,\nAs if to say \"Here lives a wealthy man.\"
+Live and Let Die:Paul McCartney & Wings:When you were young and your heart\nWas an open book\nYou used to say live and let live\n(You know you did)\n(You know you did)\n(You know you did)\nBut if this ever changin' world\nIn which we're livin'\nMakes you give in and cry\n
+The French Connection:Don Ellis:
+Braveheart:James Horner:
+Airplane!:Elmer Bernstein:
+The Eagle Has Landed:Lalo Schifrin:
+The Big Country:Jerome Moross:
+Babe:Nigel Westlake:
+Blade Runner:Vangelis:
+Get Carter:Roy Budd:
+The Godfather:Nino Rota & Ennio Morricone:Speak softly, love and hold me warm against your heart\nI feel your words, the tender trembling moments start\nWe're in a world, our very own\nSharing a love that only few have ever known\nSpeak softly, love so no one hears us but the sky
+Saving Private Ryan:John Williams:
+Calamity Jane:Doris Day:Take me back to the black hills\nThe black hills of Dakota\nTo the beautiful Indian country\nThat I love\n\nLost my heart in the black hills\nThe black hills of Dakota\nWhere the pines are so high\nThat they kiss the sky above\n\nAnd when I get that lonesome feelin'
+Mary Poppins:Sherman Brothers:
+Halloween:John Carpenter:
+Tom and Jerry:Henry Mancini:
+The Little Shop of Horrors:Fred Katz & Ronald Stein:
+Hook:John Williams:
+Jailhouse Rock:Elvis Presley:
+Sweet Sweetback's Baadass Song:Melvin Van Peebles:
+A Hard Day's Night:Beatles:It's been a hard day's night\nAnd I've been working like a dog\nIt's been a hard day's night\nI should be sleeping like a log\n\nBut when I get home to you\nI find the things that you do\nWill make me feel alright\n\nYou know I work all day\nTo get you money to buy you things\nAnd it's worth it just to hear you say\nYou're gonna give me everything\n\nSo why on Earth should I moan?\n'Cause when I get you alone
+The Jungle Book:George Bruns & the Sherman Brothers:
+Saturday Night Fever:Bee Gees:My baby moves at midnight\nGoes right on till the dawn\nMy woman takes me higher\nMy woman keeps me warm\nWhat you doin' on your back aah\nWhat you doin' on your back aah\nYou should be dancing, yeah\nDancing, yeah\nShe's juicy and she's trouble\nShe gets it to me good\nMy woman gives me power\nGoes right down to my blood\nWhat you doin' on your back aah\nWhat you doin' on your back aah\nYou should be dancing, yeah\nDancing, yeah\n\nWhat you doin' on your back aah\nWhat you doin' on your back aah\nYou should be dancing, yeah\nDancing, yeah
+Labyrinth:David Bowie:You remind me of the babe\nWhat babe? babe with the power\nWhat power? power of voodoo\nWho do? you do\nDo what? remind me of the babe\n\nI saw my baby, crying hard as babe could cry\nWhat could I do\nMy baby's love had gone\nAnd left my baby blue\nNobody knew\n\nWhat kind of magic spell to use\nSlime and snails\nOr puppy dogs' tails\nThunder or lightning\nThen baby said\nDance magic, dance (dance magic, dance)\nDance magic, dance (dance magic, dance)\nPut that baby spell on me\nJump magic, jump (jump magic, jump)\nJump magic, jump (jump magic, jump)\nPut that magic jump on me\nSlap that baby, make him free\n\nI saw my baby, trying hard as babe could try\nWhat could I do\nMy baby's fun had gone\nAnd left my baby blue\nNobody knew\n
+West Side Story:Saul Chaplin, Johnny Green, Sid Ramin and Irwin Kostal:
+Close Encounters of the Third Kind:John Williams:
+The Hunchback of Notre Dame:Paul Kandel:
+Chicken Run:John Powell & Harry Gregson Williams:
+Team America World Police:Marc Shairman:
+The Sword in the Stone:George Bruns & The Sherman Brothers:
+The AristoCats:Maurice Chevalier:Which pet's address is the finest in Paris?\nWhich pet possess the longest pedigree?\nWhich pets get to sleep on velvet mats?\nNaturellement! The aristocats!\n\nWhich pets are blessed with the fairest forms and faces?\nWhich pets know best all the gentle social graces?\nWhich pets live on cream and loving pats?\nNaturellement! The aristocats!\n
+Amistad:John Williams:
+Ace Ventura Pet Detective:Ira Newborn:
+On Her Majesty's Secret Service:John Barry:
+Dirty Harry:Lalo Schrifin:
+The Wizard of Oz:Judy Garland:
+Catch Me If You Can:John Williams:
+The Man with the Golden Gun:Lulu:He has a powerful weapon\nHe charges a million a shot\nAn assassin that's second to none\nThe man with the golden gun.\n\nLurking in some darkened doorway\nOr crouched on a roof top somewhere\nIn the next room, or this very one\nThe man with the golden gun.\n\nLove is required whenever he's hired\nIt comes just before the kill.
+Diamonds Are Forever:Shirley Bassey:Diamonds are forever\nThey are all I need to please me\nThey can stimulate and tease me\nThey won't leave in the night\nI've no fear that they might desert me\n\nDiamonds are forever\nHold one up and then caress it\nTouch it, stroke it and undress it\nI can see every part\nNothing hides in the heart to hurt me"
+Flash Gordon:Queen:
+JFK:John Williams:
+The Triplets of Belleville:Benoit Charest & Sylvain Chomet:
+South Park:Trey Parker, Matt Stone & Mary Kay Bergman:
+Superman:John Williams:
+Tokyo Drifter:So Kaburagi:
+2001 A Space Odyssey:Alex North:
+The Sound of Music:Julie Andrews:The hills are alive with the sound of music\nWith songs they have sung for a thousand years\nThe hills fill my heart with the sound of music\nMy heart wants to sing every song it hears\n\nMy heart wants to beat like the wings of the birds
+The Towering Inferno:John Williams:
+The Living Daylights:A'ha:Hey driver, where we going?\nI swear my nerves are showing\nSet your hopes up way too high\nThe living's in the way we die\n\nComes the morning and the headlights fade away\nHundred thousand people, I'm the one they blame\nI've been waiting long for one of us to say\n\"Save the darkness, let it never fade away\"\n\nOh, the living daylights\nOh, the living daylights\n\nAll right, hold on tight now\nIt's down, down to the wire
+For Your Eyes Only:Sheena Easton:For your eyes only, can see me through the night\nFor your eyes only, I never need to hide\nYou can see so much in me\nSo much in me, that's new\nI never felt 'til I looked at you\n\nFor your eyes only, only for you\nYou see what no one else can see\nNow I'm breaking free
+Moonraker:Shirley Bassey:Where are you?\nWhy do you hide?\nWhere is that moonlight trail that leads to your side?\nJust like the moonraker goes\nIn search of his dream of gold\nI search for love\nFor someone to have and hold\n\nI've seen your smile\nIn a thousand dreams
+The Lord of the Rings:Howard Shore:
+Sweeney Todd:Stephen Sondheim:Nothing's gonna harm you\nNot while im around\nNothing's gonna harm you\nNo sir\nNot while im around\nDemons are prowling everywhere\nNowadays\nIll send 'em howling\nI don't care, i got ways\nNo one's gonna hurt you\nNo one's gonna dare\nOthers can desert you\nNot to worry, whistle,\nIl be there
+The Poseidon Adventure:John Williams:
+Zulu:John Barry:
+Alice in Wonderland:Oliver Wallace:
+Sleeping Beauty:Tchaikovsky:
+Harry Potter::
+La soupe aux choux::
+Interstallar:Hans Zimmer:
+Pirate of the Caribbean:Hans Zimmer:
+Mission Impossible::
+Indiana Jones:John Williams:
