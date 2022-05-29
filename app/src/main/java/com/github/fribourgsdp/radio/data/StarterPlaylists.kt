@@ -14,17 +14,16 @@ object StarterPlaylists {
     private val videoGames = Playlist("Video game songs", VIDEO_GAMES)
     private val classicalHits = Playlist("Classical music hits", CLASSICAL)
 
-    private fun addSongArtistToPlaylist(playlist: Playlist, song: Pair<String, String>, lyrics : String) {
-        val lyrics2 = lyrics.ifEmpty {
+    private fun processLyrics(lyrics : String) : String {
+        return lyrics.ifEmpty {
             MusixmatchLyricsGetter.LYRICS_NOT_FOUND_PLACEHOLDER
         }
-        playlist.addSong(Song(song.first, song.second, lyrics2))
+    }
+    private fun addSongArtistToPlaylist(playlist: Playlist, song: Pair<String, String>, lyrics : String) {
+        playlist.addSong(Song(song.first, song.second, processLyrics(lyrics)))
     }
     private fun addArtistSongToPlaylist(playlist: Playlist, song: Pair<String, String>, lyrics : String) {
-        val lyrics2 = lyrics.ifEmpty {
-            MusixmatchLyricsGetter.LYRICS_NOT_FOUND_PLACEHOLDER
-        }
-        playlist.addSong(Song(song.second, song.first, lyrics2))
+        playlist.addSong(Song(song.second, song.first, processLyrics(lyrics)))
     }
 
 
