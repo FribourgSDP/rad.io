@@ -11,6 +11,7 @@ import android.widget.Button
 //import com.github.fribourgsdp.radio.databinding.ActivityMainBinding
 
 import android.widget.ImageButton
+import android.widget.Toast
 import com.github.fribourgsdp.radio.config.MyAppCompatActivity
 import com.github.fribourgsdp.radio.config.SettingsActivity
 import com.github.fribourgsdp.radio.data.User
@@ -27,7 +28,15 @@ open class MainActivity : MyAppCompatActivity() {
         setContentView(R.layout.activity_main)
 
         val playButton = findViewById<Button>(R.id.playButton)
-        playButton.setOnClickListener {startActivity(Intent(this, GameSettingsActivity::class.java))}
+        playButton.setOnClickListener {
+            if(hasConnectivity(this)){
+                startActivity(Intent(this, GameSettingsActivity::class.java))
+            }
+            else{
+                Toast.makeText(this,getString(R.string.offline_error_message_toast), Toast.LENGTH_SHORT).show()
+                playButton.isEnabled = false
+            }
+        }
         val joinButton : Button = findViewById(R.id.joinButton)
         joinButton.setOnClickListener {startActivity(Intent(this, JoinGameActivity::class.java))}
         val settingsButton = findViewById<Button>(R.id.settingsButton)
