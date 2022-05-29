@@ -23,7 +23,7 @@ object StarterPlaylists {
         playlist.addSong(Song(song.first, song.second, lyrics))
     }
     private fun addArtistSongToPlaylist(playlist: Playlist, song: Pair<String, String>, lyrics : String) {
-        playlist.addSong(Song(song.second, song.first, lyrics))
+        addSongArtistToPlaylist(playlist, Pair(song.second, song.first), lyrics)
     }
 
 
