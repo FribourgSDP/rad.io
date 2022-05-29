@@ -67,7 +67,14 @@ open class UserProfileActivity : MyAppCompatActivity(), KeepOrDismissPlaylistDia
         }
 
         launchSpotifyButton.setOnClickListener {
-            authenticateUser()
+            if(hasConnectivity(this)){
+                authenticateUser()
+
+            }else{
+                disableButtons()
+                Toast.makeText(this,getString(R.string.offline_error_message_toast),Toast.LENGTH_SHORT).show()
+
+            }
         }
 
 
@@ -83,7 +90,13 @@ open class UserProfileActivity : MyAppCompatActivity(), KeepOrDismissPlaylistDia
         }
 
         googleSignInButton.setOnClickListener {
-            signInOrOut()
+            if(hasConnectivity(this)){
+                signInOrOut()
+            }else{
+                disableButtons()
+                Toast.makeText(this,getString(R.string.offline_error_message_toast),Toast.LENGTH_SHORT).show()
+
+            }
         }
 
 
@@ -93,8 +106,7 @@ open class UserProfileActivity : MyAppCompatActivity(), KeepOrDismissPlaylistDia
 
 
         if(!hasConnectivity(this)){
-            launchSpotifyButton.isEnabled = false
-            googleSignInButton.isEnabled = false
+            disableButtons()
         }
     }
 
@@ -106,6 +118,10 @@ open class UserProfileActivity : MyAppCompatActivity(), KeepOrDismissPlaylistDia
         }
     }
 
+    private fun disableButtons(){
+        launchSpotifyButton.isEnabled = false
+        googleSignInButton.isEnabled = false
+    }
     private fun instantiateViews(){
         firebaseAuth = FirebaseAuth.getInstance()
         usernameField = findViewById(R.id.username)
@@ -130,7 +146,7 @@ open class UserProfileActivity : MyAppCompatActivity(), KeepOrDismissPlaylistDia
                 user.name = usernameField.text.toString()
                 user.onlineCopyAndSave()
             }else if(user.isGoogleUser && !hasConnectivity(this)) {
-                Toast.makeText(this,"Cannot make online related changes without connection",Toast.LENGTH_SHORT).show()
+                Toast.makeText(this,getString(R.string.offline_error_message_toast),Toast.LENGTH_SHORT).show()
                 usernameField.setText(user.name)
             }else {
                 user.name = usernameField.text.toString()
