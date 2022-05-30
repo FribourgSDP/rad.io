@@ -23,31 +23,39 @@ import com.github.fribourgsdp.radio.game.prep.JoinGameActivity
 
 open class MainActivity : MyAppCompatActivity() {
     private val db = FirestoreDatabase()
+    private lateinit var playButton : Button
+    private lateinit var joinButton : Button
+    private lateinit var settingsButton : Button
+    private lateinit var profileButton : ImageButton
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-
-        val playButton = findViewById<Button>(R.id.playButton)
+        initViews()
         playButton.setOnClickListener {
             if(hasConnectivity(this)){
                 startActivity(Intent(this, GameSettingsActivity::class.java))
             }
             else{
                 Toast.makeText(this,getString(R.string.offline_error_message_toast), Toast.LENGTH_SHORT).show()
-                playButton.isEnabled = false
+                disableButtons()
             }
         }
-        val joinButton : Button = findViewById(R.id.joinButton)
-        joinButton.setOnClickListener {startActivity(Intent(this, JoinGameActivity::class.java))}
-        val settingsButton = findViewById<Button>(R.id.settingsButton)
+        joinButton.setOnClickListener {
+            if(hasConnectivity(this)){
+                startActivity(Intent(this, JoinGameActivity::class.java))
+            }else{
+                Toast.makeText(this,getString(R.string.offline_error_message_toast), Toast.LENGTH_SHORT).show()
+                disableButtons()
+            }
+        }
         settingsButton.setOnClickListener {startActivity(Intent(this, SettingsActivity::class.java))}
-        val profileButton: ImageButton = findViewById(R.id.profileButton)
         profileButton.setOnClickListener {
             startActivity(Intent(this, UserProfileActivity::class.java))
         }
 
         if(!hasConnectivity(this)) {
-            playButton.isEnabled = false
+            disableButtons()
         }
         /** this user allows quick demo's as it is data that is written to the app
          * specific storage and can be easily read without intents */
@@ -58,6 +66,21 @@ open class MainActivity : MyAppCompatActivity() {
         } catch (e: java.io.FileNotFoundException) {
             createUser()
         }
+
+
+    }
+
+    private fun disableButtons(){
+        playButton.isEnabled = false
+        joinButton.isEnabled = false
+
+
+    }
+    private fun initViews(){
+         settingsButton = findViewById(R.id.settingsButton)
+         joinButton  = findViewById(R.id.joinButton)
+         playButton = findViewById(R.id.playButton)
+         profileButton = findViewById(R.id.profileButton)
 
 
     }
