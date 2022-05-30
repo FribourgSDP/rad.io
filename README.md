@@ -46,6 +46,6 @@ Voice channel : https://www.agora.io/
 
 Lyrics provider : https://www.musixmatch.com/
 
-We use spotify to retrieve the playlists of a user : developer.spotify.com
+We use spotify to retrieve the playlists of a user : https://developer.spotify.com
 
 ...and Firebase to store all data online : https://firebase.google.com
