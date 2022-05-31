@@ -314,7 +314,7 @@ class FirestoreDatabaseTest {
 
 
         `when`(mockSnapshot.exists()).thenReturn(true)
-        val fakeSettings = Game.Settings("host22", "gameName", "playlistBla", 3, false, true)
+        val fakeSettings = Game.Settings("host22", "gameName", "playlistBla", 3, false, true, 45)
 
         val result = db.openLobby(idForOpenLobby, fakeSettings)
         assertEquals(null, Tasks.await(result))
@@ -342,7 +342,7 @@ class FirestoreDatabaseTest {
 
     @Test
     fun getGameSettingsFromLobbyWorks() {
-        var expected = Game.Settings("testHost", "A test lobby for testing", "testPlaylist", 3, false, true)
+        var expected = Game.Settings("testHost", "A test lobby for testing", "testPlaylist", 3, false, true, 30L)
         val result = fireDb.getGameSettingsFromLobby(testingLobbyId)
         assertEquals(expected, Tasks.await(result))
     }
@@ -537,7 +537,7 @@ class FirestoreDatabaseTest {
     @Test
     fun addGetAndRemovePublicLobbiesWorks() {
         val lobbyId = unusedLobbyForPublic
-        val fakeSettings = Game.Settings("host22", "lobbyName", "playlistBla", 3, false, false)
+        val fakeSettings = Game.Settings("host22", "lobbyName", "playlistBla", 3, false, false, 45)
         Tasks.await(fireDb.openLobby(lobbyId, fakeSettings))
         var publicLobbies = Tasks.await(fireDb.getPublicLobbies())
         assertEquals(true, publicLobbies.contains(LobbyData(lobbyId, "lobbyName", "host22")))
