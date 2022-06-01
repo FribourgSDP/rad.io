@@ -108,7 +108,9 @@ open class GameActivity : AppCompatActivity(), GameView, Timer.Listener {
     override fun onDestroy() {
         super.onDestroy()
         playerGameHandler.unlinkFromDatabase()
-        hostGameHandler.unlinkFromDatabase()
+        if(isHost) {
+            hostGameHandler.unlinkFromDatabase()
+        }
         voiceChannel.leaveChannel()
         RtcEngine.destroy()
     }
