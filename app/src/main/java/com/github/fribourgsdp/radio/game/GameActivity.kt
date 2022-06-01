@@ -7,7 +7,6 @@ import android.view.View
 import android.view.inputmethod.EditorInfo
 import android.widget.Button
 import android.widget.EditText
-import android.widget.ImageButton
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -44,7 +43,7 @@ open class GameActivity : AppCompatActivity(), GameView, Timer.Listener {
     private lateinit var user: User
     private var isHost: Boolean = false
     private var noSing = false
-    private var gameDuration = DEFAULT_GAME_DURATION
+    private var gameDuration = DEFAULT_SINGER_DURATION
 
     private lateinit var currentRoundTextView : TextView
     private lateinit var singerTextView : TextView
@@ -82,7 +81,7 @@ open class GameActivity : AppCompatActivity(), GameView, Timer.Listener {
         } ?: HashMap()
         isHost = intent.getBooleanExtra(GAME_IS_HOST_KEY, false)
         noSing = intent.getBooleanExtra(GAME_IS_NO_SING_MODE, false)
-        gameDuration = intent.getLongExtra(GAME_DURATION_KEY, DEFAULT_GAME_DURATION)
+        gameDuration = intent.getLongExtra(GAME_DURATION_KEY, DEFAULT_SINGER_DURATION)
 
         withHint = intent.getBooleanExtra(GAME_HINT_KEY, false)
         initViews()
