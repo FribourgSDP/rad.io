@@ -36,7 +36,6 @@ open class JoinGameActivity : MyAppCompatActivity() {
     private lateinit var spinner: Spinner
     private lateinit var joinWithQRCodeButton : Button
     private lateinit var qrCodeScan: DialogFragment
-    private lateinit var adapter: PublicLobbiesAdapter
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -131,7 +130,7 @@ open class JoinGameActivity : MyAppCompatActivity() {
     private fun initPublicLobbiesDisplay() {
         // init the cards
         lobbiesRecyclerView.layoutManager = LinearLayoutManager(this)
-        adapter = PublicLobbiesAdapter(this, db).apply {
+        val adapter = PublicLobbiesAdapter(this, db).apply {
             setOnPickListener { connectToLobby(it) }
         }
         lobbiesRecyclerView.adapter = adapter

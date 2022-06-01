@@ -388,7 +388,7 @@ class FirestoreDatabase(var refMake: FirestoreRef, var transactionMgr: Transacti
     }
 
     override fun listenToPublicLobbiesUpdate(listener: EventListener<List<LobbyData>>) {
-        publicLobbyListerRegistration?.remove()
+        removePublicLobbyListener()
         publicLobbyListerRegistration = db.collection("lobby").document("public").addSnapshotListener { snapshot, error ->
             val value = snapshot?.let{ createListLobbyDataFromRawData(it.data) }
             listener.onEvent(value, error)
@@ -687,7 +687,6 @@ class FirestoreDatabase(var refMake: FirestoreRef, var transactionMgr: Transacti
     }
 
     private fun listenUpdate(collectionPath : String, id: Long, listener: EventListener<DocumentSnapshot>):ListenerRegistration{
-        Log.d("LISTEN_UPDATE : ", id.toString())
         return db.collection(collectionPath).document(id.toString())
             .addSnapshotListener(listener)
     }

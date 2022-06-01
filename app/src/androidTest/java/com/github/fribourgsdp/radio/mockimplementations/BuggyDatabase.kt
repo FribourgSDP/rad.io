@@ -145,4 +145,20 @@ class BuggyDatabase : Database {
         TODO("Not yet implemented")
     }
 
+    override fun removeGameListener() {
+        TODO("Not yet implemented")
+    }
+
+    override fun removeLobbyListener() {
+        TODO("Not yet implemented")
+    }
+
+    override fun removeMetadataGameListener() {
+        TODO("Not yet implemented")
+    }
+
+    override fun removePublicLobbyListener() {
+        TODO("Not yet implemented")
+    }
+
 }
