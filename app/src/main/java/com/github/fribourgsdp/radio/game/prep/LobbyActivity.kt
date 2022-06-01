@@ -336,7 +336,6 @@ open class LobbyActivity : MyAppCompatActivity(){
             intent.putExtra(GAME_KEY, Json.encodeToString(game))
             loadLyrics(game.playlist, MusixmatchLyricsGetter, user)
         }
-        //intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
         startActivity(intent)
         finish()
     }

@@ -26,13 +26,9 @@ class MainActivity : MyAppCompatActivity() {
         setContentView(R.layout.activity_main)
 
         val playButton = findViewById<Button>(R.id.playButton)
-        val playIntent = Intent(this, GameSettingsActivity::class.java)
-        //playIntent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
-        playButton.setOnClickListener {startActivity(playIntent)}
-        val joinIntent = Intent(this, JoinGameActivity::class.java)
-        //joinIntent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+        playButton.setOnClickListener {startActivity(Intent(this, GameSettingsActivity::class.java))}
         val joinButton : Button = findViewById(R.id.joinButton)
-        joinButton.setOnClickListener {startActivity(joinIntent)}
+        joinButton.setOnClickListener {startActivity(Intent(this, JoinGameActivity::class.java))}
         val settingsButton = findViewById<Button>(R.id.settingsButton)
         settingsButton.setOnClickListener {startActivity(Intent(this, SettingsActivity::class.java))}
         val profileButton: ImageButton = findViewById(R.id.profileButton)

@@ -127,6 +127,7 @@ class FirestoreDatabase(var refMake: FirestoreRef, var transactionMgr: Transacti
     private var gameListerRegistration : ListenerRegistration? = null
     private var metadataGameListerRegistration : ListenerRegistration? = null
     private var lobbyListerRegistration : ListenerRegistration? = null
+    private var publicLobbyListerRegistration : ListenerRegistration? = null
 
     init {
         refMake.db = db
@@ -387,7 +388,8 @@ class FirestoreDatabase(var refMake: FirestoreRef, var transactionMgr: Transacti
     }
 
     override fun listenToPublicLobbiesUpdate(listener: EventListener<List<LobbyData>>) {
-        db.collection("lobby").document("public").addSnapshotListener { snapshot, error ->
+        publicLobbyListerRegistration?.remove()
+        publicLobbyListerRegistration = db.collection("lobby").document("public").addSnapshotListener { snapshot, error ->
             val value = snapshot?.let{ createListLobbyDataFromRawData(it.data) }
             listener.onEvent(value, error)
         }
@@ -576,6 +578,10 @@ class FirestoreDatabase(var refMake: FirestoreRef, var transactionMgr: Transacti
     }
     override fun removeMetadataGameListener(){
         lobbyListerRegistration?.remove()
+    }
+
+    override fun removePublicLobbyListener() {
+        publicLobbyListerRegistration?.remove()
     }
 
     override fun listenToGameMetadataUpdate(id: Long, listener: EventListener<DocumentSnapshot>) {

@@ -211,7 +211,7 @@ interface Database {
 
 
     fun removeGameListener()
-
     fun removeLobbyListener()
     fun removeMetadataGameListener()
+    fun removePublicLobbyListener()
 }

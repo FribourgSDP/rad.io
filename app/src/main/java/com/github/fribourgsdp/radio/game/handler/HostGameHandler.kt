@@ -82,7 +82,6 @@ class HostGameHandler(
                             .addOnSuccessListener(onSuccess)
                             .addOnFailureListener {
                                 // quit on second failure
-                                Log.d("LISTEN", " handleSnapShot2")
                                 view.gameOver(game.getAllScores(), true)
                             }
                 }
@@ -108,7 +107,6 @@ class HostGameHandler(
                 latestSingerId
             ).addOnFailureListener {
                 // quit on second failure
-                Log.d("LISTEN", " resetGameMetadata")
                 view.gameOver(game.getAllScores(), true)
             }
         }
@@ -122,7 +120,6 @@ class HostGameHandler(
 
                 db.updateCurrentSongOfGame(game.id, songName, singerDuration)
                     .addOnFailureListener{
-                        Log.d("LISTEN", " assignSong")
                         view.gameOver(game.getAllScores(), true)
                     }
             }

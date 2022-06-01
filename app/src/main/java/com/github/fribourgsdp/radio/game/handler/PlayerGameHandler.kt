@@ -31,7 +31,6 @@ class PlayerGameHandler(
     private val stopTimer = Timer(singerDuration + WAIT_DELTA_IN_SECONDS).apply {
         // When this timer expires, stop the game
         setOnDoneListener {
-            Log.d("LISTEN", " stopTimer")
             view.gameOver(scores, true) }
     }
 
@@ -51,7 +50,6 @@ class PlayerGameHandler(
             val gameStillValid = snapshot.getBoolean("validity")!!
             scores = snapshot.get("scores") as HashMap<String, Long>
             if (snapshot.getBoolean("finished")!! || !gameStillValid) {
-                Log.d("LISTEN", " handleSnapshot")
                 view.gameOver(scores!!, !gameStillValid)
                 return
             }
@@ -111,7 +109,6 @@ class PlayerGameHandler(
                     // retry
                     db.playerEndTurn(gameID, userId, true)
                         .addOnFailureListener {
-                            Log.d("LISTEN", " handleGuess")
                             view.gameOver(scores, true)
                         }
                 }
@@ -130,7 +127,6 @@ class PlayerGameHandler(
                 // retry
                 db.playerEndTurn(gameID, userId, false)
                     .addOnFailureListener {
-                        Log.d("LISTEN", " timeOutOnGuess")
                         view.gameOver(scores, true)
                     }
             }
@@ -152,7 +148,6 @@ class PlayerGameHandler(
                 db.updateCurrentSongOfGame(gameID, song, singerDuration)
                     .addOnSuccessListener(onSuccess)
                     .addOnFailureListener {
-                        Log.d("LISTEN", " onPick")
                         view.gameOver(scores, true)
                     }
             }

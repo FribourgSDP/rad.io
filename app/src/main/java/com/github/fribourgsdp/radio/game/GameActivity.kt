@@ -108,8 +108,8 @@ open class GameActivity : AppCompatActivity(), GameView, Timer.Listener {
 
     override fun onDestroy() {
         super.onDestroy()
-       // playerGameHandler.unlinkFromDatabase()
-        //hostGameHandler.unlinkFromDatabase()
+        playerGameHandler.unlinkFromDatabase()
+        hostGameHandler.unlinkFromDatabase()
         voiceChannel.leaveChannel()
         RtcEngine.destroy()
     }
@@ -230,7 +230,6 @@ open class GameActivity : AppCompatActivity(), GameView, Timer.Listener {
 
             putExtra(GAME_CRASH_KEY, hasCrashed)
         }
-        //intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
         startActivity(intent)
         finish()
     }

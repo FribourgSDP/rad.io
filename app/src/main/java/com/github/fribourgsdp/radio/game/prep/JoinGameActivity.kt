@@ -36,6 +36,7 @@ open class JoinGameActivity : MyAppCompatActivity() {
     private lateinit var spinner: Spinner
     private lateinit var joinWithQRCodeButton : Button
     private lateinit var qrCodeScan: DialogFragment
+    private lateinit var adapter: PublicLobbiesAdapter
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -46,6 +47,11 @@ open class JoinGameActivity : MyAppCompatActivity() {
         initPublicLobbiesDisplay()
         initJoinWithQRCode()
 
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        db.removePublicLobbyListener()
     }
 
     private fun initViews() {
@@ -108,8 +114,6 @@ open class JoinGameActivity : MyAppCompatActivity() {
                     putExtra(GAME_UID_KEY, id)
                     putExtra(GAME_IS_NO_SING_MODE, settings.noSing)
                 }
-
-                //intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
                 startActivity(intent)
                 finish()
 
@@ -127,7 +131,7 @@ open class JoinGameActivity : MyAppCompatActivity() {
     private fun initPublicLobbiesDisplay() {
         // init the cards
         lobbiesRecyclerView.layoutManager = LinearLayoutManager(this)
-        val adapter = PublicLobbiesAdapter(this, db).apply {
+        adapter = PublicLobbiesAdapter(this, db).apply {
             setOnPickListener { connectToLobby(it) }
         }
         lobbiesRecyclerView.adapter = adapter
