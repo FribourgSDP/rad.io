@@ -47,7 +47,7 @@ class UserPlaylistsFragment : MyFragment(R.layout.fragment_user_playlists_displa
     override fun onItemClick(position: Int) {
         activity?.run {
             if(!hasConnectivity(requireContext()) && userPlaylists[position].savedOnline){
-                Toast.makeText(this,"Cannot access online data without connection", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this,getString(R.string.offline_error_message_toast), Toast.LENGTH_SHORT).show()
             }else{
                 val intent = Intent(this, PlaylistsFragmentHolderActivity::class.java)
                     .putExtra(PLAYLIST_DATA, userPlaylists[position].name)
