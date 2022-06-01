@@ -333,8 +333,8 @@ open class LobbyActivity : MyAppCompatActivity(){
         }
 
         if (isHost && game != null) {
-            intent.putExtra(GAME_KEY, Json.encodeToString(game))
             loadLyrics(game.playlist, MusixmatchLyricsGetter, user)
+            intent.putExtra(GAME_KEY, Json.encodeToString(game))
         }
 
         startActivity(intent)
@@ -342,7 +342,7 @@ open class LobbyActivity : MyAppCompatActivity(){
     protected fun loadLyrics(playlist : Playlist, lyricsGetter: LyricsGetter, host : User){
         if (host.getPlaylists().contains(playlist)){
             for (song in playlist.getSongs()){
-                if(song.lyrics == "") {
+                if(song.lyrics == MusixmatchLyricsGetter.BACKEND_ERROR_PLACEHOLDER) {
                     lyricsGetter.getLyrics(song.name, song.artist).thenAccept { f ->
                         val songWithLyrics = Song(song.name, song.artist, f)
                         host.updateSongInPlaylist(playlist, songWithLyrics)
