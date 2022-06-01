@@ -59,8 +59,7 @@ open class PlaylistSongsFragment : MyFragment(R.layout.fragment_playlist_display
         editButton = requireView().findViewById(R.id.editButton)
         editButton.setOnClickListener {
             if(!hasConnectivity(requireContext()) && playlist.savedOnline){
-                Toast.makeText(requireContext(),getString(R.string.offline_error_message_toast), Toast.LENGTH_SHORT).show()
-                disableButtons()
+                disableButtonAndShowToast()
             }else{
                 val intent  = Intent(context, AddPlaylistActivity::class.java)
                 intent.putExtra(PLAYLIST_TO_MODIFY, Json.encodeToString(playlist))
@@ -81,8 +80,7 @@ open class PlaylistSongsFragment : MyFragment(R.layout.fragment_playlist_display
             //removes playlist from user playlists
 
             if(!hasConnectivity(requireContext()) && playlist.savedOnline){
-                disableButtons()
-                Toast.makeText(requireContext(),getString(R.string.offline_error_message_toast), Toast.LENGTH_SHORT).show()
+                disableButtonAndShowToast()
             }else{
                 user.removePlaylist(playlist)
                 user.save(requireContext())
@@ -104,8 +102,7 @@ open class PlaylistSongsFragment : MyFragment(R.layout.fragment_playlist_display
                     saveOnlineButton.visibility = View.GONE
                 }
             }else{
-                disableButtons()
-                Toast.makeText(requireContext(),getString(R.string.offline_error_message_toast), Toast.LENGTH_SHORT).show()
+                disableButtonAndShowToast()
             }
 
         }
@@ -123,9 +120,8 @@ open class PlaylistSongsFragment : MyFragment(R.layout.fragment_playlist_display
                     importLyricsButton.visibility = View.GONE
                 }
             }else{
-                disableButtons()
-                Toast.makeText(requireContext(),getString(R.string.no_lyrics_generation_offline), Toast.LENGTH_SHORT).show()
-            }
+                disableButtonAndShowToast()
+                }
 
         }
 
@@ -137,6 +133,11 @@ open class PlaylistSongsFragment : MyFragment(R.layout.fragment_playlist_display
     open fun loadLyrics(playlist: Playlist) : Task<Void>{
     return playlist.loadLyrics()
 }
+
+    private fun disableButtonAndShowToast(){
+        disableButtons()
+        Toast.makeText(requireContext(),getString(R.string.offline_error_message_toast), Toast.LENGTH_SHORT).show()
+    }
     private fun loadPlaylist(){
         User.loadOrDefault(requireContext()).addOnSuccessListener { l ->
             user = l
