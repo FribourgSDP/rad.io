@@ -208,4 +208,10 @@ interface Database {
      * @return a task void so we know the singer was correctly added to the players done map in the database.
      */
     fun makeSingerDone(gameID: Long, singerName: String): Task<Void>
+
+
+    fun removeGameListener()
+
+    fun removeLobbyListener()
+    fun removeMetadataGameListener()
 }

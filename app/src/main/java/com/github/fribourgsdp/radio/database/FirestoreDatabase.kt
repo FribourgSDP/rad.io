@@ -124,6 +124,10 @@ open class TransactionManager() {
  */
 class FirestoreDatabase(var refMake: FirestoreRef, var transactionMgr: TransactionManager) : Database {
     private val db = Firebase.firestore
+    private var gameListerRegistration : ListenerRegistration? = null
+    private var metadataGameListerRegistration : ListenerRegistration? = null
+    private var lobbyListerRegistration : ListenerRegistration? = null
+
     init {
         refMake.db = db
         transactionMgr.db = db
@@ -310,7 +314,8 @@ class FirestoreDatabase(var refMake: FirestoreRef, var transactionMgr: Transacti
     }
 
     override fun listenToLobbyUpdate(id: Long, listener: EventListener<DocumentSnapshot>) {
-        listenUpdate("lobby", id, listener)
+        removeLobbyListener()
+        lobbyListerRegistration = listenUpdate("lobby", id, listener)
     }
 
     override fun getGameSettingsFromLobby(id: Long) :Task<Game.Settings> {
@@ -558,11 +563,24 @@ class FirestoreDatabase(var refMake: FirestoreRef, var transactionMgr: Transacti
     }
 
     override fun listenToGameUpdate(id: Long, listener: EventListener<DocumentSnapshot>) {
-        listenUpdate("games", id, listener)
+        removeGameListener()
+        gameListerRegistration = listenUpdate("games", id, listener)
+    }
+
+    override fun removeGameListener(){
+        gameListerRegistration?.remove()
+    }
+
+    override fun removeLobbyListener(){
+        metadataGameListerRegistration?.remove()
+    }
+    override fun removeMetadataGameListener(){
+        lobbyListerRegistration?.remove()
     }
 
     override fun listenToGameMetadataUpdate(id: Long, listener: EventListener<DocumentSnapshot>) {
-        listenUpdate("games_metadata", id, listener)
+        removeMetadataGameListener()
+        metadataGameListerRegistration = listenUpdate("games_metadata", id, listener)
     }
 
     override fun updateGame(id: Long, updatesMap: Map<String, Any>): Task<Void> {
@@ -662,10 +680,14 @@ class FirestoreDatabase(var refMake: FirestoreRef, var transactionMgr: Transacti
         }
     }
 
-    private fun listenUpdate(collectionPath : String, id: Long, listener: EventListener<DocumentSnapshot>){
-        db.collection(collectionPath).document(id.toString())
+    private fun listenUpdate(collectionPath : String, id: Long, listener: EventListener<DocumentSnapshot>):ListenerRegistration{
+        Log.d("LISTEN_UPDATE : ", id.toString())
+        return db.collection(collectionPath).document(id.toString())
             .addSnapshotListener(listener)
     }
+
+
+
 
     private fun createListLobbyDataFromRawData(data: Map<String, Any>?): List<LobbyData> {
         return data?.let {

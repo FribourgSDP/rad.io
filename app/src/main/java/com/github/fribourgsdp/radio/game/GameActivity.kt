@@ -69,6 +69,7 @@ open class GameActivity : AppCompatActivity(), GameView, Timer.Listener {
     protected lateinit var voiceChannel: VoiceIpEngineDecorator
 
     private lateinit var playerGameHandler: PlayerGameHandler
+    private lateinit var hostGameHandler : HostGameHandler
 
     private lateinit var tts : MyTextToSpeech
 
@@ -107,6 +108,8 @@ open class GameActivity : AppCompatActivity(), GameView, Timer.Listener {
 
     override fun onDestroy() {
         super.onDestroy()
+       // playerGameHandler.unlinkFromDatabase()
+        //hostGameHandler.unlinkFromDatabase()
         voiceChannel.leaveChannel()
         RtcEngine.destroy()
     }
@@ -227,7 +230,9 @@ open class GameActivity : AppCompatActivity(), GameView, Timer.Listener {
 
             putExtra(GAME_CRASH_KEY, hasCrashed)
         }
+        //intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
         startActivity(intent)
+        finish()
     }
 
     private fun returnToMainMenu() {
@@ -248,7 +253,7 @@ open class GameActivity : AppCompatActivity(), GameView, Timer.Listener {
     private fun initHostGameHandler(){
         if (isHost) {
             val game = Json.decodeFromString(intent.getStringExtra(GAME_KEY)!!) as Game
-            val hostGameHandler = HostGameHandler(this, game, this, noSing=noSing)
+            hostGameHandler = HostGameHandler(this, game, this, noSing=noSing)
             hostGameHandler.linkToDatabase()
             hostGameHandler.setSingerDuration(gameDuration)
         }

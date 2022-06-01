@@ -25,6 +25,7 @@ import com.github.fribourgsdp.radio.game.GameActivity
 import com.github.fribourgsdp.radio.game.view.QuitGameOrLobbyDialog
 import com.github.fribourgsdp.radio.util.getPermissions
 import com.github.fribourgsdp.radio.util.getPlayers
+import io.agora.rtc.RtcEngine
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
@@ -335,8 +336,9 @@ open class LobbyActivity : MyAppCompatActivity(){
             intent.putExtra(GAME_KEY, Json.encodeToString(game))
             loadLyrics(game.playlist, MusixmatchLyricsGetter, user)
         }
-
+        //intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
         startActivity(intent)
+        finish()
     }
     protected fun loadLyrics(playlist : Playlist, lyricsGetter: LyricsGetter, host : User){
         if (host.getPlaylists().contains(playlist)){
@@ -379,6 +381,11 @@ open class LobbyActivity : MyAppCompatActivity(){
                     returnToMainMenu()
                 }
             }
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        db.removeLobbyListener()
     }
 
     private fun returnToMainMenu(){

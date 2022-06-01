@@ -17,6 +17,7 @@ import com.github.fribourgsdp.radio.database.FirestoreDatabase
 import com.github.fribourgsdp.radio.deprecated.VoiceOverIPActivity
 import com.github.fribourgsdp.radio.game.prep.GameSettingsActivity
 import com.github.fribourgsdp.radio.game.prep.JoinGameActivity
+import com.github.fribourgsdp.radio.game.prep.LobbyActivity
 
 class MainActivity : MyAppCompatActivity() {
     private val db = FirestoreDatabase()
@@ -25,14 +26,19 @@ class MainActivity : MyAppCompatActivity() {
         setContentView(R.layout.activity_main)
 
         val playButton = findViewById<Button>(R.id.playButton)
-        playButton.setOnClickListener {startActivity(Intent(this, GameSettingsActivity::class.java))}
+        val playIntent = Intent(this, GameSettingsActivity::class.java)
+        //playIntent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+        playButton.setOnClickListener {startActivity(playIntent)}
+        val joinIntent = Intent(this, JoinGameActivity::class.java)
+        //joinIntent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
         val joinButton : Button = findViewById(R.id.joinButton)
-        joinButton.setOnClickListener {startActivity(Intent(this, JoinGameActivity::class.java))}
+        joinButton.setOnClickListener {startActivity(joinIntent)}
         val settingsButton = findViewById<Button>(R.id.settingsButton)
         settingsButton.setOnClickListener {startActivity(Intent(this, SettingsActivity::class.java))}
         val profileButton: ImageButton = findViewById(R.id.profileButton)
         profileButton.setOnClickListener {
             startActivity(Intent(this, UserProfileActivity::class.java))
+            finish()
         }
 
         /** this user allows quick demo's as it is data that is written to the app

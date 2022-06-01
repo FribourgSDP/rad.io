@@ -20,6 +20,8 @@ abstract class GameHandler(private val ctx: Context, private val view: GameView,
      */
     abstract fun linkToDatabase()
 
+    abstract fun unlinkFromDatabase()
+
     protected fun executeOnUpdate(): EventListener<DocumentSnapshot> {
         return EventListener<DocumentSnapshot> { snapshot, e ->
             if (e != null) {

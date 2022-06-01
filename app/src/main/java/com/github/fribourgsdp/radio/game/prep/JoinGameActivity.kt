@@ -97,7 +97,7 @@ open class JoinGameActivity : MyAppCompatActivity() {
     private fun connectToLobby(id: Long) {
         db.getGameSettingsFromLobby(id).addOnSuccessListener { settings ->
             db.addUserToLobby(id, User.load(this), (ContextCompat.checkSelfPermission(this, Manifest.permission.RECORD_AUDIO) == PackageManager.PERMISSION_GRANTED)).addOnSuccessListener {
-                startActivity(Intent(this, LobbyActivity::class.java).apply {
+                val intent = Intent(this, LobbyActivity::class.java).apply {
                     putExtra(GAME_HOST_NAME_KEY, settings.hostName)
                     putExtra(GAME_NAME_KEY, settings.name)
                     putExtra(GAME_PLAYLIST_NAME_KEY, settings.playlistName)
@@ -107,7 +107,11 @@ open class JoinGameActivity : MyAppCompatActivity() {
                     putExtra(GAME_IS_HOST_KEY, false)
                     putExtra(GAME_UID_KEY, id)
                     putExtra(GAME_IS_NO_SING_MODE, settings.noSing)
-                })
+                }
+
+                //intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+                startActivity(intent)
+                finish()
 
             }.addOnFailureListener {
                 joinErrorView.text = getString(R.string.join_fail_format, id)
