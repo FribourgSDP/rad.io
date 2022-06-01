@@ -110,6 +110,7 @@ open class JoinGameActivity : MyAppCompatActivity() {
                     putExtra(GAME_HINT_KEY, settings.withHint)
                     putExtra(GAME_PRIVACY_KEY, settings.isPrivate)
                     putExtra(GAME_IS_HOST_KEY, false)
+                    putExtra(GAME_DURATION_KEY, settings.singerDuration)
                     putExtra(GAME_UID_KEY, id)
                     putExtra(GAME_IS_NO_SING_MODE, settings.noSing)
                 }

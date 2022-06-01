@@ -177,7 +177,7 @@ class LocalDatabase : Database {
     companion object {
         const val EXPECTED_USER_UID = 392L
         const val EXPECTED_UID = 794L
-        val EXPECTED_SETTINGS = Game.Settings("Host", "Hello World!", "Host's Playlist", 42, true, true)
+        val EXPECTED_SETTINGS = Game.Settings("Host", "Hello World!", "Host's Playlist", 42, true, true, 45)
 
     }
 }
