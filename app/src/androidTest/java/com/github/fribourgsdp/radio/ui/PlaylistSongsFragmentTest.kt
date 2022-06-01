@@ -190,11 +190,12 @@ class PlaylistSongsFragmentTest {
     }
 
     @Test
-    fun buttonAreDisabledWhenOffline(){
+    fun buttonAreDisabledWhenOfflineAfterBeingClickedOn(){
         val bundle = Bundle()
         val playlistName = "test"
         val playlist: Playlist = Playlist(playlistName, Genre.NONE)
         playlist.id = "TEST"
+        playlist.savedOnline = true
         playlist.addSong(Song("rouge", "sardou"))
         playlist.addSong(Song("salut", "sardou"))
         playlist.addSong(Song("Le France", "sardou"))
@@ -210,6 +211,23 @@ class PlaylistSongsFragmentTest {
             Espresso.onView(withId(R.id.ImportLyricsButton))
                 .check(
                     ViewAssertions.matches(
+                        ViewMatchers.isEnabled()
+                    )
+                )
+            Espresso.onView(withId(R.id.SaveOnlineButton))
+                .check(
+                    ViewAssertions.matches(
+                        ViewMatchers.isEnabled()
+                    )
+                )
+
+            Espresso.onView(withId(R.id.deleteButton))
+                .perform(ViewActions.click())
+
+
+            Espresso.onView(withId(R.id.ImportLyricsButton))
+                .check(
+                    ViewAssertions.matches(
                         ViewMatchers.isNotEnabled()
                     )
                 )
@@ -219,7 +237,18 @@ class PlaylistSongsFragmentTest {
                         ViewMatchers.isNotEnabled()
                     )
                 )
-
+            Espresso.onView(withId(R.id.deleteButton))
+                .check(
+                    ViewAssertions.matches(
+                        ViewMatchers.isNotEnabled()
+                    )
+                )
+            Espresso.onView(withId(R.id.editButton))
+                .check(
+                    ViewAssertions.matches(
+                        ViewMatchers.isNotEnabled()
+                    )
+                )
         }
 
     }
