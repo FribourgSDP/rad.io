@@ -3,8 +3,7 @@ package com.github.fribourgsdp.radio.game
 import com.github.fribourgsdp.radio.data.Playlist
 import com.github.fribourgsdp.radio.data.Song
 import com.github.fribourgsdp.radio.data.User
-import com.github.fribourgsdp.radio.external.musixmatch.MusixmatchLyricsGetter
-import com.github.fribourgsdp.radio.game.prep.DEFAULT_GAME_DURATION
+import com.github.fribourgsdp.radio.game.prep.DEFAULT_SINGER_DURATION
 import kotlinx.serialization.Serializable
 import java.util.*
 import kotlin.math.max
@@ -170,7 +169,7 @@ class Game private constructor(val id: Long, val name: String, val host: User, v
         private var isPrivate = false
         private var list = ArrayList<String>()
         private var noSing = false
-        private var singerDuration: Long = DEFAULT_GAME_DURATION
+        private var singerDuration: Long = DEFAULT_SINGER_DURATION
 
         /**
          * Set the [id] of the game.
@@ -241,7 +240,7 @@ class Game private constructor(val id: Long, val name: String, val host: User, v
         }
 
         /**
-         * Set the [duration] of the game
+         * Set the [duration] the players will sing for
          * @return the [Builder]
          */
         fun setDuration(duration: Long): Builder {

@@ -51,7 +51,7 @@ open class LobbyActivity : MyAppCompatActivity(){
     private var noSing : Boolean = false
     private var hasVoiceIdPermissions : Boolean = false
     private var gameLobbyId: Long = -1L
-    private var gameDuration: Long = DEFAULT_GAME_DURATION
+    private var singerDuration: Long = DEFAULT_SINGER_DURATION
 
     private lateinit var uuidTextView     : TextView
     private lateinit var hostNameTextView : TextView
@@ -114,7 +114,7 @@ open class LobbyActivity : MyAppCompatActivity(){
                         db.launchGame(uid).addOnSuccessListener {
 
                             // When launched correctly, go to the game activity
-                            goToGameActivity(true, game, uid, gameDuration)
+                            goToGameActivity(true, game, uid, singerDuration)
 
                         }.addOnFailureListener {
                             uuidTextView.text = getString(R.string.launch_game_error)
@@ -168,7 +168,7 @@ open class LobbyActivity : MyAppCompatActivity(){
         nbRounds        = intent.getIntExtra(GAME_NB_ROUNDS_KEY, getString(R.string.default_game_nb_rounds).toInt())
         withHint        = intent.getBooleanExtra(GAME_HINT_KEY, false)
         isPrivate       = intent.getBooleanExtra(GAME_PRIVACY_KEY, false)
-        gameDuration    = intent.getLongExtra(GAME_DURATION_KEY, DEFAULT_GAME_DURATION)
+        singerDuration    = intent.getLongExtra(GAME_DURATION_KEY, DEFAULT_SINGER_DURATION)
 
         hasVoiceIdPermissions = (ContextCompat.checkSelfPermission(this, Manifest.permission.RECORD_AUDIO) == PackageManager.PERMISSION_GRANTED)
         gameLobbyId = intent.getLongExtra(GAME_UID_KEY, -1L)
@@ -229,7 +229,7 @@ open class LobbyActivity : MyAppCompatActivity(){
         nbRoundsTextView.text = getString(R.string.number_of_rounds_format, nbRounds)
         withHintTextView.text = getString(R.string.hints_enabled_format, withHint)
         privateTextView.text  = getString(R.string.private_format, isPrivate)
-        singerDurationTextView.text = getString(R.string.gameDurationFormat, gameDuration)
+        singerDurationTextView.text = getString(R.string.gameDurationFormat, singerDuration)
         noSingTextView.text = getString(R.string.with_singer_format, !noSing)
     }
 
@@ -244,7 +244,7 @@ open class LobbyActivity : MyAppCompatActivity(){
                     .setWithHint(withHint)
                     .setPrivacy(isPrivate)
                     .setNoSing(noSing)
-                    .setDuration(gameDuration)
+                    .setDuration(singerDuration)
 
 
                 openLobby(uid)
@@ -323,12 +323,11 @@ open class LobbyActivity : MyAppCompatActivity(){
         mapIdToName = HashMap(playersMap)
     }
 
-    protected open fun goToGameActivity(isHost: Boolean, game: Game? = null, gameID: Long, singerDuration: Long = DEFAULT_GAME_DURATION) {
+    protected open fun goToGameActivity(isHost: Boolean, game: Game? = null, gameID: Long, singerDuration: Long = DEFAULT_SINGER_DURATION) {
         val intent: Intent = Intent(this, GameActivity::class.java).apply {
             putExtra(GAME_IS_HOST_KEY, isHost)
             putExtra(MAP_ID_NAME_KEY, mapIdToName)
             putExtra(GAME_UID_KEY, gameID)
-            //putExtra(GAME_DURATION_KEY, gameDuration)
             putExtra(GAME_DURATION_KEY, singerDuration)
             putExtra(GAME_IS_NO_SING_MODE, noSing)
             putExtra(GAME_HINT_KEY, withHint)
