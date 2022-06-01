@@ -282,7 +282,6 @@ open class LobbyActivity : MyAppCompatActivity(){
                     returnToMainMenu()
                 }
 
-                val singerDuration = snapshot.get("singerDuration")!! as Long
                 val newMap = snapshot.getPlayers()
 
                 val isGameLaunched = snapshot.getBoolean("launched")
