@@ -58,10 +58,17 @@ open class PlaylistSongsFragment : MyFragment(R.layout.fragment_playlist_display
         //sets listeners to 2 buttons
         editButton = requireView().findViewById(R.id.editButton)
         editButton.setOnClickListener {
-            val intent  = Intent(context, AddPlaylistActivity::class.java)
-            intent.putExtra(PLAYLIST_TO_MODIFY, Json.encodeToString(playlist))
-            intent.putExtra(ADD_PLAYLIST_FLAG, false)
-            startActivity(intent)
+            if(!hasConnectivity(requireContext()) && playlist.savedOnline){
+                Toast.makeText(requireContext(),getString(R.string.offline_error_message_toast), Toast.LENGTH_SHORT).show()
+                disableButtons()
+            }else{
+                val intent  = Intent(context, AddPlaylistActivity::class.java)
+                intent.putExtra(PLAYLIST_TO_MODIFY, Json.encodeToString(playlist))
+                intent.putExtra(ADD_PLAYLIST_FLAG, false)
+                startActivity(intent)
+            }
+
+
         }
 
         loadPlaylist()
@@ -122,10 +129,6 @@ open class PlaylistSongsFragment : MyFragment(R.layout.fragment_playlist_display
 
         }
 
-
-        if(!hasConnectivity(requireContext())){
-            disableButtons()
-        }
     }
 
     /**
@@ -182,14 +185,24 @@ open class PlaylistSongsFragment : MyFragment(R.layout.fragment_playlist_display
     private fun disableButtons(){
         importLyricsButton.isEnabled = false
         saveOnlineButton.isEnabled = false
+        if(playlist.savedOnline){
+            deleteButton.isEnabled = false
+            editButton.isEnabled = false
+        }
     }
     override fun onItemClick(position: Int) {
-        val bundle = Bundle()
-        bundle.putString(PLAYLIST_DATA, playlist.name)
-        bundle.putStringArray(SONG_DATA, arrayOf(songs[position].name, songs[position].artist))
-        activity?.supportFragmentManager?.beginTransaction()
-            ?.replace(R.id.container, SongFragment::class.java, bundle)
-            ?.addToBackStack("SongFragment")
-            ?.commit()
+        if(!hasConnectivity(requireContext()) && playlist.savedOnline){
+            disableButtons()
+            Toast.makeText(requireContext(),getString(R.string.offline_error_message_toast), Toast.LENGTH_SHORT).show()
+        }else{
+            val bundle = Bundle()
+            bundle.putString(PLAYLIST_DATA, playlist.name)
+            bundle.putStringArray(SONG_DATA, arrayOf(songs[position].name, songs[position].artist))
+            activity?.supportFragmentManager?.beginTransaction()
+                ?.replace(R.id.container, SongFragment::class.java, bundle)
+                ?.addToBackStack("SongFragment")
+                ?.commit()
+        }
+
     }
 }
