@@ -33,21 +33,10 @@ open class MainActivity : MyAppCompatActivity() {
         setContentView(R.layout.activity_main)
         initViews()
         playButton.setOnClickListener {
-            if(hasConnectivity(this)){
-                startActivity(Intent(this, GameSettingsActivity::class.java))
-            }
-            else{
-                Toast.makeText(this,getString(R.string.offline_error_message_toast), Toast.LENGTH_SHORT).show()
-                disableButtons()
-            }
+            checkForConnectivityAndGoTo(Intent(this, GameSettingsActivity::class.java))
         }
         joinButton.setOnClickListener {
-            if(hasConnectivity(this)){
-                startActivity(Intent(this, JoinGameActivity::class.java))
-            }else{
-                Toast.makeText(this,getString(R.string.offline_error_message_toast), Toast.LENGTH_SHORT).show()
-                disableButtons()
-            }
+            checkForConnectivityAndGoTo(Intent(this, JoinGameActivity::class.java))
         }
         settingsButton.setOnClickListener {startActivity(Intent(this, SettingsActivity::class.java))}
         profileButton.setOnClickListener {
@@ -68,6 +57,15 @@ open class MainActivity : MyAppCompatActivity() {
         }
 
 
+    }
+
+    private fun checkForConnectivityAndGoTo( targetActivity : Intent){
+        if(hasConnectivity(this)){
+            startActivity(targetActivity)
+        }else{
+            Toast.makeText(this,getString(R.string.offline_error_message_toast), Toast.LENGTH_SHORT).show()
+            disableButtons()
+        }
     }
 
     private fun disableButtons(){
