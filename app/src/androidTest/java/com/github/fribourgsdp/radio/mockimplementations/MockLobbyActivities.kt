@@ -25,7 +25,7 @@ class WorkingLobbyActivity : LobbyActivity() {
 
     }
 
-    override fun goToGameActivity(isHost: Boolean, game: Game?, gameID: Long) {
+    override fun goToGameActivity(isHost: Boolean, game: Game?, gameID: Long, singerDuration: Long) {
         val intent: Intent = Intent(this, MockGameActivity::class.java).apply {
             putExtra(GAME_IS_HOST_KEY, isHost)
             putExtra(MAP_ID_NAME_KEY, mapIdToName)
@@ -53,7 +53,7 @@ class BuggyLobbyActivity : LobbyActivity() {
         return BuggyDatabase()
     }
 
-    override fun goToGameActivity(isHost: Boolean, game: Game?, gameID: Long) {
+    override fun goToGameActivity(isHost: Boolean, game: Game?, gameID: Long, singerDuration: Long) {
         val intent: Intent = Intent(this, MockGameActivity::class.java).apply {
             putExtra(GAME_IS_HOST_KEY, isHost)
             putExtra(MAP_ID_NAME_KEY, mapIdToName)
@@ -92,7 +92,7 @@ class LyricsGettingWorkingLobbyActivity : LobbyActivity() {
             44L)
     }
 
-    override fun goToGameActivity(isHost: Boolean, game: Game?, gameID: Long) {
+    override fun goToGameActivity(isHost: Boolean, game: Game?, gameID: Long, singerDuration: Long) {
 
         if (isHost && game != null) {
             intent.putExtra(GAME_KEY, Json.encodeToString(game))

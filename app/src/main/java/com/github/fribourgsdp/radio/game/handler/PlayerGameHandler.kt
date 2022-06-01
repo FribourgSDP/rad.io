@@ -7,7 +7,7 @@ import com.github.fribourgsdp.radio.database.Database
 import com.github.fribourgsdp.radio.database.FirestoreDatabase
 import com.github.fribourgsdp.radio.data.User
 import com.github.fribourgsdp.radio.game.GameView
-import com.github.fribourgsdp.radio.game.prep.DEFAULT_GAME_DURATION
+import com.github.fribourgsdp.radio.game.prep.DEFAULT_SINGER_DURATION
 import com.github.fribourgsdp.radio.game.timer.Timer
 import com.github.fribourgsdp.radio.util.MyTextToSpeech
 import com.github.fribourgsdp.radio.util.NOT_THE_SAME
@@ -27,7 +27,7 @@ class PlayerGameHandler(
 
     private var songToGuess: String? = null
     private var scores: HashMap<String, Long>? = null
-    private var singerDuration: Long = DEFAULT_GAME_DURATION
+    private var singerDuration: Long = DEFAULT_SINGER_DURATION
     private val stopTimer = Timer(singerDuration + WAIT_DELTA_IN_SECONDS).apply {
         // When this timer expires, stop the game
         setOnDoneListener { view.gameOver(scores, true) }

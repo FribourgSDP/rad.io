@@ -1,7 +1,6 @@
 package com.github.fribourgsdp.radio.game.prep
 
 import android.content.Intent
-import android.content.res.Resources
 import android.os.Bundle
 import android.view.View
 import android.widget.*
@@ -13,7 +12,6 @@ import com.github.fribourgsdp.radio.MainActivity
 import com.github.fribourgsdp.radio.R
 import com.github.fribourgsdp.radio.data.Playlist
 import com.github.fribourgsdp.radio.data.User
-import com.github.fribourgsdp.radio.game.Game
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 
@@ -27,7 +25,7 @@ const val GAME_IS_HOST_KEY = "com.github.fribourgsdp.radio.GAME_IS_HOST"
 const val GAME_IS_NO_SING_MODE = "com.github.fribourgsdp.radio.GAME_IS_NO_SING_MODE"
 const val GAME_DURATION_KEY = "com.github.fribourgsdp.radio.GAME_DURATION"
 
-const val DEFAULT_GAME_DURATION = 45L;
+const val DEFAULT_SINGER_DURATION = 45L;
 
 open class GameSettingsActivity : AppCompatActivity() {
     private lateinit var host: User
@@ -48,7 +46,7 @@ open class GameSettingsActivity : AppCompatActivity() {
 
     private lateinit var selectedPlaylist: Playlist
 
-    private var gameTimeDuration = DEFAULT_GAME_DURATION
+    private var singerTimeDuration = DEFAULT_SINGER_DURATION
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -82,12 +80,12 @@ open class GameSettingsActivity : AppCompatActivity() {
                 setPrefix(R.string.timerMinutes)
                 setSuffix(R.string.timerSeconds)
                 setThemeColor(R.color.red)
-                setPreselectedTime(TimeValue(0, DEFAULT_GAME_DURATION.toInt()))
+                setPreselectedTime(TimeValue(0, DEFAULT_SINGER_DURATION.toInt()))
                 setSelectableTimeRange(TimeRange(TimeValue(0, 5), TimeValue(2, 0)))
             }.build().apply {
                 setListener { minute, second ->
-                    gameTimeDuration = (60*minute + second).toLong()
-                    timerButton.text = getString(R.string.round_duration_format, gameTimeDuration)
+                    singerTimeDuration = (60*minute + second).toLong()
+                    timerButton.text = getString(R.string.round_duration_format, singerTimeDuration)
                 }
             }.show(supportFragmentManager, "TimerSettings")
         }
@@ -106,7 +104,7 @@ open class GameSettingsActivity : AppCompatActivity() {
         playlistAdapter = ArrayAdapter(this, android.R.layout.simple_list_item_1, playlistsNames)
         errorText = findViewById(R.id.playlistSearchError)
         timerButton = findViewById<Button?>(R.id.chooseTimeButton).apply {
-            text = getString(R.string.round_duration_format, gameTimeDuration)
+            text = getString(R.string.round_duration_format, singerTimeDuration)
         }
 
         playlistListView.adapter = playlistAdapter
@@ -149,7 +147,7 @@ open class GameSettingsActivity : AppCompatActivity() {
                     putExtra(GAME_PRIVACY_KEY, privacyCheckBox.isChecked)
                     putExtra(GAME_IS_HOST_KEY, true)
                     putExtra(GAME_IS_NO_SING_MODE, noSingCheckBox.isChecked)
-                    putExtra(GAME_DURATION_KEY, gameTimeDuration)
+                    putExtra(GAME_DURATION_KEY, singerTimeDuration)
                 }
                 startActivity(intent)
             }
