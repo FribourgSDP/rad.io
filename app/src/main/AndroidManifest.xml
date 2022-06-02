@@ -144,7 +144,15 @@
         <activity
             android:name=".mockimplementations.MockSettingsActivity"
             android:exported="false" />
-
+        <activity
+            android:name=".activities.MockMainActivity"
+            android:exported="false" />
+        <activity
+            android:name=".mockimplementations.MockAddPlaylistActivityNoConnection"
+            android:exported="false" />
+        <activity
+            android:name=".mockimplementations.MockUserProfileActivityOffline"
+            android:exported="false" />
         <meta-data
             android:name="preloaded_fonts"
             android:resource="@array/preloaded_fonts" />

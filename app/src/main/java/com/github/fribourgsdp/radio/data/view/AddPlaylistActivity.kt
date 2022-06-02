@@ -69,6 +69,10 @@ open class AddPlaylistActivity : MyAppCompatActivity(), SavePlaylistOnlinePicker
         recyclerView.layoutManager = layoutManager
         errorTextView = findViewById(R.id.addPlaylistErrorTextView)
 
+        if(!hasConnectivity(this)){
+            generateLyricsCheckBox.isEnabled = false
+        }
+
     }
 
     private fun initViews(){
@@ -115,8 +119,14 @@ open class AddPlaylistActivity : MyAppCompatActivity(), SavePlaylistOnlinePicker
                 displayError(R.string.playlist_is_empty)
             }
             else -> {
-                val savePlaylistOnlinePicker = SavePlaylistOnlinePickerDialog(this)
-                savePlaylistOnlinePicker.show(supportFragmentManager, "SavePlaylistOnlinePicker")
+                if(!hasConnectivity(this)){
+                    savePlaylistLocally()
+
+                }else{
+                    val savePlaylistOnlinePicker = SavePlaylistOnlinePickerDialog(this)
+                    savePlaylistOnlinePicker.show(supportFragmentManager, "SavePlaylistOnlinePicker")
+                }
+
             }
         }
     }
@@ -142,6 +152,18 @@ open class AddPlaylistActivity : MyAppCompatActivity(), SavePlaylistOnlinePicker
     }
 
 
+    private fun savePlaylistLocally(){
+        if(generateLyricsCheckBox.isChecked){
+            Toast.makeText(this,getString(R.string.no_lyrics_generation_offline),Toast.LENGTH_SHORT).show()
+        }
+        val playlistName : String = findViewById<EditText>(R.id.newPlaylistName).text.toString()
+        val genre : Genre = genreSpinner.selectedItem as Genre
+        val playlist = Playlist(playlistName,listSongs.toSet(),genre)
+        user.addPlaylist(playlist)
+        user.save(this)
+        val intent = Intent(this@AddPlaylistActivity, UserProfileActivity::class.java)
+        startActivity(intent)
+    }
     override fun onPick(online: Boolean) {
         val playlistName: String = findViewById<EditText>(R.id.newPlaylistName).text.toString()
         val genre: Genre = genreSpinner.selectedItem as Genre

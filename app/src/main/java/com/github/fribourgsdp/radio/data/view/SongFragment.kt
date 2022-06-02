@@ -6,16 +6,18 @@ import android.text.TextWatcher
 import android.view.View
 import android.widget.EditText
 import android.widget.TextView
+import android.widget.Toast
 import com.github.fribourgsdp.radio.external.musixmatch.LyricsGetter
 import com.github.fribourgsdp.radio.external.musixmatch.MusixmatchLyricsGetter
 import com.github.fribourgsdp.radio.util.MyFragment
 import com.github.fribourgsdp.radio.R
+import com.github.fribourgsdp.radio.config.ConnectivityChecker
 import com.github.fribourgsdp.radio.data.Playlist
 import com.github.fribourgsdp.radio.data.Song
 import com.github.fribourgsdp.radio.data.User
 import com.github.fribourgsdp.radio.database.DatabaseHolder
 
-open class SongFragment : MyFragment(R.layout.fragment_song),DatabaseHolder {
+open class SongFragment : MyFragment(R.layout.fragment_song),ConnectivityChecker,DatabaseHolder {
     private lateinit var initialLyrics : String
     private lateinit var currentLyrics : String
     private lateinit var playlistName : String
@@ -70,7 +72,8 @@ open class SongFragment : MyFragment(R.layout.fragment_song),DatabaseHolder {
         song = playlist.getSong(songName, songArtist)
         initialLyrics = song.lyrics
         currentLyrics = initialLyrics
-        if(song.lyrics == MusixmatchLyricsGetter.BACKEND_ERROR_PLACEHOLDER){
+        if(song.lyrics == MusixmatchLyricsGetter.BACKEND_ERROR_PLACEHOLDER
+            && hasConnectivity(requireContext())){
             fetchLyrics(getLyricsGetter())
         }
         songTitle.text = song.name
@@ -92,11 +95,14 @@ open class SongFragment : MyFragment(R.layout.fragment_song),DatabaseHolder {
 
     override fun onDestroyView() {
         super.onDestroyView()
-        if ((currentLyrics != initialLyrics )|| (doSaveLyrics)) {
+        if(!hasConnectivity(requireContext()) && playlist.savedOnline){
+            Toast.makeText(requireContext(),getString(R.string.offline_error_message_toast), Toast.LENGTH_SHORT).show()
+        }else if (((currentLyrics != initialLyrics )|| (doSaveLyrics))) {
             val user = User.load(requireView().context)
             song.lyrics = currentLyrics
             user.updateSongInPlaylist(playlist, song)
-            if(playlist.savedOnline){
+            if(playlist.savedOnline
+                && hasConnectivity(requireContext())){
                 db.registerSong(song)
             }
             user.save(requireView().context)

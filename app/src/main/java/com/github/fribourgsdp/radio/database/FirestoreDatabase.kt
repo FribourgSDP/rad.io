@@ -231,7 +231,9 @@ class FirestoreDatabase(var refMake: FirestoreRef, var transactionMgr: Transacti
                     songSet.add(songEntry)
                 }
 
-                Playlist(playlistTitle, songSet, Genre.valueOf(genre))
+               val pl = Playlist(playlistTitle, songSet, Genre.valueOf(genre))
+               pl.savedOnline=true
+               pl
             }else{
                 null
             }
