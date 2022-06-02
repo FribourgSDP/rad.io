@@ -334,6 +334,7 @@ open class LobbyActivity : MyAppCompatActivity(){
 
         if (isHost && game != null) {
             intent.putExtra(GAME_KEY, Json.encodeToString(game))
+            loadLyrics(game.playlist, MusixmatchLyricsGetter, user)
         }
 
         startActivity(intent)
