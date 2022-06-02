@@ -8,7 +8,7 @@ import java.io.BufferedReader
 import java.io.InputStreamReader
 
 object StarterPlaylists {
-    private val top100french = Playlist("Chanson francaise", FRENCH)
+    private val top100french = Playlist("Chansons francophones", FRENCH)
     private val basicBlindTest = Playlist("Basic blind test", NONE)
     private val movieThemeSongs = Playlist("Movie theme songs", MOVIE)
     private val videoGames = Playlist("Video game songs", VIDEO_GAMES)
