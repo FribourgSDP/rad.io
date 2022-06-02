@@ -67,36 +67,3 @@ class BuggyLobbyActivity : LobbyActivity() {
         startActivity(intent)
     }
 }
-
-class LyricsGettingWorkingLobbyActivity : LobbyActivity() {
-    override fun initDatabase(): Database {
-        return LocalDatabase()
-    }
-    lateinit var host : User
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        host = User("Test User")
-        val name = "Test Game"
-        val playlistTest = Playlist("Stoner Playlist")
-        playlistTest.addSong(Song("Momentum", "Truckfighters"))
-        host.addPlaylist(playlistTest)
-
-        goToGameActivity(true, Game.Builder()
-            .setHost(host)
-            .setName(name)
-            .setPlaylist(playlistTest)
-            .setWithHint(false)
-            .setNbRounds(1)
-            .setPrivacy(true).build(),
-            44L)
-    }
-
-    override fun goToGameActivity(isHost: Boolean, game: Game?, gameID: Long, singerDuration: Long) {
-
-        if (isHost && game != null) {
-            intent.putExtra(GAME_KEY, Json.encodeToString(game))
-            loadLyrics(game.playlist, MockLyricsGetter, host)
-        }
-    }
-}
