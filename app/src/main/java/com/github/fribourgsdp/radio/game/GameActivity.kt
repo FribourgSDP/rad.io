@@ -319,12 +319,10 @@ open class GameActivity : AppCompatActivity(), GameView, Timer.Listener {
     }
 
     override fun onUpdate(timeInSeconds: Long) {
-
-        updateHint(timeInSeconds.toInt())
-
         // Run on main thread
         runOnUiThread {
             timerProgressBarHandler.progressBar.setProgress(timeInSeconds.toInt(), true)
+            updateHint(timeInSeconds.toInt())
         }
     }
 
