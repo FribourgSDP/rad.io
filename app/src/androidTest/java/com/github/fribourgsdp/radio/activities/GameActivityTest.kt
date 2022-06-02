@@ -3,22 +3,23 @@ package com.github.fribourgsdp.radio.activities
 
 import android.content.Context
 import android.content.Intent
+import android.content.res.Resources
 import android.view.View
+import android.widget.TextView
 import androidx.test.core.app.ActivityScenario
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.espresso.Espresso
 import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.action.ViewActions
-import androidx.test.espresso.assertion.ViewAssertions
 import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.intent.Intents
 import androidx.test.espresso.intent.matcher.IntentMatchers
+import androidx.test.espresso.matcher.BoundedMatcher
 import androidx.test.espresso.matcher.RootMatchers.isDialog
 import androidx.test.espresso.matcher.ViewMatchers
 import androidx.test.espresso.matcher.ViewMatchers.*
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.github.fribourgsdp.radio.R
-import com.github.fribourgsdp.radio.config.language.LanguageManager
 import com.github.fribourgsdp.radio.data.Playlist
 import com.github.fribourgsdp.radio.data.User
 import com.github.fribourgsdp.radio.external.musixmatch.MusixmatchLyricsGetter
@@ -30,17 +31,18 @@ import com.github.fribourgsdp.radio.game.prep.GAME_IS_NO_SING_MODE
 import com.github.fribourgsdp.radio.game.prep.GAME_KEY
 import com.github.fribourgsdp.radio.mockimplementations.MockGameActivity
 import com.github.fribourgsdp.radio.util.SongNameHint
-import com.github.fribourgsdp.radio.utils.CustomMatchers
 import com.github.fribourgsdp.radio.utils.CustomMatchers.Companion.atPosition
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 import org.hamcrest.CoreMatchers.equalTo
+import org.hamcrest.Description
 import org.hamcrest.Matchers.allOf
 import org.hamcrest.Matchers.not
 import org.junit.After
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
+import java.util.regex.Matcher
 
 
 @RunWith(AndroidJUnit4::class)
@@ -54,7 +56,6 @@ class GameActivityTest {
 
     @Before
     fun initIntent() {
-        LanguageManager(ctx).setLang("en")
         Intents.init()
     }
 
@@ -186,7 +187,7 @@ class GameActivityTest {
     @Test
     fun errorDisplayedCorrectly() {
         // Test values
-        val errorMessage = "This is an error message"
+        val errorMessage = ctx.getString(R.string.game_error)
 
         // Init views
         val errorOrFailureTextView = onView(withId(R.id.errorOrFailureTextView))
@@ -198,7 +199,46 @@ class GameActivityTest {
             }
 
             errorOrFailureTextView.check(matches(isDisplayed()))
-            errorOrFailureTextView.check(matches(withText(errorMessage)))
+            errorOrFailureTextView.check(matches(withText2(R.string.game_error)))
+        }
+    }
+    private fun withText2(resourceId: Int): BoundedMatcher<View?, TextView> {
+        return object : BoundedMatcher<View?, TextView>(TextView::class.java) {
+            private var resourceName: String? = null
+            private var expectedText: String? = null
+            override fun describeTo(description: Description) {
+                description.appendText("with string from resource id: ")
+                description.appendValue(resourceId)
+                if (null != resourceName) {
+                    description.appendText("[")
+                    description.appendText(resourceName)
+                    description.appendText("]")
+                }
+                if (null != expectedText) {
+                    description.appendText(" value: ")
+                    description.appendText(expectedText)
+                }
+            }
+
+            override fun matchesSafely(textView: TextView): Boolean {
+                if (null == expectedText) {
+                    try {
+                        expectedText = textView.resources.getString(
+                            resourceId
+                        )
+                        resourceName = textView.resources
+                            .getResourceEntryName(resourceId)
+                    } catch (ignored: Resources.NotFoundException) {
+
+                    }
+                }
+                return if (null != expectedText) {
+                    expectedText == textView.text
+                        .toString()
+                } else {
+                    false
+                }
+            }
         }
     }
 
