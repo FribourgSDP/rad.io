@@ -164,10 +164,7 @@ open class GameActivity : AppCompatActivity(), GameView, Timer.Listener {
         showLyricsButton.visibility = View.GONE
 
         // Show the edit text and the submit button instead
-        songGuessEditText.apply {
-            text.clear()
-            visibility = View.VISIBLE
-        }
+        songGuessEditText.visibility = View.VISIBLE
         songGuessSubmitButton.visibility = View.VISIBLE
     }
 
@@ -277,6 +274,10 @@ open class GameActivity : AppCompatActivity(), GameView, Timer.Listener {
             }
             false
         }
+
+        // clear edittext on click
+        songGuessEditText.setOnClickListener { songGuessEditText.text.clear() }
+
         muteButton = findViewById(R.id.muteChannelButton)
         muteButton.setOnClickListener {
             voiceChannel.mute()
