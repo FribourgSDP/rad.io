@@ -119,13 +119,18 @@
 
     </TableLayout>
 
-    <Button
+    <ImageButton
         android:id="@+id/displayQRCodeButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/display_qr_code"
-        app:layout_constraintEnd_toEndOf="@id/topImage"
-        app:layout_constraintTop_toTopOf="@id/topImage" />
+        style="@style/Button.Icon"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="12dp"
+        android:contentDescription="@string/display_qr_code"
+        android:src="@drawable/ic_baseline_qr_code_24"
+        app:tint="@color/white"
+        android:scaleType="fitCenter"
+        android:adjustViewBounds="true"
+        app:layout_constraintTop_toTopOf="@id/topImage"
+        app:layout_constraintEnd_toEndOf="@id/topImage" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/lobbyRecyclerView"
