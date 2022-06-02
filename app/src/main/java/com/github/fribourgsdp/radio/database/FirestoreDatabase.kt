@@ -573,17 +573,21 @@ class FirestoreDatabase(var refMake: FirestoreRef, var transactionMgr: Transacti
 
     override fun removeGameListener(){
         gameListerRegistration?.remove()
+        gameListerRegistration = null
     }
 
     override fun removeLobbyListener(){
         metadataGameListerRegistration?.remove()
+        metadataGameListerRegistration = null
     }
     override fun removeMetadataGameListener(){
         lobbyListerRegistration?.remove()
+        lobbyListerRegistration = null
     }
 
     override fun removePublicLobbyListener() {
         publicLobbyListerRegistration?.remove()
+        publicLobbyListerRegistration = null
     }
 
     override fun listenToGameMetadataUpdate(id: Long, listener: EventListener<DocumentSnapshot>) {

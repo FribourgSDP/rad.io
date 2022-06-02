@@ -68,7 +68,7 @@ open class GameActivity : AppCompatActivity(), GameView, Timer.Listener {
     protected lateinit var voiceChannel: VoiceIpEngineDecorator
 
     private lateinit var playerGameHandler: PlayerGameHandler
-    private lateinit var hostGameHandler : HostGameHandler
+    private var hostGameHandler : HostGameHandler? = null
 
     private lateinit var tts : MyTextToSpeech
 
@@ -108,9 +108,7 @@ open class GameActivity : AppCompatActivity(), GameView, Timer.Listener {
     override fun onDestroy() {
         super.onDestroy()
         playerGameHandler.unlinkFromDatabase()
-        if(isHost) {
-            hostGameHandler.unlinkFromDatabase()
-        }
+        hostGameHandler?.unlinkFromDatabase()
         voiceChannel.leaveChannel()
         RtcEngine.destroy()
     }
@@ -254,8 +252,8 @@ open class GameActivity : AppCompatActivity(), GameView, Timer.Listener {
         if (isHost) {
             val game = Json.decodeFromString(intent.getStringExtra(GAME_KEY)!!) as Game
             hostGameHandler = HostGameHandler(this, game, this, noSing=noSing)
-            hostGameHandler.linkToDatabase()
-            hostGameHandler.setSingerDuration(gameDuration)
+            hostGameHandler?.linkToDatabase()
+            hostGameHandler?.setSingerDuration(gameDuration)
         }
     }
 
