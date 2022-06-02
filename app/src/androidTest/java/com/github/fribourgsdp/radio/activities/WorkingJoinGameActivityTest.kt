@@ -1,7 +1,10 @@
 package com.github.fribourgsdp.radio.activities
 
 import android.content.Context
+import android.content.Intent
+import androidx.test.core.app.ActivityScenario
 import androidx.test.core.app.ApplicationProvider
+import androidx.test.espresso.Espresso
 import androidx.test.espresso.Espresso.*
 import androidx.test.espresso.action.ViewActions
 import androidx.test.espresso.action.ViewActions.click
@@ -12,14 +15,17 @@ import androidx.test.espresso.matcher.RootMatchers.isTouchable
 import androidx.test.espresso.matcher.ViewMatchers.*
 import androidx.test.ext.junit.rules.ActivityScenarioRule
 import androidx.test.ext.junit.runners.AndroidJUnit4
+import com.github.fribourgsdp.radio.MainActivity
 import com.github.fribourgsdp.radio.data.LobbyData
 import com.github.fribourgsdp.radio.data.LobbyDataKeys
 import com.github.fribourgsdp.radio.R
 import com.github.fribourgsdp.radio.config.language.LanguageManager
+import com.github.fribourgsdp.radio.deprecated.VoiceOverIPActivity
 import com.github.fribourgsdp.radio.game.prep.*
 import com.github.fribourgsdp.radio.mockimplementations.*
 import com.github.fribourgsdp.radio.mockimplementations.WorkingJoinGameActivity
 import com.github.fribourgsdp.radio.utils.CustomMatchers.Companion.atPosition
+import org.hamcrest.Matchers
 import org.hamcrest.Matchers.*
 import org.junit.After
 import org.junit.Before
@@ -90,6 +96,23 @@ class WorkingJoinGameActivityTest {
         val lobbies = ArrayList(WorkingJoinGameActivity.testDatabase.lobbies)
 
         checkLobbiesDisplay(lobbies)
+    }
+
+
+    @Test
+    fun pressBackWorks(){
+        val context: Context = ApplicationProvider.getApplicationContext()
+
+        val intent = Intent(context, VoiceOverIPActivity::class.java)
+        ActivityScenario.launch<VoiceOverIPActivity>(intent).use { _ ->
+            pressBack()
+            Intents.intended(
+                allOf(
+                    IntentMatchers.hasComponent(MainActivity::class.java.name),
+                    IntentMatchers.toPackage("com.github.fribourgsdp.radio")
+                )
+            )
+        }
     }
 
 
