@@ -153,7 +153,6 @@ open class GameSettingsActivity : MyAppCompatActivity(), DatabaseHolder {
                     putExtra(
                         GAME_NAME_KEY,
                         nameInput.text.toString().ifEmpty { getString(R.string.default_game_name) })
-                    //putExtra(GAME_PLAYLIST_KEY, Json.encodeToString(selectedPlaylist))
                     putExtra(
                         GAME_NB_ROUNDS_KEY,
                         nbRoundsInput.text.toString()
