@@ -44,7 +44,7 @@ open class MainActivity : MyAppCompatActivity() {
         }
 
         if(!hasConnectivity(this)) {
-            disableButtons()
+            disableButtonsAndShowToast()
         }
         /** this user allows quick demo's as it is data that is written to the app
          * specific storage and can be easily read without intents */
@@ -63,11 +63,15 @@ open class MainActivity : MyAppCompatActivity() {
         if(hasConnectivity(this)){
             startActivity(targetActivity)
         }else{
-            Toast.makeText(this,getString(R.string.offline_error_message_toast), Toast.LENGTH_SHORT).show()
-            disableButtons()
+            disableButtonsAndShowToast()
         }
     }
 
+    private fun disableButtonsAndShowToast(){
+        Toast.makeText(this,getString(R.string.offline_error_message_toast), Toast.LENGTH_SHORT).show()
+        disableButtons()
+
+    }
     private fun disableButtons(){
         playButton.isEnabled = false
         joinButton.isEnabled = false
