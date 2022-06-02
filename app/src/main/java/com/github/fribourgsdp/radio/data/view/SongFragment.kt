@@ -6,6 +6,7 @@ import android.text.TextWatcher
 import android.view.View
 import android.widget.EditText
 import android.widget.TextView
+import android.widget.Toast
 import com.github.fribourgsdp.radio.external.musixmatch.LyricsGetter
 import com.github.fribourgsdp.radio.external.musixmatch.MusixmatchLyricsGetter
 import com.github.fribourgsdp.radio.util.MyFragment
@@ -94,7 +95,9 @@ open class SongFragment : MyFragment(R.layout.fragment_song),ConnectivityChecker
 
     override fun onDestroyView() {
         super.onDestroyView()
-        if ((currentLyrics != initialLyrics )|| (doSaveLyrics)) {
+        if(!hasConnectivity(requireContext()) && playlist.savedOnline){
+            Toast.makeText(requireContext(),getString(R.string.offline_error_message_toast), Toast.LENGTH_SHORT).show()
+        }else if (((currentLyrics != initialLyrics )|| (doSaveLyrics))) {
             val user = User.load(requireView().context)
             song.lyrics = currentLyrics
             user.updateSongInPlaylist(playlist, song)
