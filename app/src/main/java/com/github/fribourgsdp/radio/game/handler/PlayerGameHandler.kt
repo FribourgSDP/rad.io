@@ -168,6 +168,7 @@ class PlayerGameHandler(
         val deadline = snapshot.getTimestamp("round_deadline")
         view.updateSinger(NO_SINGER)
         if(songToGuess != null && deadline != null) {
+            view.addHint(SongNameHint(songToGuess!!))
             tts!!.readLyrics(getLyricsFromSnapshot(snapshot))
             view.startTimer(deadline.toDate())
         } else{
