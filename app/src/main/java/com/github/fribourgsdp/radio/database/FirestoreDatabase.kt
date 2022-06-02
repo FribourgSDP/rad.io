@@ -124,6 +124,11 @@ open class TransactionManager() {
  */
 class FirestoreDatabase(var refMake: FirestoreRef, var transactionMgr: TransactionManager) : Database {
     private val db = Firebase.firestore
+    private var gameListerRegistration : ListenerRegistration? = null
+    private var metadataGameListerRegistration : ListenerRegistration? = null
+    private var lobbyListerRegistration : ListenerRegistration? = null
+    private var publicLobbyListerRegistration : ListenerRegistration? = null
+
     init {
         refMake.db = db
         transactionMgr.db = db
@@ -196,16 +201,16 @@ class FirestoreDatabase(var refMake: FirestoreRef, var transactionMgr: Transacti
     }
 
     override fun registerSong(song : Song): Task<Void>{
-            if(song.id == ""){
-                return Tasks.forException(IllegalArgumentException("Not null id is expected"))
-            }
-            val songHash = hashMapOf(
-                "songId" to song.id,
-                "songName" to song.name,
-                "artistName" to song.artist,
-                "lyrics" to song.lyrics
-            )
-            return refMake.getSongRef(song.id).set(songHash)
+        if(song.id == ""){
+            return Tasks.forException(IllegalArgumentException("Not null id is expected"))
+        }
+        val songHash = hashMapOf(
+            "songId" to song.id,
+            "songName" to song.name,
+            "artistName" to song.artist,
+            "lyrics" to song.lyrics
+        )
+        return refMake.getSongRef(song.id).set(songHash)
 
     }
 
@@ -311,7 +316,8 @@ class FirestoreDatabase(var refMake: FirestoreRef, var transactionMgr: Transacti
     }
 
     override fun listenToLobbyUpdate(id: Long, listener: EventListener<DocumentSnapshot>) {
-        listenUpdate("lobby", id, listener)
+        removeLobbyListener()
+        lobbyListerRegistration = listenUpdate("lobby", id, listener)
     }
 
     override fun getGameSettingsFromLobby(id: Long) :Task<Game.Settings> {
@@ -384,7 +390,8 @@ class FirestoreDatabase(var refMake: FirestoreRef, var transactionMgr: Transacti
     }
 
     override fun listenToPublicLobbiesUpdate(listener: EventListener<List<LobbyData>>) {
-        db.collection("lobby").document("public").addSnapshotListener { snapshot, error ->
+        removePublicLobbyListener()
+        publicLobbyListerRegistration = db.collection("lobby").document("public").addSnapshotListener { snapshot, error ->
             val value = snapshot?.let{ createListLobbyDataFromRawData(it.data) }
             listener.onEvent(value, error)
         }
@@ -560,11 +567,32 @@ class FirestoreDatabase(var refMake: FirestoreRef, var transactionMgr: Transacti
     }
 
     override fun listenToGameUpdate(id: Long, listener: EventListener<DocumentSnapshot>) {
-        listenUpdate("games", id, listener)
+        removeGameListener()
+        gameListerRegistration = listenUpdate("games", id, listener)
+    }
+
+    override fun removeGameListener(){
+        gameListerRegistration?.remove()
+        gameListerRegistration = null
+    }
+
+    override fun removeLobbyListener(){
+        metadataGameListerRegistration?.remove()
+        metadataGameListerRegistration = null
+    }
+    override fun removeMetadataGameListener(){
+        lobbyListerRegistration?.remove()
+        lobbyListerRegistration = null
+    }
+
+    override fun removePublicLobbyListener() {
+        publicLobbyListerRegistration?.remove()
+        publicLobbyListerRegistration = null
     }
 
     override fun listenToGameMetadataUpdate(id: Long, listener: EventListener<DocumentSnapshot>) {
-        listenUpdate("games_metadata", id, listener)
+        removeMetadataGameListener()
+        metadataGameListerRegistration = listenUpdate("games_metadata", id, listener)
     }
 
     override fun updateGame(id: Long, updatesMap: Map<String, Any>): Task<Void> {
@@ -576,7 +604,7 @@ class FirestoreDatabase(var refMake: FirestoreRef, var transactionMgr: Transacti
         val roundDeadline = Date()
         //incrementBy is in seconds whereas we must add milliseconds to the time before deadline.
         roundDeadline.time += incrementBy*1000
-        
+
 
         val songUpdateMap = hashMapOf(
             "current_song" to songName,
@@ -664,10 +692,13 @@ class FirestoreDatabase(var refMake: FirestoreRef, var transactionMgr: Transacti
         }
     }
 
-    private fun listenUpdate(collectionPath : String, id: Long, listener: EventListener<DocumentSnapshot>){
-        db.collection(collectionPath).document(id.toString())
+    private fun listenUpdate(collectionPath : String, id: Long, listener: EventListener<DocumentSnapshot>):ListenerRegistration{
+        return db.collection(collectionPath).document(id.toString())
             .addSnapshotListener(listener)
     }
+
+
+
 
     private fun createListLobbyDataFromRawData(data: Map<String, Any>?): List<LobbyData> {
         return data?.let {

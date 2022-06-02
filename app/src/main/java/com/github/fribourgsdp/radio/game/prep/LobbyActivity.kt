@@ -25,6 +25,7 @@ import com.github.fribourgsdp.radio.game.GameActivity
 import com.github.fribourgsdp.radio.game.view.QuitGameOrLobbyDialog
 import com.github.fribourgsdp.radio.util.getPermissions
 import com.github.fribourgsdp.radio.util.getPlayers
+import io.agora.rtc.RtcEngine
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
@@ -121,8 +122,8 @@ open class LobbyActivity : MyAppCompatActivity(){
                         }
 
                     }.addOnFailureListener {
-                    uuidTextView.text = getString(R.string.open_game_error)
-                }
+                        uuidTextView.text = getString(R.string.open_game_error)
+                    }
 
                 }.addOnFailureListener {
                     uuidTextView.text = getString(R.string.open_game_error)
@@ -260,14 +261,14 @@ open class LobbyActivity : MyAppCompatActivity(){
 
     private fun openLobby(uid: Long){
         db.openLobby(uid, gameBuilder.getSettings()).addOnSuccessListener {
-                    db.addUserToLobby(uid, user, (ContextCompat.checkSelfPermission(this, Manifest.permission.RECORD_AUDIO) == PackageManager.PERMISSION_GRANTED)).addOnSuccessListener {
-                        listenToUpdates(uid)
-                    }.addOnFailureListener {
-                        uuidTextView.text = getString(R.string.uid_error)
-                    }
-                }.addOnFailureListener {
-                    uuidTextView.text = getString(R.string.uid_error)
-                }
+            db.addUserToLobby(uid, user, (ContextCompat.checkSelfPermission(this, Manifest.permission.RECORD_AUDIO) == PackageManager.PERMISSION_GRANTED)).addOnSuccessListener {
+                listenToUpdates(uid)
+            }.addOnFailureListener {
+                uuidTextView.text = getString(R.string.uid_error)
+            }
+        }.addOnFailureListener {
+            uuidTextView.text = getString(R.string.uid_error)
+        }
     }
 
     private fun listenToUpdates(uid: Long) {
@@ -336,8 +337,8 @@ open class LobbyActivity : MyAppCompatActivity(){
             intent.putExtra(GAME_KEY, Json.encodeToString(game))
             loadLyrics(game.playlist, MusixmatchLyricsGetter, user)
         }
-
         startActivity(intent)
+        finish()
     }
     protected fun loadLyrics(playlist : Playlist, lyricsGetter: LyricsGetter, host : User){
         if (host.getPlaylists().contains(playlist)){
@@ -380,6 +381,11 @@ open class LobbyActivity : MyAppCompatActivity(){
                     returnToMainMenu()
                 }
             }
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        db.removeLobbyListener()
     }
 
     private fun returnToMainMenu(){

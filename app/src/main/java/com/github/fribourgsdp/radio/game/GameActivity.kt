@@ -68,6 +68,7 @@ open class GameActivity : AppCompatActivity(), GameView, Timer.Listener {
     protected lateinit var voiceChannel: VoiceIpEngineDecorator
 
     private lateinit var playerGameHandler: PlayerGameHandler
+    private var hostGameHandler : HostGameHandler? = null
 
     private lateinit var tts : MyTextToSpeech
 
@@ -106,6 +107,8 @@ open class GameActivity : AppCompatActivity(), GameView, Timer.Listener {
 
     override fun onDestroy() {
         super.onDestroy()
+        playerGameHandler.unlinkFromDatabase()
+        hostGameHandler?.unlinkFromDatabase()
         voiceChannel.leaveChannel()
         RtcEngine.destroy()
     }
@@ -220,13 +223,14 @@ open class GameActivity : AppCompatActivity(), GameView, Timer.Listener {
                 putExtra(
                     SCORES_KEY,
                     // Replace ids by names and put in an ArrayList to make it Serializable
-                    ArrayList(it.map { (id, score) -> Pair(mapIdToName[id] ?: id, score) })
+                            ArrayList(it.map { (id, score) -> Pair(mapIdToName[id] ?: id, score) })
                 )
             }
 
             putExtra(GAME_CRASH_KEY, hasCrashed)
         }
         startActivity(intent)
+        finish()
     }
 
     private fun returnToMainMenu() {
@@ -247,11 +251,12 @@ open class GameActivity : AppCompatActivity(), GameView, Timer.Listener {
     private fun initHostGameHandler(){
         if (isHost) {
             val game = Json.decodeFromString(intent.getStringExtra(GAME_KEY)!!) as Game
-            val hostGameHandler = HostGameHandler(this, game, this, noSing=noSing)
-            hostGameHandler.linkToDatabase()
-            hostGameHandler.setSingerDuration(gameDuration)
+            hostGameHandler = HostGameHandler(this, game, this, noSing=noSing)
+            hostGameHandler?.linkToDatabase()
+            hostGameHandler?.setSingerDuration(gameDuration)
         }
     }
+
 
     private fun initViews() {
         currentRoundTextView = findViewById(R.id.currentRoundView)
@@ -340,13 +345,13 @@ open class GameActivity : AppCompatActivity(), GameView, Timer.Listener {
             cantQuitGamePopup?.show(supportFragmentManager, "cannotQuitGame")
         }
     }
-    
+
     override fun updateLyrics(lyrics : String) {
         //Close any active popup if open
         closePopups()
-        
+
         lyricsPopup = if(lyrics.isNotEmpty() && lyrics != LYRICS_NOT_FOUND_PLACEHOLDER)  LyricsPopup(lyrics)
-            else null
+        else null
     }
 
     override fun onPause() {

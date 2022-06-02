@@ -7,6 +7,7 @@ import com.google.android.gms.tasks.Task
 import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.EventListener
 
+
 interface Database {
 
     /**
@@ -208,4 +209,21 @@ interface Database {
      * @return a task void so we know the singer was correctly added to the players done map in the database.
      */
     fun makeSingerDone(gameID: Long, singerName: String): Task<Void>
+
+    /**
+     * Stop listening to the updates of the game
+     */
+    fun removeGameListener()
+    /**
+     * Stop listening to the updates of the public lobbies
+     */
+    fun removeLobbyListener()
+    /**
+     * Stop listening to the updates of the metadata of game
+     */
+    fun removeMetadataGameListener()
+    /**
+     * Stop listening to the updates of the lobby
+     */
+    fun removePublicLobbyListener()
 }

@@ -30,11 +30,16 @@ class PlayerGameHandler(
     private var singerDuration: Long = DEFAULT_SINGER_DURATION
     private val stopTimer = Timer(singerDuration + WAIT_DELTA_IN_SECONDS).apply {
         // When this timer expires, stop the game
-        setOnDoneListener { view.gameOver(scores, true) }
+        setOnDoneListener {
+            view.gameOver(scores, true) }
     }
 
     override fun linkToDatabase() {
         db.listenToGameUpdate(gameID, executeOnUpdate())
+    }
+
+    override fun unlinkFromDatabase() {
+        db.removeGameListener()
     }
 
     override fun handleSnapshot(snapshot: DocumentSnapshot?) {
@@ -57,7 +62,7 @@ class PlayerGameHandler(
             // Get the picked song
             // It's not null when there is one.
             songToGuess = snapshot.getString("current_song")
-      
+
             if(!noSing) {
                 val singerName = snapshot.getString("singer")!!
                 view.updateSinger(singerName)

@@ -90,7 +90,7 @@ class BuggyDatabase : Database {
     }
 
     override fun listenToPublicLobbiesUpdate(listener: EventListener<List<LobbyData>>) {
-        
+
     }
 
     override fun openGame(id: Long): Task<Void> {
@@ -143,6 +143,22 @@ class BuggyDatabase : Database {
 
     override fun makeSingerDone(gameID: Long, singerName: String): Task<Void> {
         TODO("Not yet implemented")
+    }
+
+    override fun removeGameListener() {
+
+    }
+
+    override fun removeLobbyListener() {
+
+    }
+
+    override fun removeMetadataGameListener() {
+
+    }
+
+    override fun removePublicLobbyListener() {
+
     }
 
 }

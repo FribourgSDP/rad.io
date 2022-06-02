@@ -84,7 +84,7 @@ class HostGameHandler(
                                 // quit on second failure
                                 view.gameOver(game.getAllScores(), true)
                             }
-                }
+                    }
             }
 
         } else {
@@ -128,6 +128,11 @@ class HostGameHandler(
     override fun linkToDatabase() {
         db.listenToGameMetadataUpdate(game.id, executeOnUpdate())
     }
+
+    override fun unlinkFromDatabase() {
+        db.removeMetadataGameListener()
+    }
+
 
     private fun createUpdatesMap(playerIdsOnDatabase: Set<String>): Map<String, Any> {
         if (playerIdsOnDatabase.isEmpty()) {
@@ -179,4 +184,3 @@ class HostGameHandler(
     }
 
 }
-

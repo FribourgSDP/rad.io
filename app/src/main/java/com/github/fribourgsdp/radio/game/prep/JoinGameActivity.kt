@@ -13,6 +13,7 @@ import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.DialogFragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.github.fribourgsdp.radio.MainActivity
 import com.github.fribourgsdp.radio.data.LobbyDataKeys
 import com.github.fribourgsdp.radio.game.view.PublicLobbiesAdapter
 import com.github.fribourgsdp.radio.R
@@ -46,6 +47,18 @@ open class JoinGameActivity : MyAppCompatActivity() {
         initPublicLobbiesDisplay()
         initJoinWithQRCode()
 
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        db.removePublicLobbyListener()
+    }
+
+    override fun onBackPressed() {
+        super.onBackPressed()
+        val intent = Intent(this, MainActivity::class.java)
+        startActivity(intent)
+        finish()
     }
 
     private fun initViews() {
@@ -97,7 +110,7 @@ open class JoinGameActivity : MyAppCompatActivity() {
     private fun connectToLobby(id: Long) {
         db.getGameSettingsFromLobby(id).addOnSuccessListener { settings ->
             db.addUserToLobby(id, User.load(this), (ContextCompat.checkSelfPermission(this, Manifest.permission.RECORD_AUDIO) == PackageManager.PERMISSION_GRANTED)).addOnSuccessListener {
-                startActivity(Intent(this, LobbyActivity::class.java).apply {
+                val intent = Intent(this, LobbyActivity::class.java).apply {
                     putExtra(GAME_HOST_NAME_KEY, settings.hostName)
                     putExtra(GAME_NAME_KEY, settings.name)
                     putExtra(GAME_PLAYLIST_NAME_KEY, settings.playlistName)
@@ -108,7 +121,9 @@ open class JoinGameActivity : MyAppCompatActivity() {
                     putExtra(GAME_DURATION_KEY, settings.singerDuration)
                     putExtra(GAME_UID_KEY, id)
                     putExtra(GAME_IS_NO_SING_MODE, settings.noSing)
-                })
+                }
+                startActivity(intent)
+                finish()
 
             }.addOnFailureListener {
                 joinErrorView.text = getString(R.string.join_fail_format, id)

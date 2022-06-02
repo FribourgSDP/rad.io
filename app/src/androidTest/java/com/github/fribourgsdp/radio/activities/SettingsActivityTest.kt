@@ -18,6 +18,7 @@ import androidx.test.espresso.matcher.ViewMatchers
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import org.junit.runner.RunWith
 import androidx.test.espresso.Espresso.onData
+import androidx.test.espresso.assertion.ViewAssertions
 import com.github.fribourgsdp.radio.MainActivity
 import com.github.fribourgsdp.radio.R
 import com.github.fribourgsdp.radio.config.SettingsActivity
@@ -28,7 +29,7 @@ import org.hamcrest.Matchers.*
 
 @RunWith(AndroidJUnit4::class)
 class SettingsActivityTest {
-  @get:Rule
+    @get:Rule
     var settingsActivityRule = ActivityScenarioRule(MockSettingsActivity::class.java)
 
     private val ctx: Context = ApplicationProvider.getApplicationContext()
@@ -71,8 +72,10 @@ class SettingsActivityTest {
                 )
             )
 
+            Espresso.onView(ViewMatchers.withId(R.id.spinner_language))
+                .check(ViewAssertions.matches(ViewMatchers.withSpinnerText("Français")))
+
         }
     }
 }
-
 
