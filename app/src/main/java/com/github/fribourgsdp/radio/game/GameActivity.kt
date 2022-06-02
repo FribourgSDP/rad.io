@@ -68,6 +68,7 @@ open class GameActivity : AppCompatActivity(), GameView, Timer.Listener {
     protected lateinit var voiceChannel: VoiceIpEngineDecorator
 
     private lateinit var playerGameHandler: PlayerGameHandler
+    private var hostGameHandler : HostGameHandler? = null
 
     private lateinit var tts : MyTextToSpeech
 
@@ -106,6 +107,8 @@ open class GameActivity : AppCompatActivity(), GameView, Timer.Listener {
 
     override fun onDestroy() {
         super.onDestroy()
+        playerGameHandler.unlinkFromDatabase()
+        hostGameHandler?.unlinkFromDatabase()
         voiceChannel.leaveChannel()
         RtcEngine.destroy()
     }
@@ -164,10 +167,7 @@ open class GameActivity : AppCompatActivity(), GameView, Timer.Listener {
         showLyricsButton.visibility = View.GONE
 
         // Show the edit text and the submit button instead
-        songGuessEditText.apply {
-            text.clear()
-            visibility = View.VISIBLE
-        }
+        songGuessEditText.visibility = View.VISIBLE
         songGuessSubmitButton.visibility = View.VISIBLE
     }
 
@@ -227,6 +227,7 @@ open class GameActivity : AppCompatActivity(), GameView, Timer.Listener {
             putExtra(GAME_CRASH_KEY, hasCrashed)
         }
         startActivity(intent)
+        finish()
     }
 
     private fun returnToMainMenu() {
@@ -247,9 +248,9 @@ open class GameActivity : AppCompatActivity(), GameView, Timer.Listener {
     private fun initHostGameHandler(){
         if (isHost) {
             val game = Json.decodeFromString(intent.getStringExtra(GAME_KEY)!!) as Game
-            val hostGameHandler = HostGameHandler(this, game, this, noSing=noSing)
-            hostGameHandler.linkToDatabase()
-            hostGameHandler.setSingerDuration(gameDuration)
+            hostGameHandler = HostGameHandler(this, game, this, noSing=noSing)
+            hostGameHandler?.linkToDatabase()
+            hostGameHandler?.setSingerDuration(gameDuration)
         }
     }
 
@@ -277,6 +278,10 @@ open class GameActivity : AppCompatActivity(), GameView, Timer.Listener {
             }
             false
         }
+
+        // clear edittext on click
+        songGuessEditText.setOnClickListener { songGuessEditText.text.clear() }
+
         muteButton = findViewById(R.id.muteChannelButton)
         muteButton.setOnClickListener {
             voiceChannel.mute()
@@ -314,12 +319,10 @@ open class GameActivity : AppCompatActivity(), GameView, Timer.Listener {
     }
 
     override fun onUpdate(timeInSeconds: Long) {
-
-        updateHint(timeInSeconds.toInt())
-
         // Run on main thread
         runOnUiThread {
             timerProgressBarHandler.progressBar.setProgress(timeInSeconds.toInt(), true)
+            updateHint(timeInSeconds.toInt())
         }
     }
 

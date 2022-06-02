@@ -25,6 +25,7 @@ import com.github.fribourgsdp.radio.game.GameActivity
 import com.github.fribourgsdp.radio.game.view.QuitGameOrLobbyDialog
 import com.github.fribourgsdp.radio.util.getPermissions
 import com.github.fribourgsdp.radio.util.getPlayers
+import io.agora.rtc.RtcEngine
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
@@ -65,7 +66,7 @@ open class LobbyActivity : MyAppCompatActivity(){
 
     private lateinit var launchGameButton: Button
     private lateinit var askForPermissionsButton: Button
-    private lateinit var displayQRCodeButton: Button
+    private lateinit var displayQRCodeButton: ImageButton
 
     private lateinit var qrCodeDisplay: DialogFragment
 
@@ -334,23 +335,9 @@ open class LobbyActivity : MyAppCompatActivity(){
 
         if (isHost && game != null) {
             intent.putExtra(GAME_KEY, Json.encodeToString(game))
-            loadLyrics(game.playlist, MusixmatchLyricsGetter, user)
         }
-
         startActivity(intent)
-    }
-    protected fun loadLyrics(playlist : Playlist, lyricsGetter: LyricsGetter, host : User){
-        if (host.getPlaylists().contains(playlist)){
-            for (song in playlist.getSongs()){
-                if(song.lyrics == "") {
-                    lyricsGetter.getLyrics(song.name, song.artist).thenAccept { f ->
-                        val songWithLyrics = Song(song.name, song.artist, f)
-                        host.updateSongInPlaylist(playlist, songWithLyrics)
-                        host.save(applicationContext)
-                    }
-                }
-            }
-        }
+        finish()
     }
 
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
@@ -380,6 +367,11 @@ open class LobbyActivity : MyAppCompatActivity(){
                     returnToMainMenu()
                 }
             }
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        db.removeLobbyListener()
     }
 
     private fun returnToMainMenu(){

@@ -111,7 +111,7 @@
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/addPlaylistButton"
-        style="@style/FloatingButtons"
+        style="@style/Button.Floating"
         android:contentDescription="@string/add_a_playlist_manually"
         android:src="@drawable/ic_baseline_add_24"
         app:layout_constraintBottom_toBottomOf="@+id/container"

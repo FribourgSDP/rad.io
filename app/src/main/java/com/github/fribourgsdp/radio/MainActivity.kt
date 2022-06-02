@@ -20,6 +20,7 @@ import com.github.fribourgsdp.radio.database.FirestoreDatabase
 import com.github.fribourgsdp.radio.deprecated.VoiceOverIPActivity
 import com.github.fribourgsdp.radio.game.prep.GameSettingsActivity
 import com.github.fribourgsdp.radio.game.prep.JoinGameActivity
+import com.github.fribourgsdp.radio.game.prep.LobbyActivity
 
 open class MainActivity : MyAppCompatActivity() {
     private val db = FirestoreDatabase()
@@ -41,6 +42,7 @@ open class MainActivity : MyAppCompatActivity() {
         settingsButton.setOnClickListener {startActivity(Intent(this, SettingsActivity::class.java))}
         profileButton.setOnClickListener {
             startActivity(Intent(this, UserProfileActivity::class.java))
+            finish()
         }
 
         if(!hasConnectivity(this)) {

@@ -57,7 +57,7 @@
     <string name="create_playlist">CRÉER UNE PLAYLIST</string>
     <string name="update_playlist">MODIFIER LA PLAYLIST</string>
     <string name="add_song">AJOUTER UNE CHANSON</string>
-    <string name="lyricsPresenter">paroles :</string>
+    <string name="lyricsPresenter">Paroles :</string>
     <string name="pick_a_song">Choisis une chanson !</string>
     <string name="submit">Soumettre</string>
     <string name="playlist_name">Playlist Name</string>
@@ -86,7 +86,7 @@
     <string name="cancelMessageQuitGameOrLobby">Annuler</string>
     <string name="warningMessageQuitGameOrLobby">Attention, en cliquant sur continuer, vous serez retiré du lobby. Si vous êtes l\'hôte vous mettrez fin à la partie.</string>
     <string name="warningMessageQuitAddPlaylist">Voulez vous retourner au menu d\'utilisateur? Toutes les modifications ne seront pas sauvegardées.</string>
-    <string name="validateMessageQuitAddPlaylist">Supprimer la playlist et retourner au profil</string>
+    <string name="validateMessageQuitAddPlaylist">Retourner au profil</string>
     <string name="saveOnlineQuestionText">Voulez-vous sauvez votre playlist en ligne?</string>
     <string name="yes">oui</string>
     <string name="no">non</string>
@@ -125,6 +125,7 @@
     <string name="round_duration_format">%d secondes</string>
     <string name="return_to_the_game">Retournez à la partie</string>
     <string name="mute_button_desc">Bouton pour éteindre le micro</string>
+    <string name="active_speaker_base">Personne n\'a encore parlé</string>
     <string name="active_speaker_format">%s parle</string>
     <string name="noSingModeCheckbox">Paroles lues par un robot !</string>
     <string name="with_singer_format">Avec chanteur : %b</string>
