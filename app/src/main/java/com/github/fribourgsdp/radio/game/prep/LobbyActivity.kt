@@ -25,6 +25,7 @@ import com.github.fribourgsdp.radio.game.GameActivity
 import com.github.fribourgsdp.radio.game.view.QuitGameOrLobbyDialog
 import com.github.fribourgsdp.radio.util.getPermissions
 import com.github.fribourgsdp.radio.util.getPlayers
+import io.agora.rtc.RtcEngine
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
@@ -335,8 +336,8 @@ open class LobbyActivity : MyAppCompatActivity(){
         if (isHost && game != null) {
             intent.putExtra(GAME_KEY, Json.encodeToString(game))
         }
-
         startActivity(intent)
+        finish()
     }
 
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
@@ -366,6 +367,11 @@ open class LobbyActivity : MyAppCompatActivity(){
                     returnToMainMenu()
                 }
             }
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        db.removeLobbyListener()
     }
 
     private fun returnToMainMenu(){

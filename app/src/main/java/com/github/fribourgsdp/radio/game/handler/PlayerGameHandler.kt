@@ -30,11 +30,16 @@ class PlayerGameHandler(
     private var singerDuration: Long = DEFAULT_SINGER_DURATION
     private val stopTimer = Timer(singerDuration + WAIT_DELTA_IN_SECONDS).apply {
         // When this timer expires, stop the game
-        setOnDoneListener { view.gameOver(scores, true) }
+        setOnDoneListener {
+            view.gameOver(scores, true) }
     }
 
     override fun linkToDatabase() {
         db.listenToGameUpdate(gameID, executeOnUpdate())
+    }
+
+    override fun unlinkFromDatabase() {
+        db.removeGameListener()
     }
 
     override fun handleSnapshot(snapshot: DocumentSnapshot?) {
