@@ -195,8 +195,8 @@ class GameActivityTest {
                 it.displayError(errorMessage)
             }
 
-            errorOrFailureTextView.check(matches(withText(errorMessage)))
             errorOrFailureTextView.check(matches(isDisplayed()))
+            errorOrFailureTextView.check(matches(withText(errorMessage)))
         }
     }
 
