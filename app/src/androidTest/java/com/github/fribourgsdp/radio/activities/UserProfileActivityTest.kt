@@ -270,7 +270,6 @@ class UserProfileActivityTest : TestCase() {
         val testName = "testModified"
 
         val db = Mockito.mock(Database::class.java)
-        //`when`(db.generateUserId()).thenReturn(Tasks.forResult(1))
         User.database = db
 
         ActivityScenario.launch<MockUserProfileActivityOffline>(intent).use {
