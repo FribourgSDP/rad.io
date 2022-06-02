@@ -101,18 +101,13 @@ class WorkingJoinGameActivityTest {
 
     @Test
     fun pressBackWorks(){
-        val context: Context = ApplicationProvider.getApplicationContext()
-
-        val intent = Intent(context, VoiceOverIPActivity::class.java)
-        ActivityScenario.launch<VoiceOverIPActivity>(intent).use { _ ->
-            pressBack()
-            Intents.intended(
-                allOf(
-                    IntentMatchers.hasComponent(MainActivity::class.java.name),
-                    IntentMatchers.toPackage("com.github.fribourgsdp.radio")
-                )
+        pressBack()
+        Intents.intended(
+            allOf(
+                IntentMatchers.hasComponent(MainActivity::class.java.name),
+                IntentMatchers.toPackage("com.github.fribourgsdp.radio")
             )
-        }
+        )
     }
 
 
