@@ -18,6 +18,7 @@ import androidx.test.espresso.matcher.ViewMatchers
 import androidx.test.espresso.matcher.ViewMatchers.*
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.github.fribourgsdp.radio.R
+import com.github.fribourgsdp.radio.config.language.LanguageManager
 import com.github.fribourgsdp.radio.data.Playlist
 import com.github.fribourgsdp.radio.data.User
 import com.github.fribourgsdp.radio.external.musixmatch.MusixmatchLyricsGetter
@@ -53,6 +54,7 @@ class GameActivityTest {
 
     @Before
     fun initIntent() {
+        LanguageManager(ctx).setLang("en")
         Intents.init()
     }
 
