@@ -65,7 +65,7 @@ open class LobbyActivity : MyAppCompatActivity(){
 
     private lateinit var launchGameButton: Button
     private lateinit var askForPermissionsButton: Button
-    private lateinit var displayQRCodeButton: Button
+    private lateinit var displayQRCodeButton: ImageButton
 
     private lateinit var qrCodeDisplay: DialogFragment
 

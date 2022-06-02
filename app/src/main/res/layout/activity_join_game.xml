@@ -50,16 +50,18 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/gameToJoinID" />
 
-
-    <Button
+    <ImageButton
         android:id="@+id/joinWithQRCode"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="20dp"
-        android:text="@string/join_with_qr_code"
-        app:layout_constraintBottom_toTopOf="@+id/joinGameButton"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        style="@style/Button.Icon"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="12dp"
+        android:contentDescription="@string/join_with_qr_code"
+        android:src="@drawable/ic_baseline_qr_code_scanner_24"
+        app:tint="@color/white"
+        android:scaleType="fitCenter"
+        android:adjustViewBounds="true"
+        app:layout_constraintTop_toTopOf="@id/topImage"
+        app:layout_constraintEnd_toEndOf="@id/topImage" />
 
     <Button
         android:id="@+id/joinGameButton"
@@ -74,12 +76,9 @@
     <TextView
         android:id="@+id/joinPublicLobbies"
         style="@style/Text.Subtitles"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
         android:layout_marginTop="32dp"
         android:text="@string/public_lobbies"
-        android:textStyle="bold"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/joinErrorView" />
 

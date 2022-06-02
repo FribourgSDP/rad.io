@@ -49,6 +49,8 @@
             style="?android:attr/progressBarStyleHorizontal"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:progressBackgroundTint="@color/white"
+            android:progressBackgroundTintMode="add"
             android:layout_marginTop="8dp"/>
 
         <TextView
@@ -126,7 +128,7 @@
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/muteChannelButton"
-        style="@style/FloatingButtons"
+        style="@style/Button.Floating"
         android:src="@drawable/ic_unmute"
         app:layout_constraintBottom_toBottomOf="@+id/scoresRecyclerView"
         app:layout_constraintEnd_toEndOf="@+id/scoresRecyclerView"
