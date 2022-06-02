@@ -144,10 +144,12 @@
     <TextView
         android:id="@+id/activeSpeakerView"
         style="@style/Text.OnPrimary"
+        android:layout_width="wrap_content"
         android:layout_marginTop="16dp"
         android:layout_marginStart="16dp"
-        android:text="@string/active_speaker_format"
+        android:text="@string/active_speaker_base"
         app:layout_constraintTop_toTopOf="@id/topImage"
         app:layout_constraintStart_toStartOf="@id/topImage" />
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>

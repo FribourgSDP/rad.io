@@ -124,7 +124,8 @@
     <string name="round_duration_format">%d seconds</string>
     <string name="return_to_the_game">Return to the game</string>
     <string name="mute_button_desc">Mute button</string>
-    <string name="active_speaker_format">Active speaker: %s</string>
+    <string name="active_speaker_base">No one has spoken yet</string>
+    <string name="active_speaker_format">%s speaks</string>
     <string name="noSingModeCheckbox">Lyrics read by bot !</string>
     <string name="with_singer_format">With singer : %b</string>
     <string name="listen">Listen !</string>

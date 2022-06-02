@@ -13,6 +13,7 @@ import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.DialogFragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.github.fribourgsdp.radio.MainActivity
 import com.github.fribourgsdp.radio.data.LobbyDataKeys
 import com.github.fribourgsdp.radio.game.view.PublicLobbiesAdapter
 import com.github.fribourgsdp.radio.R
@@ -51,6 +52,13 @@ open class JoinGameActivity : MyAppCompatActivity() {
     override fun onDestroy() {
         super.onDestroy()
         db.removePublicLobbyListener()
+    }
+
+    override fun onBackPressed() {
+        super.onBackPressed()
+        val intent = Intent(this, MainActivity::class.java)
+        startActivity(intent)
+        finish()
     }
 
     private fun initViews() {
