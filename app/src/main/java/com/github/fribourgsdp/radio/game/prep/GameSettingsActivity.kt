@@ -183,7 +183,6 @@ open class GameSettingsActivity : MyAppCompatActivity(), DatabaseHolder {
                         }
                     }
                 }else{
-                    //Toast.makeText(this,"je viens la aussi j'espre?", Toast.LENGTH_SHORT).show()
                     intent.putExtra(GAME_PLAYLIST_KEY, Json.encodeToString(selectedPlaylist))
                     startActivity(intent)
                 }
