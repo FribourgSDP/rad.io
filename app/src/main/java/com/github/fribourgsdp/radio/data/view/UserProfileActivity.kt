@@ -71,9 +71,7 @@ open class UserProfileActivity : MyAppCompatActivity(), KeepOrDismissPlaylistDia
                 authenticateUser()
 
             }else{
-                disableButtons()
-                Toast.makeText(this,getString(R.string.offline_error_message_toast),Toast.LENGTH_SHORT).show()
-
+                disableButtonsAndShowToast()
             }
         }
 
@@ -93,9 +91,7 @@ open class UserProfileActivity : MyAppCompatActivity(), KeepOrDismissPlaylistDia
             if(hasConnectivity(this)){
                 signInOrOut()
             }else{
-                disableButtons()
-                Toast.makeText(this,getString(R.string.offline_error_message_toast),Toast.LENGTH_SHORT).show()
-
+                disableButtonsAndShowToast()
             }
         }
 
@@ -108,7 +104,7 @@ open class UserProfileActivity : MyAppCompatActivity(), KeepOrDismissPlaylistDia
 
 
         if(!hasConnectivity(this)){
-            disableButtons()
+            disableButtonsAndShowToast()
         }
     }
 
@@ -118,6 +114,12 @@ open class UserProfileActivity : MyAppCompatActivity(), KeepOrDismissPlaylistDia
         } else {
             googleSignIn.signIn()
         }
+    }
+
+
+    private fun disableButtonsAndShowToast(){
+        Toast.makeText(this,getString(R.string.offline_error_message_toast), Toast.LENGTH_SHORT).show()
+        disableButtons()
     }
 
     private fun disableButtons(){
