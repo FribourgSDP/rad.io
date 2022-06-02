@@ -78,14 +78,15 @@ open class GameSettingsActivity : MyAppCompatActivity(), DatabaseHolder {
             startButton.isEnabled = true
         }
 
-        startButton.setOnClickListener (
-            /*if (hasConnectivity(this)) {
-                startButtonBehavior()
-            }else {
-                Toast.makeText(this,getString(R.string.offline_error_message_toast), Toast.LENGTH_SHORT).show()
-            }*/
-            startButtonBehavior()
-        )
+        startButton.setOnClickListener {
+            if (hasConnectivity(this)) {
+               startButtonBehavior()
+           }else {
+               Toast.makeText(this,getString(R.string.offline_error_message_toast), Toast.LENGTH_SHORT).show()
+           }
+        }
+
+
 
 
                     timerButton.setOnClickListener {
@@ -143,8 +144,8 @@ open class GameSettingsActivity : MyAppCompatActivity(), DatabaseHolder {
         errorText.visibility = View.VISIBLE
     }
 
-    private fun startButtonBehavior() : View.OnClickListener {
-        return View.OnClickListener {
+    private fun startButtonBehavior()  {
+
             if(noSingCheckBox.isChecked && selectedPlaylist.getSongs().none{s -> s.songHasLyrics()}){
                 displayError(getString(R.string.playlistLyricsLess))
             } else {
@@ -190,7 +191,7 @@ open class GameSettingsActivity : MyAppCompatActivity(), DatabaseHolder {
 
                 startActivity(intent)
             }
-        }
+
     }
     private fun getPlaylist(name: String): Playlist {
         return host.getPlaylists().find { playlist -> playlist.name == name }!!
