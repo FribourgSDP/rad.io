@@ -57,7 +57,7 @@
     <string name="create_playlist">CRÉER UNE PLAYLIST</string>
     <string name="update_playlist">MODIFIER LA PLAYLIST</string>
     <string name="add_song">AJOUTER UNE CHANSON</string>
-    <string name="lyricsPresenter">paroles :</string>
+    <string name="lyricsPresenter">Paroles :</string>
     <string name="pick_a_song">Choisis une chanson !</string>
     <string name="submit">Soumettre</string>
     <string name="playlist_name">Playlist Name</string>
