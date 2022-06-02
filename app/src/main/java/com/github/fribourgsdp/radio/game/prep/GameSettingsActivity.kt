@@ -186,8 +186,6 @@ open class GameSettingsActivity : MyAppCompatActivity(), DatabaseHolder {
                     intent.putExtra(GAME_PLAYLIST_KEY, Json.encodeToString(selectedPlaylist))
                     startActivity(intent)
                 }
-
-                startActivity(intent)
             }
 
     }
