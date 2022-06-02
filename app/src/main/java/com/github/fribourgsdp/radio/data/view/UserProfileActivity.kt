@@ -11,7 +11,6 @@ import com.github.fribourgsdp.radio.auth.*
 import com.github.fribourgsdp.radio.config.MyAppCompatActivity
 import com.github.fribourgsdp.radio.data.User
 import com.github.fribourgsdp.radio.database.DatabaseHolder
-import com.github.fribourgsdp.radio.util.MyFragment
 import com.google.android.gms.tasks.Task
 import com.google.android.gms.tasks.Tasks
 import com.google.android.material.floatingactionbutton.FloatingActionButton
@@ -19,8 +18,6 @@ import com.google.firebase.auth.FirebaseAuth
 import com.spotify.sdk.android.auth.AuthorizationClient
 import com.spotify.sdk.android.auth.AuthorizationRequest
 import com.spotify.sdk.android.auth.AuthorizationResponse
-import kotlinx.serialization.encodeToString
-import kotlinx.serialization.json.Json
 
 const val MY_CLIENT_ID = "9dc40237547f4ffaa41bf1e07ea0bba1"
 const val REDIRECT_URI = "com.github.fribourgsdp.radio://callback"
@@ -203,6 +200,9 @@ open class UserProfileActivity : MyAppCompatActivity(), KeepOrDismissPlaylistDia
             MergeDismissImportPlaylistDialog.Choice.DISMISS_ONLINE -> dismissOnlinePlaylist()
         }.addOnSuccessListener {
             user.save(this)
+            val refresh = Intent(this, UserProfileActivity::class.java)
+            finish()
+            startActivity(refresh)
         }
     }
 
@@ -246,6 +246,9 @@ open class UserProfileActivity : MyAppCompatActivity(), KeepOrDismissPlaylistDia
                 user = it.result
                 user.addPlaylists(playlist)
                 user.save(this)
+                val refresh = Intent(this, UserProfileActivity::class.java)
+                finish()
+                startActivity(refresh)
             }
         }
 

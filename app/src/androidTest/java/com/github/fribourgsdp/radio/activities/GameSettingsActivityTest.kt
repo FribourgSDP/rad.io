@@ -11,7 +11,6 @@ import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.UiController
 import androidx.test.espresso.ViewAction
 import androidx.test.espresso.action.ViewActions
-import androidx.test.espresso.action.ViewActions.click
 import androidx.test.espresso.assertion.ViewAssertions
 import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.intent.Intents
@@ -192,7 +191,7 @@ class GameSettingsActivityTest {
                 hasExtra(GAME_HINT_KEY, false),
                 hasExtra(GAME_PRIVACY_KEY, false),
                 hasExtra(GAME_IS_HOST_KEY, true),
-                hasExtra(GAME_DURATION_KEY, DEFAULT_GAME_DURATION),
+                hasExtra(GAME_DURATION_KEY, DEFAULT_SINGER_DURATION),
                 toPackage("com.github.fribourgsdp.radio")
             )
         )
