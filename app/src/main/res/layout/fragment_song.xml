@@ -27,12 +27,12 @@
 
     <TextView
         android:id="@+id/lyricsPresenter"
-        style="@style/Text"
-        android:layout_marginTop="4dp"
+        style="@style/Text.Subtitles"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="32dp"
         android:text="@string/lyricsPresenter"
-        android:textSize="16sp"
         android:labelFor="@id/editTextLyrics"
-        app:layout_constraintStart_toStartOf="@+id/SongName"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/ArtistName" />
 
     <EditText

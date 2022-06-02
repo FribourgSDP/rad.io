@@ -35,7 +35,7 @@ open class JoinGameActivity : MyAppCompatActivity() {
     private lateinit var joinErrorView : TextView
     private lateinit var lobbiesRecyclerView: RecyclerView
     private lateinit var spinner: Spinner
-    private lateinit var joinWithQRCodeButton : Button
+    private lateinit var joinWithQRCodeButton: ImageButton
     private lateinit var qrCodeScan: DialogFragment
 
 

@@ -17,7 +17,7 @@
     <ImageView
         android:id="@+id/mainLogo"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_height="0dp"
         android:adjustViewBounds="true"
         android:maxHeight="200dp"
         android:padding="20dp"
@@ -26,20 +26,19 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/topImage"
-        app:layout_constraintVertical_bias="0.0"
         app:srcCompat="@drawable/ic_logo"
         tools:ignore="ContentDescription" />
 
     <TextView
         android:id="@+id/mainText"
         style="@style/Text.Logo"
+        android:layout_margin="8dp"
         android:text="@string/app_name"
         android:textAllCaps="false"
         android:textSize="40sp"
         app:layout_constraintBottom_toTopOf="@+id/buttonsLayout"
         app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/mainLogo" />
+        app:layout_constraintRight_toRightOf="parent" />
 
     <ImageButton
         android:id="@+id/profileButton"
