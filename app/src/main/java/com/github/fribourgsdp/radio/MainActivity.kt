@@ -17,6 +17,7 @@ import com.github.fribourgsdp.radio.database.FirestoreDatabase
 import com.github.fribourgsdp.radio.deprecated.VoiceOverIPActivity
 import com.github.fribourgsdp.radio.game.prep.GameSettingsActivity
 import com.github.fribourgsdp.radio.game.prep.JoinGameActivity
+import com.github.fribourgsdp.radio.game.prep.LobbyActivity
 
 class MainActivity : MyAppCompatActivity() {
     private val db = FirestoreDatabase()
@@ -33,6 +34,7 @@ class MainActivity : MyAppCompatActivity() {
         val profileButton: ImageButton = findViewById(R.id.profileButton)
         profileButton.setOnClickListener {
             startActivity(Intent(this, UserProfileActivity::class.java))
+            finish()
         }
 
         /** this user allows quick demo's as it is data that is written to the app

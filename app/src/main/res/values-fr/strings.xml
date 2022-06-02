@@ -125,6 +125,7 @@
     <string name="round_duration_format">%d secondes</string>
     <string name="return_to_the_game">Retournez à la partie</string>
     <string name="mute_button_desc">Bouton pour éteindre le micro</string>
+    <string name="active_speaker_base">Personne n\'a encore parlé</string>
     <string name="active_speaker_format">%s parle</string>
     <string name="noSingModeCheckbox">Paroles lues par un robot !</string>
     <string name="with_singer_format">Avec chanteur : %b</string>

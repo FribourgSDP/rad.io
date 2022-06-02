@@ -129,6 +129,11 @@ class HostGameHandler(
         db.listenToGameMetadataUpdate(game.id, executeOnUpdate())
     }
 
+    override fun unlinkFromDatabase() {
+        db.removeMetadataGameListener()
+    }
+
+
     private fun createUpdatesMap(playerIdsOnDatabase: Set<String>): Map<String, Any> {
         if (playerIdsOnDatabase.isEmpty()) {
             throw IllegalStateException()

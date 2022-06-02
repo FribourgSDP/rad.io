@@ -158,6 +158,22 @@ class LocalDatabase : Database {
         TODO("Not yet implemented")
     }
 
+    override fun removeGameListener() {
+
+    }
+
+    override fun removeLobbyListener() {
+
+    }
+
+    override fun removeMetadataGameListener() {
+
+    }
+
+    override fun removePublicLobbyListener() {
+
+    }
+
     companion object {
         const val EXPECTED_USER_UID = 392L
         const val EXPECTED_UID = 794L
