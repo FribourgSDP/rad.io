@@ -157,5 +157,7 @@
     </string-array>
     <string name="deleteUndoQuestion">Undo deletion?</string>
     <string name="deleteUndoAnswer">Undo</string>
+    <string name="offline_error_message_toast">Cannot access online resources offline</string>
+    <string name="no_lyrics_generation_offline">Couldn\'t generate lyrics</string>
 </resources>
 

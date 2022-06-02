@@ -6,9 +6,11 @@ import android.view.View
 import android.widget.Button
 import android.widget.ImageButton
 import android.widget.TextView
+import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.github.fribourgsdp.radio.*
+import com.github.fribourgsdp.radio.config.ConnectivityChecker
 import com.github.fribourgsdp.radio.data.Playlist
 import com.github.fribourgsdp.radio.data.Song
 import com.github.fribourgsdp.radio.data.User
@@ -27,7 +29,8 @@ const val SONG_ARTIST_INDEX = 1
 const val PLAYLIST_TO_MODIFY = "com.github.fribourgsdp.radio.data.view.PLAYLIST_TO_MODIFY"
 const val ADD_PLAYLIST_FLAG = "com.github.fribourgsdp.radio.data.view.ADD_PLAYLIST_FLAG"
 
-open class PlaylistSongsFragment : MyFragment(R.layout.fragment_playlist_display), OnClickListener,
+open class PlaylistSongsFragment : MyFragment(R.layout.fragment_playlist_display),
+    ConnectivityChecker,OnClickListener,
     DatabaseHolder {
     private lateinit var playlist: Playlist
     private lateinit var songs: List<Song>
@@ -55,10 +58,16 @@ open class PlaylistSongsFragment : MyFragment(R.layout.fragment_playlist_display
         //sets listeners to 2 buttons
         editButton = requireView().findViewById(R.id.editButton)
         editButton.setOnClickListener {
-            val intent  = Intent(context, AddPlaylistActivity::class.java)
-            intent.putExtra(PLAYLIST_TO_MODIFY, Json.encodeToString(playlist))
-            intent.putExtra(ADD_PLAYLIST_FLAG, false)
-            startActivity(intent)
+            if(!hasConnectivity(requireContext()) && playlist.savedOnline){
+                disableButtonAndShowToast()
+            }else{
+                val intent  = Intent(context, AddPlaylistActivity::class.java)
+                intent.putExtra(PLAYLIST_TO_MODIFY, Json.encodeToString(playlist))
+                intent.putExtra(ADD_PLAYLIST_FLAG, false)
+                startActivity(intent)
+            }
+
+
         }
 
         loadPlaylist()
@@ -69,36 +78,53 @@ open class PlaylistSongsFragment : MyFragment(R.layout.fragment_playlist_display
         deleteButton = requireView().findViewById(R.id.deleteButton)
         deleteButton.setOnClickListener{
             //removes playlist from user playlists
-            user.removePlaylist(playlist)
-            user.save(requireContext())
-            user.onlineCopyAndSave()
-            activity?.setResult(0)
-            activity?.finish()
+
+            if(!hasConnectivity(requireContext()) && playlist.savedOnline){
+                disableButtonAndShowToast()
+            }else{
+                user.removePlaylist(playlist)
+                user.save(requireContext())
+                user.onlineCopyAndSave()
+                activity?.setResult(0)
+                activity?.finish()
+            }
+
         }
 
         saveOnlineButton = requireView().findViewById(R.id.SaveOnlineButton)
         saveOnlineButton.setOnClickListener {
-            playlist.transformToOnline().addOnSuccessListener {
-                playlist.saveOnline()
-            }.addOnSuccessListener {
-                user.save(requireContext())
-                user.onlineCopyAndSave()
-                saveOnlineButton.visibility = View.GONE
+            if(hasConnectivity(requireContext())){
+                playlist.transformToOnline().addOnSuccessListener {
+                    playlist.saveOnline()
+                }.addOnSuccessListener {
+                    user.save(requireContext())
+                    user.onlineCopyAndSave()
+                    saveOnlineButton.visibility = View.GONE
+                }
+            }else{
+                disableButtonAndShowToast()
             }
+
         }
 
         importLyricsButton = requireView().findViewById(R.id.ImportLyricsButton)
         importLyricsButton.setOnClickListener {
-            importLyricsButton.text = getString(R.string.Loading_lyrics_text)
-              loadLyrics(playlist).addOnSuccessListener {
-                user.addPlaylist(playlist)
-                user.save(requireContext())
-                if(playlist.savedOnline){
-                   user.onlineCopyAndSave()
+            if(hasConnectivity(requireContext())){
+                importLyricsButton.text = getString(R.string.Loading_lyrics_text)
+                loadLyrics(playlist).addOnSuccessListener {
+                    user.addPlaylist(playlist)
+                    user.save(requireContext())
+                    if(playlist.savedOnline){
+                        user.onlineCopyAndSave()
+                    }
+                    importLyricsButton.visibility = View.GONE
                 }
-                importLyricsButton.visibility = View.GONE
-            }
+            }else{
+                disableButtonAndShowToast()
+                }
+
         }
+
     }
 
     /**
@@ -107,6 +133,11 @@ open class PlaylistSongsFragment : MyFragment(R.layout.fragment_playlist_display
     open fun loadLyrics(playlist: Playlist) : Task<Void>{
     return playlist.loadLyrics()
 }
+
+    private fun disableButtonAndShowToast(){
+        disableButtons()
+        Toast.makeText(requireContext(),getString(R.string.offline_error_message_toast), Toast.LENGTH_SHORT).show()
+    }
     private fun loadPlaylist(){
         User.loadOrDefault(requireContext()).addOnSuccessListener { l ->
             user = l
@@ -152,13 +183,27 @@ open class PlaylistSongsFragment : MyFragment(R.layout.fragment_playlist_display
         songDisplay.setHasFixedSize(true)
     }
 
+    private fun disableButtons(){
+        importLyricsButton.isEnabled = false
+        saveOnlineButton.isEnabled = false
+        if(playlist.savedOnline){
+            deleteButton.isEnabled = false
+            editButton.isEnabled = false
+        }
+    }
     override fun onItemClick(position: Int) {
-        val bundle = Bundle()
-        bundle.putString(PLAYLIST_DATA, playlist.name)
-        bundle.putStringArray(SONG_DATA, arrayOf(songs[position].name, songs[position].artist))
-        activity?.supportFragmentManager?.beginTransaction()
-            ?.replace(R.id.container, SongFragment::class.java, bundle)
-            ?.addToBackStack("SongFragment")
-            ?.commit()
+        if(!hasConnectivity(requireContext()) && playlist.savedOnline){
+            disableButtons()
+            Toast.makeText(requireContext(),getString(R.string.offline_error_message_toast), Toast.LENGTH_SHORT).show()
+        }else{
+            val bundle = Bundle()
+            bundle.putString(PLAYLIST_DATA, playlist.name)
+            bundle.putStringArray(SONG_DATA, arrayOf(songs[position].name, songs[position].artist))
+            activity?.supportFragmentManager?.beginTransaction()
+                ?.replace(R.id.container, SongFragment::class.java, bundle)
+                ?.addToBackStack("SongFragment")
+                ?.commit()
+        }
+
     }
 }

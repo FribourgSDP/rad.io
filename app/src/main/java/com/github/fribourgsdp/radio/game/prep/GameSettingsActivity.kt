@@ -10,8 +10,13 @@ import com.akexorcist.snaptimepicker.TimeRange
 import com.akexorcist.snaptimepicker.TimeValue
 import com.github.fribourgsdp.radio.MainActivity
 import com.github.fribourgsdp.radio.R
+import com.github.fribourgsdp.radio.config.MyAppCompatActivity
 import com.github.fribourgsdp.radio.data.Playlist
 import com.github.fribourgsdp.radio.data.User
+import com.github.fribourgsdp.radio.database.Database
+import com.github.fribourgsdp.radio.database.DatabaseHolder
+import com.google.android.gms.tasks.Task
+import com.google.android.gms.tasks.Tasks
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 
@@ -27,7 +32,7 @@ const val GAME_DURATION_KEY = "com.github.fribourgsdp.radio.GAME_DURATION"
 
 const val DEFAULT_SINGER_DURATION = 45L;
 
-open class GameSettingsActivity : AppCompatActivity() {
+open class GameSettingsActivity : MyAppCompatActivity(), DatabaseHolder {
     private lateinit var host: User
 
     private lateinit var nameInput : EditText
@@ -46,6 +51,7 @@ open class GameSettingsActivity : AppCompatActivity() {
 
     private lateinit var selectedPlaylist: Playlist
 
+    private val db : Database = initializeDatabase()
     private var singerTimeDuration = DEFAULT_SINGER_DURATION
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -72,23 +78,33 @@ open class GameSettingsActivity : AppCompatActivity() {
             startButton.isEnabled = true
         }
 
-        startButton.setOnClickListener(startButtonBehavior())
-
-        timerButton.setOnClickListener {
-            SnapTimePickerDialog.Builder().apply {
-                setTitle(R.string.timerSelectTime)
-                setPrefix(R.string.timerMinutes)
-                setSuffix(R.string.timerSeconds)
-                setThemeColor(R.color.red)
-                setPreselectedTime(TimeValue(0, DEFAULT_SINGER_DURATION.toInt()))
-                setSelectableTimeRange(TimeRange(TimeValue(0, 5), TimeValue(2, 0)))
-            }.build().apply {
-                setListener { minute, second ->
-                    singerTimeDuration = (60*minute + second).toLong()
-                    timerButton.text = getString(R.string.round_duration_format, singerTimeDuration)
-                }
-            }.show(supportFragmentManager, "TimerSettings")
+        startButton.setOnClickListener {
+            if (hasConnectivity(this)) {
+               startButtonBehavior()
+           }else {
+               Toast.makeText(this,getString(R.string.offline_error_message_toast), Toast.LENGTH_SHORT).show()
+           }
         }
+
+
+
+
+                    timerButton.setOnClickListener {
+                        SnapTimePickerDialog.Builder().apply {
+                            setTitle(R.string.timerSelectTime)
+                            setPrefix(R.string.timerMinutes)
+                            setSuffix(R.string.timerSeconds)
+                            setThemeColor(R.color.red)
+                            setPreselectedTime(TimeValue(0, DEFAULT_SINGER_DURATION.toInt()))
+                            setSelectableTimeRange(TimeRange(TimeValue(0, 5), TimeValue(2, 0)))
+                        }.build().apply {
+                            setListener { minute, second ->
+                                singerTimeDuration = (60*minute + second).toLong()
+                                timerButton.text = getString(R.string.round_duration_format, singerTimeDuration)
+                            }
+                        }.show(supportFragmentManager, "TimerSettings")
+                    }
+
     }
 
     private fun initViews() {
@@ -128,8 +144,8 @@ open class GameSettingsActivity : AppCompatActivity() {
         errorText.visibility = View.VISIBLE
     }
 
-    private fun startButtonBehavior() : View.OnClickListener {
-        return View.OnClickListener {
+    private fun startButtonBehavior()  {
+
             if(noSingCheckBox.isChecked && selectedPlaylist.getSongs().none{s -> s.songHasLyrics()}){
                 displayError(getString(R.string.playlistLyricsLess))
             } else {
@@ -137,7 +153,6 @@ open class GameSettingsActivity : AppCompatActivity() {
                     putExtra(
                         GAME_NAME_KEY,
                         nameInput.text.toString().ifEmpty { getString(R.string.default_game_name) })
-                    putExtra(GAME_PLAYLIST_KEY, Json.encodeToString(selectedPlaylist))
                     putExtra(
                         GAME_NB_ROUNDS_KEY,
                         nbRoundsInput.text.toString()
@@ -149,9 +164,30 @@ open class GameSettingsActivity : AppCompatActivity() {
                     putExtra(GAME_IS_NO_SING_MODE, noSingCheckBox.isChecked)
                     putExtra(GAME_DURATION_KEY, singerTimeDuration)
                 }
-                startActivity(intent)
+
+                if(!selectedPlaylist.savedLocally){
+                    db.getPlaylist(selectedPlaylist.id).addOnSuccessListener {
+
+                        selectedPlaylist = it
+                        val songs = selectedPlaylist.getSongs().toList()
+                        val tasks = mutableListOf<Task<Void>>()
+                        for(song in songs){
+                            tasks.add(db.getSong(song.id).continueWith { s ->
+                                song.lyrics = s.result.lyrics
+                                null
+                            })
+                        }
+                        Tasks.whenAllComplete(tasks).addOnSuccessListener {
+                            intent.putExtra(GAME_PLAYLIST_KEY, Json.encodeToString(selectedPlaylist))
+                            startActivity(intent)
+                        }
+                    }
+                }else{
+                    intent.putExtra(GAME_PLAYLIST_KEY, Json.encodeToString(selectedPlaylist))
+                    startActivity(intent)
+                }
             }
-        }
+
     }
     private fun getPlaylist(name: String): Playlist {
         return host.getPlaylists().find { playlist -> playlist.name == name }!!

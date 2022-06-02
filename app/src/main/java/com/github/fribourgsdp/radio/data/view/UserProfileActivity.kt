@@ -5,10 +5,7 @@ import android.graphics.PorterDuff
 import android.graphics.PorterDuffColorFilter
 import android.os.Bundle
 import android.view.View
-import android.widget.Button
-import android.widget.EditText
-import android.widget.ImageView
-import android.widget.TextView
+import android.widget.*
 import com.github.fribourgsdp.radio.*
 import com.github.fribourgsdp.radio.auth.*
 import com.github.fribourgsdp.radio.config.MyAppCompatActivity
@@ -67,7 +64,12 @@ open class UserProfileActivity : MyAppCompatActivity(), KeepOrDismissPlaylistDia
         }
 
         launchSpotifyButton.setOnClickListener {
-            authenticateUser()
+            if(hasConnectivity(this)){
+                authenticateUser()
+
+            }else{
+                disableButtonsAndShowToast()
+            }
         }
 
 
@@ -83,7 +85,11 @@ open class UserProfileActivity : MyAppCompatActivity(), KeepOrDismissPlaylistDia
         }
 
         googleSignInButton.setOnClickListener {
-            signInOrOut()
+            if(hasConnectivity(this)){
+                signInOrOut()
+            }else{
+                disableButtonsAndShowToast()
+            }
         }
 
 
@@ -93,17 +99,30 @@ open class UserProfileActivity : MyAppCompatActivity(), KeepOrDismissPlaylistDia
             startActivity(intent)
         }
 
+
+        if(!hasConnectivity(this)){
+            disableButtonsAndShowToast()
+        }
     }
 
     open fun signInOrOut(){
         if (signedIn) {
             signOut()
         } else {
-
             googleSignIn.signIn()
         }
     }
 
+
+    private fun disableButtonsAndShowToast(){
+        Toast.makeText(this,getString(R.string.offline_error_message_toast), Toast.LENGTH_SHORT).show()
+        disableButtons()
+    }
+
+    private fun disableButtons(){
+        launchSpotifyButton.isEnabled = false
+        googleSignInButton.isEnabled = false
+    }
     private fun instantiateViews(){
         firebaseAuth = FirebaseAuth.getInstance()
         usernameField = findViewById(R.id.username)
@@ -121,19 +140,23 @@ open class UserProfileActivity : MyAppCompatActivity(), KeepOrDismissPlaylistDia
     }
 
     private fun updateUser(){
-        user.name = usernameField.text.toString()
-        //at this point, the userId should be the firebaseUser.uid
-        if(user.isGoogleUser){
-            user.onlineCopyAndSave()
-        }else{
-            val userPlaylists = user.getPlaylists()
-            val userWithoutPlaylist = user
-            userWithoutPlaylist.removePlaylists(userPlaylists)
-            db.setUser(user.id,userWithoutPlaylist)
-            user.addPlaylists(userPlaylists)
+        if(usernameField.text.toString() != ""){
+
+            //at this point, the userId should be the firebaseUser.uid
+            if(user.isGoogleUser && hasConnectivity(this)){
+                user.name = usernameField.text.toString()
+                user.onlineCopyAndSave()
+            }else if(user.isGoogleUser && !hasConnectivity(this)) {
+                Toast.makeText(this,getString(R.string.offline_error_message_toast),Toast.LENGTH_SHORT).show()
+                usernameField.setText(user.name)
+            }else {
+                user.name = usernameField.text.toString()
+            }
+            user.save(this)
+            usernameInitialText.text = user.initial.uppercaseChar().toString()
         }
-        user.save(this)
-        usernameInitialText.text = user.initial.uppercaseChar().toString()
+
+
     }
 
     /**
@@ -145,7 +168,6 @@ open class UserProfileActivity : MyAppCompatActivity(), KeepOrDismissPlaylistDia
 
 
     open fun checkUser(){
-
         signedIn = user.isGoogleUser
         if(signedIn){
             googleSignInButton.text = getString(R.string.sign_out_message)

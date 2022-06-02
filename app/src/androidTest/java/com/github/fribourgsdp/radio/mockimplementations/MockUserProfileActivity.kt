@@ -148,4 +148,30 @@ open class MockUserProfileActivity : UserProfileActivity() {
 
 }
 
+open class MockUserProfileActivityOffline : UserProfileActivity() {
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        User.setFSGetter(MockFileSystem.MockFSGetter)
+        val user = User(userName, 0)
+        user.isGoogleUser = true
+        user.id = userId
+        val playlist1 = Playlist(playListName, Genre.ROCK)
+        playlist1.savedOnline = true
+        val song = Song(songName, artistName)
+        playlist1.addSong(song)
+        user.addPlaylists(setOf(playlist1))
+        user.save(mock(Context::class.java))
+        super.onCreate(savedInstanceState)
+    }
+
+    override fun initializeDatabase(): Database {
+        return   mock(Database::class.java)
+    }
+
+    override fun hasConnectivity(context: Context): Boolean {
+        return false
+    }
+}
+
+
 
