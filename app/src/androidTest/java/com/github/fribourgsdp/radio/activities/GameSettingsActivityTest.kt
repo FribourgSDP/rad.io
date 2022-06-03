@@ -72,8 +72,8 @@ class GameSettingsActivityTest {
     @Test
     fun timerDialogHasDefaultValue45Seconds() {
         onView(withId(R.id.chooseTimeButton))
-            .check(ViewAssertions.matches(
-                ViewMatchers.withText(ctx.getString(R.string.round_duration_format, 45))
+            .check(matches(
+                withText(ctx.getString(R.string.round_duration_format, 45))
             ))
     }
 
@@ -82,7 +82,7 @@ class GameSettingsActivityTest {
 
         // Test values
         val testName = "Hello World!"
-        val testPlaylist = Playlist("Rap Playlist")
+        val testPlaylist = Playlist(testPlaylist)
         val testNbRounds = 20
         val withHint = true
         val private = true
@@ -168,7 +168,7 @@ class GameSettingsActivityTest {
     fun intentWorksWithDefaultSettings() {
 
         // Test values
-        val testPlaylist = Playlist("Rap Playlist")
+        val testPlaylist = Playlist(testPlaylist)
 
         onView(withId(R.id.playlistSearchView))
             .perform(
@@ -202,8 +202,8 @@ class GameSettingsActivityTest {
     fun startButtonDisabledOnNoPlaylist() {
         onView(withId(R.id.startButton))
             .check(
-                ViewAssertions.matches(
-                    ViewMatchers.isNotEnabled()
+                matches(
+                    isNotEnabled()
                 )
             )
     }
@@ -221,8 +221,8 @@ class GameSettingsActivityTest {
 
         onView(withId(R.id.startButton))
             .check(
-                ViewAssertions.matches(
-                    ViewMatchers.isNotEnabled()
+                matches(
+                    isNotEnabled()
                 )
             )
     }
@@ -233,7 +233,7 @@ class GameSettingsActivityTest {
         onView(withId(R.id.playlistSearchView))
             .perform(
                 ViewActions.click(),
-                ViewActions.typeText("Rap Playlist"),
+                ViewActions.typeText(testPlaylist),
                 ViewActions.pressKey(KeyEvent.KEYCODE_ENTER)
             )
 
@@ -241,8 +241,8 @@ class GameSettingsActivityTest {
 
         onView(withId(R.id.startButton))
             .check(
-                ViewAssertions.matches(
-                    ViewMatchers.isEnabled()
+                matches(
+                    isEnabled()
                 )
             )
 
@@ -258,8 +258,8 @@ class GameSettingsActivityTest {
 
         onView(withId(R.id.startButton))
             .check(
-                ViewAssertions.matches(
-                    ViewMatchers.isNotEnabled()
+                matches(
+                    isNotEnabled()
                 )
             )
     }
@@ -280,10 +280,10 @@ class GameSettingsActivityTest {
 
         val errorTextView = onView(withId(R.id.playlistSearchError))
 
-        errorTextView.check(ViewAssertions.matches(ViewMatchers.isDisplayed()))
+        errorTextView.check(matches(isDisplayed()))
         errorTextView.check(
-            ViewAssertions.matches(
-                ViewMatchers.withText(ctx.getString(R.string.playlist_error_format, fakeName))
+            matches(
+                withText(ctx.getString(R.string.playlist_error_format, fakeName))
             )
         )
 
@@ -293,8 +293,8 @@ class GameSettingsActivityTest {
     fun pressBackReturnsToMainActivity() {
         Espresso.pressBack()
         Intents.intended(
-            Matchers.allOf(
-                IntentMatchers.hasComponent(MainActivity::class.java.name)
+            allOf(
+                hasComponent(MainActivity::class.java.name)
             )
         )
     }
