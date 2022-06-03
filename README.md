@@ -1,6 +1,4 @@
-<span style="font-family:Trebuchet MS;font-weight:600;font-size:50px">
-    rad.io
-</span>
+# rad.io
 
 [![Build Status](https://api.cirrus-ci.com/github/FribourgSDP/rad.io.svg)](https://cirrus-ci.com/github/FribourgSDP/rad.io)
 [![Maintainability](https://api.codeclimate.com/v1/badges/d819e783c8fc8700526b/maintainability)](https://codeclimate.com/github/FribourgSDP/rad.io/maintainability)
