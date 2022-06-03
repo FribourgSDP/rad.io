@@ -5,10 +5,7 @@ import com.github.fribourgsdp.radio.database.FirestoreDatabase
 import com.github.fribourgsdp.radio.database.FirestoreRef
 import com.github.fribourgsdp.radio.database.TransactionManager
 import com.github.fribourgsdp.radio.game.Game
-import com.github.fribourgsdp.radio.util.getPermissions
-import com.github.fribourgsdp.radio.util.getPlayerDoneMap
-import com.github.fribourgsdp.radio.util.getPlayerFoundMap
-import com.github.fribourgsdp.radio.util.getScoresOfRound
+import com.github.fribourgsdp.radio.util.*
 import com.google.android.gms.tasks.Task
 import com.google.android.gms.tasks.Tasks
 import com.google.firebase.firestore.DocumentReference
@@ -67,8 +64,8 @@ class FirestoreDatabaseTest {
         mockDocumentReference = mock(DocumentReference::class.java)
         mockTransactionManager = mock(TransactionManager::class.java)
         db = FirestoreDatabase(mockFirestoreRef, mockTransactionManager)
-        user1.id = "testUser1"
-        user2.id = "testUser2"
+        user1.id = testSinger1
+        user2.id = testSinger2
 
         //this handling is always the same, what changes is what the document snapshot returns
         `when`(mockDocumentReference.get()).thenReturn(Tasks.forResult(mockSnapshot))
@@ -145,7 +142,7 @@ class FirestoreDatabaseTest {
 
     @Test(expected = Exception::class)
     fun registerPlaylistWithSongWithNoNameThrowsException() {
-        var fakePlaylist = Playlist("fake")
+        val fakePlaylist = Playlist("fake")
         fakePlaylist.addSong(Song("", ""))
         Tasks.await(fireDb.registerPlaylist(fakePlaylist))
     }
@@ -164,20 +161,20 @@ class FirestoreDatabaseTest {
 
     @Test(expected = Exception::class)
     fun addingUserToNonExistingLobbyFails() {
-        var user = User("unusedUser")
+        val user = User("unusedUser")
         user.id = unusedId.toString()
         Tasks.await(fireDb.addUserToLobby(unusedId,user, true))
     }
 
     @Test(expected = Exception::class)
     fun addingUserAlreadyInLobbyFails() {
-        var user = user1
+        val user = user1
         Tasks.await(fireDb.addUserToLobby(testingLobbyId ,user, true))
     }
 
     @Test(expected = Exception::class)
     fun removingUserNotInLobbyFails() {
-        var user = User("nate3")
+        val user = User("nate3")
         user.id = "testUser3"
         Tasks.await(fireDb.removeUserFromLobby(testingLobbyId ,user))
     }
@@ -298,10 +295,10 @@ class FirestoreDatabaseTest {
             assertEquals(false, snapshot.get("finished") as Boolean)
             assertEquals(0L, snapshot.get("current_round") as Long)
             assertEquals("", snapshot.get("singer") as String)
-            assertEquals(ArrayList<String>(), snapshot.get("song_choices") as ArrayList<String>)
-            assertEquals(HashMap<String, Int>(), snapshot.get("scores") as HashMap<String, Int>)
+            assertEquals(ArrayList<String>(), snapshot.getAndCast<ArrayList<String>>("song_choices"))
+            assertEquals(HashMap<String, Int>(), snapshot.getAndCast<HashMap<String, Int>>("scores"))
             assertEquals(true, snapshot.get("validity") as Boolean)
-            assertEquals(HashMap<String, String>(), snapshot.get("song_choices_lyrics") as HashMap<String, String>)
+            assertEquals(HashMap<String, String>(), snapshot.getAndCast<HashMap<String, String>>("song_choices_lyrics"))
             null
         }
     }
@@ -309,7 +306,7 @@ class FirestoreDatabaseTest {
     @Test
     fun openLobbyWorks() {
         `when`(mockTransactionManager.openLobbyTransaction(any(), any(), anyLong(), any(), any())).thenReturn(Tasks.forResult(null))
-        var mockDocumentReference2 = mock(DocumentReference::class.java)
+        val mockDocumentReference2 = mock(DocumentReference::class.java)
         `when`(mockFirestoreRef.getPublicLobbiesRef()).thenReturn(mockDocumentReference2)
 
 
@@ -332,24 +329,24 @@ class FirestoreDatabaseTest {
 
     @Test
     fun testMicPermissionsOnTransactionMgr() {
-        var user = user1
+        val user = user1
         fireDb.modifyUserMicPermissions(testingLobbyId, user, true)
         fireDb.refMake.getLobbyRef(testingLobbyId.toString()).get().addOnCompleteListener { snapshot ->
             val newPermissions = snapshot.result.getPermissions()
-            assertEquals(true, newPermissions["testUser1"])
+            assertEquals(true, newPermissions[testSinger1])
         }
     }
 
     @Test
     fun getGameSettingsFromLobbyWorks() {
-        var expected = Game.Settings("testHost", "A test lobby for testing", "testPlaylist", 3, false, true, 30L)
+        val expected = Game.Settings("testHost", "A test lobby for testing", "testPlaylist", 3, false, true, 30L)
         val result = fireDb.getGameSettingsFromLobby(testingLobbyId)
         assertEquals(expected, Tasks.await(result))
     }
 
     @Test
     fun removeUserFromLobbyWorks() {
-        var user = user2
+        val user = user2
         val result = fireDb.removeUserFromLobby(testingLobbyId, user)
         assertEquals(null, Tasks.await(result))
         //Revert changes
@@ -395,12 +392,12 @@ class FirestoreDatabaseTest {
             val collection = fireDb.transactionMgr.db.collection("games_metadata")
             val gameMetaRef = collection.document(gameId.toString())
             val snapshot = it.get(gameMetaRef)
-            val playerDoneMap = snapshot.get("player_done_map")!! as HashMap<String, Boolean>
-            val playerFoundMap = snapshot.get("player_found_map")!! as HashMap<String, Boolean>
-            assertEquals(false, playerDoneMap.containsKey("testUser2"))
-            assertEquals(false, playerFoundMap.containsKey("testUser2"))
-            playerDoneMap.put("testUser2", true)
-            playerFoundMap.put("testUser2", true)
+            val playerDoneMap = snapshot.getAndCast<HashMap<String, Boolean>>("player_done_map")
+            val playerFoundMap = snapshot.getAndCast<HashMap<String, Boolean>>("player_found_map")
+            assertEquals(false, playerDoneMap.containsKey(testSinger2))
+            assertEquals(false, playerFoundMap.containsKey(testSinger2))
+            playerDoneMap[testSinger2] = true
+            playerFoundMap[testSinger2] = true
             it.update(gameMetaRef, "player_done_map", playerDoneMap)
             it.update(gameMetaRef, "player_found_map", playerFoundMap)
             null
@@ -409,7 +406,7 @@ class FirestoreDatabaseTest {
 
     @Test
     fun openGameMetadataWorks() {
-        val users = listOf("testUser1", "testUser2")
+        val users = listOf(testSinger1, testSinger2)
         val gameId = testingLobbyId
         val result = fireDb.openGameMetadata(gameId, users)
         assertEquals(null, Tasks.await(result))
@@ -417,9 +414,9 @@ class FirestoreDatabaseTest {
             val collection = fireDb.transactionMgr.db.collection("games_metadata")
             val gameMetaRef = collection.document(gameId.toString())
             val snapshot = it.get(gameMetaRef)
-            assertEquals(users.size, (snapshot.get("player_done_map") as HashMap<String, Boolean>).size)
-            assertEquals(users.size, (snapshot.get("player_found_map") as HashMap<String, Boolean>).size)
-            assertEquals(users.size, (snapshot.get("scores_of_round") as HashMap<String, Boolean>).size)
+            assertEquals(users.size, (snapshot.getAndCast<HashMap<String, Boolean>>("player_done_map")).size)
+            assertEquals(users.size, (snapshot.getAndCast<HashMap<String, Boolean>>("player_found_map")).size)
+            assertEquals(users.size, (snapshot.getAndCast<HashMap<String, Boolean>>("scores_of_round")).size)
             null
         }
     }
@@ -442,7 +439,7 @@ class FirestoreDatabaseTest {
 
     @Test
     fun makeSingerDoneWorks() {
-        var user = user2
+        val user = user2
         val gameId = testingLobbyId
         val result = fireDb.makeSingerDone(gameId, user.id)
         assertEquals(null, Tasks.await(result))
@@ -451,9 +448,9 @@ class FirestoreDatabaseTest {
             val collection = fireDb.transactionMgr.db.collection("games_metadata")
             val gameRef = collection.document(gameId.toString())
             val snapshot = it.get(gameRef)
-            val playerDoneMap = snapshot.get("player_done_map")!! as HashMap<String, Boolean>
-            assertEquals(true, playerDoneMap["testUser2"])
-            playerDoneMap["testUser2"] = false
+            val playerDoneMap = snapshot.getAndCast<HashMap<String, Boolean>>("player_done_map")
+            assertEquals(true, playerDoneMap[testSinger2])
+            playerDoneMap[testSinger2] = false
             it.update(gameRef, "player_done_map", playerDoneMap)
             null
         }
@@ -461,7 +458,7 @@ class FirestoreDatabaseTest {
 
     @Test
     fun playerEndTurnWorksHasFound() {
-        var user = user2
+        val user = user2
         val gameId = testingLobbyId
         val result = fireDb.playerEndTurn(gameId, user.id, true)
         assertEquals(null, Tasks.await(result))
@@ -469,15 +466,15 @@ class FirestoreDatabaseTest {
             val collection = fireDb.transactionMgr.db.collection("games_metadata")
             val gameRef = collection.document(gameId.toString())
             val snapshot = it.get(gameRef)
-            assertNotEquals(0, (snapshot.get("scores_of_round") as HashMap<String, Int>)["testUser2"])
+            assertNotEquals(0, (snapshot.getAndCast<HashMap<String, Int>>("scores_of_round"))[testSinger2])
             null
         }
-        fireDb.resetGameMetadata(gameId, "testUser1")
+        fireDb.resetGameMetadata(gameId, testSinger1)
     }
 
     @Test
     fun playerEndTurnWorksHasNotFound() {
-        var user = user2
+        val user = user2
         val gameId = testingLobbyId
         val result = fireDb.playerEndTurn(gameId, user.id, false)
         assertEquals(null, Tasks.await(result))
@@ -485,15 +482,15 @@ class FirestoreDatabaseTest {
             val collection = fireDb.transactionMgr.db.collection("games_metadata")
             val gameRef = collection.document(gameId.toString())
             val snapshot = it.get(gameRef)
-            assertEquals(0, (snapshot.get("scores_of_round") as HashMap<String, Int>)["testUser2"])
+            assertEquals(0, (snapshot.getAndCast<HashMap<String, Int>>("scores_of_round"))[testSinger2])
             null
         }
-        fireDb.resetGameMetadata(gameId, "testUser1")
+        fireDb.resetGameMetadata(gameId, testSinger1)
     }
 
     @Test
     fun resetGameMetadataWorks() {
-        var user = user2
+        val user = user2
         val gameId = testingLobbyId
         val result = fireDb.resetGameMetadata(gameId, user.id)
         assertEquals(null, Tasks.await(result))
@@ -513,7 +510,7 @@ class FirestoreDatabaseTest {
             for ((_, score) in scoresOfRound) {
                 assertEquals(0, score)
             }
-            assertEquals(0, (snapshot.get("scores_of_round") as HashMap<String, Int>)["testUser2"])
+            assertEquals(0, (snapshot.getAndCast<HashMap<String, Int>>("scores_of_round"))[testSinger2])
             null
         }
     }
@@ -537,9 +534,13 @@ class FirestoreDatabaseTest {
     @Test
     fun addGetAndRemovePublicLobbiesWorks() {
         val lobbyId = unusedLobbyForPublic
-        val fakeSettings = Game.Settings("host22", "lobbyName", "playlistBla", 3, false, false, 45)
+        val fakeSettings = Game.Settings("host22", "lobbyName", "playlistBla", 3,
+            withHint = false,
+            isPrivate = false,
+            singerDuration = 45
+        )
         Tasks.await(fireDb.openLobby(lobbyId, fakeSettings))
-        var publicLobbies = Tasks.await(fireDb.getPublicLobbies())
+        val publicLobbies = Tasks.await(fireDb.getPublicLobbies())
         assertEquals(true, publicLobbies.contains(LobbyData(lobbyId, "lobbyName", "host22")))
         Tasks.await(fireDb.removeLobbyFromPublic(lobbyId))
         val newPublicLobbies = Tasks.await(fireDb.getPublicLobbies())
