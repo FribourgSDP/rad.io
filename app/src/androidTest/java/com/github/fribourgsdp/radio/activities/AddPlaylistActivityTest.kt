@@ -32,15 +32,14 @@ import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
 
+const val testArtist = "Sardou"
+const val testSong1 = "Rouge"
+const val testSong2 = "En chantant"
+const val testSong3 = "Le France"
+const val testPlaylist = "Sardou playlist"
 
 @RunWith(AndroidJUnit4::class)
 class AddPlaylistActivityTest {
-
-    private val testArtist = "Sardou"
-    private val testSong1 = "Rouge"
-    private val testSong2 = "En chantant"
-    private val testSong3 = "Le France"
-    private val testPlaylist = "Sardou playlist"
 
     @get:Rule
     var addPlaylistActivityRule = ActivityScenarioRule(MockAddPlaylistActivity::class.java)
