@@ -6,7 +6,6 @@ import androidx.test.espresso.Espresso
 import androidx.test.espresso.Espresso.*
 import androidx.test.espresso.action.*
 import androidx.test.espresso.action.ViewActions.click
-import androidx.test.espresso.assertion.ViewAssertions
 import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.contrib.RecyclerViewActions
 import androidx.test.espresso.intent.Intents
@@ -37,6 +36,12 @@ import org.junit.runner.RunWith
 @RunWith(AndroidJUnit4::class)
 class AddPlaylistActivityTest {
 
+    private val testArtist = "Sardou"
+    private val testSong1 = "Rouge"
+    private val testSong2 = "En chantant"
+    private val testSong3 = "Le France"
+    private val testPlaylist = "Sardou playlist"
+
     @get:Rule
     var addPlaylistActivityRule = ActivityScenarioRule(MockAddPlaylistActivity::class.java)
     private val ctx: Context = ApplicationProvider.getApplicationContext()
@@ -55,62 +60,68 @@ class AddPlaylistActivityTest {
     fun testSongWithNoName(){
         onView(withId(R.id.addSongToPlaylistArtistName))
             .perform(
-                ViewActions.typeText("Sardou")
+                ViewActions.typeText(testArtist)
             )
         closeSoftKeyboard()
         onView(withId(R.id.addSongToPlaylistBtn))
-            .perform(ViewActions.click())
+            .perform(click())
         onView(withId(R.id.addPlaylistErrorTextView))
-            .check(ViewAssertions.matches(
-                ViewMatchers.withText(ctx.resources.getText(R.string.name_cannot_be_empty).toString())
-            ))
+            .check(
+                matches(
+                withText(ctx.resources.getText(R.string.name_cannot_be_empty).toString())
+            )
+            )
     }
     @Test
     fun testEmptyPlaylist(){
         onView(withId(R.id.newPlaylistName))
             .perform(
-                ViewActions.typeText("Sardou playlist")
+                ViewActions.typeText(testPlaylist)
             )
         closeSoftKeyboard()
         onView(withId(R.id.confirmBtn))
-            .perform(ViewActions.click())
+            .perform(click())
         onView(withId(R.id.addPlaylistErrorTextView))
-            .check(ViewAssertions.matches(
-                ViewMatchers.withText(ctx.resources.getText(R.string.playlist_is_empty).toString())
-            ))
+            .check(
+                matches(
+                withText(ctx.resources.getText(R.string.playlist_is_empty).toString())
+            )
+            )
 
     }
     @Test
     fun testPlaylistWithNoName(){
         onView(withId(R.id.addSongToPlaylistArtistName))
             .perform(
-                ViewActions.typeText("Despacito")
+                ViewActions.typeText(testSong1)
             )
         closeSoftKeyboard()
         onView(withId(R.id.addSongToPlaylistBtn))
-            .perform(ViewActions.click())
+            .perform(click())
         onView(withId(R.id.confirmBtn))
-            .perform(ViewActions.click())
+            .perform(click())
         onView(withId(R.id.addPlaylistErrorTextView))
-            .check(ViewAssertions.matches(
-                ViewMatchers.withText(ctx.resources.getText(R.string.playlist_has_no_name).toString())
-            ))
+            .check(
+                matches(
+                withText(ctx.resources.getText(R.string.playlist_has_no_name).toString())
+            )
+            )
     }
     @Test
     fun testAddPlaylist(){
 
-        initializeSardouPlaylist()
+        initializeTestPlaylist()
 
         onView(withId(R.id.confirmBtn))
-            .perform(ViewActions.click())
+            .perform(click())
 
         //check that a popup has spawned and click on saveOffline
-        onView(ViewMatchers.withText(R.string.saveOnlineQuestionText)) // Look for the dialog => use its title
-            .inRoot(RootMatchers.isDialog()) // check that it's indeed in a dialog
-            .check(ViewAssertions.matches(ViewMatchers.isDisplayed()));
+        onView(withText(R.string.saveOnlineQuestionText)) // Look for the dialog => use its title
+            .inRoot(isDialog()) // check that it's indeed in a dialog
+            .check(matches(isDisplayed()))
 
         onView(withId(R.id.saveOnlinePlaylistNo))
-            .perform(ViewActions.click())
+            .perform(click())
         Intents.intended(
             allOf(
                 hasComponent(UserProfileActivity::class.java.name)
@@ -118,12 +129,12 @@ class AddPlaylistActivityTest {
         )
 
         val user = Tasks.await(User.loadOrDefault(ctx))
-        assert(user.getPlaylists().any { p -> p.name == "Sardou playlist" })
-        user.getPlaylists().filter { p -> p.name == "Sardou playlist" }.forEach{p ->
+        assert(user.getPlaylists().any { p -> p.name == testPlaylist })
+        user.getPlaylists().filter { p -> p.name == testPlaylist }.forEach{p ->
             run {
-                assert(p.getSongs().any { s -> s.name == "Rouge" && s.artist == "Sardou" })
-                assert(p.getSongs().any { s -> s.name == "En Chantant" && s.artist == "Sardou" })
-                assert(p.getSongs().any { s -> s.name == "Le France" && s.artist == "Sardou" })
+                assert(p.getSongs().any { s -> s.name == testSong1 && s.artist == testArtist })
+                assert(p.getSongs().any { s -> s.name == testSong2 && s.artist == testArtist })
+                assert(p.getSongs().any { s -> s.name == testSong3 && s.artist == testArtist })
             }
         }
     }
@@ -132,16 +143,16 @@ class AddPlaylistActivityTest {
     fun clickingDoesNothing(){
 
         onView(withId(R.id.addSongToPlaylistSongName))
-            .perform(ViewActions.typeText("Rouge"))
+            .perform(ViewActions.typeText(testSong1))
         closeSoftKeyboard()
         onView(withId(R.id.addSongToPlaylistArtistName))
-            .perform(ViewActions.typeText("Sardou"))
+            .perform(ViewActions.typeText(testArtist))
         closeSoftKeyboard()
         onView(withId(R.id.addSongToPlaylistBtn))
-            .perform(ViewActions.click())
+            .perform(click())
 
         onView(withId(R.id.list_playlist_creation))
-            .perform(RecyclerViewActions.actionOnItemAtPosition<ViewHolder>(0, ViewActions.click()))
+            .perform(RecyclerViewActions.actionOnItemAtPosition<ViewHolder>(0, click()))
 
         onView(withId(R.id.list_playlist_creation))
             .check(matches(hasChildCount(1)))
@@ -150,13 +161,13 @@ class AddPlaylistActivityTest {
     @Test
     fun swipingToDeleteWorks(){
         onView(withId(R.id.addSongToPlaylistSongName))
-            .perform(ViewActions.typeText("Rouge"))
+            .perform(ViewActions.typeText(testSong1))
         closeSoftKeyboard()
         onView(withId(R.id.addSongToPlaylistArtistName))
-            .perform(ViewActions.typeText("Sardou"))
+            .perform(ViewActions.typeText(testArtist))
         closeSoftKeyboard()
         onView(withId(R.id.addSongToPlaylistBtn))
-            .perform(ViewActions.click())
+            .perform(click())
 
         onView(withId(R.id.list_playlist_creation))
             .perform(RecyclerViewActions.actionOnItemAtPosition<ViewHolder>(0,
@@ -169,13 +180,13 @@ class AddPlaylistActivityTest {
     @Test
     fun swipingToDeleteUndoWorks(){
         onView(withId(R.id.addSongToPlaylistSongName))
-            .perform(ViewActions.typeText("Rouge"))
+            .perform(ViewActions.typeText(testSong1))
         closeSoftKeyboard()
         onView(withId(R.id.addSongToPlaylistArtistName))
-            .perform(ViewActions.typeText("Sardou"))
+            .perform(ViewActions.typeText(testArtist))
         closeSoftKeyboard()
         onView(withId(R.id.addSongToPlaylistBtn))
-            .perform(ViewActions.click())
+            .perform(click())
 
         onView(withId(R.id.list_playlist_creation))
             .perform(RecyclerViewActions.actionOnItemAtPosition<ViewHolder>(0,
@@ -191,10 +202,10 @@ class AddPlaylistActivityTest {
 
     @Test
     fun pressingBackWhenNothingHasBeenModifiedGoesToUserProfile(){
-        Espresso.pressBack()
+        pressBack()
         Intents.intended(
-            Matchers.allOf(
-                IntentMatchers.hasComponent(UserProfileActivity::class.java.name)
+            allOf(
+                hasComponent(UserProfileActivity::class.java.name)
             )
         )
     }
@@ -203,10 +214,10 @@ class AddPlaylistActivityTest {
     fun modifyingPlaylistNameMakesPopupAppear(){
         onView(withId(R.id.newPlaylistName))
             .perform(
-                ViewActions.typeText("Sardou playlist")
+                ViewActions.typeText(testPlaylist)
             )
         closeSoftKeyboard()
-        Espresso.pressBack()
+        pressBack()
 
         onView(withId(R.id.warningQuitAddPlaylist))
             .inRoot(isDialog())
@@ -226,12 +237,12 @@ class AddPlaylistActivityTest {
     fun modifyingGenreMakesPopupAppear(){
         onView(withId(R.id.genreSpinner))
             .perform(
-                ViewActions.click()
+                click()
             )
         onData(allOf(`is`(instanceOf(Genre::class.java)),
             `is`(Genre.COUNTRY))).perform(click())
 
-        Espresso.pressBack()
+        pressBack()
 
         onView(withId(R.id.warningQuitAddPlaylist))
             .inRoot(isDialog())
@@ -251,10 +262,10 @@ class AddPlaylistActivityTest {
     fun writingSongNameMakesPopupAppear(){
         onView(withId(R.id.addSongToPlaylistSongName))
             .perform(
-                ViewActions.typeText("name")
+                ViewActions.typeText(testSong1)
             )
         closeSoftKeyboard()
-        Espresso.pressBack()
+        pressBack()
 
         onView(withId(R.id.warningQuitAddPlaylist))
             .inRoot(isDialog())
@@ -274,10 +285,10 @@ class AddPlaylistActivityTest {
     fun writingArtistNameMakesPopupAppear(){
         onView(withId(R.id.addSongToPlaylistArtistName))
             .perform(
-                ViewActions.typeText("artistname")
+                ViewActions.typeText(testArtist)
             )
         closeSoftKeyboard()
-        Espresso.pressBack()
+        pressBack()
 
         onView(withId(R.id.warningQuitAddPlaylist))
             .inRoot(isDialog())
@@ -296,15 +307,15 @@ class AddPlaylistActivityTest {
     @Test
     fun addingASongToPlaylistMakesPopupAppear(){
         onView(withId(R.id.addSongToPlaylistSongName))
-            .perform(ViewActions.typeText("Rouge"))
+            .perform(ViewActions.typeText(testSong1))
         closeSoftKeyboard()
         onView(withId(R.id.addSongToPlaylistArtistName))
-            .perform(ViewActions.typeText("Sardou"))
+            .perform(ViewActions.typeText(testArtist))
         closeSoftKeyboard()
         onView(withId(R.id.addSongToPlaylistBtn))
-            .perform(ViewActions.click())
+            .perform(click())
 
-        Espresso.pressBack()
+        pressBack()
 
         onView(withId(R.id.warningQuitAddPlaylist))
             .inRoot(isDialog())
@@ -324,9 +335,9 @@ class AddPlaylistActivityTest {
     @Test
     fun pressingOnQuitGoesToMain() {
         onView(withId(R.id.addSongToPlaylistSongName))
-            .perform(ViewActions.typeText("Rouge"))
+            .perform(ViewActions.typeText(testSong1))
         closeSoftKeyboard()
-        Espresso.pressBack()
+        pressBack()
 
         onView(withId(R.id.warningQuitAddPlaylist))
             .inRoot(isDialog())
@@ -346,8 +357,8 @@ class AddPlaylistActivityTest {
             .perform(click())
 
         Intents.intended(
-            Matchers.allOf(
-                IntentMatchers.hasComponent(UserProfileActivity::class.java.name)
+            allOf(
+                hasComponent(UserProfileActivity::class.java.name)
             )
         )
     }
@@ -355,9 +366,9 @@ class AddPlaylistActivityTest {
     @Test
     fun pressingOnCancelStaysOnCurrentActivity() {
         onView(withId(R.id.addSongToPlaylistSongName))
-            .perform(ViewActions.typeText("Rouge"))
+            .perform(ViewActions.typeText(testSong1))
         closeSoftKeyboard()
-        Espresso.pressBack()
+        pressBack()
         onView(withId(R.id.warningQuitAddPlaylist))
             .inRoot(isDialog())
             .check(matches(isDisplayed()))
@@ -377,41 +388,42 @@ class AddPlaylistActivityTest {
 
         onView(withId(R.id.addSongToPlaylistSongName))
             .check(
-            ViewAssertions.matches(
-                ViewMatchers.withText("Rouge")
-            ))
+                matches(
+                    withText(testSong1)
+                )
+            )
     }
 
-    private fun initializeSardouPlaylist() {
+    private fun initializeTestPlaylist() {
         onView(withId(R.id.newPlaylistName))
-            .perform(ViewActions.typeText("Sardou playlist"))
+            .perform(ViewActions.typeText(testPlaylist))
         closeSoftKeyboard()
 
         onView(withId(R.id.addSongToPlaylistSongName))
-            .perform(ViewActions.typeText("Rouge"))
+            .perform(ViewActions.typeText(testSong1))
         closeSoftKeyboard()
         onView(withId(R.id.addSongToPlaylistArtistName))
-            .perform(ViewActions.typeText("Sardou"))
+            .perform(ViewActions.typeText(testArtist))
         closeSoftKeyboard()
         onView(withId(R.id.addSongToPlaylistBtn))
-            .perform(ViewActions.click())
+            .perform(click())
 
         onView(withId(R.id.addSongToPlaylistSongName))
-            .perform(ViewActions.typeText("En chantant"))
+            .perform(ViewActions.typeText(testSong2))
         closeSoftKeyboard()
         onView(withId(R.id.addSongToPlaylistArtistName))
-            .perform(ViewActions.typeText("Sardou"))
+            .perform(ViewActions.typeText(testArtist))
         closeSoftKeyboard()
         onView(withId(R.id.addSongToPlaylistBtn))
-            .perform(ViewActions.click())
+            .perform(click())
 
         onView(withId(R.id.addSongToPlaylistSongName))
-            .perform(ViewActions.typeText("Le France"))
+            .perform(ViewActions.typeText(testSong3))
         closeSoftKeyboard()
         onView(withId(R.id.addSongToPlaylistArtistName))
-            .perform(ViewActions.typeText("Sardou"))
+            .perform(ViewActions.typeText(testArtist))
         closeSoftKeyboard()
         onView(withId(R.id.addSongToPlaylistBtn))
-            .perform(ViewActions.click())
+            .perform(click())
     }
 }
