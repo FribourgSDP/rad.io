@@ -26,6 +26,8 @@ import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
 
+const val testHostUser = "host"
+
 /**
  * Lobby Activity Tests with buggy database
  * NB: Here we test on [BuggyLobbyActivity], that uses a [BuggyDatabase],
@@ -56,8 +58,8 @@ class BuggyLobbyActivityTest {
 
         val testIntent = Intent(ctx, BuggyLobbyActivity::class.java).apply {
             putExtra(GAME_IS_HOST_KEY, true)
-            putExtra(GAME_HOST_KEY, Json.encodeToString(User("host")))
-            putExtra(GAME_PLAYLIST_KEY, Json.encodeToString(Playlist("playlist")))
+            putExtra(GAME_HOST_KEY, Json.encodeToString(User(testHostUser)))
+            putExtra(GAME_PLAYLIST_KEY, Json.encodeToString(Playlist(testPlaylist)))
         }
 
         ActivityScenario.launch<BuggyLobbyActivity>(testIntent).use {
