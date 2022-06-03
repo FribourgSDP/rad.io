@@ -25,6 +25,10 @@ import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
 
+const val testSinger1 = "TheBestSinger"
+const val testSinger2 = "TheOverlord"
+const val testSinger3 = "TheBreadMaster"
+
 /**
  * End Game Activity Tests
  *
@@ -58,10 +62,13 @@ class EndGameActivityTest{
 
     @Test
     fun finalScoresDisplayedCorrectly() {
+        val singer1Score = 85L
+        val singer2Score = 70L
+        val singer3Score = 100L
         val scores = arrayListOf(
-            Pair("singer0", 85L),
-            Pair("singer1", 70L),
-            Pair("singer2", 100L)
+            Pair(testSinger1, singer1Score),
+            Pair(testSinger2, singer2Score),
+            Pair(testSinger3, singer3Score)
         )
 
         val testIntent = Intent(ctx, EndGameActivity::class.java).apply {
@@ -73,12 +80,12 @@ class EndGameActivityTest{
                 .check(
                     matches(
                         allOf(
-                            atPosition(0, R.id.nameScoreTextView, ViewMatchers.withText("singer2")),
-                            atPosition(0, R.id.scoreTextView, ViewMatchers.withText("100")),
-                            atPosition(1, R.id.nameScoreTextView, ViewMatchers.withText("singer0")),
-                            atPosition(1, R.id.scoreTextView, ViewMatchers.withText("85")),
-                            atPosition(2, R.id.nameScoreTextView, ViewMatchers.withText("singer1")),
-                            atPosition(2, R.id.scoreTextView, ViewMatchers.withText("70"))
+                            atPosition(0, R.id.nameScoreTextView, withText(testSinger3)),
+                            atPosition(0, R.id.scoreTextView, withText(singer3Score.toInt().toString())),
+                            atPosition(1, R.id.nameScoreTextView, withText(testSinger1)),
+                            atPosition(1, R.id.scoreTextView, withText(singer1Score.toInt().toString())),
+                            atPosition(2, R.id.nameScoreTextView, withText(testSinger2)),
+                            atPosition(2, R.id.scoreTextView, withText(singer2Score.toInt().toString()))
                         )
                     )
                 )
