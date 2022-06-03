@@ -17,7 +17,7 @@ import org.junit.Test
 class FireBaseTestActivityTest {
 
     @get:Rule
-    var FireBaseTestRule = ActivityScenarioRule(FireBaseTestActivity::class.java)
+    var fireBaseTestRule = ActivityScenarioRule(FireBaseTestActivity::class.java)
 
     private val ctx: Context = ApplicationProvider.getApplicationContext()
 
