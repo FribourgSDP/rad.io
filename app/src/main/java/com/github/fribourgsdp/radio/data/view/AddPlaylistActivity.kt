@@ -119,9 +119,8 @@ open class AddPlaylistActivity : MyAppCompatActivity(), SavePlaylistOnlinePicker
                 displayError(R.string.playlist_is_empty)
             }
             else -> {
-                if(!hasConnectivity(this)){
+                if(!hasConnectivity(this) || !user.isGoogleUser){
                     savePlaylistLocally()
-
                 }else{
                     val savePlaylistOnlinePicker = SavePlaylistOnlinePickerDialog(this)
                     savePlaylistOnlinePicker.show(supportFragmentManager, "SavePlaylistOnlinePicker")
@@ -148,6 +147,7 @@ open class AddPlaylistActivity : MyAppCompatActivity(), SavePlaylistOnlinePicker
             confirmButton.text = getString(R.string.create_playlist)
         } else{
             confirmButton.text = getString(R.string.update_playlist)
+
         }
     }
 
