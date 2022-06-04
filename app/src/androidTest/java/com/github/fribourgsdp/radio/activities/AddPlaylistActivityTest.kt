@@ -123,7 +123,7 @@ class AddPlaylistActivityTest {
         user.getPlaylists().filter { p -> p.name == testPlaylist1 }.forEach{ p ->
             run {
                 assertTrue(p.getSongs().any { s -> s.name == testSong1 && s.artist == testArtist })
-                assertTrue(p.getSongs().any { s -> s.name == testSong2 && s.artist == testArtist })
+                assertTrue(p.getSongs().any { s -> s.name == testSong7 && s.artist == testArtist })
                 assertTrue(p.getSongs().any { s -> s.name == testSong3 && s.artist == testArtist })
             }
         }
@@ -399,7 +399,7 @@ class AddPlaylistActivityTest {
             .perform(click())
 
         onView(withId(R.id.addSongToPlaylistSongName))
-            .perform(ViewActions.typeText(testSong2))
+            .perform(ViewActions.typeText(testSong7))
         closeSoftKeyboard()
         onView(withId(R.id.addSongToPlaylistArtistName))
             .perform(ViewActions.typeText(testArtist))
