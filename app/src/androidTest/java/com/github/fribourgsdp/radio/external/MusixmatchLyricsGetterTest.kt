@@ -74,7 +74,7 @@ class MusixmatchLyricsGetterTest {
     }
     @Test
     fun emptyLyrics(){
-        val lyricsFuture = MusixmatchLyricsGetter.getLyrics(testSong1, testArtist, MockOkHttpClient(), EmptyLyricsJSONParser())
+        val lyricsFuture = MusixmatchLyricsGetter.getLyrics(testSong1.lowercase(), testArtist.lowercase(), MockOkHttpClient(), EmptyLyricsJSONParser())
         checkLyricsNotFound(lyricsFuture)
     }
 

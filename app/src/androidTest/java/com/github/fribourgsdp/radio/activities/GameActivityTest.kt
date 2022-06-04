@@ -46,6 +46,7 @@ import org.junit.runner.RunWith
 @RunWith(AndroidJUnit4::class)
 class GameActivityTest {
     private val ctx: Context = ApplicationProvider.getApplicationContext()
+    private val sleepingTime = 50L
 
     private val fakeGame = Game.Builder()
         .setHost(User("host"))
@@ -250,6 +251,7 @@ class GameActivityTest {
             scenario.onActivity {
                 it.hideError()
             }
+            Thread.sleep(sleepingTime)
             errorOrFailureTextView.check(matches(not(isDisplayed())))
         }
     }
