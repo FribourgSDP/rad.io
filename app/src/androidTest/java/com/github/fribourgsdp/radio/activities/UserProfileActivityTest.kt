@@ -7,12 +7,10 @@ import androidx.test.core.app.ActivityScenario
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.espresso.Espresso
 import androidx.test.espresso.Espresso.onView
-import androidx.test.espresso.ViewAssertion
 import androidx.test.espresso.action.ViewActions
 import androidx.test.espresso.action.ViewActions.click
 import androidx.test.espresso.assertion.ViewAssertions
 import androidx.test.espresso.assertion.ViewAssertions.matches
-import androidx.test.espresso.contrib.RecyclerViewActions
 import androidx.test.espresso.intent.Intents
 import androidx.test.espresso.intent.matcher.IntentMatchers.hasComponent
 import androidx.test.espresso.matcher.RootMatchers
@@ -29,17 +27,14 @@ import com.github.fribourgsdp.radio.data.view.REDIRECT_URI
 import com.github.fribourgsdp.radio.data.view.UserProfileActivity
 import com.github.fribourgsdp.radio.database.Database
 import com.github.fribourgsdp.radio.mockimplementations.*
-import com.github.fribourgsdp.radio.util.ViewHolder
 import com.google.android.gms.tasks.Tasks
 import junit.framework.TestCase
 import org.hamcrest.Matchers.allOf
+import org.junit.After
+import org.junit.Assert.assertNotEquals
+import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
-
-import org.junit.Assert.*
-
-import org.junit.After
-import org.junit.Before
 import org.mockito.Mockito
 import org.mockito.Mockito.`when`
 
@@ -112,7 +107,7 @@ class UserProfileActivityTest : TestCase() {
             Intents.intended(
                 Matchers.allOf(
                     IntentMatchers.hasComponent(GoogleSignInActivity::class.java.name),
-                    IntentMatchers.toPackage("com.github.fribourgsdp.radio")
+                    IntentMatchers.toPackage(packageName)
                 )
             )
         }

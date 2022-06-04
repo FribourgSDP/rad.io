@@ -16,7 +16,6 @@ import androidx.test.espresso.intent.Intents
 import androidx.test.espresso.intent.matcher.IntentMatchers
 import androidx.test.espresso.matcher.BoundedMatcher
 import androidx.test.espresso.matcher.RootMatchers.isDialog
-import androidx.test.espresso.matcher.ViewMatchers
 import androidx.test.espresso.matcher.ViewMatchers.*
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.github.fribourgsdp.radio.R
@@ -42,7 +41,6 @@ import org.junit.After
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
-import java.util.regex.Matcher
 
 const val testLyrics1 = "A long, long time ago\nI can still remember\nHow that music used to make me smile..."
 const val testSong4 = "American Pie"
@@ -379,7 +377,7 @@ class GameActivityTest {
                 allOf(
                     IntentMatchers.hasComponent(EndGameActivity::class.java.name),
                     IntentMatchers.hasExtra(SCORES_KEY, ArrayList(scores.toList())),
-                    IntentMatchers.toPackage("com.github.fribourgsdp.radio")
+                    IntentMatchers.toPackage(packageName)
                 )
             )
         }

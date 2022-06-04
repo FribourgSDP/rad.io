@@ -29,7 +29,7 @@ import com.github.fribourgsdp.radio.data.view.PlaylistSongsFragment
 import com.github.fribourgsdp.radio.database.Database
 import com.google.android.gms.tasks.Task
 import com.google.android.gms.tasks.Tasks
-import junit.framework.Assert.assertTrue
+import org.junit.Assert.assertTrue
 import org.junit.Assert.assertEquals
 import org.mockito.Mockito
 import org.mockito.Mockito.`when`

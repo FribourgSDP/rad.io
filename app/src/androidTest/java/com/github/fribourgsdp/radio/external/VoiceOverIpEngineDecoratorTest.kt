@@ -2,19 +2,18 @@ package com.github.fribourgsdp.radio.external
 
 import android.content.Context
 import android.content.Intent
-import android.widget.ImageButton
 import androidx.test.core.app.ActivityScenario
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.espresso.Espresso
 import androidx.test.espresso.intent.Intents
 import androidx.test.espresso.intent.matcher.IntentMatchers
 import com.github.fribourgsdp.radio.MainActivity
+import com.github.fribourgsdp.radio.activities.packageName
 import com.github.fribourgsdp.radio.deprecated.VoiceOverIPActivity
 import com.github.fribourgsdp.radio.voip.VoiceIpEngineDecorator
-import com.google.android.material.floatingactionbutton.FloatingActionButton
 import io.agora.rtc.IRtcEngineEventHandler
 import io.agora.rtc.RtcEngine
-import junit.framework.Assert.assertTrue
+import org.junit.Assert.assertTrue
 import org.hamcrest.Matchers
 import org.junit.After
 import org.junit.Before
@@ -37,7 +36,7 @@ class VoiceOverIpEngineDecoratorTest {
     @Test
     fun initMockRtcEngine() {
         val context: Context = ApplicationProvider.getApplicationContext()
-        val intent: Intent = Intent(context, VoiceOverIPActivity::class.java)
+        val intent = Intent(context, VoiceOverIPActivity::class.java)
 
         ActivityScenario.launch<VoiceOverIPActivity>(intent).use { scenario ->
 
@@ -47,7 +46,7 @@ class VoiceOverIpEngineDecoratorTest {
             Intents.intended(
                 Matchers.allOf(
                     IntentMatchers.hasComponent(MainActivity::class.java.name),
-                    IntentMatchers.toPackage("com.github.fribourgsdp.radio")
+                    IntentMatchers.toPackage(packageName)
                 )
             )
         }
@@ -57,7 +56,7 @@ class VoiceOverIpEngineDecoratorTest {
     fun allFunctionsWeNeedToCallReturnSuccess() {
         val context: Context = ApplicationProvider.getApplicationContext()
 
-        val intent: Intent = Intent(context, VoiceOverIPActivity::class.java)
+        val intent = Intent(context, VoiceOverIPActivity::class.java)
 
         ActivityScenario.launch<VoiceOverIPActivity>(intent).use { scenario ->
             val testEngineDecorator =

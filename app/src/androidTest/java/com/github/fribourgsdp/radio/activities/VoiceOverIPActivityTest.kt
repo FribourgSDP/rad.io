@@ -40,7 +40,7 @@ class VoiceOverIPActivityTest {
             Intents.intended(
                 Matchers.allOf(
                     IntentMatchers.hasComponent(MainActivity::class.java.name),
-                    IntentMatchers.toPackage("com.github.fribourgsdp.radio")
+                    IntentMatchers.toPackage(packageName)
                 )
             )
         }

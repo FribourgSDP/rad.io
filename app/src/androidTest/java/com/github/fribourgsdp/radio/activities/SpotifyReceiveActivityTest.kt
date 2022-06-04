@@ -83,7 +83,7 @@ class SpotifyReceiveActivityTest {
             Intents.intended(
                 Matchers.allOf(
                     IntentMatchers.hasComponent(ImportSpotifyPlaylistsActivity::class.java.name),
-                    IntentMatchers.toPackage("com.github.fribourgsdp.radio")
+                    IntentMatchers.toPackage(packageName)
                 )
             )
 

@@ -95,7 +95,7 @@ class GoogleSignInActivityTest {
             Intents.intended(
                 Matchers.allOf(
                     IntentMatchers.hasComponent(UserProfileActivity::class.java.name),
-                    IntentMatchers.toPackage("com.github.fribourgsdp.radio")
+                    IntentMatchers.toPackage(packageName)
                 )
             )
 
@@ -125,7 +125,7 @@ class GoogleSignInActivityTest {
             Intents.intended(
                 Matchers.allOf(
                     IntentMatchers.hasComponent(UserProfileActivity::class.java.name),
-                    IntentMatchers.toPackage("com.github.fribourgsdp.radio")
+                    IntentMatchers.toPackage(packageName)
                 )
             )
         }
@@ -169,7 +169,7 @@ class GoogleSignInActivityTest {
             Intents.intended(
                 Matchers.allOf(
                     IntentMatchers.hasComponent(UserProfileActivity::class.java.name),
-                    IntentMatchers.toPackage("com.github.fribourgsdp.radio")
+                    IntentMatchers.toPackage(packageName)
                 )
             )
         }

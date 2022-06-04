@@ -1,32 +1,24 @@
 package com.github.fribourgsdp.radio.activities
 
 import android.content.Context
-import android.content.Intent
-import androidx.test.core.app.ActivityScenario
 import androidx.test.core.app.ApplicationProvider
-import androidx.test.espresso.Espresso
 import androidx.test.espresso.Espresso.*
 import androidx.test.espresso.action.ViewActions
 import androidx.test.espresso.action.ViewActions.click
 import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.intent.Intents
 import androidx.test.espresso.intent.matcher.IntentMatchers
-import androidx.test.espresso.matcher.RootMatchers.isTouchable
 import androidx.test.espresso.matcher.ViewMatchers.*
 import androidx.test.ext.junit.rules.ActivityScenarioRule
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.github.fribourgsdp.radio.MainActivity
-import com.github.fribourgsdp.radio.data.LobbyData
-import com.github.fribourgsdp.radio.data.LobbyDataKeys
 import com.github.fribourgsdp.radio.R
-import com.github.fribourgsdp.radio.config.language.LanguageManager
-import com.github.fribourgsdp.radio.deprecated.VoiceOverIPActivity
+import com.github.fribourgsdp.radio.data.LobbyData
 import com.github.fribourgsdp.radio.game.prep.*
-import com.github.fribourgsdp.radio.mockimplementations.*
+import com.github.fribourgsdp.radio.mockimplementations.LocalDatabase
 import com.github.fribourgsdp.radio.mockimplementations.WorkingJoinGameActivity
 import com.github.fribourgsdp.radio.utils.CustomMatchers.Companion.atPosition
-import org.hamcrest.Matchers
-import org.hamcrest.Matchers.*
+import org.hamcrest.Matchers.allOf
 import org.junit.After
 import org.junit.Before
 import org.junit.Rule
@@ -76,7 +68,7 @@ class WorkingJoinGameActivityTest {
 
         Intents.intended(
             allOf(
-                IntentMatchers.toPackage("com.github.fribourgsdp.radio"),
+                IntentMatchers.toPackage(packageName),
                 IntentMatchers.hasComponent(LobbyActivity::class.java.name),
                 IntentMatchers.hasExtra(GAME_HOST_NAME_KEY, LocalDatabase.EXPECTED_SETTINGS.hostName),
                 IntentMatchers.hasExtra(GAME_NAME_KEY, LocalDatabase.EXPECTED_SETTINGS.name),
@@ -105,7 +97,7 @@ class WorkingJoinGameActivityTest {
         Intents.intended(
             allOf(
                 IntentMatchers.hasComponent(MainActivity::class.java.name),
-                IntentMatchers.toPackage("com.github.fribourgsdp.radio")
+                IntentMatchers.toPackage(packageName)
             )
         )
     }

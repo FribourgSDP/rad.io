@@ -130,7 +130,7 @@ class GameSettingsActivityTest {
 
                 Intents.intended(
                     allOf(
-                        toPackage("com.github.fribourgsdp.radio"),
+                        toPackage(packageName),
                         hasComponent(LobbyActivity::class.java.name),
                         hasExtra(GAME_NAME_KEY, testName),
                         hasExtra(GAME_PLAYLIST_KEY, Json.encodeToString(testPlaylist)),
@@ -190,7 +190,7 @@ class GameSettingsActivityTest {
                 hasExtra(GAME_PRIVACY_KEY, false),
                 hasExtra(GAME_IS_HOST_KEY, true),
                 hasExtra(GAME_DURATION_KEY, DEFAULT_SINGER_DURATION),
-                toPackage("com.github.fribourgsdp.radio")
+                toPackage(packageName)
             )
         )
 
