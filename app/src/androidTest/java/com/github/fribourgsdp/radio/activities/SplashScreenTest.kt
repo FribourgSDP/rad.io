@@ -6,12 +6,10 @@ import androidx.test.ext.junit.rules.ActivityScenarioRule
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.github.fribourgsdp.radio.MainActivity
 import com.github.fribourgsdp.radio.SplashScreen
-import com.github.fribourgsdp.radio.game.prep.GameSettingsActivity
+import com.github.fribourgsdp.radio.utils.packageName
 import org.hamcrest.Matchers
 import org.junit.After
 import org.junit.Before
-
-import org.junit.Assert.*
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -44,7 +42,7 @@ class SplashScreenTest {
         Intents.intended(
             Matchers.allOf(
                 IntentMatchers.hasComponent(MainActivity::class.java.name),
-                IntentMatchers.toPackage("com.github.fribourgsdp.radio")
+                IntentMatchers.toPackage(packageName)
             )
         )
     }

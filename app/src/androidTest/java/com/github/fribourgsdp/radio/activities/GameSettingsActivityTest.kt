@@ -11,12 +11,9 @@ import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.UiController
 import androidx.test.espresso.ViewAction
 import androidx.test.espresso.action.ViewActions
-import androidx.test.espresso.assertion.ViewAssertions
 import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.intent.Intents
-import androidx.test.espresso.intent.matcher.IntentMatchers
 import androidx.test.espresso.intent.matcher.IntentMatchers.*
-import androidx.test.espresso.matcher.ViewMatchers
 import androidx.test.espresso.matcher.ViewMatchers.*
 import androidx.test.ext.junit.rules.ActivityScenarioRule
 import androidx.test.ext.junit.runners.AndroidJUnit4
@@ -25,10 +22,12 @@ import com.github.fribourgsdp.radio.R
 import com.github.fribourgsdp.radio.data.Playlist
 import com.github.fribourgsdp.radio.game.prep.*
 import com.github.fribourgsdp.radio.mockimplementations.MockGameSettingsActivity
+import com.github.fribourgsdp.radio.utils.packageName
+import com.github.fribourgsdp.radio.utils.testPlaylist1
+import com.github.fribourgsdp.radio.utils.testPlaylist3
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 import org.hamcrest.Matcher
-import org.hamcrest.Matchers
 import org.hamcrest.Matchers.allOf
 import org.junit.After
 import org.junit.Before
@@ -72,9 +71,11 @@ class GameSettingsActivityTest {
     @Test
     fun timerDialogHasDefaultValue45Seconds() {
         onView(withId(R.id.chooseTimeButton))
-            .check(ViewAssertions.matches(
-                ViewMatchers.withText(ctx.getString(R.string.round_duration_format, 45))
-            ))
+            .check(
+                matches(
+                withText(ctx.getString(R.string.round_duration_format, 45))
+            )
+            )
     }
 
     @Test
@@ -82,7 +83,7 @@ class GameSettingsActivityTest {
 
         // Test values
         val testName = "Hello World!"
-        val testPlaylist = Playlist("Rap Playlist")
+        val testPlaylist = Playlist(testPlaylist3)
         val testNbRounds = 20
         val withHint = true
         val private = true
@@ -132,7 +133,7 @@ class GameSettingsActivityTest {
 
                 Intents.intended(
                     allOf(
-                        toPackage("com.github.fribourgsdp.radio"),
+                        toPackage(packageName),
                         hasComponent(LobbyActivity::class.java.name),
                         hasExtra(GAME_NAME_KEY, testName),
                         hasExtra(GAME_PLAYLIST_KEY, Json.encodeToString(testPlaylist)),
@@ -168,7 +169,7 @@ class GameSettingsActivityTest {
     fun intentWorksWithDefaultSettings() {
 
         // Test values
-        val testPlaylist = Playlist("Rap Playlist")
+        val testPlaylist = Playlist(testPlaylist3)
 
         onView(withId(R.id.playlistSearchView))
             .perform(
@@ -192,7 +193,7 @@ class GameSettingsActivityTest {
                 hasExtra(GAME_PRIVACY_KEY, false),
                 hasExtra(GAME_IS_HOST_KEY, true),
                 hasExtra(GAME_DURATION_KEY, DEFAULT_SINGER_DURATION),
-                toPackage("com.github.fribourgsdp.radio")
+                toPackage(packageName)
             )
         )
 
@@ -202,8 +203,8 @@ class GameSettingsActivityTest {
     fun startButtonDisabledOnNoPlaylist() {
         onView(withId(R.id.startButton))
             .check(
-                ViewAssertions.matches(
-                    ViewMatchers.isNotEnabled()
+                matches(
+                    isNotEnabled()
                 )
             )
     }
@@ -221,8 +222,8 @@ class GameSettingsActivityTest {
 
         onView(withId(R.id.startButton))
             .check(
-                ViewAssertions.matches(
-                    ViewMatchers.isNotEnabled()
+                matches(
+                    isNotEnabled()
                 )
             )
     }
@@ -233,7 +234,7 @@ class GameSettingsActivityTest {
         onView(withId(R.id.playlistSearchView))
             .perform(
                 ViewActions.click(),
-                ViewActions.typeText("Rap Playlist"),
+                ViewActions.typeText(testPlaylist3),
                 ViewActions.pressKey(KeyEvent.KEYCODE_ENTER)
             )
 
@@ -241,8 +242,8 @@ class GameSettingsActivityTest {
 
         onView(withId(R.id.startButton))
             .check(
-                ViewAssertions.matches(
-                    ViewMatchers.isEnabled()
+                matches(
+                    isEnabled()
                 )
             )
 
@@ -258,8 +259,8 @@ class GameSettingsActivityTest {
 
         onView(withId(R.id.startButton))
             .check(
-                ViewAssertions.matches(
-                    ViewMatchers.isNotEnabled()
+                matches(
+                    isNotEnabled()
                 )
             )
     }
@@ -280,10 +281,10 @@ class GameSettingsActivityTest {
 
         val errorTextView = onView(withId(R.id.playlistSearchError))
 
-        errorTextView.check(ViewAssertions.matches(ViewMatchers.isDisplayed()))
+        errorTextView.check(matches(isDisplayed()))
         errorTextView.check(
-            ViewAssertions.matches(
-                ViewMatchers.withText(ctx.getString(R.string.playlist_error_format, fakeName))
+            matches(
+                withText(ctx.getString(R.string.playlist_error_format, fakeName))
             )
         )
 
@@ -293,8 +294,8 @@ class GameSettingsActivityTest {
     fun pressBackReturnsToMainActivity() {
         Espresso.pressBack()
         Intents.intended(
-            Matchers.allOf(
-                IntentMatchers.hasComponent(MainActivity::class.java.name)
+            allOf(
+                hasComponent(MainActivity::class.java.name)
             )
         )
     }

@@ -36,6 +36,12 @@ import org.junit.runner.RunWith
 @RunWith(AndroidJUnit4::class)
 class WorkingLobbyActivityTest {
     private val ctx: Context = ApplicationProvider.getApplicationContext()
+    // Test values
+    private val testName = "Hello World!"
+    private val testPlaylist = Playlist("Rap Playlist")
+    private val testNbRounds = 20
+    private val withHint = true
+    private val private = true
     @Before
     fun initIntent() {
         Intents.init()
@@ -46,12 +52,6 @@ class WorkingLobbyActivityTest {
     }
     @Test
     fun pressingOnBackThenCancelStaysInLobby(){
-        // Test values
-        val testName = "Hello World!"
-        val testPlaylist = Playlist("Rap Playlist")
-        val testNbRounds = 20
-        val withHint = true
-        val private = true
         val testIntent = Intent(ctx, WorkingLobbyActivity::class.java).apply {
             putExtra(GAME_NAME_KEY, testName)
             putExtra(GAME_PLAYLIST_KEY, Json.encodeToString(testPlaylist))
@@ -79,12 +79,6 @@ class WorkingLobbyActivityTest {
     }
     @Test
     fun lobbyDisplayCorrectInfosWhenHost() {
-        // Test values
-        val testName = "Hello World!"
-        val testPlaylist = Playlist("Rap Playlist")
-        val testNbRounds = 20
-        val withHint = true
-        val private = true
         // Init views
         val uuidTextView = Espresso.onView(withId(R.id.uuidText))
         val gameNameTextView = Espresso.onView(withId(R.id.gameNameText))
@@ -118,11 +112,6 @@ class WorkingLobbyActivityTest {
     fun lobbyDisplayCorrectInfosWhenInvited() {
         // Test values
         val testUID = 42L
-        val testName = "Hello World!"
-        val testPlaylist = Playlist("Rap Playlist")
-        val testNbRounds = 20
-        val withHint = true
-        val private = true
         // Init views
         val uuidTextView = Espresso.onView(withId(R.id.uuidText))
         val gameNameTextView = Espresso.onView(withId(R.id.gameNameText))
@@ -167,12 +156,7 @@ class WorkingLobbyActivityTest {
 
     @Test
     fun createCorrectQrCode(){
-        // Test values
-        val testName = "Hello World!"
-        val testPlaylist = Playlist("Rap Playlist")
-        val testNbRounds = 20
-        val withHint = true
-        val private = true
+
         val intent = Intent(ctx, WorkingLobbyActivity::class.java).apply {
             putExtra(GAME_NAME_KEY, testName)
             putExtra(GAME_PLAYLIST_KEY, Json.encodeToString(testPlaylist))
@@ -181,7 +165,7 @@ class WorkingLobbyActivityTest {
             putExtra(GAME_PRIVACY_KEY, private)
             putExtra(GAME_IS_HOST_KEY, true)
         }
-        ActivityScenario.launch<WorkingLobbyActivity>(intent).use { scenario ->
+        ActivityScenario.launch<WorkingLobbyActivity>(intent).use {
 
 
             val displayQRCodeButton = Espresso.onView(withId(R.id.displayQRCodeButton))

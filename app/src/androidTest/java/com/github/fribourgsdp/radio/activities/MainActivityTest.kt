@@ -1,5 +1,6 @@
 package com.github.fribourgsdp.radio.activities
 
+
 import android.content.Context
 import android.content.Intent
 import androidx.test.core.app.ActivityScenario
@@ -11,28 +12,19 @@ import androidx.test.espresso.intent.Intents
 import androidx.test.espresso.intent.matcher.IntentMatchers
 import androidx.test.espresso.matcher.ViewMatchers
 import androidx.test.espresso.matcher.ViewMatchers.withId
-import androidx.test.ext.junit.rules.ActivityScenarioRule
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.github.fribourgsdp.radio.MainActivity
 import com.github.fribourgsdp.radio.R
 import com.github.fribourgsdp.radio.config.SettingsActivity
-import com.github.fribourgsdp.radio.data.User
 import com.github.fribourgsdp.radio.data.view.UserProfileActivity
-import com.github.fribourgsdp.radio.database.Database
-import com.github.fribourgsdp.radio.deprecated.VoiceOverIPActivity
 import com.github.fribourgsdp.radio.game.prep.GameSettingsActivity
-import com.github.fribourgsdp.radio.mockimplementations.GoogleUserMockUserProfileActivity
-import com.google.android.gms.tasks.Tasks
-import junit.framework.Assert.assertEquals
+import com.github.fribourgsdp.radio.utils.packageName
 import org.hamcrest.Matchers
 import org.junit.After
+import org.junit.Assert.assertEquals
 import org.junit.Before
-
-
-import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
-import org.mockito.Mockito
 
 /**
  * Main Activity Tests
@@ -65,7 +57,7 @@ class MainActivityTest {
             Intents.intended(
                 Matchers.allOf(
                     IntentMatchers.hasComponent(GameSettingsActivity::class.java.name),
-                    IntentMatchers.toPackage("com.github.fribourgsdp.radio")
+                    IntentMatchers.toPackage(packageName)
                 )
            )
         }
@@ -83,7 +75,7 @@ class MainActivityTest {
             Intents.intended(
                 Matchers.allOf(
                     IntentMatchers.hasComponent(SettingsActivity::class.java.name),
-                    IntentMatchers.toPackage("com.github.fribourgsdp.radio")
+                    IntentMatchers.toPackage(packageName)
                 )
             )
         }

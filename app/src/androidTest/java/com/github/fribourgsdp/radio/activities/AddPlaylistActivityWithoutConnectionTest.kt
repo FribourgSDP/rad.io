@@ -4,21 +4,20 @@ import android.content.Context
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.espresso.Espresso
 import androidx.test.espresso.action.ViewActions
-import androidx.test.espresso.assertion.ViewAssertions
 import androidx.test.espresso.intent.Intents
 import androidx.test.espresso.intent.matcher.IntentMatchers
-import androidx.test.espresso.matcher.RootMatchers
 import androidx.test.espresso.matcher.ViewMatchers
 import androidx.test.ext.junit.rules.ActivityScenarioRule
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.github.fribourgsdp.radio.R
 import com.github.fribourgsdp.radio.data.User
 import com.github.fribourgsdp.radio.data.view.UserProfileActivity
-import com.github.fribourgsdp.radio.mockimplementations.MockAddPlaylistActivity
 import com.github.fribourgsdp.radio.mockimplementations.MockAddPlaylistActivityNoConnection
+import com.github.fribourgsdp.radio.utils.*
 import com.google.android.gms.tasks.Tasks
 import org.hamcrest.Matchers
 import org.junit.After
+import org.junit.Assert.assertTrue
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
@@ -54,12 +53,12 @@ class AddPlaylistActivityWithoutConnectionTest {
         )
 
         val user = Tasks.await(User.loadOrDefault(ctx))
-        assert(user.getPlaylists().any { p -> p.name == "Sardou playlist" })
-        user.getPlaylists().filter { p -> p.name == "Sardou playlist" }.forEach{p ->
+        assertTrue(user.getPlaylists().any { p -> p.name == testPlaylist1 })
+        user.getPlaylists().filter { p -> p.name == testPlaylist1 }.forEach{ p ->
             run {
-                assert(p.getSongs().any { s -> s.name == "Rouge" && s.artist == "Sardou" })
-                assert(p.getSongs().any { s -> s.name == "En Chantant" && s.artist == "Sardou" })
-                assert(p.getSongs().any { s -> s.name == "Le France" && s.artist == "Sardou" })
+                assertTrue(p.getSongs().any { s -> s.name == testSong1 && s.artist == testArtist })
+                assertTrue(p.getSongs().any { s -> s.name == testSong7 && s.artist == testArtist })
+                assertTrue(p.getSongs().any { s -> s.name == testSong3 && s.artist == testArtist })
             }
         }
 
@@ -67,32 +66,32 @@ class AddPlaylistActivityWithoutConnectionTest {
 
     private fun initializeSardouPlaylist() {
         Espresso.onView(ViewMatchers.withId(R.id.newPlaylistName))
-            .perform(ViewActions.typeText("Sardou playlist"))
+            .perform(ViewActions.typeText(testPlaylist1))
         Espresso.closeSoftKeyboard()
 
         Espresso.onView(ViewMatchers.withId(R.id.addSongToPlaylistSongName))
-            .perform(ViewActions.typeText("Rouge"))
+            .perform(ViewActions.typeText(testSong1))
         Espresso.closeSoftKeyboard()
         Espresso.onView(ViewMatchers.withId(R.id.addSongToPlaylistArtistName))
-            .perform(ViewActions.typeText("Sardou"))
+            .perform(ViewActions.typeText(testArtist))
         Espresso.closeSoftKeyboard()
         Espresso.onView(ViewMatchers.withId(R.id.addSongToPlaylistBtn))
             .perform(ViewActions.click())
 
         Espresso.onView(ViewMatchers.withId(R.id.addSongToPlaylistSongName))
-            .perform(ViewActions.typeText("En chantant"))
+            .perform(ViewActions.typeText(testSong7))
         Espresso.closeSoftKeyboard()
         Espresso.onView(ViewMatchers.withId(R.id.addSongToPlaylistArtistName))
-            .perform(ViewActions.typeText("Sardou"))
+            .perform(ViewActions.typeText(testArtist))
         Espresso.closeSoftKeyboard()
         Espresso.onView(ViewMatchers.withId(R.id.addSongToPlaylistBtn))
             .perform(ViewActions.click())
 
         Espresso.onView(ViewMatchers.withId(R.id.addSongToPlaylistSongName))
-            .perform(ViewActions.typeText("Le France"))
+            .perform(ViewActions.typeText(testSong3))
         Espresso.closeSoftKeyboard()
         Espresso.onView(ViewMatchers.withId(R.id.addSongToPlaylistArtistName))
-            .perform(ViewActions.typeText("Sardou"))
+            .perform(ViewActions.typeText(testArtist))
         Espresso.closeSoftKeyboard()
         Espresso.onView(ViewMatchers.withId(R.id.addSongToPlaylistBtn))
             .perform(ViewActions.click())
