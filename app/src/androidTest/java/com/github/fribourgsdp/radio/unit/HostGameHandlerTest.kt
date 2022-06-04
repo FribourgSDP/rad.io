@@ -8,8 +8,7 @@ import com.github.fribourgsdp.radio.data.Genre
 import com.github.fribourgsdp.radio.data.Playlist
 import com.github.fribourgsdp.radio.data.Song
 import com.github.fribourgsdp.radio.data.User
-import com.github.fribourgsdp.radio.database.Database
-import com.github.fribourgsdp.radio.database.SONG_CHOICES_KEY
+import com.github.fribourgsdp.radio.database.*
 import com.github.fribourgsdp.radio.game.Game
 import com.github.fribourgsdp.radio.game.handler.HostGameHandler
 import com.github.fribourgsdp.radio.mockimplementations.FakeGameView
@@ -18,7 +17,8 @@ import com.github.fribourgsdp.radio.utils.testPlaylist4
 import com.github.fribourgsdp.radio.utils.testSong4
 import com.google.android.gms.tasks.Tasks
 import com.google.firebase.firestore.DocumentSnapshot
-import org.junit.Assert.*
+import org.junit.Assert.assertEquals
+import org.junit.Assert.assertTrue
 import org.junit.Before
 import org.junit.Test
 import org.mockito.Mockito.*
