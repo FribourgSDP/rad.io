@@ -23,6 +23,7 @@ import org.junit.Test
 
 
 class SpotifyReceiveActivityTest {
+    private val dummyMsg = "hehe"
     private val ctx: Context = ApplicationProvider.getApplicationContext()
 
     @Before
@@ -37,39 +38,41 @@ class SpotifyReceiveActivityTest {
     @Test
     fun nullSpotifyResponseReturnsError(){
         val intent: Intent? = null
-        assertEquals("Error", SpotifyReceiveActivity.Companion.handleSpotifyResponse(intent))
+        assertEquals(SpotifyReceiveActivity.simpleErrorResponse, SpotifyReceiveActivity.Companion.handleSpotifyResponse(intent))
     }
 
     @Test
     fun emptySpotifyResponseReturnsError(){
         val intent = Intent()
         intent.data = null
-        assertEquals("Error", SpotifyReceiveActivity.Companion.handleSpotifyResponse(intent))
+        assertEquals(SpotifyReceiveActivity.simpleErrorResponse, SpotifyReceiveActivity.Companion.handleSpotifyResponse(intent))
     }
 
     @Test
     fun spotifyResponseTypeErrorReturnsErrorMessage(){
         val intent = Intent()
-        val uri = Uri.Builder().appendQueryParameter(AccountsQueryParameters.ERROR, "hehe").build()
+        val uri = Uri.Builder().appendQueryParameter(AccountsQueryParameters.ERROR, dummyMsg).build()
         intent.data = uri
-        assertEquals("Error occured.", SpotifyReceiveActivity.Companion.handleSpotifyResponse(intent))
+        assertEquals(SpotifyReceiveActivity.errorResponse, SpotifyReceiveActivity.Companion.handleSpotifyResponse(intent))
     }
 
     @Test
     fun spotifyResponseTypeCodeReturnsUnexpectedMessage(){
         val intent = Intent()
-        val uri = Uri.Builder().appendQueryParameter(AccountsQueryParameters.CODE, "hehe").build()
+        val uri = Uri.Builder().appendQueryParameter(AccountsQueryParameters.CODE, dummyMsg).build()
         intent.data = uri
-        assertEquals("Something unexpected occured.", SpotifyReceiveActivity.Companion.handleSpotifyResponse(intent))
+        assertEquals(SpotifyReceiveActivity.unexpectedResponse, SpotifyReceiveActivity.Companion.handleSpotifyResponse(intent))
     }
 
     @Test
     fun correctSpotifyResponseReturnsToken(){
+        val rawFragment = "access_token=BQCn2_RdmWU-KzsrM-VNsYU9eBHyRvR6vfIhRsiZgRMisHp76ya0U0EAXmpnhMCwOQaNO3SSAdHVQtBtSs_B_jTZT2vE29KGCnU5ZdKN4ik1cSs5rZGYG1StW3r1dGQxDoTLCjttbf1sHMa7OGYlWvvtenEDXJZ3CXiL6_-mvVnaW2ED-B8&token_type=Bearer&expires_in=3600"
+        val expected = "BQCn2_RdmWU-KzsrM-VNsYU9eBHyRvR6vfIhRsiZgRMisHp76ya0U0EAXmpnhMCwOQaNO3SSAdHVQtBtSs_B_jTZT2vE29KGCnU5ZdKN4ik1cSs5rZGYG1StW3r1dGQxDoTLCjttbf1sHMa7OGYlWvvtenEDXJZ3CXiL6_-mvVnaW2ED-B8"
         val intent = Intent()
-        val uri = Uri.Builder().encodedFragment("access_token=BQCn2_RdmWU-KzsrM-VNsYU9eBHyRvR6vfIhRsiZgRMisHp76ya0U0EAXmpnhMCwOQaNO3SSAdHVQtBtSs_B_jTZT2vE29KGCnU5ZdKN4ik1cSs5rZGYG1StW3r1dGQxDoTLCjttbf1sHMa7OGYlWvvtenEDXJZ3CXiL6_-mvVnaW2ED-B8&token_type=Bearer&expires_in=3600")
+        val uri = Uri.Builder().encodedFragment(rawFragment)
             .build()
         intent.data = uri
-        assertEquals("BQCn2_RdmWU-KzsrM-VNsYU9eBHyRvR6vfIhRsiZgRMisHp76ya0U0EAXmpnhMCwOQaNO3SSAdHVQtBtSs_B_jTZT2vE29KGCnU5ZdKN4ik1cSs5rZGYG1StW3r1dGQxDoTLCjttbf1sHMa7OGYlWvvtenEDXJZ3CXiL6_-mvVnaW2ED-B8", SpotifyReceiveActivity.Companion.handleSpotifyResponse(intent))
+        assertEquals(expected, SpotifyReceiveActivity.Companion.handleSpotifyResponse(intent))
     }
 
     @Test

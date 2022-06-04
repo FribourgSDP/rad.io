@@ -35,6 +35,9 @@ class SpotifyReceiveActivity : MyAppCompatActivity() {
     }
 
     companion object {
+        const val unexpectedResponse = "Something unexpected occurred."
+        const val errorResponse = "Error occurred"
+        const val simpleErrorResponse = "Error"
         fun handleSpotifyResponse(intent: Intent?): String {
             if (intent != null){
                 val uri: Uri? = intent.data
@@ -47,16 +50,16 @@ class SpotifyReceiveActivity : MyAppCompatActivity() {
                         }
 
                         AuthorizationResponse.Type.ERROR -> {
-                            ("Error occured.")
+                            (errorResponse)
                         }
 
                         else -> {
-                            ("Something unexpected occured.")
+                            (unexpectedResponse)
                         }
                     }
                 }
             }
-            return "Error"
+            return simpleErrorResponse
         }
     }
 }
