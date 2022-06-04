@@ -45,7 +45,7 @@ class GoogleSignInTest {
             val mockAuthCredential: AuthCredential = makeMockAuthCredential()
 
             scenario.onActivity { a ->
-                a.firebaseAuthWithCredentitial(
+                a.firebaseAuthWithCredential(
                     mockAuthCredential,
                     mockFireBaseAuth
                 )
@@ -75,7 +75,7 @@ class GoogleSignInTest {
             val mockAuthCredential: AuthCredential = makeMockAuthCredential()
 
             scenario.onActivity { a ->
-                a.firebaseAuthWithCredentitial(
+                a.firebaseAuthWithCredential(
                     mockAuthCredential,
                     mockFireBaseAuth
                 )
@@ -100,7 +100,7 @@ class GoogleSignInTest {
             val mockAuthCredential: AuthCredential = makeMockAuthCredential()
 
             scenario.onActivity { a ->
-                a.firebaseAuthWithCredentitial(
+                a.firebaseAuthWithCredential(
                     mockAuthCredential,
                     mockFireBaseAuth
                 )

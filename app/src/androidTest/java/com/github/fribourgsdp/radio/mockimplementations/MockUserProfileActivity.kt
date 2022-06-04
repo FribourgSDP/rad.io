@@ -45,13 +45,13 @@ class GoogleUserMockUserProfileActivity : UserProfileActivity() {
 
 
     override fun initializeDatabase(): Database {
-        val db = Mockito.mock(Database::class.java)
+        val db = mock(Database::class.java)
 
-        val playlist : Playlist = Playlist(playlistName, Genre.NONE)
+        val playlist = Playlist(playlistName, Genre.NONE)
         playlist.id = testPlaylistId
         playlist.addSong(Song(testSong1, testArtist))
-        playlist.addSong(Song("salut", testArtist))
-        playlist.addSong(Song("Le France", testArtist))
+        playlist.addSong(Song(testSong5, testArtist))
+        playlist.addSong(Song(testSong3, testArtist))
 
         val testUser = User(onlineUserName)
         testUser.id = onlineUserId
@@ -83,11 +83,11 @@ class GoogleSignInTestMockUserProfileActivity : MockUserProfileActivity()  {
         val song = Song(songName, artistName)
         playlist1.addSong(song)
         user.addPlaylists(setOf(playlist1))
-        user.save(Mockito.mock(Context::class.java))
+        user.save(mock(Context::class.java))
         super.onCreate(savedInstanceState)
     }
 
-    fun firebaseAuthWithCredentitial(credential: AuthCredential, firebaseAuth: FirebaseAuth){
+    fun firebaseAuthWithCredential(credential: AuthCredential, firebaseAuth: FirebaseAuth){
         googleSignIn.firebaseAuthWithCredentitial(credential, firebaseAuth)
     }
 
@@ -130,8 +130,8 @@ open class MockUserProfileActivity : UserProfileActivity() {
         val playlist = Playlist(playlistName, Genre.NONE)
         playlist.id = testPlaylistId
         playlist.addSong(Song(testSong1, testArtist))
-        playlist.addSong(Song("salut", testArtist))
-        playlist.addSong(Song("Le France", testArtist))
+        playlist.addSong(Song(testSong5, testArtist))
+        playlist.addSong(Song(testSong3, testArtist))
 
         val testUser = User(onlineUserName)
         testUser.id = onlineUserId

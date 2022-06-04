@@ -31,6 +31,7 @@ const val testArtist = "Sardou"
 const val testSong1 = "Rouge"
 const val testSong2 = "En chantant"
 const val testSong3 = "Le France"
+const val testSong5 = "salut"
 const val testPlaylist1 = "Sardou playlist"
 
 @RunWith(AndroidJUnit4::class)
