@@ -33,8 +33,8 @@ class LocalDatabase : Database {
         return Tasks.forResult(null)
     }
 
-    override fun getSong(songName: String): Task<Song> {
-        return Tasks.forResult(songMap[songName])
+    override fun getSong(songId: String): Task<Song> {
+        return Tasks.forResult(songMap[songId])
     }
 
     override fun registerSong(song: Song): Task<Void> {
@@ -177,7 +177,11 @@ class LocalDatabase : Database {
     companion object {
         const val EXPECTED_USER_UID = 392L
         const val EXPECTED_UID = 794L
-        val EXPECTED_SETTINGS = Game.Settings("Host", "Hello World!", "Host's Playlist", 42, true, true, 45)
+        val EXPECTED_SETTINGS = Game.Settings("Host", "Hello World!", "Host's Playlist", 42,
+            withHint = true,
+            isPrivate = true,
+            singerDuration = 45
+        )
 
     }
 }
