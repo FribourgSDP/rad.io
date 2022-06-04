@@ -42,7 +42,7 @@ class QRCodeJoinGameActivityTest {
 
         val context: Context = ApplicationProvider.getApplicationContext()
         val intent = Intent(context, QRCodeJoinGameActivity::class.java)
-        ActivityScenario.launch<QRCodeJoinGameActivity>(intent).use { scenario ->
+        ActivityScenario.launch<QRCodeJoinGameActivity>(intent).use { _ ->
             ViewActions.closeSoftKeyboard()
             val joinQRCodeButton = Espresso.onView(ViewMatchers.withId(R.id.joinWithQRCode))
             joinQRCodeButton.perform(ViewActions.click())
@@ -65,7 +65,7 @@ class QRCodeJoinGameActivityTest {
 
         val context: Context = ApplicationProvider.getApplicationContext()
         val intent = Intent(context, QRCodeJoinGameActivityJoin::class.java)
-        ActivityScenario.launch<QRCodeJoinGameActivityJoin>(intent).use { scenario ->
+        ActivityScenario.launch<QRCodeJoinGameActivityJoin>(intent).use { _ ->
             val displayQRCodeButton = Espresso.onView(ViewMatchers.withId(R.id.joinWithQRCode))
             displayQRCodeButton.perform(ViewActions.click())
 
@@ -89,7 +89,7 @@ class QRCodeJoinGameActivityTest {
 
         val context: Context = ApplicationProvider.getApplicationContext()
         val intent = Intent(context, QRCodeJoinGameActivityJoinFail::class.java)
-        ActivityScenario.launch<QRCodeJoinGameActivityJoinFail>(intent).use { scenario ->
+        ActivityScenario.launch<QRCodeJoinGameActivityJoinFail>(intent).use { _ ->
             val displayQRCodeButton = Espresso.onView(ViewMatchers.withId(R.id.joinWithQRCode))
             displayQRCodeButton.perform(ViewActions.click())
 
