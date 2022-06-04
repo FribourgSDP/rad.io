@@ -27,9 +27,11 @@ import org.junit.Test
 import org.junit.runner.RunWith
 
 
+
 @RunWith(AndroidJUnit4::class)
 class SettingsActivityTest {
-  @get:Rule
+    private val frenchLanguageName = "Français"
+    @get:Rule
     var settingsActivityRule = ActivityScenarioRule(MockSettingsActivity::class.java)
 
     private val ctx: Context = ApplicationProvider.getApplicationContext()
@@ -59,7 +61,7 @@ class SettingsActivityTest {
     fun saveSettingsWork() {
         val context: Context = ApplicationProvider.getApplicationContext()
         val intent = Intent(context, MockSettingsActivity::class.java)
-        ActivityScenario.launch<MockSettingsActivity>(intent).use { scenario ->
+        ActivityScenario.launch<MockSettingsActivity>(intent).use {
 
             val spinnerId = Espresso.onView(ViewMatchers.withId(R.id.spinner_language))
 
@@ -73,7 +75,7 @@ class SettingsActivityTest {
             )
 
             Espresso.onView(ViewMatchers.withId(R.id.spinner_language))
-                .check(ViewAssertions.matches(ViewMatchers.withSpinnerText("Français")))
+                .check(ViewAssertions.matches(ViewMatchers.withSpinnerText(frenchLanguageName)))
 
         }
     }
