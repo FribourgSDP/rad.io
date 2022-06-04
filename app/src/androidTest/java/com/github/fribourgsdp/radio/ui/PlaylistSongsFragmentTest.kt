@@ -250,12 +250,12 @@ class PlaylistSongsFragmentTest {
 
 
     class MockPlaylistSongsFragment : PlaylistSongsFragment() {
-        private val playlistName = "test"
-        private val playlist = Playlist(playlistName, Genre.NONE)
         override fun initializeDatabase(): Database {
+            val playlistName = "test"
+            val playlist = Playlist(playlistName, Genre.NONE)
             val db = Mockito.mock(Database::class.java)
-            
-            
+
+
             playlist.id = "TEST"
             playlist.addSong(Song(testSong1, testArtist, "", "1"))
             playlist.addSong(Song(testSong5, testArtist, "", "2"))

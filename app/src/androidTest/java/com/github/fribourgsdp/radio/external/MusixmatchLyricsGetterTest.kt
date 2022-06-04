@@ -53,23 +53,23 @@ class MusixmatchLyricsGetterTest {
     }
     @Test
     fun getLyricsFailingHTTPClientTest(){
-        val f = MusixmatchLyricsGetter.getLyrics(testSong1, testArtist, SemiFailingHTTPClient())
+        val f = MusixmatchLyricsGetter.getLyrics(testSong1.lowercase(), testArtist.lowercase(), SemiFailingHTTPClient())
         assertEquals(f.get(), BACKEND_ERROR_PLACEHOLDER)
     }
     @Test(expected = Exception::class)
     fun getSongIDFailingHTTPClientTest(){
-        val id = MusixmatchLyricsGetter.getSongID(testSong1, testArtist, FailingHTTPClient())
+        val id = MusixmatchLyricsGetter.getSongID(testSong1.lowercase(), testArtist.lowercase(), FailingHTTPClient())
         val i = id.get()
         println(i)
     }
     @Test(expected = Exception::class)
     fun getSongIDMalformedResponse(){
-        val id = MusixmatchLyricsGetter.getSongID(testSong1, testArtist, MockOkHttpClient(), NullJSONParser())
+        val id = MusixmatchLyricsGetter.getSongID(testSong1.lowercase(), testArtist.lowercase(), MockOkHttpClient(), NullJSONParser())
         println(id.get())
     }
     @Test
     fun getLyricsMalformedResponse(){
-        val lyricsFuture = MusixmatchLyricsGetter.getLyrics(testSong1, testArtist, MockOkHttpClient(), NullJSONParser())
+        val lyricsFuture = MusixmatchLyricsGetter.getLyrics(testSong1.lowercase(), testArtist.lowercase(), MockOkHttpClient(), NullJSONParser())
         checkBackendError(lyricsFuture)
     }
     @Test
@@ -85,7 +85,7 @@ class MusixmatchLyricsGetterTest {
     }
     @Test
     fun cleanLyricsTest1(){
-        val lyrics = MusixmatchLyricsGetter.getLyrics(testSong1, testArtist, MockOkHttpClient()).get()
+        val lyrics = MusixmatchLyricsGetter.getLyrics(testSong1.lowercase(), testArtist.lowercase(), MockOkHttpClient()).get()
         assertFalse(lyrics.contains("commercial"))
     }
     private val testSong1LyricsWithLineBreaks = "Rouge,\nComme un soleil couchant de Méditerrannée\nRouge,\n..."
@@ -98,7 +98,7 @@ class MusixmatchLyricsGetterTest {
     }
     @Test
     fun emphasizeSongNameInLyrics(){
-        val lyrics = MusixmatchLyricsGetter.markSongName(MusixmatchLyricsGetter.getLyrics(testSong1, testArtist, MockOkHttpClient()).get(), testSong1)
+        val lyrics = MusixmatchLyricsGetter.markSongName(MusixmatchLyricsGetter.getLyrics(testSong1.lowercase(), testArtist.lowercase(), MockOkHttpClient()).get(), testSong1)
         assertTrue("actual : $lyrics",lyrics.startsWith(testSong1LyricsFormatted))
     }
     @Test

@@ -12,6 +12,7 @@ const val testSong6 = "Momentum"
 const val testSong7 = "Les Lacs Du Connemara"
 const val testPlaylist1 = "Sardou playlist"
 const val testPlaylist2 = "Stoner Playlist"
+const val testPlaylist3 = "Rap Playlist"
 const val testPlaylist4 = "70s hits"
 const val testLyrics4 =
     "A long, long time ago\nI can still remember\nHow that music used to make me smile..."

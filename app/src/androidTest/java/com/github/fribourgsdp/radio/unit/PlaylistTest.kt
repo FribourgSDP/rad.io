@@ -22,6 +22,8 @@ internal class PlaylistTest {
     private val song3 = Song("i got a feeling", "black eyed pees")
     private val song4 = Song("  party rock anthem", "lmfao")
     private val song5 = Song("song song", "artist", "bla")
+    private val song6 = Song("a", "aa")
+    private val song7 = Song("woodlawn", "amine")
     private val song1Lyrics = "Lyrics1"
     private val song2Lyrics = "Lyrics2"
     private val song3Lyrics = "Lyrics3"
@@ -86,11 +88,11 @@ internal class PlaylistTest {
     fun addSongs() {
         val testerSet = mutableSetOf(song1, song2, song3, song4)
         val playlist1 = Playlist(firstPlaylistName, testerSet, Genre.POP)
-        val addedSet: Set<Song> = mutableSetOf(Song(song1.name, song1.artist), Song(song2.name, song2.artist))
+        val addedSet: Set<Song> = mutableSetOf(Song(song6.name, song6.artist), Song(song7.name, song7.artist))
         playlist1.addSongs(addedSet)
         assertEquals(6, playlist1.getSongs().size)
-        assertTrue(playlist1.getSongs().contains(Song(song1.name, song1.artist)))
-        assertTrue(playlist1.getSongs().contains(Song(song2.name, song2.artist)))
+        assertTrue(playlist1.getSongs().contains(Song(song6.name, song6.artist)))
+        assertTrue(playlist1.getSongs().contains(Song(song7.name, song7.artist)))
     }
 
     @Test

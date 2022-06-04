@@ -24,6 +24,7 @@ import com.github.fribourgsdp.radio.game.prep.*
 import com.github.fribourgsdp.radio.mockimplementations.MockGameSettingsActivity
 import com.github.fribourgsdp.radio.utils.packageName
 import com.github.fribourgsdp.radio.utils.testPlaylist1
+import com.github.fribourgsdp.radio.utils.testPlaylist3
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 import org.hamcrest.Matcher
@@ -82,7 +83,7 @@ class GameSettingsActivityTest {
 
         // Test values
         val testName = "Hello World!"
-        val testPlaylist = Playlist(testPlaylist1)
+        val testPlaylist = Playlist(testPlaylist3)
         val testNbRounds = 20
         val withHint = true
         val private = true
@@ -168,7 +169,7 @@ class GameSettingsActivityTest {
     fun intentWorksWithDefaultSettings() {
 
         // Test values
-        val testPlaylist = Playlist(testPlaylist1)
+        val testPlaylist = Playlist(testPlaylist3)
 
         onView(withId(R.id.playlistSearchView))
             .perform(
@@ -233,7 +234,7 @@ class GameSettingsActivityTest {
         onView(withId(R.id.playlistSearchView))
             .perform(
                 ViewActions.click(),
-                ViewActions.typeText(testPlaylist1),
+                ViewActions.typeText(testPlaylist3),
                 ViewActions.pressKey(KeyEvent.KEYCODE_ENTER)
             )
 
