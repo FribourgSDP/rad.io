@@ -47,7 +47,7 @@ class GoogleSignInActivityTest {
     fun correctTextOnTextView() {
         val context: Context = ApplicationProvider.getApplicationContext()
         val intent = Intent(context, GoogleSignInActivity::class.java)
-        ActivityScenario.launch<GoogleSignInActivity>(intent).use { scenario ->
+        ActivityScenario.launch<GoogleSignInActivity>(intent).use {
 
             val txtView = onView(ViewMatchers.withId(R.id.captionTv))
             txtView.check(
@@ -63,7 +63,7 @@ class GoogleSignInActivityTest {
 
         val context: Context = ApplicationProvider.getApplicationContext()
         val intent = Intent(context, GoogleSignInActivity::class.java)
-        ActivityScenario.launch<GoogleSignInActivity>(intent).use { scenario ->
+        ActivityScenario.launch<GoogleSignInActivity>(intent).use {
 
             val googleButton = onView(ViewMatchers.withId(R.id.googleSignInButton))
             googleButton.perform(click())
@@ -165,7 +165,7 @@ class GoogleSignInActivityTest {
 
         val intent = Intent(context, GoogleSignInActivity::class.java)
 
-        ActivityScenario.launch<GoogleSignInActivity>(intent).use { scenario ->
+        ActivityScenario.launch<GoogleSignInActivity>(intent).use {
 
             Intents.intended(
                 Matchers.allOf(
