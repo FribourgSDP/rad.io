@@ -28,6 +28,7 @@ class MusixmatchLyricsGetterTest {
     private val lyricslessArtist = "dream theater"
     private val unknownSongName = "fsdgfdgdfgdfgdfg"
     private val unknownArtistName = "weoir hpfasdsfno"
+    private val corruptedJSONString = "32q87rfha98 73298r7h08qwoehr703o490{{{{{"
 
     @Test
     fun getLyricsFromSongAndArtist(){
@@ -78,8 +79,8 @@ class MusixmatchLyricsGetterTest {
     }
 
     @Test
-    fun jsonStandardParserDoesntThrowException(){
-        val s = JSONStandardParser().parse("32q87rfha98 73298r7h08qwoehr703o490{{{{{")
+    fun jsonStandardParserDoesNotThrowException(){
+        val s = JSONStandardParser().parse(corruptedJSONString)
         assertNull(s)
     }
     @Test
@@ -87,21 +88,24 @@ class MusixmatchLyricsGetterTest {
         val lyrics = MusixmatchLyricsGetter.getLyrics(testSong1, testArtist, MockOkHttpClient()).get()
         assertFalse(lyrics.contains("commercial"))
     }
+    private val testSong1LyricsWithLineBreaks = "Rouge,\nComme un soleil couchant de Méditerrannée\nRouge,\n..."
+    private val testSong1LyricsFormatted = "<strike>Rouge</strike><br>Comme un soleil couchant de Méditerranée"
+    private val testSong1LyricsWithoutName = "\nComme un soleil couchant de Méditerranée"
     @Test
     fun markSongWithNoName(){
-        val lyrics = "Rouge,\nComme un soleil couchant de Méditerrannée\nRouge,\n..."
+        val lyrics = testSong1LyricsWithLineBreaks
         assertEquals(lyrics, MusixmatchLyricsGetter.markSongName(lyrics, ""))
     }
     @Test
     fun emphasizeSongNameInLyrics(){
         val lyrics = MusixmatchLyricsGetter.markSongName(MusixmatchLyricsGetter.getLyrics(testSong1, testArtist, MockOkHttpClient()).get(), testSong1)
-        assertTrue("actual : $lyrics",lyrics.startsWith("<strike>Rouge</strike><br>Comme un soleil couchant de Méditerranée"))
+        assertTrue("actual : $lyrics",lyrics.startsWith(testSong1LyricsFormatted))
     }
     @Test
     fun replaceSongNameAndRemoveHTMLTags(){
-        val markedLyrics = "<strike>Rouge</strike><br>Comme un soleil couchant de Méditerranée"
+        val markedLyrics = testSong1LyricsFormatted
         val unMarkedLyrics = MusixmatchLyricsGetter.makeReadable(markedLyrics)
-        assertEquals(unMarkedLyrics, "${REPLACEMENT_STRING}\nComme un soleil couchant de Méditerranée")
+        assertEquals(unMarkedLyrics, "${REPLACEMENT_STRING}${testSong1LyricsWithoutName}")
     }
     class MockOkHttpClient : OkHttpClient(){
         override fun newCall(request1: Request): Call {
