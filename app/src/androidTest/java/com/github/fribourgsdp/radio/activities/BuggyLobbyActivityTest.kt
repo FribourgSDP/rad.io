@@ -59,7 +59,7 @@ class BuggyLobbyActivityTest {
         val testIntent = Intent(ctx, BuggyLobbyActivity::class.java).apply {
             putExtra(GAME_IS_HOST_KEY, true)
             putExtra(GAME_HOST_KEY, Json.encodeToString(User(testHostUser)))
-            putExtra(GAME_PLAYLIST_KEY, Json.encodeToString(Playlist(testPlaylist)))
+            putExtra(GAME_PLAYLIST_KEY, Json.encodeToString(Playlist(testPlaylist1)))
         }
 
         ActivityScenario.launch<BuggyLobbyActivity>(testIntent).use {

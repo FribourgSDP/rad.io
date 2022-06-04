@@ -2,18 +2,14 @@ package com.github.fribourgsdp.radio.activities
 
 import android.content.Context
 import androidx.test.core.app.ApplicationProvider
-import androidx.test.espresso.Espresso
 import androidx.test.espresso.Espresso.*
 import androidx.test.espresso.action.*
 import androidx.test.espresso.action.ViewActions.click
 import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.contrib.RecyclerViewActions
 import androidx.test.espresso.intent.Intents
-import androidx.test.espresso.intent.matcher.IntentMatchers
 import androidx.test.espresso.intent.matcher.IntentMatchers.hasComponent
-import androidx.test.espresso.matcher.RootMatchers
 import androidx.test.espresso.matcher.RootMatchers.isDialog
-import androidx.test.espresso.matcher.ViewMatchers
 import androidx.test.espresso.matcher.ViewMatchers.*
 import androidx.test.ext.junit.rules.ActivityScenarioRule
 import androidx.test.ext.junit.runners.AndroidJUnit4
@@ -24,7 +20,6 @@ import com.github.fribourgsdp.radio.data.view.UserProfileActivity
 import com.github.fribourgsdp.radio.mockimplementations.MockAddPlaylistActivity
 import com.github.fribourgsdp.radio.util.ViewHolder
 import com.google.android.gms.tasks.Tasks
-import org.hamcrest.Matchers
 import org.hamcrest.Matchers.*
 import org.junit.After
 import org.junit.Before
@@ -36,7 +31,7 @@ const val testArtist = "Sardou"
 const val testSong1 = "Rouge"
 const val testSong2 = "En chantant"
 const val testSong3 = "Le France"
-const val testPlaylist = "Sardou playlist"
+const val testPlaylist1 = "Sardou playlist"
 
 @RunWith(AndroidJUnit4::class)
 class AddPlaylistActivityTest {
@@ -75,7 +70,7 @@ class AddPlaylistActivityTest {
     fun testEmptyPlaylist(){
         onView(withId(R.id.newPlaylistName))
             .perform(
-                ViewActions.typeText(testPlaylist)
+                ViewActions.typeText(testPlaylist1)
             )
         closeSoftKeyboard()
         onView(withId(R.id.confirmBtn))
@@ -128,8 +123,8 @@ class AddPlaylistActivityTest {
         )
 
         val user = Tasks.await(User.loadOrDefault(ctx))
-        assert(user.getPlaylists().any { p -> p.name == testPlaylist })
-        user.getPlaylists().filter { p -> p.name == testPlaylist }.forEach{p ->
+        assert(user.getPlaylists().any { p -> p.name == testPlaylist1 })
+        user.getPlaylists().filter { p -> p.name == testPlaylist1 }.forEach{ p ->
             run {
                 assert(p.getSongs().any { s -> s.name == testSong1 && s.artist == testArtist })
                 assert(p.getSongs().any { s -> s.name == testSong2 && s.artist == testArtist })
@@ -213,7 +208,7 @@ class AddPlaylistActivityTest {
     fun modifyingPlaylistNameMakesPopupAppear(){
         onView(withId(R.id.newPlaylistName))
             .perform(
-                ViewActions.typeText(testPlaylist)
+                ViewActions.typeText(testPlaylist1)
             )
         closeSoftKeyboard()
         pressBack()
@@ -395,7 +390,7 @@ class AddPlaylistActivityTest {
 
     private fun initializeTestPlaylist() {
         onView(withId(R.id.newPlaylistName))
-            .perform(ViewActions.typeText(testPlaylist))
+            .perform(ViewActions.typeText(testPlaylist1))
         closeSoftKeyboard()
 
         onView(withId(R.id.addSongToPlaylistSongName))

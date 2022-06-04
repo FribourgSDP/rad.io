@@ -11,12 +11,9 @@ import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.UiController
 import androidx.test.espresso.ViewAction
 import androidx.test.espresso.action.ViewActions
-import androidx.test.espresso.assertion.ViewAssertions
 import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.intent.Intents
-import androidx.test.espresso.intent.matcher.IntentMatchers
 import androidx.test.espresso.intent.matcher.IntentMatchers.*
-import androidx.test.espresso.matcher.ViewMatchers
 import androidx.test.espresso.matcher.ViewMatchers.*
 import androidx.test.ext.junit.rules.ActivityScenarioRule
 import androidx.test.ext.junit.runners.AndroidJUnit4
@@ -28,7 +25,6 @@ import com.github.fribourgsdp.radio.mockimplementations.MockGameSettingsActivity
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 import org.hamcrest.Matcher
-import org.hamcrest.Matchers
 import org.hamcrest.Matchers.allOf
 import org.junit.After
 import org.junit.Before
@@ -72,9 +68,11 @@ class GameSettingsActivityTest {
     @Test
     fun timerDialogHasDefaultValue45Seconds() {
         onView(withId(R.id.chooseTimeButton))
-            .check(matches(
+            .check(
+                matches(
                 withText(ctx.getString(R.string.round_duration_format, 45))
-            ))
+            )
+            )
     }
 
     @Test
@@ -82,7 +80,7 @@ class GameSettingsActivityTest {
 
         // Test values
         val testName = "Hello World!"
-        val testPlaylist = Playlist(testPlaylist)
+        val testPlaylist = Playlist(testPlaylist1)
         val testNbRounds = 20
         val withHint = true
         val private = true
@@ -168,7 +166,7 @@ class GameSettingsActivityTest {
     fun intentWorksWithDefaultSettings() {
 
         // Test values
-        val testPlaylist = Playlist(testPlaylist)
+        val testPlaylist = Playlist(testPlaylist1)
 
         onView(withId(R.id.playlistSearchView))
             .perform(
@@ -233,7 +231,7 @@ class GameSettingsActivityTest {
         onView(withId(R.id.playlistSearchView))
             .perform(
                 ViewActions.click(),
-                ViewActions.typeText(testPlaylist),
+                ViewActions.typeText(testPlaylist1),
                 ViewActions.pressKey(KeyEvent.KEYCODE_ENTER)
             )
 

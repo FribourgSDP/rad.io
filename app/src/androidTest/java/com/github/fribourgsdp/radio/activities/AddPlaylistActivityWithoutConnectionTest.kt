@@ -4,17 +4,14 @@ import android.content.Context
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.espresso.Espresso
 import androidx.test.espresso.action.ViewActions
-import androidx.test.espresso.assertion.ViewAssertions
 import androidx.test.espresso.intent.Intents
 import androidx.test.espresso.intent.matcher.IntentMatchers
-import androidx.test.espresso.matcher.RootMatchers
 import androidx.test.espresso.matcher.ViewMatchers
 import androidx.test.ext.junit.rules.ActivityScenarioRule
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.github.fribourgsdp.radio.R
 import com.github.fribourgsdp.radio.data.User
 import com.github.fribourgsdp.radio.data.view.UserProfileActivity
-import com.github.fribourgsdp.radio.mockimplementations.MockAddPlaylistActivity
 import com.github.fribourgsdp.radio.mockimplementations.MockAddPlaylistActivityNoConnection
 import com.google.android.gms.tasks.Tasks
 import org.hamcrest.Matchers
@@ -54,8 +51,8 @@ class AddPlaylistActivityWithoutConnectionTest {
         )
 
         val user = Tasks.await(User.loadOrDefault(ctx))
-        assert(user.getPlaylists().any { p -> p.name == testPlaylist })
-        user.getPlaylists().filter { p -> p.name == testPlaylist}.forEach{p ->
+        assert(user.getPlaylists().any { p -> p.name == testPlaylist1 })
+        user.getPlaylists().filter { p -> p.name == testPlaylist1}.forEach{ p ->
             run {
                 assert(p.getSongs().any { s -> s.name == testSong1 && s.artist == testArtist })
                 assert(p.getSongs().any { s -> s.name == testSong2 && s.artist == testArtist })
@@ -67,7 +64,7 @@ class AddPlaylistActivityWithoutConnectionTest {
 
     private fun initializeSardouPlaylist() {
         Espresso.onView(ViewMatchers.withId(R.id.newPlaylistName))
-            .perform(ViewActions.typeText(testPlaylist))
+            .perform(ViewActions.typeText(testPlaylist1))
         Espresso.closeSoftKeyboard()
 
         Espresso.onView(ViewMatchers.withId(R.id.addSongToPlaylistSongName))
