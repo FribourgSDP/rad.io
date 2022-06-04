@@ -10,23 +10,13 @@ import com.github.fribourgsdp.radio.data.Song
 import com.github.fribourgsdp.radio.data.User
 import com.github.fribourgsdp.radio.data.view.UserProfileActivity
 import com.github.fribourgsdp.radio.database.Database
-import com.github.fribourgsdp.radio.utils.KotlinAny
+import com.github.fribourgsdp.radio.utils.*
 import com.google.android.gms.tasks.Tasks
 import com.google.firebase.auth.AuthCredential
 import com.google.firebase.auth.FirebaseAuth
 import org.mockito.Mockito
 import org.mockito.Mockito.anyString
 import org.mockito.Mockito.mock
-
-const val userName = "test"
-const val playListName = "testTitle"
-const val songName = "TestSongName"
-const val userId = "testId"
-const val artistName = "artist"
-const val playlistName = "testPlaylist"
-const val testPlaylistId = "TEST_PLAYLIST"
-const val onlineUserId = "onlineUserTestId"
-const val onlineUserName = "onlineUserTest"
 
 class GoogleUserMockUserProfileActivity : UserProfileActivity() {
 

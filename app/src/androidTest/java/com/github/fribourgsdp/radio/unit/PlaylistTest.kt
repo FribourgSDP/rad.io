@@ -1,13 +1,13 @@
 package com.github.fribourgsdp.radio.unit
 
-import com.github.fribourgsdp.radio.activities.testPlaylist1
+import com.github.fribourgsdp.radio.utils.testPlaylist1
 import com.github.fribourgsdp.radio.data.Genre
 import com.github.fribourgsdp.radio.data.Playlist
 import com.github.fribourgsdp.radio.data.Song
 import com.github.fribourgsdp.radio.database.Database
 import com.github.fribourgsdp.radio.external.musixmatch.MusixmatchLyricsGetter
 import com.github.fribourgsdp.radio.mockimplementations.MockLyricsGetter
-import com.github.fribourgsdp.radio.mockimplementations.testLyrics6
+import com.github.fribourgsdp.radio.utils.testLyrics6
 import com.github.fribourgsdp.radio.utils.KotlinAny
 import com.google.android.gms.tasks.Tasks
 import org.junit.Test

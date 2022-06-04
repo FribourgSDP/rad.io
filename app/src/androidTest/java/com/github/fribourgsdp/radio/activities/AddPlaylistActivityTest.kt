@@ -19,6 +19,7 @@ import com.github.fribourgsdp.radio.data.User
 import com.github.fribourgsdp.radio.data.view.UserProfileActivity
 import com.github.fribourgsdp.radio.mockimplementations.MockAddPlaylistActivity
 import com.github.fribourgsdp.radio.util.ViewHolder
+import com.github.fribourgsdp.radio.utils.*
 import com.google.android.gms.tasks.Tasks
 import org.hamcrest.Matchers.*
 import org.junit.After
@@ -26,16 +27,6 @@ import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
-
-const val testArtist = "Sardou"
-const val testSong1 = "Rouge"
-const val testSong2 = "En chantant"
-const val testSong3 = "Le France"
-const val testSong5 = "salut"
-const val testSong6 = "Momentum"
-const val testArtist6 = "Truckfighters"
-const val testPlaylist1 = "Sardou playlist"
-const val testPlaylist2 = "Stoner Playlist"
 
 @RunWith(AndroidJUnit4::class)
 class AddPlaylistActivityTest {

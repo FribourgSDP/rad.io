@@ -9,7 +9,6 @@ import androidx.test.espresso.Espresso.pressBack
 import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.intent.Intents
 import androidx.test.espresso.intent.matcher.IntentMatchers
-import androidx.test.espresso.matcher.ViewMatchers
 import androidx.test.espresso.matcher.ViewMatchers.withId
 import androidx.test.espresso.matcher.ViewMatchers.withText
 import androidx.test.ext.junit.runners.AndroidJUnit4
@@ -19,15 +18,14 @@ import com.github.fribourgsdp.radio.game.EndGameActivity
 import com.github.fribourgsdp.radio.game.GAME_CRASH_KEY
 import com.github.fribourgsdp.radio.game.SCORES_KEY
 import com.github.fribourgsdp.radio.utils.CustomMatchers.Companion.atPosition
+import com.github.fribourgsdp.radio.utils.testSinger1
+import com.github.fribourgsdp.radio.utils.testSinger2
+import com.github.fribourgsdp.radio.utils.testSinger3
 import org.hamcrest.Matchers.allOf
 import org.junit.After
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
-
-const val testSinger1 = "TheBestSinger"
-const val testSinger2 = "TheOverlord"
-const val testSinger3 = "TheBreadMaster"
 
 /**
  * End Game Activity Tests

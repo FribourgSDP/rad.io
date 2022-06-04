@@ -10,7 +10,6 @@ import androidx.test.espresso.intent.Intents
 import androidx.test.espresso.matcher.ViewMatchers
 import androidx.test.internal.runner.junit4.AndroidJUnit4ClassRunner
 import com.github.fribourgsdp.radio.R
-import com.github.fribourgsdp.radio.activities.*
 import com.github.fribourgsdp.radio.data.Genre
 import com.github.fribourgsdp.radio.data.Playlist
 import com.github.fribourgsdp.radio.data.Song
@@ -19,15 +18,14 @@ import com.github.fribourgsdp.radio.data.view.PLAYLIST_DATA
 import com.github.fribourgsdp.radio.data.view.SONG_DATA
 import com.github.fribourgsdp.radio.data.view.SongFragment
 import com.github.fribourgsdp.radio.mockimplementations.MockFileSystem
-import com.github.fribourgsdp.radio.mockimplementations.MockLyricsGetter
 import com.github.fribourgsdp.radio.mockimplementations.MockSongFragment
+import com.github.fribourgsdp.radio.utils.*
 import org.junit.After
 import org.junit.Before
 import org.junit.FixMethodOrder
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.junit.runners.MethodSorters
-const val longLyrics = " Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus et lobortis elit, non rutrum sem. Proin at sapien ac justo molestie scelerisque non ac enim. Cras fermentum, massa ac maximus suscipit, ex diam dapibus nulla, in mattis enim ligula ut eros. Etiam nec libero nibh. Phasellus scelerisque purus eu orci congue cursus ut tempus mi. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Aliquam luctus consequat tellus, vitae interdum felis molestie vitae. Donec dapibus tellus vel sapien laoreet tempor. Suspendisse sodales in magna eu vehicula. Mauris faucibus risus a leo vestibulum, ac vestibulum elit sodales. "
 
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 @RunWith(AndroidJUnit4ClassRunner::class)
@@ -99,7 +97,7 @@ class SongFragmentTest {
         launchFragmentInContainer<MockSongFragment>(bundle)
         Espresso.onView(ViewMatchers.withId(R.id.editTextLyrics))
             .check(ViewAssertions.matches(
-                ViewMatchers.withText(MockLyricsGetter.truckfightersLyrics)))
+                ViewMatchers.withText(testLyrics6)))
     }
 
     @Test

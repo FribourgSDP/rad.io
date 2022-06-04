@@ -14,6 +14,7 @@ import com.github.fribourgsdp.radio.R
 import com.github.fribourgsdp.radio.data.view.UserProfileActivity
 import com.github.fribourgsdp.radio.external.spotify.ImportSpotifyPlaylistsActivity
 import com.github.fribourgsdp.radio.external.spotify.SpotifyReceiveActivity
+import com.github.fribourgsdp.radio.utils.packageName
 import com.spotify.sdk.android.auth.AccountsQueryParameters
 import junit.framework.TestCase.assertEquals
 import org.hamcrest.Matchers

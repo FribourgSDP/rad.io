@@ -4,7 +4,6 @@ import android.content.Context
 import android.view.View
 import androidx.test.core.app.ApplicationProvider
 import com.github.fribourgsdp.radio.R
-import com.github.fribourgsdp.radio.activities.*
 import com.github.fribourgsdp.radio.data.Genre
 import com.github.fribourgsdp.radio.data.Playlist
 import com.github.fribourgsdp.radio.data.Song
@@ -13,6 +12,9 @@ import com.github.fribourgsdp.radio.database.Database
 import com.github.fribourgsdp.radio.game.Game
 import com.github.fribourgsdp.radio.game.handler.HostGameHandler
 import com.github.fribourgsdp.radio.mockimplementations.FakeGameView
+import com.github.fribourgsdp.radio.utils.testLyrics4
+import com.github.fribourgsdp.radio.utils.testPlaylist4
+import com.github.fribourgsdp.radio.utils.testSong4
 import com.google.android.gms.tasks.Tasks
 import com.google.firebase.firestore.DocumentSnapshot
 import org.junit.Assert.*

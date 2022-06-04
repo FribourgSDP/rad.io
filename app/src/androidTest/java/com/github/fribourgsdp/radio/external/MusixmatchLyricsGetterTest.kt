@@ -1,7 +1,7 @@
 package com.github.fribourgsdp.radio.external
 
-import com.github.fribourgsdp.radio.activities.testArtist
-import com.github.fribourgsdp.radio.activities.testSong1
+import com.github.fribourgsdp.radio.utils.testArtist
+import com.github.fribourgsdp.radio.utils.testSong1
 import com.github.fribourgsdp.radio.external.musixmatch.MusixmatchLyricsGetter
 import com.github.fribourgsdp.radio.external.musixmatch.MusixmatchLyricsGetter.BACKEND_ERROR_PLACEHOLDER
 import com.github.fribourgsdp.radio.external.musixmatch.MusixmatchLyricsGetter.LYRICS_NOT_FOUND_PLACEHOLDER

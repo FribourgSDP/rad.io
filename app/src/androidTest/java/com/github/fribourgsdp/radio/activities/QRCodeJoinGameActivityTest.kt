@@ -17,6 +17,7 @@ import com.github.fribourgsdp.radio.game.prep.LobbyActivity
 import com.github.fribourgsdp.radio.mockimplementations.QRCodeJoinGameActivity
 import com.github.fribourgsdp.radio.mockimplementations.QRCodeJoinGameActivityJoin
 import com.github.fribourgsdp.radio.mockimplementations.QRCodeJoinGameActivityJoinFail
+import com.github.fribourgsdp.radio.utils.packageName
 import org.hamcrest.Matchers
 import org.junit.After
 import org.junit.Before

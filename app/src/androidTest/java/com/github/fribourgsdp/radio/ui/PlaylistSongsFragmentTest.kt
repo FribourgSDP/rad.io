@@ -12,10 +12,10 @@ import androidx.test.espresso.intent.matcher.IntentMatchers.hasComponent
 import androidx.test.espresso.matcher.ViewMatchers.*
 import androidx.test.internal.runner.junit4.AndroidJUnit4ClassRunner
 import com.github.fribourgsdp.radio.R
-import com.github.fribourgsdp.radio.activities.testArtist
-import com.github.fribourgsdp.radio.activities.testSong1
-import com.github.fribourgsdp.radio.activities.testSong3
-import com.github.fribourgsdp.radio.activities.testSong5
+import com.github.fribourgsdp.radio.utils.testArtist
+import com.github.fribourgsdp.radio.utils.testSong1
+import com.github.fribourgsdp.radio.utils.testSong3
+import com.github.fribourgsdp.radio.utils.testSong5
 import com.github.fribourgsdp.radio.data.Genre
 import com.github.fribourgsdp.radio.data.Playlist
 import com.github.fribourgsdp.radio.data.Song

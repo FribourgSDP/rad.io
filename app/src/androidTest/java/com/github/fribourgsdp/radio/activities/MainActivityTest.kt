@@ -18,14 +18,13 @@ import com.github.fribourgsdp.radio.R
 import com.github.fribourgsdp.radio.config.SettingsActivity
 import com.github.fribourgsdp.radio.data.view.UserProfileActivity
 import com.github.fribourgsdp.radio.game.prep.GameSettingsActivity
+import com.github.fribourgsdp.radio.utils.packageName
 import org.hamcrest.Matchers
 import org.junit.After
 import org.junit.Assert.assertEquals
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
-
-const val packageName = "com.github.fribourgsdp.radio"
 
 /**
  * Main Activity Tests

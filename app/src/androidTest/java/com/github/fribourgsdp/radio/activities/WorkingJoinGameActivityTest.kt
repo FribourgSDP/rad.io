@@ -18,6 +18,7 @@ import com.github.fribourgsdp.radio.game.prep.*
 import com.github.fribourgsdp.radio.mockimplementations.LocalDatabase
 import com.github.fribourgsdp.radio.mockimplementations.WorkingJoinGameActivity
 import com.github.fribourgsdp.radio.utils.CustomMatchers.Companion.atPosition
+import com.github.fribourgsdp.radio.utils.packageName
 import org.hamcrest.Matchers.allOf
 import org.junit.After
 import org.junit.Before

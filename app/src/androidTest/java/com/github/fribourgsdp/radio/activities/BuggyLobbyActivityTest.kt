@@ -18,6 +18,7 @@ import com.github.fribourgsdp.radio.game.prep.GAME_HOST_KEY
 import com.github.fribourgsdp.radio.game.prep.GAME_IS_HOST_KEY
 import com.github.fribourgsdp.radio.game.prep.GAME_PLAYLIST_KEY
 import com.github.fribourgsdp.radio.mockimplementations.BuggyLobbyActivity
+import com.github.fribourgsdp.radio.utils.testPlaylist1
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 import org.junit.After
@@ -25,8 +26,6 @@ import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
-
-const val testHostUser = "host"
 
 /**
  * Lobby Activity Tests with buggy database
@@ -36,6 +35,7 @@ const val testHostUser = "host"
  */
 @RunWith(AndroidJUnit4::class)
 class BuggyLobbyActivityTest {
+    private val testHostUser = "host"
     @get:Rule
     var lobbyActivityRule = ActivityScenarioRule(BuggyLobbyActivity::class.java)
 

@@ -2,16 +2,9 @@ package com.github.fribourgsdp.radio.mockimplementations
 
 import com.github.fribourgsdp.radio.util.JSONParser
 import com.github.fribourgsdp.radio.external.musixmatch.LyricsGetter
+import com.github.fribourgsdp.radio.utils.testLyrics6
 import okhttp3.OkHttpClient
 import java.util.concurrent.CompletableFuture
-
-const val testLyrics6 = "If you feel, little chance, make a stance\n" +
-        "Looking for, better days, let me say\n" +
-        "Something's wrong, when you can't, let me go\n" +
-        "For to long, long, long...\n" +
-        "\n" +
-        "Momentum owns you\n" +
-        "Controlling her too"
 
 object MockLyricsGetter : LyricsGetter {
 

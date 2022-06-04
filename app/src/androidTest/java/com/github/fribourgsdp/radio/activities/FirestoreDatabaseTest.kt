@@ -6,23 +6,17 @@ import com.github.fribourgsdp.radio.database.FirestoreRef
 import com.github.fribourgsdp.radio.database.TransactionManager
 import com.github.fribourgsdp.radio.game.Game
 import com.github.fribourgsdp.radio.util.*
-import com.google.android.gms.tasks.Task
+import com.github.fribourgsdp.radio.utils.testSinger1
+import com.github.fribourgsdp.radio.utils.testSinger2
 import com.google.android.gms.tasks.Tasks
 import com.google.firebase.firestore.DocumentReference
 import com.google.firebase.firestore.DocumentSnapshot
-import com.google.firebase.firestore.Transaction
-import com.google.firebase.firestore.ktx.firestore
-import com.google.firebase.ktx.Firebase
-import com.google.firestore.v1.FirestoreProto
 import org.junit.Test
 import java.util.concurrent.TimeUnit
 import org.junit.Assert.*
 import org.junit.Before
-import org.mockito.ArgumentMatcher
-import org.mockito.ArgumentMatchers
 import org.mockito.ArgumentMatchers.anyString
 import org.mockito.Mockito.*
-import java.io.Serializable
 
 //import java.lang.Exception
 class FirestoreDatabaseTest {

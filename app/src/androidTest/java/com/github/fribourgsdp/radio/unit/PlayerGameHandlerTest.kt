@@ -4,13 +4,13 @@ import android.content.Context
 import android.view.View
 import androidx.test.core.app.ApplicationProvider
 import com.github.fribourgsdp.radio.R
-import com.github.fribourgsdp.radio.activities.testLyrics4
-import com.github.fribourgsdp.radio.activities.testSong4
-import com.github.fribourgsdp.radio.activities.testSong6
+import com.github.fribourgsdp.radio.utils.testLyrics4
+import com.github.fribourgsdp.radio.utils.testSong4
+import com.github.fribourgsdp.radio.utils.testSong6
 import com.github.fribourgsdp.radio.database.Database
 import com.github.fribourgsdp.radio.game.handler.PlayerGameHandler
 import com.github.fribourgsdp.radio.mockimplementations.FakeGameView
-import com.github.fribourgsdp.radio.mockimplementations.testLyrics6
+import com.github.fribourgsdp.radio.utils.testLyrics6
 import com.github.fribourgsdp.radio.util.MyTextToSpeech
 import com.google.android.gms.tasks.Tasks
 import com.google.firebase.Timestamp

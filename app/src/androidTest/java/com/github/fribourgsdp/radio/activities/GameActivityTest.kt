@@ -30,6 +30,7 @@ import com.github.fribourgsdp.radio.game.prep.GAME_IS_NO_SING_MODE
 import com.github.fribourgsdp.radio.game.prep.GAME_KEY
 import com.github.fribourgsdp.radio.mockimplementations.MockGameActivity
 import com.github.fribourgsdp.radio.util.SongNameHint
+import com.github.fribourgsdp.radio.utils.*
 import com.github.fribourgsdp.radio.utils.CustomMatchers.Companion.atPosition
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
@@ -41,10 +42,6 @@ import org.junit.After
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
-
-const val testLyrics4 = "A long, long time ago\nI can still remember\nHow that music used to make me smile..."
-const val testSong4 = "American Pie"
-const val testPlaylist4 = "70s hits"
 
 @RunWith(AndroidJUnit4::class)
 class GameActivityTest {

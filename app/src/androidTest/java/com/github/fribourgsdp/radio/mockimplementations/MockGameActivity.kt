@@ -9,6 +9,9 @@ import com.github.fribourgsdp.radio.data.User
 import com.github.fribourgsdp.radio.external.makeMockIRtcEngineEventHandler
 import com.github.fribourgsdp.radio.external.makeMockRtcEngine
 import com.github.fribourgsdp.radio.game.GameActivity
+import com.github.fribourgsdp.radio.utils.playListName
+import com.github.fribourgsdp.radio.utils.songName
+import com.github.fribourgsdp.radio.utils.userName
 import com.github.fribourgsdp.radio.voip.VoiceIpEngineDecorator
 import org.mockito.Mockito
 

@@ -18,7 +18,7 @@ import com.github.fribourgsdp.radio.R
 import com.github.fribourgsdp.radio.config.SettingsActivity
 import com.github.fribourgsdp.radio.config.language.Language
 import com.github.fribourgsdp.radio.mockimplementations.MockSettingsActivity
-import org.hamcrest.Matchers
+import com.github.fribourgsdp.radio.utils.packageName
 import org.hamcrest.Matchers.*
 import org.junit.After
 import org.junit.Before

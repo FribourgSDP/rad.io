@@ -26,6 +26,7 @@ import com.github.fribourgsdp.radio.data.view.REDIRECT_URI
 import com.github.fribourgsdp.radio.data.view.UserProfileActivity
 import com.github.fribourgsdp.radio.database.Database
 import com.github.fribourgsdp.radio.mockimplementations.*
+import com.github.fribourgsdp.radio.utils.*
 import com.google.android.gms.tasks.Tasks
 import junit.framework.TestCase
 import org.hamcrest.Matchers.allOf
