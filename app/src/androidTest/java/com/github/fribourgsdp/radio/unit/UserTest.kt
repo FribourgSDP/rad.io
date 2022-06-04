@@ -13,14 +13,20 @@ import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.ArgumentMatchers.anyString
 import org.mockito.Mockito
+import org.mockito.Mockito.*
 
 
 @RunWith(AndroidJUnit4::class)
 class UserTest {
+    
+    private val testString = "test"
+    private val testString2 = "test2"
+    private val testString3 = "test3"
+    private val userName = "user"
 
     @Test
     fun constructorTest(){
-        val string = "test"
+        val string = testString
         val user = User(string)
         assertEquals(string, user.name)
         assertTrue(user.getPlaylists().isEmpty())
@@ -44,10 +50,10 @@ class UserTest {
 
     @Test
     fun addPlaylistWorksAsExpected(){
-        val string = "test"
+        val string = testString
         val user = User(string)
         assertTrue(user.getPlaylists().isEmpty())
-        val playlist = Playlist("test", Genre.ROCK)
+        val playlist = Playlist(testString, Genre.ROCK)
         user.addPlaylist(playlist)
         assertEquals(1, user.getPlaylists().size)
         assertTrue(user.getPlaylists().contains(playlist))
@@ -55,9 +61,9 @@ class UserTest {
 
     @Test
     fun removePlaylistWorksAsExpected(){
-        val string = "test"
+        val string = testString
         val user = User(string)
-        val playlist = Playlist("test", Genre.ROCK)
+        val playlist = Playlist(testString, Genre.ROCK)
         user.addPlaylist(playlist)
         assertEquals(1, user.getPlaylists().size)
         user.removePlaylist(playlist)
@@ -66,11 +72,11 @@ class UserTest {
 
     @Test
     fun addPlaylistsWorksAsExpected(){
-        val string = "test"
+        val string = testString
         val user = User(string)
         assertTrue(user.getPlaylists().isEmpty())
-        val playlist1 = Playlist("test", Genre.ROCK)
-        val playlist2 = Playlist("test2", Genre.ROCK)
+        val playlist1 = Playlist(testString, Genre.ROCK)
+        val playlist2 = Playlist(testString2, Genre.ROCK)
         user.addPlaylists(setOf(playlist1,playlist2))
         assertEquals(2, user.getPlaylists().size)
         assertTrue(user.getPlaylists().contains(playlist1))
@@ -79,12 +85,12 @@ class UserTest {
 
     @Test
     fun removePlaylistsWorksAsExpected(){
-        val string = "test"
+        val string = testString
         val user = User(string)
 
-        val playlist1 = Playlist("test", Genre.ROCK)
-        val playlist2 = Playlist("test2", Genre.ROCK)
-        val playlist3 = Playlist("test3", Genre.ROCK)
+        val playlist1 = Playlist(testString, Genre.ROCK)
+        val playlist2 = Playlist(testString2, Genre.ROCK)
+        val playlist3 = Playlist(testString3, Genre.ROCK)
         user.addPlaylists(setOf(playlist1,playlist2, playlist3))
         assertEquals(3, user.getPlaylists().size)
         user.removePlaylists(setOf(playlist1, playlist2))
@@ -95,26 +101,26 @@ class UserTest {
 
     @Test
     fun addingPlaylistWithSameNameKeepsMostRecentlyAdded(){
-        val playlist1 = Playlist("test", Genre.ROCK)
-        val playlist2 = Playlist("test", Genre.POP)
-        playlist2.addSong(Song("testSong",""))
+        val playlist1 = Playlist(testString, Genre.ROCK)
+        val playlist2 = Playlist(testString, Genre.POP)
+        playlist2.addSong(Song(testString,""))
         assertEquals(playlist1,playlist2)
-        val userTest = User("Test")
+        val userTest = User(testString)
         userTest.addPlaylist(playlist1)
         userTest.addPlaylist(playlist2)
         assertEquals(1,userTest.getPlaylists().size)
-        assertEquals(Genre.POP,userTest.getPlaylistWithName("test").genre)
-        assertEquals(1,userTest.getPlaylistWithName("test").getSongs().size)
+        assertEquals(Genre.POP,userTest.getPlaylistWithName(testString).genre)
+        assertEquals(1,userTest.getPlaylistWithName(testString).getSongs().size)
     }
     @Test
     fun savingUserToFile(){
         val ctx = ApplicationProvider.getApplicationContext<Context>()
-        val string = "test"
+        val string = testString
         val user = User(string, 0)
 
-        val playlist1 = Playlist("test", Genre.ROCK)
-        val playlist2 = Playlist("test2", Genre.ROCK)
-        val playlist3 = Playlist("test3", Genre.ROCK)
+        val playlist1 = Playlist(testString, Genre.ROCK)
+        val playlist2 = Playlist(testString2, Genre.ROCK)
+        val playlist3 = Playlist(testString3, Genre.ROCK)
         user.addPlaylists(setOf(playlist1,playlist2, playlist3))
         assertEquals(3, user.getPlaylists().size)
         user.save(ctx)
@@ -124,72 +130,73 @@ class UserTest {
 
     @Test
     fun addSpotifyPlaylistUIdWorks(){
-        val user = User("nathan", 0)
-        user.addSpotifyPlaylistUId("name", "uid")
-        assertEquals("uid", user.getSpotifyPlaylistUId("name"))
+        val user = User(userName, 0)
+        val uid = "uid"
+        user.addSpotifyPlaylistUId(testString, uid)
+        assertEquals(uid, user.getSpotifyPlaylistUId(testString))
     }
 
     @Test
     fun getSpotifyPlaylistUidWorks(){
-        val user = User("nathan", 0)
+        val user = User(userName, 0)
         val map = hashMapOf<String, String>()
-        map.put("test1", "bla")
-        map.put("test2", "hihi")
+        map[testString] = "bla"
+        map[testString2] = "hihi"
         user.addSpotifyPlaylistUids(map)
-        assertEquals("bla", user.getSpotifyPlaylistUId("test1"))
+        assertEquals("bla", user.getSpotifyPlaylistUId(testString))
     }
 
     @Test
     fun getSpotifyPlaylistUidWhenNonExistent(){
-        assertEquals(null, User("testUser", 0).getSpotifyPlaylistUId("none"))
+        assertEquals(null, User(testString, 0).getSpotifyPlaylistUId(testString2))
     }
 
     @Test
     fun getPlaylistWithNameWorks(){
-        val user = User("user", 0)
-        val playlistName = "test2"
-        val playlist1 = Playlist("test", Genre.ROCK)
+        val user = User(userName, 0)
+        val playlistName = testString2
+        val playlist1 = Playlist(testString, Genre.ROCK)
         val playlist2 = Playlist(playlistName, Genre.ROCK)
-        val playlist3 = Playlist("test3", Genre.ROCK)
+        val playlist3 = Playlist(testString3, Genre.ROCK)
         user.addPlaylists(setOf(playlist1,playlist2, playlist3))
         assertEquals(playlist2, user.getPlaylistWithName(playlistName))
     }
 
     @Test(expected = NoSuchElementException::class)
     fun getNonExistingPlaylistWithNameThrowsException(){
-        val user = User("user", 0)
-        val playlistName = "test2"
-        val playlist1 = Playlist("test", Genre.ROCK)
+        val user = User(userName, 0)
+        val playlistName = testString2
+        val playlist1 = Playlist(testString, Genre.ROCK)
         val playlist2 = Playlist(playlistName, Genre.ROCK)
-        val playlist3 = Playlist("test3", Genre.ROCK)
+        val playlist3 = Playlist(testString3, Genre.ROCK)
         user.addPlaylists(setOf(playlist1,playlist2, playlist3))
         user.getPlaylistWithName("doesNotExist")
     }
 
     @Test
     fun onlineCopyReturnsUserWithOnlyOnlinePlaylists(){
-        val user = User("test1")
-        val playlist1 = Playlist("test", Genre.ROCK)
-        val playlist2 = Playlist("test2", Genre.POP)
+        val user = User(testString)
+        val playlist1 = Playlist(testString, Genre.ROCK)
+        val playlist2 = Playlist(testString2, Genre.POP)
         playlist1.savedOnline = true
         user.addPlaylist(playlist1)
         user.addPlaylist(playlist2)
         val user2 = user.onlineCopy()
 
         assertEquals(1,user2.getPlaylists().size)
-        assertEquals("test",user2.getPlaylists().toList()[0].name)
+        assertEquals(testString,user2.getPlaylists().toList()[0].name)
         assertEquals(2,user.getPlaylists().size)
-        user2.name = "test3"
-        assertEquals("test3",user2.name)
-        assertEquals("test1",user.name)
+        user2.name = testString3
+        assertEquals(testString3,user2.name)
+        assertEquals(testString,user.name)
 
     }
 
 
     @Test
     fun createDefaultUserWorksCorrectly(){
-        val db = Mockito.mock(Database::class.java)
-        Mockito.`when`(db.generateUserId()).thenReturn(Tasks.forResult(-3))
+        val db = mock(Database::class.java)
+        `when`(db.generateUserId()).thenReturn(Tasks.forResult(-3))
         User.database = db
         val user = Tasks.await(User.createDefaultUser())
         assertEquals("-3",user.id)
@@ -197,10 +204,10 @@ class UserTest {
 
     @Test
     fun onlineCopyAndSaveWorksCorrectly(){
-        val db = Mockito.mock(Database::class.java)
-        Mockito.`when`(db.setUser(anyString(),KotlinAny.any())).thenReturn(Tasks.forResult(null))
+        val db = mock(Database::class.java)
+        `when`(db.setUser(anyString(),KotlinAny.any())).thenReturn(Tasks.forResult(null))
         User.database = db
-        val user = User("test")
+        val user = User(testString)
         assertEquals(null,Tasks.await(user.onlineCopyAndSave()))
     }
 }
