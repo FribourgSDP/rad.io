@@ -32,7 +32,10 @@ const val testSong1 = "Rouge"
 const val testSong2 = "En chantant"
 const val testSong3 = "Le France"
 const val testSong5 = "salut"
+const val testSong6 = "Momentum"
+const val testArtist6 = "Truckfighters"
 const val testPlaylist1 = "Sardou playlist"
+const val testPlaylist2 = "Stoner Playlist"
 
 @RunWith(AndroidJUnit4::class)
 class AddPlaylistActivityTest {
