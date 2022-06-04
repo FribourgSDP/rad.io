@@ -49,7 +49,7 @@ class PlaylistRecyclerViewTest {
 
         val intent = Intent(context, MockUserProfileActivity::class.java)
 
-        ActivityScenario.launch<MockUserProfileActivity>(intent).use { scenario ->
+        ActivityScenario.launch<MockUserProfileActivity>(intent).use {
             Espresso.onView(withId(R.id.playlist_recycler_view)).check(matches(isDisplayed()))
         }
     }
@@ -69,7 +69,7 @@ class PlaylistRecyclerViewTest {
 
         val intent = Intent(context, MockUserProfileActivity::class.java)
 
-        ActivityScenario.launch<MockUserProfileActivity>(intent).use { scenario ->
+        ActivityScenario.launch<MockUserProfileActivity>(intent).use {
             Espresso.onView(withId(R.id.playlist_recycler_view))
                 .perform(RecyclerViewActions.actionOnItemAtPosition<ViewHolder>(0, click()))
             Espresso.onView(withId(R.id.PlaylistName)).check(matches(withText(playListName)))
@@ -91,15 +91,15 @@ class PlaylistRecyclerViewTest {
 
         val intent = Intent(context, MockUserProfileActivity::class.java)
 
-        ActivityScenario.launch<MockUserProfileActivity>(intent).use { scenario ->
+        ActivityScenario.launch<MockUserProfileActivity>(intent).use {
             Espresso.onView(withId(R.id.playlist_recycler_view))
                 .perform(RecyclerViewActions.actionOnItemAtPosition<ViewHolder>(0, click()))
             Espresso.onView(withId(R.id.PlaylistName)).check(matches(withText(playListName)))
             Espresso.onView(withId(R.id.SongRecyclerView)).check(matches(isDisplayed()))
             Espresso.onView(withId(R.id.SongRecyclerView))
                 .perform(RecyclerViewActions.actionOnItemAtPosition<ViewHolder>(0, click()))
-            Espresso.onView(ViewMatchers.withId(R.id.SongName))
-                .check(ViewAssertions.matches(ViewMatchers.withText(songName)))
+            Espresso.onView(withId(R.id.SongName))
+                .check(matches(withText(songName)))
         }
     }
 
@@ -118,7 +118,7 @@ class PlaylistRecyclerViewTest {
 
         val intent = Intent(context, MockUserProfileActivity::class.java)
 
-        ActivityScenario.launch<MockUserProfileActivity>(intent).use { scenario ->
+        ActivityScenario.launch<MockUserProfileActivity>(intent).use {
             Espresso.onView(withId(R.id.playlist_recycler_view))
                 .check(matches(hasChildCount(1)))
             Espresso.onView(withId(R.id.playlist_recycler_view))
