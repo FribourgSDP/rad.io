@@ -57,7 +57,7 @@ class AddPlaylistActivityWithoutConnectionTest {
         user.getPlaylists().filter { p -> p.name == testPlaylist1 }.forEach{ p ->
             run {
                 assertTrue(p.getSongs().any { s -> s.name == testSong1 && s.artist == testArtist })
-                assertTrue(p.getSongs().any { s -> s.name == testSong2 && s.artist == testArtist })
+                assertTrue(p.getSongs().any { s -> s.name == testSong7 && s.artist == testArtist })
                 assertTrue(p.getSongs().any { s -> s.name == testSong3 && s.artist == testArtist })
             }
         }
