@@ -5,13 +5,12 @@ import android.view.View
 import androidx.test.core.app.ApplicationProvider
 import com.github.fribourgsdp.radio.R
 import com.github.fribourgsdp.radio.activities.testLyrics4
-import com.github.fribourgsdp.radio.activities.testSong1
 import com.github.fribourgsdp.radio.activities.testSong4
 import com.github.fribourgsdp.radio.activities.testSong6
 import com.github.fribourgsdp.radio.database.Database
 import com.github.fribourgsdp.radio.game.handler.PlayerGameHandler
 import com.github.fribourgsdp.radio.mockimplementations.FakeGameView
-import com.github.fribourgsdp.radio.mockimplementations.testlyrics6
+import com.github.fribourgsdp.radio.mockimplementations.testLyrics6
 import com.github.fribourgsdp.radio.util.MyTextToSpeech
 import com.google.android.gms.tasks.Tasks
 import com.google.firebase.Timestamp
@@ -93,7 +92,7 @@ class PlayerGameHandlerTest {
         val view = FakeGameView(singer)
         val handler = PlayerGameHandler(ctx, 0, view)
         val song = testSong6
-        val lyrics = testlyrics6
+        val lyrics = testLyrics6
         `when`(mockSnapshot.getString("current_song")).thenReturn(song)
         `when`(mockSnapshot.get("song_choices_lyrics")).thenReturn(hashMapOf(song to lyrics))
         handler.handleSnapshot(mockSnapshot)
