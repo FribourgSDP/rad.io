@@ -38,7 +38,7 @@ class VoiceOverIpEngineDecoratorTest {
         val context: Context = ApplicationProvider.getApplicationContext()
         val intent = Intent(context, VoiceOverIPActivity::class.java)
 
-        ActivityScenario.launch<VoiceOverIPActivity>(intent).use { scenario ->
+        ActivityScenario.launch<VoiceOverIPActivity>(intent).use {
 
             VoiceIpEngineDecorator(context, makeMockIRtcEngineEventHandler(), makeMockRtcEngine())
 
@@ -58,7 +58,7 @@ class VoiceOverIpEngineDecoratorTest {
 
         val intent = Intent(context, VoiceOverIPActivity::class.java)
 
-        ActivityScenario.launch<VoiceOverIPActivity>(intent).use { scenario ->
+        ActivityScenario.launch<VoiceOverIPActivity>(intent).use {
             val testEngineDecorator =
                 VoiceIpEngineDecorator(context, makeMockIRtcEngineEventHandler(), makeMockRtcEngine())
             assertTrue(testEngineDecorator.joinChannel(null, null, null, 3) == 0)
