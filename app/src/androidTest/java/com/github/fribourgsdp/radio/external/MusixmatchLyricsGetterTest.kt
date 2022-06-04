@@ -1,5 +1,7 @@
 package com.github.fribourgsdp.radio.external
 
+import com.github.fribourgsdp.radio.activities.testArtist
+import com.github.fribourgsdp.radio.activities.testSong1
 import com.github.fribourgsdp.radio.external.musixmatch.MusixmatchLyricsGetter
 import com.github.fribourgsdp.radio.external.musixmatch.MusixmatchLyricsGetter.BACKEND_ERROR_PLACEHOLDER
 import com.github.fribourgsdp.radio.external.musixmatch.MusixmatchLyricsGetter.LYRICS_NOT_FOUND_PLACEHOLDER
@@ -19,51 +21,59 @@ import java.util.concurrent.ExecutionException
  */
 //@RunWith(AndroidJUnit4::class)
 class MusixmatchLyricsGetterTest {
+    private val searchedSong1Name = "hurricane"
+    private val searchedSong1Artist = "bob dylan"
+    private val searchedSong1Lyrics = "Pistol shots ring out in the barroom night"
+    private val lyricslessSongName = "stream"
+    private val lyricslessArtist = "dream theater"
+    private val unknownSongName = "fsdgfdgdfgdfgdfg"
+    private val unknownArtistName = "weoir hpfasdsfno"
+
     @Test
     fun getLyricsFromSongAndArtist(){
-        val f = MusixmatchLyricsGetter.getLyrics("hurricane", "bob dylan", MockOkHttpClient())
+        val f = MusixmatchLyricsGetter.getLyrics(searchedSong1Name, searchedSong1Artist, MockOkHttpClient())
         val lyrics = f.get()
-        assertTrue("actual : $lyrics",lyrics.startsWith("Pistol shots ring out in the barroom night"))
+        assertTrue("actual : $lyrics",lyrics.startsWith(searchedSong1Lyrics))
     }
     @Test
     fun emptyLyricsTest(){
-        val lyricsFuture = MusixmatchLyricsGetter.getLyrics("stream", "dream theater", MockOkHttpClient())
+        val lyricsFuture = MusixmatchLyricsGetter.getLyrics(lyricslessSongName, lyricslessArtist, MockOkHttpClient())
         checkLyricsNotFound(lyricsFuture)
     }
     @Test(expected = Exception::class)
-    fun songIDsongNotFoundTest(){
-        val songIDFuture = MusixmatchLyricsGetter.getSongID("fsdgfdgdfgdfgdfg", "weoir hpfasdsfno", MockOkHttpClient())
+    fun songIDSongNotFoundTest(){
+        val songIDFuture = MusixmatchLyricsGetter.getSongID(unknownSongName, unknownArtistName, MockOkHttpClient())
         songIDFuture.get()
     }
     @Test
     fun songNotFoundTest(){
-        val lyricsFuture = MusixmatchLyricsGetter.getLyrics("fsdgfdgdfgdfgdfg", "weoir hpfasdsfno", MockOkHttpClient())
+        val lyricsFuture = MusixmatchLyricsGetter.getLyrics(unknownSongName, unknownArtistName, MockOkHttpClient())
         checkLyricsNotFound(lyricsFuture)
     }
     @Test
     fun getLyricsFailingHTTPClientTest(){
-        val f = MusixmatchLyricsGetter.getLyrics("rouge", "sardou", SemiFailingHTTPClient())
+        val f = MusixmatchLyricsGetter.getLyrics(testSong1, testArtist, SemiFailingHTTPClient())
         assertEquals(f.get(), BACKEND_ERROR_PLACEHOLDER)
     }
     @Test(expected = Exception::class)
     fun getSongIDFailingHTTPClientTest(){
-        val id = MusixmatchLyricsGetter.getSongID("rouge", "sardou", FailingHTTPClient())
+        val id = MusixmatchLyricsGetter.getSongID(testSong1, testArtist, FailingHTTPClient())
         val i = id.get()
         println(i)
     }
     @Test(expected = Exception::class)
     fun getSongIDMalformedResponse(){
-        val id = MusixmatchLyricsGetter.getSongID("rouge", "sardou", MockOkHttpClient(), NullJSONParser())
+        val id = MusixmatchLyricsGetter.getSongID(testSong1, testArtist, MockOkHttpClient(), NullJSONParser())
         println(id.get())
     }
     @Test
     fun getLyricsMalformedResponse(){
-        val lyricsFuture = MusixmatchLyricsGetter.getLyrics("rouge", "sardou", MockOkHttpClient(), NullJSONParser())
+        val lyricsFuture = MusixmatchLyricsGetter.getLyrics(testSong1, testArtist, MockOkHttpClient(), NullJSONParser())
         checkBackendError(lyricsFuture)
     }
     @Test
     fun emptyLyrics(){
-        val lyricsFuture = MusixmatchLyricsGetter.getLyrics("rouge", "sardou", MockOkHttpClient(), EmptyLyricsJSONParser())
+        val lyricsFuture = MusixmatchLyricsGetter.getLyrics(testSong1, testArtist, MockOkHttpClient(), EmptyLyricsJSONParser())
         checkLyricsNotFound(lyricsFuture)
     }
 
@@ -74,7 +84,7 @@ class MusixmatchLyricsGetterTest {
     }
     @Test
     fun cleanLyricsTest1(){
-        val lyrics = MusixmatchLyricsGetter.getLyrics("rouge", "sardou", MockOkHttpClient()).get()
+        val lyrics = MusixmatchLyricsGetter.getLyrics(testSong1, testArtist, MockOkHttpClient()).get()
         assertFalse(lyrics.contains("commercial"))
     }
     @Test
@@ -84,7 +94,7 @@ class MusixmatchLyricsGetterTest {
     }
     @Test
     fun emphasizeSongNameInLyrics(){
-        val lyrics = MusixmatchLyricsGetter.markSongName(MusixmatchLyricsGetter.getLyrics("rouge", "sardou", MockOkHttpClient()).get(), "rouge")
+        val lyrics = MusixmatchLyricsGetter.markSongName(MusixmatchLyricsGetter.getLyrics(testSong1, testArtist, MockOkHttpClient()).get(), testSong1)
         assertTrue("actual : $lyrics",lyrics.startsWith("<strike>Rouge</strike><br>Comme un soleil couchant de Méditerranée"))
     }
     @Test

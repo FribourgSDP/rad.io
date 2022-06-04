@@ -2,10 +2,7 @@ package com.github.fribourgsdp.radio.mockimplementations
 
 import android.content.Context
 import android.os.Bundle
-import com.github.fribourgsdp.radio.activities.makeMockAdditionalUserInfo
-import com.github.fribourgsdp.radio.activities.makeMockAuthResult
-import com.github.fribourgsdp.radio.activities.makeMockFireBaseAuth
-import com.github.fribourgsdp.radio.activities.makeMockFirebaseUser
+import com.github.fribourgsdp.radio.activities.*
 import com.github.fribourgsdp.radio.auth.GoogleSignInResult
 import com.github.fribourgsdp.radio.data.Genre
 import com.github.fribourgsdp.radio.data.Playlist
@@ -52,9 +49,9 @@ class GoogleUserMockUserProfileActivity : UserProfileActivity() {
 
         val playlist : Playlist = Playlist(playlistName, Genre.NONE)
         playlist.id = testPlaylistId
-        playlist.addSong(Song("rouge", "sardou"))
-        playlist.addSong(Song("salut", "sardou"))
-        playlist.addSong(Song("Le France", "sardou"))
+        playlist.addSong(Song(testSong1, testArtist))
+        playlist.addSong(Song("salut", testArtist))
+        playlist.addSong(Song("Le France", testArtist))
 
         val testUser = User(onlineUserName)
         testUser.id = onlineUserId
@@ -132,9 +129,9 @@ open class MockUserProfileActivity : UserProfileActivity() {
         val db = mock(Database::class.java)
         val playlist = Playlist(playlistName, Genre.NONE)
         playlist.id = testPlaylistId
-        playlist.addSong(Song("rouge", "sardou"))
-        playlist.addSong(Song("salut", "sardou"))
-        playlist.addSong(Song("Le France", "sardou"))
+        playlist.addSong(Song(testSong1, testArtist))
+        playlist.addSong(Song("salut", testArtist))
+        playlist.addSong(Song("Le France", testArtist))
 
         val testUser = User(onlineUserName)
         testUser.id = onlineUserId
