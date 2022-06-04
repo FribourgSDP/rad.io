@@ -48,7 +48,7 @@ class SettingsActivityTest {
     fun onBackPressedGoesToMainActivity() {
         Espresso.pressBack()
         Intents.intended(
-            Matchers.allOf(
+            allOf(
                 IntentMatchers.hasComponent(MainActivity::class.java.name)
             )
         )
@@ -66,7 +66,7 @@ class SettingsActivityTest {
             spinnerId.perform(ViewActions.click())
             onData(allOf(`is`(instanceOf(Language::class.java)),`is`(Language.FRENCH))).perform(ViewActions.click())
             Intents.intended(
-                Matchers.allOf(
+                allOf(
                     IntentMatchers.hasComponent(SettingsActivity::class.java.name),
                     IntentMatchers.toPackage(packageName)
                 )
