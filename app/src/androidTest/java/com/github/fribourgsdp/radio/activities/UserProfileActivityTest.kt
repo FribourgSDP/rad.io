@@ -51,23 +51,23 @@ class UserProfileActivityTest : TestCase() {
     fun releaseIntent() {
         Intents.release()
     }
-   
+
     @Test
     fun changingNameAndSavingChangesChangesUser(){
         val testName = "test"
 
         val intent = Intent(ctx, MockUserProfileActivity::class.java)
 
-        ActivityScenario.launch<MockUserProfileActivity>(intent).use { scenario ->
-        onView(withId(R.id.saveUserButton)).check(matches(ViewMatchers.withEffectiveVisibility(ViewMatchers.Visibility.INVISIBLE)))
-        onView(withId(R.id.username)).perform(
-            ViewActions.clearText(),
-            ViewActions.typeText(testName),
+        ActivityScenario.launch<MockUserProfileActivity>(intent).use {
+            onView(withId(R.id.saveUserButton)).check(matches(ViewMatchers.withEffectiveVisibility(ViewMatchers.Visibility.INVISIBLE)))
+            onView(withId(R.id.username)).perform(
+                ViewActions.clearText(),
+                ViewActions.typeText(testName),
             )
-        onView(withId(R.id.saveUserButton)).check(matches(ViewMatchers.isDisplayed()))
-        Espresso.closeSoftKeyboard()
-        onView(withId(R.id.saveUserButton)).perform(click())
-        onView(withId(R.id.saveUserButton)).check(matches(ViewMatchers.withEffectiveVisibility(ViewMatchers.Visibility.INVISIBLE)))
+            onView(withId(R.id.saveUserButton)).check(matches(ViewMatchers.isDisplayed()))
+            Espresso.closeSoftKeyboard()
+            onView(withId(R.id.saveUserButton)).perform(click())
+            onView(withId(R.id.saveUserButton)).check(matches(ViewMatchers.withEffectiveVisibility(ViewMatchers.Visibility.INVISIBLE)))
         }
 
         val user = User.load(ctx)
@@ -80,11 +80,11 @@ class UserProfileActivityTest : TestCase() {
         val testName = "testNotSave"
 
         val intent = Intent(ctx, MockUserProfileActivity::class.java)
-        ActivityScenario.launch<MockUserProfileActivity>(intent).use { scenario ->
+        ActivityScenario.launch<MockUserProfileActivity>(intent).use {
             onView(withId(R.id.username)).perform(
                 ViewActions.clearText(),
                 ViewActions.typeText(testName),
-                )
+            )
             Espresso.closeSoftKeyboard()
         }
         val user = User.load(ctx)
@@ -114,7 +114,7 @@ class UserProfileActivityTest : TestCase() {
 
 
     @Test
-    fun testBuildReqest() {
+    fun testBuildRequest() {
         val request = UserProfileActivity.buildRequest()
         assertEquals(MY_CLIENT_ID, request.clientId)
         assertEquals(REDIRECT_URI, request.redirectUri)
@@ -123,7 +123,7 @@ class UserProfileActivityTest : TestCase() {
     @Test
     fun testPressBack(){
         val intent = Intent(ctx, UserProfileActivity::class.java)
-        ActivityScenario.launch<UserProfileActivity>(intent).use { scenario ->
+        ActivityScenario.launch<UserProfileActivity>(intent).use {
             Espresso.pressBack()
             Intents.intended(
                 allOf(
@@ -159,21 +159,21 @@ class UserProfileActivityTest : TestCase() {
     @Test
     fun dismissPlaylistDismissedPlaylist(){
 
-            val intent = Intent(ctx, MockUserProfileActivity::class.java)
-            ActivityScenario.launch<UserProfileActivity>(intent).use {scenario ->
+        val intent = Intent(ctx, MockUserProfileActivity::class.java)
+        ActivityScenario.launch<UserProfileActivity>(intent).use {scenario ->
 
-                scenario.onActivity { a ->
-                    a.loginFromGoogle(GoogleSignInResult.NORMAL_USER)
-                }
-
-                onView(withText(R.string.MergeImportDismissPlaylistText)) // Look for the dialog => use its title
-                    .inRoot(RootMatchers.isDialog()) // check that it's indeed in a dialog
-                    .check(matches(ViewMatchers.isDisplayed()))
-
-                onView(withId(R.id.dismissOnlineButton))
-                    .perform(click())
-
+            scenario.onActivity { a ->
+                a.loginFromGoogle(GoogleSignInResult.NORMAL_USER)
             }
+
+            onView(withText(R.string.MergeImportDismissPlaylistText)) // Look for the dialog => use its title
+                .inRoot(RootMatchers.isDialog()) // check that it's indeed in a dialog
+                .check(matches(ViewMatchers.isDisplayed()))
+
+            onView(withId(R.id.dismissOnlineButton))
+                .perform(click())
+
+        }
         val user = User.load(ctx)
         assertEquals(onlineUserName,user.name)
         assertEquals(onlineUserId,user.id)
@@ -214,8 +214,8 @@ class UserProfileActivityTest : TestCase() {
         `when`(db.generateUserId()).thenReturn(Tasks.forResult(1))
         User.database = db
         ActivityScenario.launch<GoogleUserMockUserProfileActivity>(intent).use {
-             onView(withId(R.id.googleSignInButton)).
-                    perform(click())
+            onView(withId(R.id.googleSignInButton)).
+            perform(click())
             onView(withText(R.string.KeepPlaylistLocallyText)) // Look for the dialog => use its title
                 .inRoot(RootMatchers.isDialog()) // check that it's indeed in a dialog
                 .check(matches(ViewMatchers.isDisplayed()))
