@@ -4,10 +4,9 @@ import com.github.fribourgsdp.radio.data.*
 import com.github.fribourgsdp.radio.database.FirestoreDatabase
 import com.github.fribourgsdp.radio.database.FirestoreRef
 import com.github.fribourgsdp.radio.database.TransactionManager
+import com.github.fribourgsdp.radio.database.SONG_CHOICES_KEY
 import com.github.fribourgsdp.radio.game.Game
 import com.github.fribourgsdp.radio.util.*
-import com.github.fribourgsdp.radio.utils.testSinger1
-import com.github.fribourgsdp.radio.utils.testSinger2
 import com.google.android.gms.tasks.Tasks
 import com.google.firebase.firestore.DocumentReference
 import com.google.firebase.firestore.DocumentSnapshot
@@ -27,6 +26,8 @@ class FirestoreDatabaseTest {
     private val fireDb = FirestoreDatabase()
     private var user1 = User("nate")
     private var user2 = User("nate2")
+    private var user1ID = "testUser1"
+    private var user2ID = "testUser2"
     private val unusedId = 987987L
     private val testingLobbyId = 123321L
     private val unusedLobbyForPublic = 123456789L
@@ -58,8 +59,8 @@ class FirestoreDatabaseTest {
         mockDocumentReference = mock(DocumentReference::class.java)
         mockTransactionManager = mock(TransactionManager::class.java)
         db = FirestoreDatabase(mockFirestoreRef, mockTransactionManager)
-        user1.id = testSinger1
-        user2.id = testSinger2
+        user1.id = user1ID
+        user2.id = user2ID
 
         //this handling is always the same, what changes is what the document snapshot returns
         `when`(mockDocumentReference.get()).thenReturn(Tasks.forResult(mockSnapshot))
@@ -289,7 +290,7 @@ class FirestoreDatabaseTest {
             assertEquals(false, snapshot.get("finished") as Boolean)
             assertEquals(0L, snapshot.get("current_round") as Long)
             assertEquals("", snapshot.get("singer") as String)
-            assertEquals(ArrayList<String>(), snapshot.getAndCast<ArrayList<String>>("song_choices"))
+            assertEquals(ArrayList<String>(), snapshot.getAndCast<ArrayList<String>>(SONG_CHOICES_KEY))
             assertEquals(HashMap<String, Int>(), snapshot.getAndCast<HashMap<String, Int>>("scores"))
             assertEquals(true, snapshot.get("validity") as Boolean)
             assertEquals(HashMap<String, String>(), snapshot.getAndCast<HashMap<String, String>>("song_choices_lyrics"))
@@ -327,7 +328,7 @@ class FirestoreDatabaseTest {
         fireDb.modifyUserMicPermissions(testingLobbyId, user, true)
         fireDb.refMake.getLobbyRef(testingLobbyId.toString()).get().addOnCompleteListener { snapshot ->
             val newPermissions = snapshot.result.getPermissions()
-            assertEquals(true, newPermissions[testSinger1])
+            assertEquals(true, newPermissions[user1ID])
         }
     }
 
@@ -388,10 +389,10 @@ class FirestoreDatabaseTest {
             val snapshot = it.get(gameMetaRef)
             val playerDoneMap = snapshot.getAndCast<HashMap<String, Boolean>>("player_done_map")
             val playerFoundMap = snapshot.getAndCast<HashMap<String, Boolean>>("player_found_map")
-            assertEquals(false, playerDoneMap.containsKey(testSinger2))
-            assertEquals(false, playerFoundMap.containsKey(testSinger2))
-            playerDoneMap[testSinger2] = true
-            playerFoundMap[testSinger2] = true
+            assertEquals(false, playerDoneMap.containsKey(user2ID))
+            assertEquals(false, playerFoundMap.containsKey(user2ID))
+            playerDoneMap[user2ID] = true
+            playerFoundMap[user2ID] = true
             it.update(gameMetaRef, "player_done_map", playerDoneMap)
             it.update(gameMetaRef, "player_found_map", playerFoundMap)
             null
@@ -400,7 +401,7 @@ class FirestoreDatabaseTest {
 
     @Test
     fun openGameMetadataWorks() {
-        val users = listOf(testSinger1, testSinger2)
+        val users = listOf(user1ID, user2ID)
         val gameId = testingLobbyId
         val result = fireDb.openGameMetadata(gameId, users)
         assertEquals(null, Tasks.await(result))
@@ -443,8 +444,8 @@ class FirestoreDatabaseTest {
             val gameRef = collection.document(gameId.toString())
             val snapshot = it.get(gameRef)
             val playerDoneMap = snapshot.getAndCast<HashMap<String, Boolean>>("player_done_map")
-            assertEquals(true, playerDoneMap[testSinger2])
-            playerDoneMap[testSinger2] = false
+            assertEquals(true, playerDoneMap[user2ID])
+            playerDoneMap[user2ID] = false
             it.update(gameRef, "player_done_map", playerDoneMap)
             null
         }
@@ -460,10 +461,10 @@ class FirestoreDatabaseTest {
             val collection = fireDb.transactionMgr.db.collection("games_metadata")
             val gameRef = collection.document(gameId.toString())
             val snapshot = it.get(gameRef)
-            assertNotEquals(0, (snapshot.getAndCast<HashMap<String, Int>>("scores_of_round"))[testSinger2])
+            assertNotEquals(0, (snapshot.getAndCast<HashMap<String, Int>>("scores_of_round"))[user2ID])
             null
         }
-        fireDb.resetGameMetadata(gameId, testSinger1)
+        fireDb.resetGameMetadata(gameId, user1ID)
     }
 
     @Test
@@ -476,10 +477,10 @@ class FirestoreDatabaseTest {
             val collection = fireDb.transactionMgr.db.collection("games_metadata")
             val gameRef = collection.document(gameId.toString())
             val snapshot = it.get(gameRef)
-            assertEquals(0, (snapshot.getAndCast<HashMap<String, Int>>("scores_of_round"))[testSinger2])
+            assertEquals(0, (snapshot.getAndCast<HashMap<String, Int>>("scores_of_round"))[user2ID])
             null
         }
-        fireDb.resetGameMetadata(gameId, testSinger1)
+        fireDb.resetGameMetadata(gameId, user1ID)
     }
 
     @Test
@@ -504,7 +505,7 @@ class FirestoreDatabaseTest {
             for ((_, score) in scoresOfRound) {
                 assertEquals(0, score)
             }
-            assertEquals(0, (snapshot.getAndCast<HashMap<String, Int>>("scores_of_round"))[testSinger2])
+            assertEquals(0, (snapshot.getAndCast<HashMap<String, Int>>("scores_of_round"))[user2ID])
             null
         }
     }

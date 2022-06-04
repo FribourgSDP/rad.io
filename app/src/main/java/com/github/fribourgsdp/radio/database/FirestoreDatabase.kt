@@ -409,7 +409,7 @@ class FirestoreDatabase(var refMake: FirestoreRef, var transactionMgr: Transacti
                 throw IllegalArgumentException("Document $id not found.")
             }
 
-            val mapIdToName = snapshot.get("players")!! as HashMap<String, String>
+            val mapIdToName = snapshot.getAndCast<HashMap<String, String>>("players")
             if (!mapIdToName.containsKey(user.id)) {
                 // A user with the same id was already added
                 throw IllegalArgumentException("id: ${user.id} is not in the database")
@@ -419,7 +419,7 @@ class FirestoreDatabase(var refMake: FirestoreRef, var transactionMgr: Transacti
 
             transaction.update(docRef, "players", mapIdToName)
 
-            val playerPermissions = snapshot.get("permissions")!! as HashMap<String, Boolean>
+            val playerPermissions = snapshot.getAndCast<HashMap<String, Boolean>>("permissions")
             playerPermissions.remove(user.id)
 
             transaction.update(docRef, "permissions", playerPermissions)
@@ -480,8 +480,8 @@ class FirestoreDatabase(var refMake: FirestoreRef, var transactionMgr: Transacti
                 throw IllegalArgumentException("Document $gameID not found.")
             }
 
-            val playerDoneMap = snapshot.get("player_done_map")!! as HashMap<String, Boolean>
-            val playerFoundMap = snapshot.get("player_found_map")!! as HashMap<String, Boolean>
+            val playerDoneMap = snapshot.getAndCast<HashMap<String, Boolean>>("player_done_map")
+            val playerFoundMap = snapshot.getAndCast<HashMap<String, Boolean>>("player_found_map")
             playerDoneMap.remove(user.id)
             playerFoundMap.remove(user.id)
 
@@ -503,7 +503,7 @@ class FirestoreDatabase(var refMake: FirestoreRef, var transactionMgr: Transacti
                 throw IllegalArgumentException("Document $gameID not found.")
             }
 
-            val playerDoneMap = snapshot.get("player_done_map")!! as HashMap<String, Boolean>
+            val playerDoneMap = snapshot.getAndCast<HashMap<String, Boolean>>("player_done_map")
             playerDoneMap[singerId] = true
 
             transaction.update(docRef, "player_done_map", playerDoneMap)
@@ -525,7 +525,7 @@ class FirestoreDatabase(var refMake: FirestoreRef, var transactionMgr: Transacti
                     "finished" to false,
                     "current_round" to 0L,
                     "singer" to "",
-                    "song_choices" to ArrayList<String>(),
+                    SONG_CHOICES_KEY to ArrayList<String>(),
                     "scores" to HashMap<String, Int>(),
                     "validity" to true,
                     "song_choices_lyrics" to HashMap<String, String>(),

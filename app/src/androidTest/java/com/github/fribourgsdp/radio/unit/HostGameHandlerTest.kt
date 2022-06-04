@@ -9,6 +9,7 @@ import com.github.fribourgsdp.radio.data.Playlist
 import com.github.fribourgsdp.radio.data.Song
 import com.github.fribourgsdp.radio.data.User
 import com.github.fribourgsdp.radio.database.Database
+import com.github.fribourgsdp.radio.database.SONG_CHOICES_KEY
 import com.github.fribourgsdp.radio.game.Game
 import com.github.fribourgsdp.radio.game.handler.HostGameHandler
 import com.github.fribourgsdp.radio.mockimplementations.FakeGameView
@@ -228,7 +229,7 @@ class HostGameHandlerTest {
         `when`(db.updateGame(anyLong(), anyMap()))
             .then{i ->
                 val updatesMap = i.getArgument<Map<String, Any>>(1)
-                choices = ((updatesMap["song_choices"] as List<String>?)!!)
+                choices = ((updatesMap[SONG_CHOICES_KEY] as List<String>?)!!)
                 Tasks.forResult(null)
             }
         val handler = HostGameHandler(ctx, game, view, db, noSing = false)

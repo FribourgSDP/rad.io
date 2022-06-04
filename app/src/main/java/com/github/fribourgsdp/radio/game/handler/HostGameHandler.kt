@@ -5,6 +5,7 @@ import android.util.Log
 import com.github.fribourgsdp.radio.R
 import com.github.fribourgsdp.radio.database.Database
 import com.github.fribourgsdp.radio.database.FirestoreDatabase
+import com.github.fribourgsdp.radio.database.SONG_CHOICES_KEY
 import com.github.fribourgsdp.radio.external.musixmatch.LyricsGetter
 import com.github.fribourgsdp.radio.external.musixmatch.MusixmatchLyricsGetter
 import com.github.fribourgsdp.radio.game.Game
@@ -159,7 +160,7 @@ class HostGameHandler(
             "finished" to done,
             "current_round" to game.currentRound,
             "round_deadline" to FieldValue.delete(),
-            "song_choices" to nextChoices.toList(),
+            SONG_CHOICES_KEY to nextChoices.toList(),
             "song_choices_lyrics" to nextChoicesLyrics,
             "scores" to game.getAllScores()
         )

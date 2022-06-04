@@ -6,6 +6,7 @@ import com.github.fribourgsdp.radio.R
 import com.github.fribourgsdp.radio.database.Database
 import com.github.fribourgsdp.radio.database.FirestoreDatabase
 import com.github.fribourgsdp.radio.data.User
+import com.github.fribourgsdp.radio.database.SONG_CHOICES_KEY
 import com.github.fribourgsdp.radio.game.GameView
 import com.github.fribourgsdp.radio.game.prep.DEFAULT_SINGER_DURATION
 import com.github.fribourgsdp.radio.game.timer.Timer
@@ -165,7 +166,7 @@ class PlayerGameHandler(
     }
 
     private fun chooseSong(snapshot: DocumentSnapshot){
-        val choices = snapshot.getAndCast<ArrayList<String>>("song_choices")
+        val choices = snapshot.getAndCast<ArrayList<String>>(SONG_CHOICES_KEY)
         view.chooseSong(choices, this)
     }
 

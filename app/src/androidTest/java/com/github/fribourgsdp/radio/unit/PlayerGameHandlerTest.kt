@@ -8,6 +8,7 @@ import com.github.fribourgsdp.radio.utils.testLyrics4
 import com.github.fribourgsdp.radio.utils.testSong4
 import com.github.fribourgsdp.radio.utils.testSong6
 import com.github.fribourgsdp.radio.database.Database
+import com.github.fribourgsdp.radio.database.SONG_CHOICES_KEY
 import com.github.fribourgsdp.radio.game.handler.PlayerGameHandler
 import com.github.fribourgsdp.radio.mockimplementations.FakeGameView
 import com.github.fribourgsdp.radio.utils.testLyrics6
@@ -45,7 +46,7 @@ class PlayerGameHandlerTest {
         `when`(mockSnapshot.getString("singer")).thenReturn(singer)
         `when`(mockSnapshot.exists()).thenReturn(true)
         `when`(mockSnapshot.getLong("current_round")).thenReturn(round)
-        `when`(mockSnapshot.get("song_choices")).thenReturn(listOfSongs)
+        `when`(mockSnapshot.get(SONG_CHOICES_KEY)).thenReturn(listOfSongs)
         `when`(mockSnapshot.getString("current_song")).thenReturn(null)
         `when`(mockSnapshot.get("scores")).thenReturn(scores)
         `when`(mockSnapshot.getBoolean("finished")).thenReturn(false)
