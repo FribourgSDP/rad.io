@@ -42,8 +42,9 @@ import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
 
-const val testLyrics1 = "A long, long time ago\nI can still remember\nHow that music used to make me smile..."
+const val testLyrics4 = "A long, long time ago\nI can still remember\nHow that music used to make me smile..."
 const val testSong4 = "American Pie"
+const val testPlaylist4 = "70s hits"
 
 @RunWith(AndroidJUnit4::class)
 class GameActivityTest {
@@ -313,7 +314,7 @@ class GameActivityTest {
         val testIntent = Intent(ctx, MockGameActivity::class.java)
         ActivityScenario.launch<MockGameActivity>(testIntent).use { scenario ->
             scenario.onActivity {
-                it.updateLyrics(testLyrics1)
+                it.updateLyrics(testLyrics4)
                 // Display the song to see if the button is displayed
                 it.displaySong(testSong4)
             }

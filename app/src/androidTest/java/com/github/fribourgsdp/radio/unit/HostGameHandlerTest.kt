@@ -4,6 +4,7 @@ import android.content.Context
 import android.view.View
 import androidx.test.core.app.ApplicationProvider
 import com.github.fribourgsdp.radio.R
+import com.github.fribourgsdp.radio.activities.*
 import com.github.fribourgsdp.radio.data.Genre
 import com.github.fribourgsdp.radio.data.Playlist
 import com.github.fribourgsdp.radio.data.Song
@@ -187,9 +188,8 @@ class HostGameHandlerTest {
             .setNoSing(true)
             .setHost(host)
             .addUserId(otherPlayer.id)
-            .setPlaylist(Playlist("Test PL", setOf(Song("Test Song", "", "lalala")), Genre.NONE))
+            .setPlaylist(Playlist(testPlaylist4, setOf(Song(testSong4, "", testLyrics4)), Genre.NONE))
             .build()
-        var choice : String = ""
         val db = mock(Database::class.java)
         `when`(db.updateGame(anyLong(), anyMap()))
             .thenReturn(Tasks.forResult(null))
