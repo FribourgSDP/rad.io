@@ -17,6 +17,7 @@ import com.github.fribourgsdp.radio.utils.*
 import com.google.android.gms.tasks.Tasks
 import org.hamcrest.Matchers
 import org.junit.After
+import org.junit.Assert.assertTrue
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
@@ -52,12 +53,12 @@ class AddPlaylistActivityWithoutConnectionTest {
         )
 
         val user = Tasks.await(User.loadOrDefault(ctx))
-        assert(user.getPlaylists().any { p -> p.name == testPlaylist1 })
+        assertTrue(user.getPlaylists().any { p -> p.name == testPlaylist1 })
         user.getPlaylists().filter { p -> p.name == testPlaylist1 }.forEach{ p ->
             run {
-                assert(p.getSongs().any { s -> s.name == testSong1 && s.artist == testArtist })
-                assert(p.getSongs().any { s -> s.name == testSong2 && s.artist == testArtist })
-                assert(p.getSongs().any { s -> s.name == testSong3 && s.artist == testArtist })
+                assertTrue(p.getSongs().any { s -> s.name == testSong1 && s.artist == testArtist })
+                assertTrue(p.getSongs().any { s -> s.name == testSong2 && s.artist == testArtist })
+                assertTrue(p.getSongs().any { s -> s.name == testSong3 && s.artist == testArtist })
             }
         }
 
