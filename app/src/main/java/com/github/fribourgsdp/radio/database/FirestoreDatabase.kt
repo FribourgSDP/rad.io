@@ -106,7 +106,7 @@ open class TransactionManager() {
                     publicLobbiesRef, id.toString(),
                     hashMapOf(
                         NAME_KEY to settings!!.name,
-                        HOST_KEY to settings!!.hostName
+                        HOST_KEY to settings.hostName
                     )
                 )
             }
@@ -213,11 +213,11 @@ class FirestoreDatabase(var refMake: FirestoreRef, var transactionMgr: Transacti
 
     }
 
-    override fun getPlaylist(PLAYLIST_ID_KEY : String): Task<Playlist>{
-        if(PLAYLIST_ID_KEY == ""){
+    override fun getPlaylist(playlistName : String): Task<Playlist>{
+        if(playlistName == ""){
             return Tasks.forException(IllegalArgumentException("Not null id is expected"))
         }
-        return  refMake.getPlaylistRef(PLAYLIST_ID_KEY).get().continueWith { l ->
+        return  refMake.getPlaylistRef(playlistName).get().continueWith { l ->
             val result = l.result
             if(result.exists()){
                 val playlistTitle = result[PLAYLIST_NAME_KEY].toString()
