@@ -15,22 +15,23 @@ import org.junit.runner.RunWith
 
 @RunWith(AndroidJUnit4::class)
 class LyricsPopupTest {
+    private val testLyrics = "Lorem Ipsum"
 
     @Test
     fun testCorrectTextIsDisplayed(){
         with(launchFragment(
             themeResId = R.style.Theme_Radio,
-            instantiate = { LyricsPopup("Lorem Ipsum") })) {
+            instantiate = { LyricsPopup(testLyrics) })) {
             onView(withId(R.id.lyricsPopupTextView))
                 .inRoot(isDialog())
-                .check(matches(withText("Lorem Ipsum")))
+                .check(matches(withText(testLyrics)))
         }
     }
     @Test
     fun testPopupClosingOnButtonPress(){
         with(launchFragment(
             themeResId = R.style.Theme_Radio,
-            instantiate = { LyricsPopup("Lorem Ipsum") })) {
+            instantiate = { LyricsPopup(testLyrics) })) {
             onView(withId(R.id.close_popup_button))
                 .inRoot(isDialog())
                 .perform(ViewActions.click())
