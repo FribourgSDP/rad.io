@@ -5,27 +5,29 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Bundle
 import android.view.View
-import android.widget.*
+import android.widget.Button
+import android.widget.ImageButton
+import android.widget.TextView
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.DialogFragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.github.fribourgsdp.radio.*
+import com.github.fribourgsdp.radio.MainActivity
+import com.github.fribourgsdp.radio.R
 import com.github.fribourgsdp.radio.config.MyAppCompatActivity
 import com.github.fribourgsdp.radio.data.Playlist
-import com.github.fribourgsdp.radio.data.Song
 import com.github.fribourgsdp.radio.data.User
 import com.github.fribourgsdp.radio.database.Database
 import com.github.fribourgsdp.radio.database.FirestoreDatabase
-import com.github.fribourgsdp.radio.external.musixmatch.LyricsGetter
-import com.github.fribourgsdp.radio.external.musixmatch.MusixmatchLyricsGetter
+import com.github.fribourgsdp.radio.database.LAUNCHED_KEY
+import com.github.fribourgsdp.radio.database.VALIDITY_KEY
 import com.github.fribourgsdp.radio.game.Game
 import com.github.fribourgsdp.radio.game.GameActivity
 import com.github.fribourgsdp.radio.game.view.QuitGameOrLobbyDialog
+import com.github.fribourgsdp.radio.util.getAndCast
 import com.github.fribourgsdp.radio.util.getPermissions
 import com.github.fribourgsdp.radio.util.getPlayers
-import io.agora.rtc.RtcEngine
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
@@ -278,14 +280,14 @@ open class LobbyActivity : MyAppCompatActivity(){
             }
 
             if (snapshot != null && snapshot.exists()) {
-                val gameStillValid = snapshot.get("validity")!! as Boolean
+                val gameStillValid = snapshot.getAndCast<Boolean>(VALIDITY_KEY)
                 if (!gameStillValid) {
                     returnToMainMenu()
                 }
 
                 val newMap = snapshot.getPlayers()
 
-                val isGameLaunched = snapshot.getBoolean("launched")
+                val isGameLaunched = snapshot.getBoolean(LAUNCHED_KEY)
 
                 val mapIdToPermissions = snapshot.getPermissions()
                 val atLeastOnePermissionMissing = mapIdToPermissions.containsValue(false)
@@ -345,8 +347,8 @@ open class LobbyActivity : MyAppCompatActivity(){
         // Test if received callback indeed comes from a microphone permission request
         if (requestCode == PERMISSION_REQ_ID_RECORD_AUDIO) {
             for (i in permissions.indices) {
-                var permission: String = permissions[i]
-                var granted: Int = grantResults[i]
+                val permission: String = permissions[i]
+                val granted: Int = grantResults[i]
                 if (permission == Manifest.permission.RECORD_AUDIO && granted == PackageManager.PERMISSION_GRANTED) {
                     hasVoiceIdPermissions = true
                     launchGameButton.isEnabled = true

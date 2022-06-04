@@ -9,7 +9,6 @@ import androidx.test.espresso.Espresso.pressBack
 import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.intent.Intents
 import androidx.test.espresso.intent.matcher.IntentMatchers
-import androidx.test.espresso.matcher.ViewMatchers
 import androidx.test.espresso.matcher.ViewMatchers.withId
 import androidx.test.espresso.matcher.ViewMatchers.withText
 import androidx.test.ext.junit.runners.AndroidJUnit4
@@ -19,6 +18,9 @@ import com.github.fribourgsdp.radio.game.EndGameActivity
 import com.github.fribourgsdp.radio.game.GAME_CRASH_KEY
 import com.github.fribourgsdp.radio.game.SCORES_KEY
 import com.github.fribourgsdp.radio.utils.CustomMatchers.Companion.atPosition
+import com.github.fribourgsdp.radio.utils.testSinger1
+import com.github.fribourgsdp.radio.utils.testSinger2
+import com.github.fribourgsdp.radio.utils.testSinger3
 import org.hamcrest.Matchers.allOf
 import org.junit.After
 import org.junit.Before
@@ -58,10 +60,13 @@ class EndGameActivityTest{
 
     @Test
     fun finalScoresDisplayedCorrectly() {
+        val singer1Score = 85L
+        val singer2Score = 70L
+        val singer3Score = 100L
         val scores = arrayListOf(
-            Pair("singer0", 85L),
-            Pair("singer1", 70L),
-            Pair("singer2", 100L)
+            Pair(testSinger1, singer1Score),
+            Pair(testSinger2, singer2Score),
+            Pair(testSinger3, singer3Score)
         )
 
         val testIntent = Intent(ctx, EndGameActivity::class.java).apply {
@@ -73,12 +78,12 @@ class EndGameActivityTest{
                 .check(
                     matches(
                         allOf(
-                            atPosition(0, R.id.nameScoreTextView, ViewMatchers.withText("singer2")),
-                            atPosition(0, R.id.scoreTextView, ViewMatchers.withText("100")),
-                            atPosition(1, R.id.nameScoreTextView, ViewMatchers.withText("singer0")),
-                            atPosition(1, R.id.scoreTextView, ViewMatchers.withText("85")),
-                            atPosition(2, R.id.nameScoreTextView, ViewMatchers.withText("singer1")),
-                            atPosition(2, R.id.scoreTextView, ViewMatchers.withText("70"))
+                            atPosition(0, R.id.nameScoreTextView, withText(testSinger3)),
+                            atPosition(0, R.id.scoreTextView, withText(singer3Score.toInt().toString())),
+                            atPosition(1, R.id.nameScoreTextView, withText(testSinger1)),
+                            atPosition(1, R.id.scoreTextView, withText(singer1Score.toInt().toString())),
+                            atPosition(2, R.id.nameScoreTextView, withText(testSinger2)),
+                            atPosition(2, R.id.scoreTextView, withText(singer2Score.toInt().toString()))
                         )
                     )
                 )

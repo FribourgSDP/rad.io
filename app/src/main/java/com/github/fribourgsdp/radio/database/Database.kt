@@ -162,7 +162,7 @@ interface Database {
      * @return a task void so that we know if the current song of the game was correctly updated.
      */
     fun updateCurrentSongOfGame(id: Long, songName: String, incrementBy: Long): Task<Void> {
-        return updateGame(id, hashMapOf("current_song" to songName))
+        return updateGame(id, hashMapOf(CURRENT_SONG_KEY to songName))
     }
 
     /**

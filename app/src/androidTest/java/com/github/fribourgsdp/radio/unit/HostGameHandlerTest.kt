@@ -8,13 +8,17 @@ import com.github.fribourgsdp.radio.data.Genre
 import com.github.fribourgsdp.radio.data.Playlist
 import com.github.fribourgsdp.radio.data.Song
 import com.github.fribourgsdp.radio.data.User
-import com.github.fribourgsdp.radio.database.Database
+import com.github.fribourgsdp.radio.database.*
 import com.github.fribourgsdp.radio.game.Game
 import com.github.fribourgsdp.radio.game.handler.HostGameHandler
 import com.github.fribourgsdp.radio.mockimplementations.FakeGameView
+import com.github.fribourgsdp.radio.utils.testLyrics4
+import com.github.fribourgsdp.radio.utils.testPlaylist4
+import com.github.fribourgsdp.radio.utils.testSong4
 import com.google.android.gms.tasks.Tasks
 import com.google.firebase.firestore.DocumentSnapshot
-import org.junit.Assert.*
+import org.junit.Assert.assertEquals
+import org.junit.Assert.assertTrue
 import org.junit.Before
 import org.junit.Test
 import org.mockito.Mockito.*
@@ -34,16 +38,16 @@ class HostGameHandlerTest {
     private val fakeGame = Game.Builder()
         .setHost(host)
         .addUserId(otherPlayer.id)
-        .setPlaylist(Playlist("playlist"))
+        .setPlaylist(Playlist(PLAYLIST_KEY))
         .build()
 
     @Before
     fun setup() {
         mockSnapshot = mock(DocumentSnapshot::class.java)
-        `when`(mockSnapshot.get("player_done_map")).thenReturn(fakeGame.getAllPlayersId().associateWith { true })
-        `when`(mockSnapshot.get("scores_of_round")).thenReturn(fakeGame.getAllPlayersId().associateWith { 0L })
-        `when`(mockSnapshot.get("player_found_map")).thenReturn(fakeGame.getAllPlayersId().associateWith { true })
-        `when`(mockSnapshot.get("current_song")).thenReturn("Test Song")
+        `when`(mockSnapshot.get(PLAYER_DONE_MAP_KEY)).thenReturn(fakeGame.getAllPlayersId().associateWith { true })
+        `when`(mockSnapshot.get(SCORES_OF_ROUND_KEY)).thenReturn(fakeGame.getAllPlayersId().associateWith { 0L })
+        `when`(mockSnapshot.get(PLAYER_FOUND_MAP_KEY)).thenReturn(fakeGame.getAllPlayersId().associateWith { true })
+        `when`(mockSnapshot.get(CURRENT_SONG_KEY)).thenReturn("Test Song")
         `when`(mockSnapshot.exists()).thenReturn(true)
     }
 
@@ -187,9 +191,8 @@ class HostGameHandlerTest {
             .setNoSing(true)
             .setHost(host)
             .addUserId(otherPlayer.id)
-            .setPlaylist(Playlist("Test PL", setOf(Song("Test Song", "", "lalala")), Genre.NONE))
+            .setPlaylist(Playlist(testPlaylist4, setOf(Song(testSong4, "", testLyrics4)), Genre.NONE))
             .build()
-        var choice : String = ""
         val db = mock(Database::class.java)
         `when`(db.updateGame(anyLong(), anyMap()))
             .thenReturn(Tasks.forResult(null))
@@ -226,7 +229,7 @@ class HostGameHandlerTest {
         `when`(db.updateGame(anyLong(), anyMap()))
             .then{i ->
                 val updatesMap = i.getArgument<Map<String, Any>>(1)
-                choices = ((updatesMap["song_choices"] as List<String>?)!!)
+                choices = ((updatesMap[SONG_CHOICES_KEY] as List<String>?)!!)
                 Tasks.forResult(null)
             }
         val handler = HostGameHandler(ctx, game, view, db, noSing = false)

@@ -32,8 +32,8 @@ internal class SongTest {
         val test1 = Song("abc", "bob")
         val test2 = Song("abc", "bob")
         val test3 = Song("Abc", "bob")
-        assertTrue(test1.equals(test2))
-        assertTrue(test1.equals(test3))
+        assertTrue(test1 == test2)
+        assertTrue(test1 == test3)
     }
 
     @Test
@@ -41,15 +41,15 @@ internal class SongTest {
         val test1 = Song("abc", "bobby")
         val test2 = Song("abc", "bob")
         val test3 = Song("Abcc", "bob")
-        assertFalse(test1.equals(test2))
-        assertFalse(test2.equals(test3))
+        assertFalse(test1 == test2)
+        assertFalse(test2 == test3)
     }
 
     @Test
     fun equalityHoldsWhenTitleAndArtistMatch(){
         val song1 = Song("a", "bob")
         val song2 = Song("A", "bob")
-        assertTrue(song1.equals(song2))
+        assertTrue(song1 == song2)
         assertEquals(song1, song2)
         val test :List<Song> = mutableListOf(song1)
         assertTrue(test.contains(song2))

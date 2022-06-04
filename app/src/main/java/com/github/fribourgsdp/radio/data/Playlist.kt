@@ -114,10 +114,10 @@ data class Playlist (override var name: String, var genre: Genre) : Nameable {
                 song.id = (songIdRange.result.first + i).toString()
             }
         }
-        val playlistId =  db.generatePlaylistId().continueWith{l ->
+        val PLAYLIST_ID_KEY =  db.generatePlaylistId().continueWith{l ->
             id = l.result.toString()
         }
-        return Tasks.whenAll(songTask,playlistId)
+        return Tasks.whenAll(songTask,PLAYLIST_ID_KEY)
     }
 
     /**

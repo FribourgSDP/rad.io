@@ -9,7 +9,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
-import android.widget.TextView
 import android.widget.Toast
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
@@ -124,24 +123,24 @@ open class JoinWithQRCodeFragment(val ctx: Context, val activity: Activity): Dia
         // and camera which is granted by user and not.
         // if permission is granted then we are returning
         // true otherwise false.
-        val camera_permission = ContextCompat.checkSelfPermission(ctx,
+        val cameraPermission = ContextCompat.checkSelfPermission(ctx,
             Manifest.permission.CAMERA
         )
-        val vibrate_permission = ContextCompat.checkSelfPermission(ctx,
+        val vibratePermission = ContextCompat.checkSelfPermission(ctx,
             Manifest.permission.VIBRATE
         )
-        return camera_permission == PackageManager.PERMISSION_GRANTED && vibrate_permission == PackageManager.PERMISSION_GRANTED
+        return cameraPermission == PackageManager.PERMISSION_GRANTED && vibratePermission == PackageManager.PERMISSION_GRANTED
     }
 
 
     protected open fun requestPermission() {
         // this method is to request
         // the runtime permission.
-        val PERMISSION_REQUEST_CODE = 200
+        val permissionRequestCode = 200
         ActivityCompat.requestPermissions(activity, arrayOf(
             Manifest.permission.CAMERA,
             Manifest.permission.VIBRATE
-        ), PERMISSION_REQUEST_CODE)
+        ), permissionRequestCode)
     }
 
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
@@ -154,7 +153,7 @@ open class JoinWithQRCodeFragment(val ctx: Context, val activity: Activity): Dia
             if (cameraAccepted && vibrateAccepted) {
                 Toast.makeText(ctx, "Permission granted..", Toast.LENGTH_SHORT).show()
             } else {
-                Toast.makeText(ctx,"Permission Denined \n You cannot use app without providing permission",Toast.LENGTH_SHORT).show()
+                Toast.makeText(ctx,"Permission Denied \n You cannot use app without providing permission",Toast.LENGTH_SHORT).show()
             }
         }
     }

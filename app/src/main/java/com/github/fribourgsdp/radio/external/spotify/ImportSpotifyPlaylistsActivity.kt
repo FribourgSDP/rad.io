@@ -52,9 +52,9 @@ class ImportSpotifyPlaylistsActivity : MyAppCompatActivity() {
 
         }
 
-        fun getPlaylistContent(playlistId: String, client: OkHttpClient = OkHttpClient(), parser : JSONParser = JSONStandardParser()) : CompletableFuture<Set<Song>> {
+        fun getPlaylistContent(PLAYLIST_ID_KEY: String, client: OkHttpClient = OkHttpClient(), parser : JSONParser = JSONStandardParser()) : CompletableFuture<Set<Song>> {
             val future = CompletableFuture<Set<Song>>()
-            val request = buildSpotifyRequest(SPOTIFY_PLAYLIST_INFO_BASE_URL + playlistId + SPOTIFY_SONG_FILTER_NAME_ARTIST, TOKEN)
+            val request = buildSpotifyRequest(SPOTIFY_PLAYLIST_INFO_BASE_URL + PLAYLIST_ID_KEY + SPOTIFY_SONG_FILTER_NAME_ARTIST, TOKEN)
             client.newCall(request).enqueue(GetPlaylistInfoCallback(future, parser))
             return future
         }

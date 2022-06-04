@@ -18,6 +18,7 @@ import com.github.fribourgsdp.radio.game.prep.GAME_HOST_KEY
 import com.github.fribourgsdp.radio.game.prep.GAME_IS_HOST_KEY
 import com.github.fribourgsdp.radio.game.prep.GAME_PLAYLIST_KEY
 import com.github.fribourgsdp.radio.mockimplementations.BuggyLobbyActivity
+import com.github.fribourgsdp.radio.utils.testPlaylist1
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 import org.junit.After
@@ -34,6 +35,7 @@ import org.junit.runner.RunWith
  */
 @RunWith(AndroidJUnit4::class)
 class BuggyLobbyActivityTest {
+    private val testHostUser = "host"
     @get:Rule
     var lobbyActivityRule = ActivityScenarioRule(BuggyLobbyActivity::class.java)
 
@@ -56,8 +58,8 @@ class BuggyLobbyActivityTest {
 
         val testIntent = Intent(ctx, BuggyLobbyActivity::class.java).apply {
             putExtra(GAME_IS_HOST_KEY, true)
-            putExtra(GAME_HOST_KEY, Json.encodeToString(User("host")))
-            putExtra(GAME_PLAYLIST_KEY, Json.encodeToString(Playlist("playlist")))
+            putExtra(GAME_HOST_KEY, Json.encodeToString(User(testHostUser)))
+            putExtra(GAME_PLAYLIST_KEY, Json.encodeToString(Playlist(testPlaylist1)))
         }
 
         ActivityScenario.launch<BuggyLobbyActivity>(testIntent).use {

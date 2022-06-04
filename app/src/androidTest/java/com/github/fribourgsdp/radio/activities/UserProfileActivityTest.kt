@@ -7,12 +7,9 @@ import androidx.test.core.app.ActivityScenario
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.espresso.Espresso
 import androidx.test.espresso.Espresso.onView
-import androidx.test.espresso.ViewAssertion
 import androidx.test.espresso.action.ViewActions
 import androidx.test.espresso.action.ViewActions.click
-import androidx.test.espresso.assertion.ViewAssertions
 import androidx.test.espresso.assertion.ViewAssertions.matches
-import androidx.test.espresso.contrib.RecyclerViewActions
 import androidx.test.espresso.intent.Intents
 import androidx.test.espresso.intent.matcher.IntentMatchers.hasComponent
 import androidx.test.espresso.matcher.RootMatchers
@@ -29,17 +26,15 @@ import com.github.fribourgsdp.radio.data.view.REDIRECT_URI
 import com.github.fribourgsdp.radio.data.view.UserProfileActivity
 import com.github.fribourgsdp.radio.database.Database
 import com.github.fribourgsdp.radio.mockimplementations.*
-import com.github.fribourgsdp.radio.util.ViewHolder
+import com.github.fribourgsdp.radio.utils.*
 import com.google.android.gms.tasks.Tasks
 import junit.framework.TestCase
 import org.hamcrest.Matchers.allOf
+import org.junit.After
+import org.junit.Assert.assertNotEquals
+import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
-
-import org.junit.Assert.*
-
-import org.junit.After
-import org.junit.Before
 import org.mockito.Mockito
 import org.mockito.Mockito.`when`
 
@@ -57,23 +52,23 @@ class UserProfileActivityTest : TestCase() {
     fun releaseIntent() {
         Intents.release()
     }
-   
+
     @Test
     fun changingNameAndSavingChangesChangesUser(){
         val testName = "test"
 
         val intent = Intent(ctx, MockUserProfileActivity::class.java)
 
-        ActivityScenario.launch<MockUserProfileActivity>(intent).use { scenario ->
-        onView(withId(R.id.saveUserButton)).check(ViewAssertions.matches(ViewMatchers.withEffectiveVisibility(ViewMatchers.Visibility.INVISIBLE)))
-        onView(withId(R.id.username)).perform(
-            ViewActions.clearText(),
-            ViewActions.typeText(testName),
+        ActivityScenario.launch<MockUserProfileActivity>(intent).use {
+            onView(withId(R.id.saveUserButton)).check(matches(ViewMatchers.withEffectiveVisibility(ViewMatchers.Visibility.INVISIBLE)))
+            onView(withId(R.id.username)).perform(
+                ViewActions.clearText(),
+                ViewActions.typeText(testName),
             )
-        onView(withId(R.id.saveUserButton)).check(ViewAssertions.matches(ViewMatchers.isDisplayed()))
-        Espresso.closeSoftKeyboard()
-        onView(withId(R.id.saveUserButton)).perform(click())
-        onView(withId(R.id.saveUserButton)).check(ViewAssertions.matches(ViewMatchers.withEffectiveVisibility(ViewMatchers.Visibility.INVISIBLE)))
+            onView(withId(R.id.saveUserButton)).check(matches(ViewMatchers.isDisplayed()))
+            Espresso.closeSoftKeyboard()
+            onView(withId(R.id.saveUserButton)).perform(click())
+            onView(withId(R.id.saveUserButton)).check(matches(ViewMatchers.withEffectiveVisibility(ViewMatchers.Visibility.INVISIBLE)))
         }
 
         val user = User.load(ctx)
@@ -86,11 +81,11 @@ class UserProfileActivityTest : TestCase() {
         val testName = "testNotSave"
 
         val intent = Intent(ctx, MockUserProfileActivity::class.java)
-        ActivityScenario.launch<MockUserProfileActivity>(intent).use { scenario ->
+        ActivityScenario.launch<MockUserProfileActivity>(intent).use {
             onView(withId(R.id.username)).perform(
                 ViewActions.clearText(),
                 ViewActions.typeText(testName),
-                )
+            )
             Espresso.closeSoftKeyboard()
         }
         val user = User.load(ctx)
@@ -112,7 +107,7 @@ class UserProfileActivityTest : TestCase() {
             Intents.intended(
                 Matchers.allOf(
                     IntentMatchers.hasComponent(GoogleSignInActivity::class.java.name),
-                    IntentMatchers.toPackage("com.github.fribourgsdp.radio")
+                    IntentMatchers.toPackage(packageName)
                 )
             )
         }
@@ -120,7 +115,7 @@ class UserProfileActivityTest : TestCase() {
 
 
     @Test
-    fun testBuildReqest() {
+    fun testBuildRequest() {
         val request = UserProfileActivity.buildRequest()
         assertEquals(MY_CLIENT_ID, request.clientId)
         assertEquals(REDIRECT_URI, request.redirectUri)
@@ -129,7 +124,7 @@ class UserProfileActivityTest : TestCase() {
     @Test
     fun testPressBack(){
         val intent = Intent(ctx, UserProfileActivity::class.java)
-        ActivityScenario.launch<UserProfileActivity>(intent).use { scenario ->
+        ActivityScenario.launch<UserProfileActivity>(intent).use {
             Espresso.pressBack()
             Intents.intended(
                 allOf(
@@ -148,15 +143,15 @@ class UserProfileActivityTest : TestCase() {
                 a.loginFromGoogle(GoogleSignInResult.NORMAL_USER)
             }
 
-            onView(ViewMatchers.withText(R.string.MergeImportDismissPlaylistText)) // Look for the dialog => use its title
+            onView(withText(R.string.MergeImportDismissPlaylistText)) // Look for the dialog => use its title
                 .inRoot(RootMatchers.isDialog()) // check that it's indeed in a dialog
-                .check(ViewAssertions.matches(ViewMatchers.isDisplayed()));
+                .check(matches(ViewMatchers.isDisplayed()))
 
             onView(withId(R.id.mergePlaylistButton))
-                .perform(ViewActions.click())
+                .perform(click())
 
         }
-        var user = User.load(ctx)
+        val user = User.load(ctx)
         assertEquals(onlineUserName,user.name)
         assertEquals(onlineUserId,user.id)
         assertEquals(2,user.getPlaylists().size)
@@ -165,22 +160,22 @@ class UserProfileActivityTest : TestCase() {
     @Test
     fun dismissPlaylistDismissedPlaylist(){
 
-            val intent = Intent(ctx, MockUserProfileActivity::class.java)
-            ActivityScenario.launch<UserProfileActivity>(intent).use {scenario ->
+        val intent = Intent(ctx, MockUserProfileActivity::class.java)
+        ActivityScenario.launch<UserProfileActivity>(intent).use {scenario ->
 
-                scenario.onActivity { a ->
-                    a.loginFromGoogle(GoogleSignInResult.NORMAL_USER)
-                }
-
-                onView(ViewMatchers.withText(R.string.MergeImportDismissPlaylistText)) // Look for the dialog => use its title
-                    .inRoot(RootMatchers.isDialog()) // check that it's indeed in a dialog
-                    .check(ViewAssertions.matches(ViewMatchers.isDisplayed()));
-
-                onView(withId(R.id.dismissOnlineButton))
-                    .perform(ViewActions.click())
-
+            scenario.onActivity { a ->
+                a.loginFromGoogle(GoogleSignInResult.NORMAL_USER)
             }
-        var user = User.load(ctx)
+
+            onView(withText(R.string.MergeImportDismissPlaylistText)) // Look for the dialog => use its title
+                .inRoot(RootMatchers.isDialog()) // check that it's indeed in a dialog
+                .check(matches(ViewMatchers.isDisplayed()))
+
+            onView(withId(R.id.dismissOnlineButton))
+                .perform(click())
+
+        }
+        val user = User.load(ctx)
         assertEquals(onlineUserName,user.name)
         assertEquals(onlineUserId,user.id)
         assertEquals(1,user.getPlaylists().size)
@@ -197,12 +192,12 @@ class UserProfileActivityTest : TestCase() {
                 a.loginFromGoogle(GoogleSignInResult.NORMAL_USER)
             }
 
-            onView(ViewMatchers.withText(R.string.MergeImportDismissPlaylistText)) // Look for the dialog => use its title
+            onView(withText(R.string.MergeImportDismissPlaylistText)) // Look for the dialog => use its title
                 .inRoot(RootMatchers.isDialog()) // check that it's indeed in a dialog
-                .check(ViewAssertions.matches(ViewMatchers.isDisplayed()));
+                .check(matches(ViewMatchers.isDisplayed()))
 
             onView(withId(R.id.importPlaylistButton))
-                .perform(ViewActions.click())
+                .perform(click())
 
         }
         val user = User.load(ctx)
@@ -220,14 +215,14 @@ class UserProfileActivityTest : TestCase() {
         `when`(db.generateUserId()).thenReturn(Tasks.forResult(1))
         User.database = db
         ActivityScenario.launch<GoogleUserMockUserProfileActivity>(intent).use {
-             onView(withId(R.id.googleSignInButton)).
-                    perform(click())
-            onView(ViewMatchers.withText(R.string.KeepPlaylistLocallyText)) // Look for the dialog => use its title
+            onView(withId(R.id.googleSignInButton)).
+            perform(click())
+            onView(withText(R.string.KeepPlaylistLocallyText)) // Look for the dialog => use its title
                 .inRoot(RootMatchers.isDialog()) // check that it's indeed in a dialog
-                .check(ViewAssertions.matches(ViewMatchers.isDisplayed()));
+                .check(matches(ViewMatchers.isDisplayed()))
 
             onView(withId(R.id.dismissPlaylistButton))
-                .perform(ViewActions.click())
+                .perform(click())
         }
         val user = User.load(ctx)
         assertFalse(user.isGoogleUser)
@@ -247,12 +242,12 @@ class UserProfileActivityTest : TestCase() {
         ActivityScenario.launch<GoogleUserMockUserProfileActivity>(intent).use {
             onView(withId(R.id.googleSignInButton)).
             perform(click())
-            onView(ViewMatchers.withText(R.string.KeepPlaylistLocallyText)) // Look for the dialog => use its title
+            onView(withText(R.string.KeepPlaylistLocallyText)) // Look for the dialog => use its title
                 .inRoot(RootMatchers.isDialog()) // check that it's indeed in a dialog
-                .check(ViewAssertions.matches(ViewMatchers.isDisplayed()));
+                .check(matches(ViewMatchers.isDisplayed()))
 
             onView(withId(R.id.keepPlaylistButton))
-                .perform(ViewActions.click())
+                .perform(click())
 
         }
         val user = User.load(ctx)
@@ -273,30 +268,30 @@ class UserProfileActivityTest : TestCase() {
         User.database = db
 
         ActivityScenario.launch<MockUserProfileActivityOffline>(intent).use {
-            Espresso.onView(withId(R.id.launchSpotifyButton))
+            onView(withId(R.id.launchSpotifyButton))
                 .check(
-                    ViewAssertions.matches(
+                    matches(
                         ViewMatchers.isNotEnabled()
                     )
                 )
 
-            Espresso.onView(withId(R.id.googleSignInButton))
+            onView(withId(R.id.googleSignInButton))
                 .check(
-                    ViewAssertions.matches(
+                    matches(
                         ViewMatchers.isNotEnabled()
                     )
                 )
 
             //try to change the username
-            onView(withId(R.id.saveUserButton)).check(ViewAssertions.matches(ViewMatchers.withEffectiveVisibility(ViewMatchers.Visibility.INVISIBLE)))
+            onView(withId(R.id.saveUserButton)).check(matches(ViewMatchers.withEffectiveVisibility(ViewMatchers.Visibility.INVISIBLE)))
             onView(withId(R.id.username)).perform(
                 ViewActions.clearText(),
                 ViewActions.typeText(testName),
             )
-            onView(withId(R.id.saveUserButton)).check(ViewAssertions.matches(ViewMatchers.isDisplayed()))
+            onView(withId(R.id.saveUserButton)).check(matches(ViewMatchers.isDisplayed()))
             Espresso.closeSoftKeyboard()
             onView(withId(R.id.saveUserButton)).perform(click())
-            onView(withId(R.id.saveUserButton)).check(ViewAssertions.matches(ViewMatchers.withEffectiveVisibility(ViewMatchers.Visibility.INVISIBLE)))
+            onView(withId(R.id.saveUserButton)).check(matches(ViewMatchers.withEffectiveVisibility(ViewMatchers.Visibility.INVISIBLE)))
 
             onView(withId(R.id.username)).check(matches(withText(userName)))
 
