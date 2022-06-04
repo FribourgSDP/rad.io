@@ -19,6 +19,10 @@ If you are shy, you can still play without singing, in that case a robot will re
 
 It is available as an Android application on android 7.0 and newer versions.
 
+## Watch our trailer 
+
+<iframe width="560" height="315" src="https://www.youtube.com/embed/CNpJROtBrTg" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+
 ## How to play ?
 
 You can create your own playlist with a selection of songs you like, or simply use one of the provided starter playlists. You simply create a game that other players can join by typing the id of your lobby or scanning a QR code. When everyone is ready, you can launch the gam and have fun !
