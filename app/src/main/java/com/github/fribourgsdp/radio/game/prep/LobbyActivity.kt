@@ -278,14 +278,14 @@ open class LobbyActivity : MyAppCompatActivity(){
             }
 
             if (snapshot != null && snapshot.exists()) {
-                val gameStillValid = snapshot.get("validity")!! as Boolean
+                val gameStillValid = snapshot.get(VALIDITY_KEY)!! as Boolean
                 if (!gameStillValid) {
                     returnToMainMenu()
                 }
 
                 val newMap = snapshot.getPlayers()
 
-                val isGameLaunched = snapshot.getBoolean("launched")
+                val isGameLaunched = snapshot.getBoolean(LAUNCHED_KEY)
 
                 val mapIdToPermissions = snapshot.getPermissions()
                 val atLeastOnePermissionMissing = mapIdToPermissions.containsValue(false)

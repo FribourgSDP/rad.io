@@ -38,16 +38,16 @@ class HostGameHandlerTest {
     private val fakeGame = Game.Builder()
         .setHost(host)
         .addUserId(otherPlayer.id)
-        .setPlaylist(Playlist("playlist"))
+        .setPlaylist(Playlist(PLAYLIST_KEY))
         .build()
 
     @Before
     fun setup() {
         mockSnapshot = mock(DocumentSnapshot::class.java)
-        `when`(mockSnapshot.get("player_done_map")).thenReturn(fakeGame.getAllPlayersId().associateWith { true })
-        `when`(mockSnapshot.get("scores_of_round")).thenReturn(fakeGame.getAllPlayersId().associateWith { 0L })
-        `when`(mockSnapshot.get("player_found_map")).thenReturn(fakeGame.getAllPlayersId().associateWith { true })
-        `when`(mockSnapshot.get("current_song")).thenReturn("Test Song")
+        `when`(mockSnapshot.get(PLAYER_DONE_MAP_KEY)).thenReturn(fakeGame.getAllPlayersId().associateWith { true })
+        `when`(mockSnapshot.get(SCORES_OF_ROUND_KEY)).thenReturn(fakeGame.getAllPlayersId().associateWith { 0L })
+        `when`(mockSnapshot.get(PLAYER_FOUND_MAP_KEY)).thenReturn(fakeGame.getAllPlayersId().associateWith { true })
+        `when`(mockSnapshot.get(CURRENT_SONG_KEY)).thenReturn("Test Song")
         `when`(mockSnapshot.exists()).thenReturn(true)
     }
 

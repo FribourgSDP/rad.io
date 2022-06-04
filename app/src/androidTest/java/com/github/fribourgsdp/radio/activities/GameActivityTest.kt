@@ -21,6 +21,7 @@ import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.github.fribourgsdp.radio.R
 import com.github.fribourgsdp.radio.data.Playlist
 import com.github.fribourgsdp.radio.data.User
+import com.github.fribourgsdp.radio.database.PLAYLIST_KEY
 import com.github.fribourgsdp.radio.external.musixmatch.MusixmatchLyricsGetter
 import com.github.fribourgsdp.radio.game.*
 import com.github.fribourgsdp.radio.game.handler.NO_SINGER
@@ -50,7 +51,7 @@ class GameActivityTest {
 
     private val fakeGame = Game.Builder()
         .setHost(User("host"))
-        .setPlaylist(Playlist("playlist"))
+        .setPlaylist(Playlist(PLAYLIST_KEY))
         .build()
 
     @Before

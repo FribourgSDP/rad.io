@@ -3,10 +3,8 @@ package com.github.fribourgsdp.radio.game.handler
 import android.content.Context
 import android.util.Log
 import com.github.fribourgsdp.radio.R
-import com.github.fribourgsdp.radio.database.Database
-import com.github.fribourgsdp.radio.database.FirestoreDatabase
 import com.github.fribourgsdp.radio.data.User
-import com.github.fribourgsdp.radio.database.SONG_CHOICES_KEY
+import com.github.fribourgsdp.radio.database.*
 import com.github.fribourgsdp.radio.game.GameView
 import com.github.fribourgsdp.radio.game.prep.DEFAULT_SINGER_DURATION
 import com.github.fribourgsdp.radio.game.timer.Timer
@@ -48,24 +46,24 @@ class PlayerGameHandler(
             // stop the timer if it was running
             stopTimer.stop()
 
-            val gameStillValid = snapshot.getBoolean("validity")!!
-            scores = snapshot.get("scores") as HashMap<String, Long>
-            if (snapshot.getBoolean("finished")!! || !gameStillValid) {
+            val gameStillValid = snapshot.getBoolean(VALIDITY_KEY)!!
+            scores = snapshot.getAndCast<HashMap<String, Long>>(SCORES_KEY)
+            if (snapshot.getBoolean(FINISHED_KEY)!! || !gameStillValid) {
                 view.gameOver(scores!!, !gameStillValid)
                 return
             }
 
-            view.updateRound(snapshot.getLong("current_round")!!)
+            view.updateRound(snapshot.getLong(CURRENT_ROUND_KEY)!!)
 
             // update the score
             view.displayPlayerScores(scores!!)
 
             // Get the picked song
             // It's not null when there is one.
-            songToGuess = snapshot.getString("current_song")
+            songToGuess = snapshot.getString(CURRENT_SONG_KEY)
       
             if(!noSing) {
-                val singerName = snapshot.getString("singer")!!
+                val singerName = snapshot.getString(SINGER_KEY)!!
                 view.updateSinger(singerName)
                 updateViewForPlayer(snapshot, singerName)
             } else{
@@ -161,7 +159,7 @@ class PlayerGameHandler(
 
     private fun getLyricsFromSnapshot(snapshot: DocumentSnapshot) : String {
         val lyricsHashMap =
-            snapshot.getAndCast<Map<String, String>>("song_choices_lyrics")
+            snapshot.getAndCast<Map<String, String>>(SONG_CHOICES_LYRICS_KEY)
         return lyricsHashMap[songToGuess!!]!!
     }
 
@@ -171,7 +169,7 @@ class PlayerGameHandler(
     }
 
     private fun updateViewNoSingMode(snapshot: DocumentSnapshot) {
-        val deadline = snapshot.getTimestamp("round_deadline")
+        val deadline = snapshot.getTimestamp(ROUND_DEADLINE_KEY)
         view.updateSinger(NO_SINGER)
         if(songToGuess != null && deadline != null) {
             view.addHint(SongNameHint(songToGuess!!))
@@ -182,7 +180,7 @@ class PlayerGameHandler(
         }
     }
     private fun updateViewForPlayer(snapshot: DocumentSnapshot, singerName : String){
-        val deadline = snapshot.getTimestamp("round_deadline")
+        val deadline = snapshot.getTimestamp(ROUND_DEADLINE_KEY)
 
         if (view.checkPlayer(singerName)) {
             if (songToGuess == null) {

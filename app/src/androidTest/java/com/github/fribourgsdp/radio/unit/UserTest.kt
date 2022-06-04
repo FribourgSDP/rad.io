@@ -22,7 +22,7 @@ class UserTest {
     private val testString = "test"
     private val testString2 = "test2"
     private val testString3 = "test3"
-    private val userName = "user"
+    private val userName = USER_COLLECTION_PATH
 
     @Test
     fun constructorTest(){
