@@ -35,7 +35,7 @@ class VoiceOverIPActivityTest {
         val context: Context = ApplicationProvider.getApplicationContext()
 
         val intent = Intent(context, VoiceOverIPActivity::class.java)
-        ActivityScenario.launch<VoiceOverIPActivity>(intent).use { _ ->
+        ActivityScenario.launch<VoiceOverIPActivity>(intent).use {
             Espresso.pressBack()
             Intents.intended(
                 Matchers.allOf(
