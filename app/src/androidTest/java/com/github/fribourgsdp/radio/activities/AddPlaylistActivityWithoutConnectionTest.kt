@@ -79,7 +79,7 @@ class AddPlaylistActivityWithoutConnectionTest {
             .perform(ViewActions.click())
 
         Espresso.onView(ViewMatchers.withId(R.id.addSongToPlaylistSongName))
-            .perform(ViewActions.typeText(testSong2))
+            .perform(ViewActions.typeText(testSong7))
         Espresso.closeSoftKeyboard()
         Espresso.onView(ViewMatchers.withId(R.id.addSongToPlaylistArtistName))
             .perform(ViewActions.typeText(testArtist))
