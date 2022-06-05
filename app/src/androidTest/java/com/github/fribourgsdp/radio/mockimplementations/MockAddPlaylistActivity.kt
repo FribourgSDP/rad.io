@@ -16,7 +16,9 @@ class MockAddPlaylistActivity : AddPlaylistActivity(){
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         User.loadOrDefault(this).addOnSuccessListener { u ->
+            user = u
             user.isGoogleUser = true
+
         }
     }
     override fun initializeDatabase(): Database {
