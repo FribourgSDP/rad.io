@@ -21,7 +21,8 @@ It is available as an Android application on android 7.0 and newer versions.
 
 ## Watch our trailer 
 
-<iframe width="560" height="315" src="https://www.youtube.com/embed/CNpJROtBrTg" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+[![rad.io logo](rad_io.png)](https://www.youtube.com/watch?v=CNpJROtBrTg)
+
 
 ## How to play ?
 
