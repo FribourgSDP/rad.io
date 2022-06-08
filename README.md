@@ -1,11 +1,11 @@
-# rad.io
+![rad.io logo](rad_io.png)
 
 [![Build Status](https://api.cirrus-ci.com/github/FribourgSDP/rad.io.svg)](https://cirrus-ci.com/github/FribourgSDP/rad.io)
 [![Maintainability](https://api.codeclimate.com/v1/badges/d819e783c8fc8700526b/maintainability)](https://codeclimate.com/github/FribourgSDP/rad.io/maintainability)
 [![Test Coverage](https://api.codeclimate.com/v1/badges/d819e783c8fc8700526b/test_coverage)](https://codeclimate.com/github/FribourgSDP/rad.io/test_coverage)
 
+[**Watch our trailer**](https://www.youtube.com/watch?v=CNpJROtBrTg)
 
-<img src="app/src/main/res/drawable-ldpi/ic_logo.png" width="200p" height="240p">
 
 ## About the game
 
@@ -18,10 +18,6 @@ friends or download pre-existing playlists from Spotify.
 If you are shy, you can still play without singing, in that case a robot will read out the lyrics of a song for you.
 
 It is available as an Android application on android 7.0 and newer versions.
-
-## Watch our trailer 
-
-[![rad.io logo](rad_io.png)](https://www.youtube.com/watch?v=CNpJROtBrTg)
 
 
 ## How to play ?
