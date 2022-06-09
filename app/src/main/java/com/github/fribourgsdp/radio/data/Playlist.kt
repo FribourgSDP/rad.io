@@ -104,13 +104,14 @@ data class Playlist (override var name: String, var genre: Genre) : Nameable {
 
     /**
      * This method transforms the playlist to a playlist that can be stored online
-     * by generating id's for all songs and the playlist itself
+     * by generating id's for all songs that don't have an id and the playlist itself
      * @param db the database to fetch the id from, by default FirestoreDatabase
      * @return [Task] indicating containing all tasks received from the database
      */
     fun transformToOnline(db : Database = FirestoreDatabase()): Task<Void> {
-        val songTask =  db.generateSongIds(songs.size).continueWith {songIdRange ->
-            for ((i, song) in songs.withIndex()) {
+        val songsWithoutId = songs.filter { s -> s.id == "" }
+        val songTask =  db.generateSongIds(songsWithoutId.size).continueWith {songIdRange ->
+            for ((i, song) in songsWithoutId.withIndex()) {
                 song.id = (songIdRange.result.first + i).toString()
             }
         }

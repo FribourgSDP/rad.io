@@ -93,7 +93,10 @@ open class PlaylistSongsFragment : MyFragment(R.layout.fragment_playlist_display
 
         saveOnlineButton = requireView().findViewById(R.id.SaveOnlineButton)
         saveOnlineButton.setOnClickListener {
-            if(hasConnectivity(requireContext())){
+            if(!user.isGoogleUser){
+                Toast.makeText(requireContext(),getString(R.string.guest_cannot_save_online), Toast.LENGTH_SHORT).show()
+
+            }else if(hasConnectivity(requireContext())){
                 playlist.transformToOnline().addOnSuccessListener {
                     playlist.saveOnline()
                 }.addOnSuccessListener {

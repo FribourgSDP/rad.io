@@ -119,18 +119,33 @@ open class AddPlaylistActivity : MyAppCompatActivity(), SavePlaylistOnlinePicker
                 displayError(R.string.playlist_is_empty)
             }
             else -> {
-                if(!hasConnectivity(this)){
+               if(!hasConnectivity(this) || !user.isGoogleUser){
                     savePlaylistLocally()
-
                 }else{
-                    val savePlaylistOnlinePicker = SavePlaylistOnlinePickerDialog(this)
-                    savePlaylistOnlinePicker.show(supportFragmentManager, "SavePlaylistOnlinePicker")
+                    if(intent.getBooleanExtra(ADD_PLAYLIST_FLAG, true)){
+                        val savePlaylistOnlinePicker = SavePlaylistOnlinePickerDialog(this)
+                        savePlaylistOnlinePicker.show(supportFragmentManager, "SavePlaylistOnlinePicker")
+                    }else{
+                        saveEditedPlaylist()
+                    }
+
                 }
 
             }
         }
     }
 
+
+
+    private fun saveEditedPlaylist(){
+        val serializedPlaylist = intent.getStringExtra(PLAYLIST_TO_MODIFY)
+        val playlist : Playlist = Json.decodeFromString(serializedPlaylist!!)
+        user.removePlaylist(playlist)
+        onPick(playlist.savedOnline)
+
+
+
+    }
     /**
      * Fills error text view
      */
@@ -148,6 +163,7 @@ open class AddPlaylistActivity : MyAppCompatActivity(), SavePlaylistOnlinePicker
             confirmButton.text = getString(R.string.create_playlist)
         } else{
             confirmButton.text = getString(R.string.update_playlist)
+            generateLyricsCheckBox.visibility = View.INVISIBLE
         }
     }
 
@@ -164,6 +180,8 @@ open class AddPlaylistActivity : MyAppCompatActivity(), SavePlaylistOnlinePicker
         val intent = Intent(this@AddPlaylistActivity, UserProfileActivity::class.java)
         startActivity(intent)
     }
+
+
     override fun onPick(online: Boolean) {
         val playlistName: String = findViewById<EditText>(R.id.newPlaylistName).text.toString()
         val genre: Genre = genreSpinner.selectedItem as Genre
