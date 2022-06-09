@@ -91,14 +91,6 @@ class GoogleSignInTestMockUserProfileActivity : MockUserProfileActivity()  {
         }
     }
 
-    override fun signInOrOut(){
-        val mockAdditionalUserInfo = makeMockAdditionalUserInfo(false)
-        val mockUser = makeMockFirebaseUser()
-        val mockAuthResult = makeMockAuthResult(mockAdditionalUserInfo,mockUser)
-        val mockFireBaseAuth = makeMockFireBaseAuth(false, mockAuthResult,mockUser)
-
-        googleSignIn.signIn(mockFireBaseAuth)
-    }
 }
 
 open class MockUserProfileActivity : UserProfileActivity() {
