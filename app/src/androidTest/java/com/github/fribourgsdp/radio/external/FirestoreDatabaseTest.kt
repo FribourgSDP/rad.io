@@ -1,4 +1,4 @@
-package com.github.fribourgsdp.radio.activities
+package com.github.fribourgsdp.radio.external
 
 import com.github.fribourgsdp.radio.data.*
 import com.github.fribourgsdp.radio.database.*
@@ -13,8 +13,8 @@ import org.junit.Assert.*
 import org.junit.Before
 import org.mockito.ArgumentMatchers.anyString
 import org.mockito.Mockito.*
+import java.lang.Exception
 
-//import java.lang.Exception
 class FirestoreDatabaseTest {
     private val userNameTest = "BakerTest"
     private val userIdTest = "ID124Test"
