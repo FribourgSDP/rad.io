@@ -49,9 +49,6 @@
             android:launchMode= "singleInstance"
             android:exported="false" />
         <activity
-            android:name=".deprecated.VoiceOverIPActivity"
-            android:exported="false" />
-        <activity
             android:name=".data.view.PlaylistsFragmentHolderActivity"
             android:exported="false" />
         <activity
@@ -87,16 +84,10 @@
             android:exported="false"
             android:launchMode="singleTop" />
         <activity
-            android:name=".deprecated.FireBaseTestActivity"
-            android:exported="false" />
-        <activity
             android:name=".config.SettingsActivity"
             android:exported="false" />
         <activity
             android:name=".game.prep.GameSettingsActivity"
-            android:exported="false" />
-        <activity
-            android:name=".deprecated.GoogleSignInActivity"
             android:exported="false" />
         <activity
             android:name=".MainActivity"
