@@ -5,19 +5,16 @@ import android.os.Bundle
 import android.view.View
 import android.widget.Toast
 import androidx.activity.result.ActivityResult
-import androidx.activity.result.ActivityResultCaller.*
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.github.fribourgsdp.radio.util.MyFragment
-import com.github.fribourgsdp.radio.util.OnClickListener
 import com.github.fribourgsdp.radio.R
 import com.github.fribourgsdp.radio.config.ConnectivityChecker
 import com.github.fribourgsdp.radio.data.Playlist
 import com.github.fribourgsdp.radio.data.User
-import kotlinx.serialization.decodeFromString
-import kotlinx.serialization.json.Json
+import com.github.fribourgsdp.radio.util.MyFragment
+import com.github.fribourgsdp.radio.util.OnClickListener
 
 const val PLAYLIST_DATA = "com.github.fribourgsdp.radio.PLAYLIST_INNER_DATA"
 

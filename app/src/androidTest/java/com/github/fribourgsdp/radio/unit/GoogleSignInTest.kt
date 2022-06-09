@@ -5,7 +5,6 @@ import android.content.Intent
 import androidx.test.core.app.ActivityScenario
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.espresso.intent.Intents
-import com.github.fribourgsdp.radio.activities.*
 import com.github.fribourgsdp.radio.mockimplementations.GoogleSignInTestMockUserProfileActivity
 import com.github.fribourgsdp.radio.utils.*
 import com.google.firebase.auth.AuthCredential

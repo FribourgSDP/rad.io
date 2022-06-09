@@ -378,36 +378,22 @@ open class LobbyActivity : MyAppCompatActivity(){
                 val scanAccepted = grantResults[1] == PackageManager.PERMISSION_GRANTED
                 val connectAccepted  = grantResults[2] == PackageManager.PERMISSION_GRANTED
                 if (audioAccepted && connectAccepted && scanAccepted) {
-                    hasVoiceIdPermissions = true
-                    launchGameButton.isEnabled = true
-                    askForPermissionsButton.visibility = View.INVISIBLE
-                    db.modifyUserMicPermissions(gameLobbyId, user, true)
+                    validatePermissionsAccept()
                 }
             }else{
                 if (audioAccepted ){
-                    hasVoiceIdPermissions = true
-                    launchGameButton.isEnabled = true
-                    askForPermissionsButton.visibility = View.INVISIBLE
-                    db.modifyUserMicPermissions(gameLobbyId, user, true)
+                    validatePermissionsAccept()
                 }
             }
 
 
         }
-
-        /**
-        if (requestCode == PERMISSION_REQ_ID_RECORD_AUDIO) {
-        for (i in permissions.indices) {
-        var permission: String = permissions[i]
-        var granted: Int = grantResults[i]
-        if (permission == Manifest.permission.RECORD_AUDIO && granted == PackageManager.PERMISSION_GRANTED) {
+    }
+    private fun validatePermissionsAccept() {
         hasVoiceIdPermissions = true
         launchGameButton.isEnabled = true
         askForPermissionsButton.visibility = View.INVISIBLE
         db.modifyUserMicPermissions(gameLobbyId, user, true)
-        }
-        }
-        }**/
     }
 
     override fun onBackPressed() {

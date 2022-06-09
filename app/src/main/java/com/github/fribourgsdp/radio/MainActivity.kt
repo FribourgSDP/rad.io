@@ -1,15 +1,8 @@
 package com.github.fribourgsdp.radio
 
-
-
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
-import android.view.View
 import android.widget.Button
-
-//import com.github.fribourgsdp.radio.databinding.ActivityMainBinding
-
 import android.widget.ImageButton
 import android.widget.Toast
 import com.github.fribourgsdp.radio.config.MyAppCompatActivity
@@ -19,7 +12,6 @@ import com.github.fribourgsdp.radio.data.view.UserProfileActivity
 import com.github.fribourgsdp.radio.database.FirestoreDatabase
 import com.github.fribourgsdp.radio.game.prep.GameSettingsActivity
 import com.github.fribourgsdp.radio.game.prep.JoinGameActivity
-
 
 open class MainActivity : MyAppCompatActivity() {
     private val db = FirestoreDatabase()
