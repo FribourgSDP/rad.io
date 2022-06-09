@@ -180,6 +180,10 @@ class GameSettingsActivityTest {
 
         closeSoftKeyboard()
 
+        // Make the game private so it does not go to the list of public Lobbies
+        onView(withId(R.id.privacyCheckBox))
+            .perform(ViewActions.click())
+
         onView(withId(R.id.startButton))
             .perform(ViewActions.click())
 
