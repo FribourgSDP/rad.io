@@ -180,6 +180,10 @@ class GameSettingsActivityTest {
 
         closeSoftKeyboard()
 
+        // Make the game private so it does not go to the list of public Lobbies
+        onView(withId(R.id.privacyCheckBox))
+            .perform(ViewActions.click())
+
         onView(withId(R.id.startButton))
             .perform(ViewActions.click())
 
@@ -190,7 +194,7 @@ class GameSettingsActivityTest {
                 hasExtra(GAME_PLAYLIST_KEY, Json.encodeToString(testPlaylist)),
                 hasExtra(GAME_NB_ROUNDS_KEY, ctx.getString(R.string.default_game_nb_rounds).toInt()),
                 hasExtra(GAME_HINT_KEY, false),
-                hasExtra(GAME_PRIVACY_KEY, false),
+                hasExtra(GAME_PRIVACY_KEY, true),
                 hasExtra(GAME_IS_HOST_KEY, true),
                 hasExtra(GAME_DURATION_KEY, DEFAULT_SINGER_DURATION),
                 toPackage(packageName)
