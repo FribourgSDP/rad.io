@@ -7,7 +7,6 @@ import com.google.android.gms.tasks.Task
 import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.EventListener
 
-
 interface Database {
 
     /**
@@ -163,7 +162,7 @@ interface Database {
      * @return a task void so that we know if the current song of the game was correctly updated.
      */
     fun updateCurrentSongOfGame(id: Long, songName: String, incrementBy: Long): Task<Void> {
-        return updateGame(id, hashMapOf("current_song" to songName))
+        return updateGame(id, hashMapOf(CURRENT_SONG_KEY to songName))
     }
 
     /**
@@ -219,8 +218,8 @@ interface Database {
      */
     fun removeLobbyListener()
     /**
-     * Stop listening to the updates of the metadata of game
-     */
+    * Stop listening to the updates of the metadata of game
+    */
     fun removeMetadataGameListener()
     /**
      * Stop listening to the updates of the lobby

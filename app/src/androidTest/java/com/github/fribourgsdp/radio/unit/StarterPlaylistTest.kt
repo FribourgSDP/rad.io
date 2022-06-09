@@ -12,7 +12,7 @@ class StarterPlaylistTest {
     fun allStarterPlaylistsAreLoaded(){
         val context = InstrumentationRegistry.getInstrumentation().targetContext
         val userPlaylists = StarterPlaylists.getStarterPlaylists(context)
-        Assert.assertTrue(userPlaylists.contains(Playlist("Chanson française")))
+        Assert.assertTrue(userPlaylists.contains(Playlist("Chansons francophones")))
         Assert.assertTrue(userPlaylists.contains(Playlist("Basic blind test")))
         Assert.assertTrue(userPlaylists.contains(Playlist("Movie theme songs")))
         Assert.assertTrue(userPlaylists.contains(Playlist("Video game songs")))
@@ -20,14 +20,14 @@ class StarterPlaylistTest {
     }
 
     @Test
-    fun chansonFrancaisePlaylistHasGoodTitlesAndArtists(){
+    fun chansonsFrancophonesPlaylistHasGoodTitlesAndArtists(){
         val context = InstrumentationRegistry.getInstrumentation().targetContext
-        val chansonFrancaisePlaylist = StarterPlaylists.getStarterPlaylists(context).find { p -> p.name == "Chanson française" }!!
+        val chansonsFrancophonesPlaylist = StarterPlaylists.getStarterPlaylists(context).find { p -> p.name == "Chansons francophones" }!!
         Assert.assertFalse(
-            chansonFrancaisePlaylist.getSongs().contains(Song("Jacques Brel", "Les vieux"))
+            chansonsFrancophonesPlaylist.getSongs().contains(Song("Jacques Brel", "Les vieux"))
         )
         Assert.assertTrue(
-            chansonFrancaisePlaylist.getSongs()
+            chansonsFrancophonesPlaylist.getSongs()
                 .contains(Song("Foule sentimentale", "Alain Souchon"))
         )
     }

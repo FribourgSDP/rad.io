@@ -26,9 +26,7 @@
         <item name="android:paddingBottom">10dp</item>
     </style>
     <!-- Style for floating button -->
-    <style name="FloatingButtons">
-        <item name="android:layout_width">wrap_content</item>
-        <item name="android:layout_height">wrap_content</item>
+    <style name="Button.Floating">
         <item name="android:layout_marginEnd">8dp</item>
         <item name="android:layout_marginBottom">8dp</item>
         <item name="android:scaleType">center</item>
@@ -77,7 +75,9 @@
     </style>
     <!-- Style for popup text -->
     <style name="Text.Popup">
-        <item name="android:layout_marginStart">32dp</item>
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_marginStart">12dp</item>
+        <item name="android:layout_marginEnd">12dp</item>
         <item name="android:layout_marginTop">16dp</item>
         <item name="android:textSize">24sp</item>
     </style>
@@ -90,6 +90,17 @@
     <style name="GradientButton.Popup">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_marginBottom">12dp</item>
+    </style>
+    <!-- Style for button layout in popups -->
+    <style name="LinearLayoutButton">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_marginTop">16dp</item>
+        <item name="android:orientation">vertical</item>
+        <item name="android:gravity">center</item>
+        <item name="android:paddingStart">32dp</item>
+        <item name="android:paddingEnd">32dp</item>
         <item name="android:layout_marginBottom">12dp</item>
     </style>
     <!-- Style for recycler views -->

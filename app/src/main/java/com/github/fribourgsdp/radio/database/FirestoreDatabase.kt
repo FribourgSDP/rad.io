@@ -28,19 +28,19 @@ import java.util.*
 open class FirestoreRef {
     lateinit var db: FirebaseFirestore
     open fun getUserRef(userId : String) : DocumentReference {
-        return db.collection("user").document(userId)
+        return db.collection(USER_COLLECTION_PATH).document(userId)
     }
     open fun getSongRef(songId : String) : DocumentReference {
-        return db.collection("songs").document(songId)
+        return db.collection(SONGS_COLLECTION_PATH).document(songId)
     }
-    open fun getPlaylistRef(playlistId : String) : DocumentReference {
-        return db.collection("playlists").document(playlistId)
+    open fun getPlaylistRef(PLAYLIST_ID_KEY : String) : DocumentReference {
+        return db.collection(PLAYLISTS_COLLECTION_PATH).document(PLAYLIST_ID_KEY)
     }
     open fun getLobbyRef(lobbyId: String) : DocumentReference {
-        return db.collection("lobby").document(lobbyId)
+        return db.collection(LOBBY_COLLECTION_PATH).document(lobbyId)
     }
     open fun getPublicLobbiesRef() : DocumentReference {
-        return db.collection("lobby").document("public")
+        return db.collection(LOBBY_COLLECTION_PATH).document(PUBLIC_DOCUMENT_PATH)
     }
     open fun getGenericIdRef(collectionPath : String, documentPath : String) : DocumentReference {
         return db.collection(collectionPath).document(documentPath)
@@ -77,7 +77,7 @@ open class TransactionManager() {
             val playerPermissions = snapshot.getPermissions()
             playerPermissions[userId] = newPermissions
 
-            transaction.update(docRef, "permissions", playerPermissions)
+            transaction.update(docRef, PERMISSIONS_KEY, playerPermissions)
 
             // Success
             null
@@ -105,8 +105,8 @@ open class TransactionManager() {
                 transaction.update(
                     publicLobbiesRef, id.toString(),
                     hashMapOf(
-                        "name" to settings!!.name,
-                        "host" to settings!!.hostName
+                        NAME_KEY to settings!!.name,
+                        HOST_KEY to settings.hostName
                     )
                 )
             }
@@ -139,26 +139,25 @@ class FirestoreDatabase(var refMake: FirestoreRef, var transactionMgr: Transacti
         return  refMake.getUserRef(userId).get().continueWith { l ->
             val result = l.result
             if(result.exists()){
-                val userId = result["userID"].toString()
-                val playlists = result["playlists"] !! as ArrayList<HashMap<String,String>>
+                val userId = result[USER_ID_KEY].toString()
+                val playlists = result[PLAYLISTS_COLLECTION_PATH] !! as ArrayList<HashMap<String,String>>
                 val playlistSet : MutableSet<Playlist> = mutableSetOf()
                 for(playlist in playlists){
 
-                    val pl = Playlist(playlist["playlistName"]!!, Genre.valueOf(playlist["genre"]!!))
-                    pl.id = playlist["playlistId"]!!
+                    val pl = Playlist(playlist[PLAYLIST_NAME_KEY]!!, Genre.valueOf(playlist[GENRE_KEY]!!))
+                    pl.id = playlist[PLAYLIST_ID_KEY]!!
                     pl.savedOnline = true
                     pl.savedLocally = false
                     playlistSet.add(pl)
                 }
 
-                val name = result["username"].toString()
+                val name = result[USERNAME_KEY].toString()
                 val user = User(name)
                 user.addPlaylists(playlistSet)
                 user.id = userId
                 user
             }else{
                 null
-                //TODO("CREATE EXCEPTION CLASS AND THROW APPROPRIATE EXCEPTION")
 
             }
         }
@@ -169,12 +168,12 @@ class FirestoreDatabase(var refMake: FirestoreRef, var transactionMgr: Transacti
 
         val playlistInfo : MutableList<HashMap<String,String>> = mutableListOf()
         for ( playlist in user.getPlaylists()){
-            playlistInfo.add((hashMapOf("playlistName" to playlist.name,"playlistId" to playlist.id, "genre" to playlist.genre.toString())))
+            playlistInfo.add((hashMapOf(PLAYLIST_NAME_KEY to playlist.name,PLAYLIST_ID_KEY to playlist.id, GENRE_KEY to playlist.genre.toString())))
         }
         val userHash = hashMapOf(
-            "username" to user.name,
-            "userID" to user.id,
-            "playlists" to playlistInfo
+            USERNAME_KEY to user.name,
+            USER_ID_KEY to user.id,
+            PLAYLISTS_COLLECTION_PATH to playlistInfo
         )
         val docRef = refMake.getUserRef(userId)
         Log.d(ContentValues.TAG, "DocumentSnapshot added with ID put: $docRef")
@@ -189,10 +188,10 @@ class FirestoreDatabase(var refMake: FirestoreRef, var transactionMgr: Transacti
         return  refMake.getSongRef(songId).get().continueWith { l ->
             val result = l.result
             if(result.exists()){
-                val songName = result["songName"].toString()
-                val artistName = result["artistName"].toString()
-                val lyrics = result["lyrics"].toString()
-                val id = result["songId"].toString()
+                val songName = result[SONG_NAME_KEY].toString()
+                val artistName = result[ARTIST_NAME_KEY].toString()
+                val lyrics = result[LYRICS_KEY].toString()
+                val id = result[SONG_ID_KEY].toString()
                 Song(songName,artistName,lyrics,id)
             }else{
                 null
@@ -201,37 +200,39 @@ class FirestoreDatabase(var refMake: FirestoreRef, var transactionMgr: Transacti
     }
 
     override fun registerSong(song : Song): Task<Void>{
-        if(song.id == ""){
-            return Tasks.forException(IllegalArgumentException("Not null id is expected"))
-        }
-        val songHash = hashMapOf(
-            "songId" to song.id,
-            "songName" to song.name,
-            "artistName" to song.artist,
-            "lyrics" to song.lyrics
-        )
-        return refMake.getSongRef(song.id).set(songHash)
+            if(song.id == ""){
+                return Tasks.forException(IllegalArgumentException("Not null id is expected"))
+            }
+            val songHash = hashMapOf(
+                SONG_ID_KEY to song.id,
+                SONG_NAME_KEY to song.name,
+                ARTIST_NAME_KEY to song.artist,
+                LYRICS_KEY to song.lyrics
+            )
+            return refMake.getSongRef(song.id).set(songHash)
 
     }
 
-    override fun getPlaylist(playlistId : String): Task<Playlist>{
-        if(playlistId == ""){
+    override fun getPlaylist(playlistName : String): Task<Playlist>{
+        if(playlistName == ""){
             return Tasks.forException(IllegalArgumentException("Not null id is expected"))
         }
-        return  refMake.getPlaylistRef(playlistId).get().continueWith { l ->
+        return  refMake.getPlaylistRef(playlistName).get().continueWith { l ->
             val result = l.result
             if(result.exists()){
-                val playlistTitle = result["playlistName"].toString()
-                val genre =result["genre"].toString()
-                val songs = result["songs"] !! as ArrayList<HashMap<String,String>>
+                val playlistTitle = result[PLAYLIST_NAME_KEY].toString()
+                val genre = result[GENRE_KEY].toString()
+                val songs = result[SONGS_COLLECTION_PATH] !! as ArrayList<HashMap<String,String>>
                 val songSet : MutableSet<Song> = mutableSetOf()
                 for(song in songs){
-                    val songEntry = (Song(song["songName"]!!,song["songArtist"]!!,""))
-                    songEntry.id = song["songId"]!!
+                    val songEntry = (Song(song[SONG_NAME_KEY]!!,song["songArtist"]!!,""))
+                    songEntry.id = song[SONG_ID_KEY]!!
                     songSet.add(songEntry)
                 }
 
-                Playlist(playlistTitle, songSet, Genre.valueOf(genre))
+               val pl = Playlist(playlistTitle, songSet, Genre.valueOf(genre))
+               pl.savedOnline=true
+               pl
             }else{
                 null
             }
@@ -248,34 +249,34 @@ class FirestoreDatabase(var refMake: FirestoreRef, var transactionMgr: Transacti
             if(song.id == ""){
                 return Tasks.forException(IllegalArgumentException("Not null id is expected"))
             }
-            titleList.add(hashMapOf("songId" to song.id,"songName" to song.name,"songArtist" to song.artist))
+            titleList.add(hashMapOf(SONG_ID_KEY to song.id,SONG_NAME_KEY to song.name,"songArtist" to song.artist))
         }
         val playlistHash = hashMapOf(
-            "playlistId" to playlist.id,
-            "playlistName" to playlist.name,
-            "genre" to playlist.genre,
-            "songs" to titleList
+            PLAYLIST_ID_KEY to playlist.id,
+            PLAYLIST_NAME_KEY to playlist.name,
+            GENRE_KEY to playlist.genre,
+            SONGS_COLLECTION_PATH to titleList
         )
         return refMake.getPlaylistRef(playlist.id).set(playlistHash)
     }
 
     override fun getLobbyId() : Task<Long> {
-        return getId("lobby","id",1).continueWith { pair -> pair.result.first }
+        return getId(LOBBY_COLLECTION_PATH, ID_DOCUMENT_PATH,1).continueWith { pair -> pair.result.first }
     }
 
     override fun generateSongIds(number: Int): Task<Pair<Long,Long>> {
-        return getId("metadata", "SongInfo",number)
+        return getId(METADATA_COLLECTION_PATH, SONG_INFO_DOCUMENT_PATH,number)
     }
     override fun generateUserId() : Task<Long> {
-        return getId("metadata","UserInfo",1).continueWith { pair -> pair.result.first }
+        return getId(METADATA_COLLECTION_PATH, USER_INFO_DOCUMENT_PATH,1).continueWith { pair -> pair.result.first }
     }
 
     override fun generateSongId() : Task<Long> {
-        return getId("metadata","SongInfo",1).continueWith { pair -> pair.result.first }
+        return getId(METADATA_COLLECTION_PATH, SONG_INFO_DOCUMENT_PATH,1).continueWith { pair -> pair.result.first }
     }
 
     override fun generatePlaylistId() : Task<Long> {
-        return getId("metadata", "PlaylistInfo",1).continueWith { pair -> pair.result.first }
+        return getId(METADATA_COLLECTION_PATH, PLAYLIST_INFO_DOCUMENT_PATH,1).continueWith { pair -> pair.result.first }
     }
 
 
@@ -293,18 +294,18 @@ class FirestoreDatabase(var refMake: FirestoreRef, var transactionMgr: Transacti
 
     override fun openLobby(id: Long, settings : Game.Settings) : Task<Void> {
         val gameData = hashMapOf(
-            "name" to settings.name,
-            "host" to settings.hostName,
-            "playlist" to settings.playlistName,
-            "nbRounds" to settings.nbRounds,
-            "withHint" to settings.withHint,
-            "private" to settings.isPrivate,
-            "singerDuration" to settings.singerDuration,
-            "players" to hashMapOf<String, String>(),
-            "permissions" to hashMapOf<String, Boolean>(),
-            "launched" to false,
-            "validity" to true,
-            "noSing" to settings.noSing
+            NAME_KEY to settings.name,
+            HOST_KEY to settings.hostName,
+            PLAYLIST_KEY to settings.playlistName,
+            NB_ROUNDS_KEY to settings.nbRounds,
+            WITH_HINT_KEY to settings.withHint,
+            PRIVATE_KEY to settings.isPrivate,
+            SINGER_DURATION_KEY to settings.singerDuration,
+            PLAYERS_KEY to hashMapOf<String, String>(),
+            PERMISSIONS_KEY to hashMapOf<String, Boolean>(),
+            LAUNCHED_KEY to false,
+            VALIDITY_KEY to true,
+            NO_SING_KEY to settings.noSing
         )
 
         val lobbyRef = refMake.getLobbyRef(id.toString())
@@ -317,11 +318,11 @@ class FirestoreDatabase(var refMake: FirestoreRef, var transactionMgr: Transacti
 
     override fun listenToLobbyUpdate(id: Long, listener: EventListener<DocumentSnapshot>) {
         removeLobbyListener()
-        lobbyListerRegistration = listenUpdate("lobby", id, listener)
+        lobbyListerRegistration = listenUpdate(LOBBY_COLLECTION_PATH, id, listener)
     }
 
     override fun getGameSettingsFromLobby(id: Long) :Task<Game.Settings> {
-        val docRef = refMake.getGenericIdRef("lobby", id.toString())
+        val docRef = refMake.getGenericIdRef(LOBBY_COLLECTION_PATH, id.toString())
 
         return db.runTransaction { transaction ->
             val snapshot = transaction.get(docRef)
@@ -330,14 +331,14 @@ class FirestoreDatabase(var refMake: FirestoreRef, var transactionMgr: Transacti
                 throw IllegalArgumentException("Document $id not found.")
             }
 
-            val host = snapshot.getString("host")!!
-            val name = snapshot.getString("name")!!
-            val playlist = snapshot.getString("playlist")!!
-            val nbRounds = snapshot.getLong("nbRounds")!!
-            val singerDuration = snapshot.getLong("singerDuration")!!
-            val withHint = snapshot.getBoolean("withHint")!!
-            val private = snapshot.getBoolean("private")!!
-            val noSing = snapshot.getBoolean("noSing") ?: false
+            val host = snapshot.getString(HOST_KEY)!!
+            val name = snapshot.getString(NAME_KEY)!!
+            val playlist = snapshot.getString(PLAYLIST_KEY)!!
+            val nbRounds = snapshot.getLong(NB_ROUNDS_KEY)!!
+            val singerDuration = snapshot.getLong(SINGER_DURATION_KEY)!!
+            val withHint = snapshot.getBoolean(WITH_HINT_KEY)!!
+            val private = snapshot.getBoolean(PRIVATE_KEY)!!
+            val noSing = snapshot.getBoolean(NO_SING_KEY) ?: false
 
             // Success
             Game.Settings(host, name, playlist, nbRounds.toInt(), withHint, private, singerDuration, noSing)
@@ -345,7 +346,7 @@ class FirestoreDatabase(var refMake: FirestoreRef, var transactionMgr: Transacti
     }
 
     override fun addUserToLobby(id: Long, user: User, hasMicPermissions: Boolean) : Task<Void> {
-        val docRef = db.collection("lobby").document(id.toString())
+        val docRef = db.collection(LOBBY_COLLECTION_PATH).document(id.toString())
 
         return db.runTransaction { transaction ->
             val snapshot = transaction.get(docRef)
@@ -362,12 +363,12 @@ class FirestoreDatabase(var refMake: FirestoreRef, var transactionMgr: Transacti
 
             mapIdToName[user.id] = user.name
 
-            transaction.update(docRef, "players", mapIdToName)
+            transaction.update(docRef, PLAYERS_KEY, mapIdToName)
 
             val playerPermissions = snapshot.getPermissions()
             playerPermissions[user.id] = hasMicPermissions
 
-            transaction.update(docRef, "permissions", playerPermissions)
+            transaction.update(docRef, PERMISSIONS_KEY, playerPermissions)
 
             // Success
             null
@@ -375,7 +376,7 @@ class FirestoreDatabase(var refMake: FirestoreRef, var transactionMgr: Transacti
     }
 
     override fun getPublicLobbies(): Task<List<LobbyData>> {
-        return db.collection("lobby").document("public").get().continueWith { snapshot ->
+        return db.collection(LOBBY_COLLECTION_PATH).document(PUBLIC_DOCUMENT_PATH).get().continueWith { snapshot ->
             if (snapshot.result == null || !snapshot.result.exists()) {
                 throw Exception("Could not fetch public lobbies")
             }
@@ -385,20 +386,20 @@ class FirestoreDatabase(var refMake: FirestoreRef, var transactionMgr: Transacti
     }
 
     override fun removeLobbyFromPublic(id: Long): Task<Void> {
-        return db.collection("lobby").document("public")
+        return db.collection(LOBBY_COLLECTION_PATH).document(PUBLIC_DOCUMENT_PATH)
             .update(id.toString(), FieldValue.delete())
     }
 
     override fun listenToPublicLobbiesUpdate(listener: EventListener<List<LobbyData>>) {
         removePublicLobbyListener()
-        publicLobbyListerRegistration = db.collection("lobby").document("public").addSnapshotListener { snapshot, error ->
+        publicLobbyListerRegistration = db.collection(LOBBY_COLLECTION_PATH).document(PUBLIC_DOCUMENT_PATH).addSnapshotListener { snapshot, error ->
             val value = snapshot?.let{ createListLobbyDataFromRawData(it.data) }
             listener.onEvent(value, error)
         }
     }
 
     override fun removeUserFromLobby(id: Long, user: User) : Task<Void> {
-        val docRef = db.collection("lobby").document(id.toString())
+        val docRef = db.collection(LOBBY_COLLECTION_PATH).document(id.toString())
 
         return db.runTransaction { transaction ->
             val snapshot = transaction.get(docRef)
@@ -407,7 +408,7 @@ class FirestoreDatabase(var refMake: FirestoreRef, var transactionMgr: Transacti
                 throw IllegalArgumentException("Document $id not found.")
             }
 
-            val mapIdToName = snapshot.get("players")!! as HashMap<String, String>
+            val mapIdToName = snapshot.getAndCast<HashMap<String, String>>(PLAYERS_KEY)
             if (!mapIdToName.containsKey(user.id)) {
                 // A user with the same id was already added
                 throw IllegalArgumentException("id: ${user.id} is not in the database")
@@ -415,12 +416,12 @@ class FirestoreDatabase(var refMake: FirestoreRef, var transactionMgr: Transacti
 
             mapIdToName.remove(user.id)
 
-            transaction.update(docRef, "players", mapIdToName)
+            transaction.update(docRef, PLAYERS_KEY, mapIdToName)
 
-            val playerPermissions = snapshot.get("permissions")!! as HashMap<String, Boolean>
+            val playerPermissions = snapshot.getAndCast<HashMap<String, Boolean>>(PERMISSIONS_KEY)
             playerPermissions.remove(user.id)
 
-            transaction.update(docRef, "permissions", playerPermissions)
+            transaction.update(docRef, PERMISSIONS_KEY, playerPermissions)
 
             // Success
             null
@@ -428,7 +429,7 @@ class FirestoreDatabase(var refMake: FirestoreRef, var transactionMgr: Transacti
     }
 
     override fun disableGame(id: Long): Task<Void> {
-        val docRef = db.collection("games").document(id.toString())
+        val docRef = db.collection(GAMES_COLLECTION_PATH).document(id.toString())
 
         return db.runTransaction { transaction ->
             val snapshot = transaction.get(docRef)
@@ -437,7 +438,7 @@ class FirestoreDatabase(var refMake: FirestoreRef, var transactionMgr: Transacti
                 throw IllegalArgumentException("Document $id not found.")
             }
 
-            transaction.update(docRef, "validity", false)
+            transaction.update(docRef, VALIDITY_KEY, false)
 
             // Success
             null
@@ -445,9 +446,9 @@ class FirestoreDatabase(var refMake: FirestoreRef, var transactionMgr: Transacti
     }
 
     override fun disableLobby(gameID: Long): Task<Void> {
-        val collection = db.collection("lobby")
+        val collection = db.collection(LOBBY_COLLECTION_PATH)
         val lobbyRef = collection.document(gameID.toString())
-        val publicRef = collection.document("public")
+        val publicRef = collection.document(PUBLIC_DOCUMENT_PATH)
         return db.runTransaction { transaction ->
             val lobbySnapshot = transaction.get(lobbyRef)
             val publicLobbiesSnapshot = transaction.get(publicRef)
@@ -460,7 +461,7 @@ class FirestoreDatabase(var refMake: FirestoreRef, var transactionMgr: Transacti
                 throw IllegalArgumentException("The public lobbies could not be reached.")
             }
 
-            transaction.update(lobbyRef, "validity", false)
+            transaction.update(lobbyRef, VALIDITY_KEY, false)
             transaction.update(publicRef, "$gameID", FieldValue.delete())
 
             // Success
@@ -469,7 +470,7 @@ class FirestoreDatabase(var refMake: FirestoreRef, var transactionMgr: Transacti
     }
 
     override fun removePlayerFromGame(gameID: Long, user: User): Task<Void> {
-        val docRef = db.collection("games_metadata").document(gameID.toString())
+        val docRef = db.collection(GAMES_METADATA_COLLECTION_PATH).document(gameID.toString())
 
         return db.runTransaction { transaction ->
             val snapshot = transaction.get(docRef)
@@ -478,13 +479,13 @@ class FirestoreDatabase(var refMake: FirestoreRef, var transactionMgr: Transacti
                 throw IllegalArgumentException("Document $gameID not found.")
             }
 
-            val playerDoneMap = snapshot.get("player_done_map")!! as HashMap<String, Boolean>
-            val playerFoundMap = snapshot.get("player_found_map")!! as HashMap<String, Boolean>
+            val playerDoneMap = snapshot.getAndCast<HashMap<String, Boolean>>(PLAYER_DONE_MAP_KEY)
+            val playerFoundMap = snapshot.getAndCast<HashMap<String, Boolean>>(PLAYER_FOUND_MAP_KEY)
             playerDoneMap.remove(user.id)
             playerFoundMap.remove(user.id)
 
-            transaction.update(docRef, "player_done_map", playerDoneMap)
-            transaction.update(docRef, "player_found_map", playerFoundMap)
+            transaction.update(docRef, PLAYER_DONE_MAP_KEY, playerDoneMap)
+            transaction.update(docRef, PLAYER_FOUND_MAP_KEY, playerFoundMap)
 
             // Success
             null
@@ -492,7 +493,7 @@ class FirestoreDatabase(var refMake: FirestoreRef, var transactionMgr: Transacti
     }
 
     override fun makeSingerDone(gameID: Long, singerId: String): Task<Void> {
-        val docRef = db.collection("games_metadata").document(gameID.toString())
+        val docRef = db.collection(GAMES_METADATA_COLLECTION_PATH).document(gameID.toString())
 
         return db.runTransaction { transaction ->
             val snapshot = transaction.get(docRef)
@@ -501,10 +502,10 @@ class FirestoreDatabase(var refMake: FirestoreRef, var transactionMgr: Transacti
                 throw IllegalArgumentException("Document $gameID not found.")
             }
 
-            val playerDoneMap = snapshot.get("player_done_map")!! as HashMap<String, Boolean>
+            val playerDoneMap = snapshot.getAndCast<HashMap<String, Boolean>>(PLAYER_DONE_MAP_KEY)
             playerDoneMap[singerId] = true
 
-            transaction.update(docRef, "player_done_map", playerDoneMap)
+            transaction.update(docRef, PLAYER_DONE_MAP_KEY, playerDoneMap)
 
             // Success
             null
@@ -517,35 +518,35 @@ class FirestoreDatabase(var refMake: FirestoreRef, var transactionMgr: Transacti
     }
 
     override fun openGame(id: Long): Task<Void> {
-        return refMake.getGenericIdRef("games", id.toString())
+        return refMake.getGenericIdRef(GAMES_COLLECTION_PATH, id.toString())
             .set(
                 hashMapOf(
-                    "finished" to false,
-                    "current_round" to 0L,
-                    "singer" to "",
-                    "song_choices" to ArrayList<String>(),
-                    "scores" to HashMap<String, Int>(),
-                    "validity" to true,
-                    "song_choices_lyrics" to HashMap<String, String>(),
+                    FINISHED_KEY to false,
+                    CURRENT_ROUND_KEY to 0L,
+                    SINGER_KEY to "",
+                    SONG_CHOICES_KEY to ArrayList<String>(),
+                    SCORES_KEY to HashMap<String, Int>(),
+                    VALIDITY_KEY to true,
+                    SONG_CHOICES_LYRICS_KEY to HashMap<String, String>(),
                 )
             )
     }
 
     override fun openGameMetadata(id: Long, usersIds: List<String>): Task<Void> {
-        return db.collection("games_metadata").document(id.toString())
+        return db.collection(GAMES_METADATA_COLLECTION_PATH).document(id.toString())
             .set(
                 hashMapOf(
-                    "player_done_map" to usersIds.associateWith { true },
-                    "player_found_map" to usersIds.associateWith { false },
-                    "scores_of_round" to usersIds.associateWith { 0 }
+                    PLAYER_DONE_MAP_KEY to usersIds.associateWith { true },
+                    PLAYER_FOUND_MAP_KEY to usersIds.associateWith { false },
+                    SCORES_OF_ROUND_KEY to usersIds.associateWith { 0 }
                 )
             )
     }
 
     override fun launchGame(id: Long): Task<Void> {
-        val collection = db.collection("lobby")
+        val collection = db.collection(LOBBY_COLLECTION_PATH)
         val lobbyRef = collection.document(id.toString())
-        val publicRef = collection.document("public")
+        val publicRef = collection.document(PUBLIC_DOCUMENT_PATH)
         return db.runTransaction { transaction ->
             val lobbySnapshot = transaction.get(lobbyRef)
             val publicLobbiesSnapshot = transaction.get(publicRef)
@@ -558,7 +559,7 @@ class FirestoreDatabase(var refMake: FirestoreRef, var transactionMgr: Transacti
                 throw IllegalArgumentException("The public lobbies could not be reached.")
             }
 
-            transaction.update(lobbyRef, "launched", true)
+            transaction.update(lobbyRef, LAUNCHED_KEY, true)
             transaction.update(publicRef, "$id", FieldValue.delete())
 
             // Success
@@ -568,7 +569,7 @@ class FirestoreDatabase(var refMake: FirestoreRef, var transactionMgr: Transacti
 
     override fun listenToGameUpdate(id: Long, listener: EventListener<DocumentSnapshot>) {
         removeGameListener()
-        gameListerRegistration = listenUpdate("games", id, listener)
+        gameListerRegistration = listenUpdate(GAMES_COLLECTION_PATH, id, listener)
     }
 
     override fun removeGameListener(){
@@ -592,11 +593,11 @@ class FirestoreDatabase(var refMake: FirestoreRef, var transactionMgr: Transacti
 
     override fun listenToGameMetadataUpdate(id: Long, listener: EventListener<DocumentSnapshot>) {
         removeMetadataGameListener()
-        metadataGameListerRegistration = listenUpdate("games_metadata", id, listener)
+        metadataGameListerRegistration = listenUpdate(GAMES_METADATA_COLLECTION_PATH, id, listener)
     }
 
     override fun updateGame(id: Long, updatesMap: Map<String, Any>): Task<Void> {
-        return db.collection("games").document(id.toString())
+        return db.collection(GAMES_COLLECTION_PATH).document(id.toString())
             .update(updatesMap)
     }
 
@@ -604,18 +605,18 @@ class FirestoreDatabase(var refMake: FirestoreRef, var transactionMgr: Transacti
         val roundDeadline = Date()
         //incrementBy is in seconds whereas we must add milliseconds to the time before deadline.
         roundDeadline.time += incrementBy*1000
-
+        
 
         val songUpdateMap = hashMapOf(
-            "current_song" to songName,
-            "round_deadline" to Timestamp(roundDeadline)
+            CURRENT_SONG_KEY to songName,
+            ROUND_DEADLINE_KEY to Timestamp(roundDeadline)
         )
 
         return updateGame(id, songUpdateMap)
     }
 
     override fun playerEndTurn(gameID: Long, playerID: String, hasFound: Boolean): Task<Void> {
-        val docRef = db.collection("games_metadata").document(gameID.toString())
+        val docRef = db.collection(GAMES_METADATA_COLLECTION_PATH).document(gameID.toString())
 
         return db.runTransaction { transaction ->
             val snapshot = transaction.get(docRef)
@@ -645,9 +646,9 @@ class FirestoreDatabase(var refMake: FirestoreRef, var transactionMgr: Transacti
             // Update on database
             transaction.update(
                 docRef,
-                "player_done_map", updatedDoneMap,
-                "player_found_map", updatedFoundMap,
-                "scores_of_round", updatedScoreMap
+                PLAYER_DONE_MAP_KEY, updatedDoneMap,
+                PLAYER_FOUND_MAP_KEY, updatedFoundMap,
+                SCORES_OF_ROUND_KEY, updatedScoreMap
             )
 
             // Success
@@ -657,7 +658,7 @@ class FirestoreDatabase(var refMake: FirestoreRef, var transactionMgr: Transacti
     }
 
     override fun resetGameMetadata(gameID: Long, singer: String): Task<Void> {
-        val docRef = db.collection("games_metadata").document(gameID.toString())
+        val docRef = db.collection(GAMES_METADATA_COLLECTION_PATH).document(gameID.toString())
 
         return db.runTransaction { transaction ->
             val snapshot = transaction.get(docRef)
@@ -682,9 +683,9 @@ class FirestoreDatabase(var refMake: FirestoreRef, var transactionMgr: Transacti
             // Update on database
             transaction.update(
                 docRef,
-                "player_done_map", updatedDoneMap,
-                "player_found_map", updatedFoundMap,
-                "scores_of_round", scoresOfRound
+                PLAYER_DONE_MAP_KEY, updatedDoneMap,
+                PLAYER_FOUND_MAP_KEY, updatedFoundMap,
+                SCORES_OF_ROUND_KEY, scoresOfRound
             )
 
             // Success
@@ -702,7 +703,7 @@ class FirestoreDatabase(var refMake: FirestoreRef, var transactionMgr: Transacti
 
     private fun createListLobbyDataFromRawData(data: Map<String, Any>?): List<LobbyData> {
         return data?.let {
-            (it as Map<String, Map<String, String>>).entries.map { (id, data) -> LobbyData(id.toLong(), data["name"]!!, data["host"]!!) }
+            (it as Map<String, Map<String, String>>).entries.map { (id, data) -> LobbyData(id.toLong(), data[NAME_KEY]!!, data[HOST_KEY]!!) }
         } ?: ArrayList()
     }
 

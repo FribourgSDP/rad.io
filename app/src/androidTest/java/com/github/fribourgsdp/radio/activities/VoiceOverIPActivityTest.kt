@@ -10,6 +10,7 @@ import androidx.test.espresso.intent.matcher.IntentMatchers
 import androidx.test.rule.GrantPermissionRule
 import com.github.fribourgsdp.radio.MainActivity
 import com.github.fribourgsdp.radio.deprecated.VoiceOverIPActivity
+import com.github.fribourgsdp.radio.utils.packageName
 import org.hamcrest.Matchers
 import org.junit.After
 import org.junit.Before
@@ -35,12 +36,12 @@ class VoiceOverIPActivityTest {
         val context: Context = ApplicationProvider.getApplicationContext()
 
         val intent = Intent(context, VoiceOverIPActivity::class.java)
-        ActivityScenario.launch<VoiceOverIPActivity>(intent).use { _ ->
+        ActivityScenario.launch<VoiceOverIPActivity>(intent).use {
             Espresso.pressBack()
             Intents.intended(
                 Matchers.allOf(
                     IntentMatchers.hasComponent(MainActivity::class.java.name),
-                    IntentMatchers.toPackage("com.github.fribourgsdp.radio")
+                    IntentMatchers.toPackage(packageName)
                 )
             )
         }

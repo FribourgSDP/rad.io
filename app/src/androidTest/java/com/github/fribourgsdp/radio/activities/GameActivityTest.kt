@@ -3,23 +3,25 @@ package com.github.fribourgsdp.radio.activities
 
 import android.content.Context
 import android.content.Intent
+import android.content.res.Resources
 import android.view.View
+import android.widget.TextView
 import androidx.test.core.app.ActivityScenario
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.espresso.Espresso
 import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.action.ViewActions
-import androidx.test.espresso.assertion.ViewAssertions
 import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.intent.Intents
 import androidx.test.espresso.intent.matcher.IntentMatchers
+import androidx.test.espresso.matcher.BoundedMatcher
 import androidx.test.espresso.matcher.RootMatchers.isDialog
-import androidx.test.espresso.matcher.ViewMatchers
 import androidx.test.espresso.matcher.ViewMatchers.*
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.github.fribourgsdp.radio.R
 import com.github.fribourgsdp.radio.data.Playlist
 import com.github.fribourgsdp.radio.data.User
+import com.github.fribourgsdp.radio.database.PLAYLIST_KEY
 import com.github.fribourgsdp.radio.external.musixmatch.MusixmatchLyricsGetter
 import com.github.fribourgsdp.radio.game.*
 import com.github.fribourgsdp.radio.game.handler.NO_SINGER
@@ -29,11 +31,12 @@ import com.github.fribourgsdp.radio.game.prep.GAME_IS_NO_SING_MODE
 import com.github.fribourgsdp.radio.game.prep.GAME_KEY
 import com.github.fribourgsdp.radio.mockimplementations.MockGameActivity
 import com.github.fribourgsdp.radio.util.SongNameHint
-import com.github.fribourgsdp.radio.utils.CustomMatchers
+import com.github.fribourgsdp.radio.utils.*
 import com.github.fribourgsdp.radio.utils.CustomMatchers.Companion.atPosition
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 import org.hamcrest.CoreMatchers.equalTo
+import org.hamcrest.Description
 import org.hamcrest.Matchers.allOf
 import org.hamcrest.Matchers.not
 import org.junit.After
@@ -41,14 +44,14 @@ import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
 
-
 @RunWith(AndroidJUnit4::class)
 class GameActivityTest {
     private val ctx: Context = ApplicationProvider.getApplicationContext()
+    private val sleepingTime = 50L
 
     private val fakeGame = Game.Builder()
         .setHost(User("host"))
-        .setPlaylist(Playlist("playlist"))
+        .setPlaylist(Playlist(PLAYLIST_KEY))
         .build()
 
     @Before
@@ -93,7 +96,7 @@ class GameActivityTest {
             .putExtra(GAME_KEY, Json.encodeToString(fakeGame))
         ActivityScenario.launch<MockGameActivity>(testIntent).use { _ ->
             Espresso.pressBack()
-            Espresso.onView(withId(R.id.validateQuitGameOrLobby))
+            onView(withId(R.id.validateQuitGameOrLobby))
                 .inRoot(isDialog())
                 .perform(ViewActions.click())
         }
@@ -184,7 +187,7 @@ class GameActivityTest {
     @Test
     fun errorDisplayedCorrectly() {
         // Test values
-        val errorMessage = "This is an error message"
+        val errorMessage = ctx.getString(R.string.game_error)
 
         // Init views
         val errorOrFailureTextView = onView(withId(R.id.errorOrFailureTextView))
@@ -196,7 +199,46 @@ class GameActivityTest {
             }
 
             errorOrFailureTextView.check(matches(isDisplayed()))
-            errorOrFailureTextView.check(matches(withText(errorMessage)))
+            errorOrFailureTextView.check(matches(withText2(R.string.game_error)))
+        }
+    }
+    private fun withText2(resourceId: Int): BoundedMatcher<View?, TextView> {
+        return object : BoundedMatcher<View?, TextView>(TextView::class.java) {
+            private var resourceName: String? = null
+            private var expectedText: String? = null
+            override fun describeTo(description: Description) {
+                description.appendText("with string from resource id: ")
+                description.appendValue(resourceId)
+                if (null != resourceName) {
+                    description.appendText("[")
+                    description.appendText(resourceName)
+                    description.appendText("]")
+                }
+                if (null != expectedText) {
+                    description.appendText(" value: ")
+                    description.appendText(expectedText)
+                }
+            }
+
+            override fun matchesSafely(textView: TextView): Boolean {
+                if (null == expectedText) {
+                    try {
+                        expectedText = textView.resources.getString(
+                            resourceId
+                        )
+                        resourceName = textView.resources
+                            .getResourceEntryName(resourceId)
+                    } catch (ignored: Resources.NotFoundException) {
+
+                    }
+                }
+                return if (null != expectedText) {
+                    expectedText == textView.text
+                        .toString()
+                } else {
+                    false
+                }
+            }
         }
     }
 
@@ -210,6 +252,7 @@ class GameActivityTest {
             scenario.onActivity {
                 it.hideError()
             }
+            Thread.sleep(sleepingTime)
             errorOrFailureTextView.check(matches(not(isDisplayed())))
         }
     }
@@ -232,16 +275,19 @@ class GameActivityTest {
 
             onView(withText(R.string.pick_a_song)) // Look for the dialog => use its title
                 .inRoot(isDialog()) // check that it's indeed in a dialog
-                .check(matches(isDisplayed()));
+                .check(matches(isDisplayed()))
         }
     }
 
     @Test
     fun scoresDisplayedCorrectly() {
+        val singer1Score = 85L
+        val singer2Score = 70L
+        val singer3Score = 100L
         val scores = hashMapOf(
-            "singer0" to 85L,
-            "singer1" to 70L,
-            "singer2" to 100L
+            testSinger1 to singer1Score,
+            testSinger2 to singer2Score,
+            testSinger3 to singer3Score
         )
 
         val testIntent = Intent(ctx, MockGameActivity::class.java)
@@ -253,12 +299,12 @@ class GameActivityTest {
             // Check that the scores are displayed with the correct data and in the correct order
             onView(withId(R.id.scoresRecyclerView))
                 .check(matches(allOf(
-                    atPosition(0, R.id.nameScoreTextView, withText("singer2")),
-                    atPosition(0, R.id.scoreTextView, withText("100")),
-                    atPosition(1, R.id.nameScoreTextView, withText("singer0")),
-                    atPosition(1, R.id.scoreTextView, withText("85")),
-                    atPosition(2, R.id.nameScoreTextView, withText("singer1")),
-                    atPosition(2, R.id.scoreTextView, withText("70"))
+                    atPosition(0, R.id.nameScoreTextView, withText(testSinger3)),
+                    atPosition(0, R.id.scoreTextView, withText(singer3Score.toInt().toString())),
+                    atPosition(1, R.id.nameScoreTextView, withText(testSinger1)),
+                    atPosition(1, R.id.scoreTextView, withText(singer1Score.toInt().toString())),
+                    atPosition(2, R.id.nameScoreTextView, withText(testSinger2)),
+                    atPosition(2, R.id.scoreTextView, withText(singer2Score.toInt().toString()))
                 )))
         }
     }
@@ -268,9 +314,9 @@ class GameActivityTest {
         val testIntent = Intent(ctx, MockGameActivity::class.java)
         ActivityScenario.launch<MockGameActivity>(testIntent).use { scenario ->
             scenario.onActivity {
-                it.updateLyrics("Lorem ipsum, dolor sit amet")
+                it.updateLyrics(testLyrics4)
                 // Display the song to see if the button is displayed
-                it.displaySong("Lorem ipsum")
+                it.displaySong(testSong4)
             }
 
             onView(withId(R.id.showLyricsButton))
@@ -313,10 +359,13 @@ class GameActivityTest {
 
     @Test
     fun goToEndGameActivityOnGameOver() {
+        val singer1Score = 85L
+        val singer2Score = 70L
+        val singer3Score = 100L
         val scores = hashMapOf(
-            "singer0" to 85L,
-            "singer1" to 70L,
-            "singer2" to 100L
+            testSinger1 to singer1Score,
+            testSinger2 to singer2Score,
+            testSinger3 to singer3Score
         )
 
         val testIntent = Intent(ctx, MockGameActivity::class.java)
@@ -329,7 +378,7 @@ class GameActivityTest {
                 allOf(
                     IntentMatchers.hasComponent(EndGameActivity::class.java.name),
                     IntentMatchers.hasExtra(SCORES_KEY, ArrayList(scores.toList())),
-                    IntentMatchers.toPackage("com.github.fribourgsdp.radio")
+                    IntentMatchers.toPackage(packageName)
                 )
             )
         }
@@ -397,7 +446,7 @@ class GameActivityTest {
                 .check(matches(isDisplayed()))
 
 
-            val txtView = onView(ViewMatchers.withId(R.id.hintTextView))
+            val txtView = onView(withId(R.id.hintTextView))
             txtView.check(
                 matches(
                     withText("_______")
@@ -410,7 +459,8 @@ class GameActivityTest {
     @Test
     fun addAllLetterHintCorrectly() {
 
-        val songNameHint = SongNameHint("song")
+        val songName = "song"
+        val songNameHint = SongNameHint(songName)
         val testIntent = Intent(ctx, MockGameActivity::class.java).putExtra(GAME_HINT_KEY, true)
         ActivityScenario.launch<MockGameActivity>(testIntent).use { scenario ->
             scenario.onActivity {
@@ -425,10 +475,10 @@ class GameActivityTest {
                 .check(matches(isDisplayed()))
 
 
-            val txtView = onView(ViewMatchers.withId(R.id.hintTextView))
+            val txtView = onView(withId(R.id.hintTextView))
             txtView.check(
                 matches(
-                    withText("song")
+                    withText(songName)
                 )
             )
         }

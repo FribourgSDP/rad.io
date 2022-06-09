@@ -15,6 +15,7 @@ import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.github.fribourgsdp.radio.R
 import com.github.fribourgsdp.radio.data.view.UserProfileActivity
 import com.github.fribourgsdp.radio.deprecated.GoogleSignInActivity
+import com.github.fribourgsdp.radio.utils.packageName
 import com.google.android.gms.tasks.Tasks
 import com.google.firebase.auth.*
 import org.hamcrest.Matchers
@@ -46,7 +47,7 @@ class GoogleSignInActivityTest {
     fun correctTextOnTextView() {
         val context: Context = ApplicationProvider.getApplicationContext()
         val intent = Intent(context, GoogleSignInActivity::class.java)
-        ActivityScenario.launch<GoogleSignInActivity>(intent).use { scenario ->
+        ActivityScenario.launch<GoogleSignInActivity>(intent).use {
 
             val txtView = onView(ViewMatchers.withId(R.id.captionTv))
             txtView.check(
@@ -62,7 +63,7 @@ class GoogleSignInActivityTest {
 
         val context: Context = ApplicationProvider.getApplicationContext()
         val intent = Intent(context, GoogleSignInActivity::class.java)
-        ActivityScenario.launch<GoogleSignInActivity>(intent).use { scenario ->
+        ActivityScenario.launch<GoogleSignInActivity>(intent).use {
 
             val googleButton = onView(ViewMatchers.withId(R.id.googleSignInButton))
             googleButton.perform(click())
@@ -95,7 +96,7 @@ class GoogleSignInActivityTest {
             Intents.intended(
                 Matchers.allOf(
                     IntentMatchers.hasComponent(UserProfileActivity::class.java.name),
-                    IntentMatchers.toPackage("com.github.fribourgsdp.radio")
+                    IntentMatchers.toPackage(packageName)
                 )
             )
 
@@ -125,7 +126,7 @@ class GoogleSignInActivityTest {
             Intents.intended(
                 Matchers.allOf(
                     IntentMatchers.hasComponent(UserProfileActivity::class.java.name),
-                    IntentMatchers.toPackage("com.github.fribourgsdp.radio")
+                    IntentMatchers.toPackage(packageName)
                 )
             )
         }
@@ -164,12 +165,12 @@ class GoogleSignInActivityTest {
 
         val intent = Intent(context, GoogleSignInActivity::class.java)
 
-        ActivityScenario.launch<GoogleSignInActivity>(intent).use { scenario ->
+        ActivityScenario.launch<GoogleSignInActivity>(intent).use {
 
             Intents.intended(
                 Matchers.allOf(
                     IntentMatchers.hasComponent(UserProfileActivity::class.java.name),
-                    IntentMatchers.toPackage("com.github.fribourgsdp.radio")
+                    IntentMatchers.toPackage(packageName)
                 )
             )
         }

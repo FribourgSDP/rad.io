@@ -4,11 +4,14 @@ import android.content.Context
 import android.view.View
 import androidx.test.core.app.ApplicationProvider
 import com.github.fribourgsdp.radio.R
-import com.github.fribourgsdp.radio.database.Database
+import com.github.fribourgsdp.radio.database.*
+import com.github.fribourgsdp.radio.utils.testLyrics4
+import com.github.fribourgsdp.radio.utils.testSong4
+import com.github.fribourgsdp.radio.utils.testSong6
 import com.github.fribourgsdp.radio.game.handler.PlayerGameHandler
 import com.github.fribourgsdp.radio.mockimplementations.FakeGameView
+import com.github.fribourgsdp.radio.utils.testLyrics6
 import com.github.fribourgsdp.radio.util.MyTextToSpeech
-import com.github.fribourgsdp.radio.util.getAndCast
 import com.google.android.gms.tasks.Tasks
 import com.google.firebase.Timestamp
 import com.google.firebase.firestore.DocumentSnapshot
@@ -26,6 +29,7 @@ class PlayerGameHandlerTest {
 
     private val sleepingTime = 50L
     private val singer = "Singer"
+    private val notSinger = "Not singer"
     private val song = "A good song"
     private val round = 1L
     private val listOfSongs = arrayListOf("Song0", "Song1", "Song2")
@@ -38,15 +42,15 @@ class PlayerGameHandlerTest {
     @Before
     fun setup() {
         mockSnapshot = mock(DocumentSnapshot::class.java)
-        `when`(mockSnapshot.getString("singer")).thenReturn(singer)
+        `when`(mockSnapshot.getString(SINGER_KEY)).thenReturn(singer)
         `when`(mockSnapshot.exists()).thenReturn(true)
-        `when`(mockSnapshot.getLong("current_round")).thenReturn(round)
-        `when`(mockSnapshot.get("song_choices")).thenReturn(listOfSongs)
-        `when`(mockSnapshot.getString("current_song")).thenReturn(null)
-        `when`(mockSnapshot.get("scores")).thenReturn(scores)
-        `when`(mockSnapshot.getBoolean("finished")).thenReturn(false)
-        `when`(mockSnapshot.getTimestamp("round_deadline")).thenReturn(Timestamp(deadline))
-        `when`(mockSnapshot.getBoolean("validity")).thenReturn(true)
+        `when`(mockSnapshot.getLong(CURRENT_ROUND_KEY)).thenReturn(round)
+        `when`(mockSnapshot.get(SONG_CHOICES_KEY)).thenReturn(listOfSongs)
+        `when`(mockSnapshot.getString(CURRENT_SONG_KEY)).thenReturn(null)
+        `when`(mockSnapshot.get(SCORES_KEY)).thenReturn(scores)
+        `when`(mockSnapshot.getBoolean(FINISHED_KEY)).thenReturn(false)
+        `when`(mockSnapshot.getTimestamp(ROUND_DEADLINE_KEY)).thenReturn(Timestamp(deadline))
+        `when`(mockSnapshot.getBoolean(VALIDITY_KEY)).thenReturn(true)
 
     }
 
@@ -72,9 +76,9 @@ class PlayerGameHandlerTest {
 
     @Test
     fun displayGuessWhenOtherPlayerAndPickNotNull() {
-        val view = FakeGameView("Not singer")
+        val view = FakeGameView(notSinger)
         val handler = PlayerGameHandler(ctx, 0, view)
-        `when`(mockSnapshot.getString("current_song")).thenReturn(song)
+        `when`(mockSnapshot.getString(CURRENT_SONG_KEY)).thenReturn(song)
 
         handler.handleSnapshot(mockSnapshot)
 
@@ -87,17 +91,17 @@ class PlayerGameHandlerTest {
     fun callDisplayLyricsOnSnapshot(){
         val view = FakeGameView(singer)
         val handler = PlayerGameHandler(ctx, 0, view)
-        val song = "Momentum"
-        val lyrics = "Lorem Ipsum"
-        `when`(mockSnapshot.getString("current_song")).thenReturn(song)
-        `when`(mockSnapshot.get("song_choices_lyrics")).thenReturn(hashMapOf(song to lyrics))
+        val song = testSong6
+        val lyrics = testLyrics6
+        `when`(mockSnapshot.getString(CURRENT_SONG_KEY)).thenReturn(song)
+        `when`(mockSnapshot.get(SONG_CHOICES_LYRICS_KEY)).thenReturn(hashMapOf(song to lyrics))
         handler.handleSnapshot(mockSnapshot)
         assertEquals(lyrics, view.lyricsDisplayed)
     }
 
     @Test
     fun displayWaitWhenOtherPlayerAndPickNull() {
-        val view = FakeGameView("Not singer")
+        val view = FakeGameView(notSinger)
         val handler = PlayerGameHandler(ctx, 0, view)
 
         handler.handleSnapshot(mockSnapshot)
@@ -160,12 +164,12 @@ class PlayerGameHandlerTest {
 
     @Test
     fun displaySongOnGoodGuess() {
-        val view = FakeGameView("Not Singer")
+        val view = FakeGameView(notSinger)
         val db = mock(Database::class.java)
         `when`(db.playerEndTurn(anyLong(), anyString(), anyBoolean()))
             .thenReturn(Tasks.forResult(null))
 
-        `when`(mockSnapshot.getString("current_song")).thenReturn(song)
+        `when`(mockSnapshot.getString(CURRENT_SONG_KEY)).thenReturn(song)
 
         val handler = PlayerGameHandler(ctx, 0, view, db)
 
@@ -185,12 +189,12 @@ class PlayerGameHandlerTest {
 
     @Test
     fun displayErrorOnBadGuess() {
-        val view = FakeGameView("Not Singer")
+        val view = FakeGameView(notSinger)
         val db = mock(Database::class.java)
         `when`(db.playerEndTurn(anyLong(), anyString(), anyBoolean()))
             .thenReturn(Tasks.forResult(null))
 
-        `when`(mockSnapshot.getString("current_song")).thenReturn(song)
+        `when`(mockSnapshot.getString(CURRENT_SONG_KEY)).thenReturn(song)
 
         val handler = PlayerGameHandler(ctx, 0, view, db)
 
@@ -209,12 +213,12 @@ class PlayerGameHandlerTest {
 
     @Test
     fun displayOtherErrorWhenClose() {
-        val view = FakeGameView("Not Singer")
+        val view = FakeGameView(notSinger)
         val db = mock(Database::class.java)
         `when`(db.playerEndTurn(anyLong(), anyString(), anyBoolean()))
             .thenReturn(Tasks.forResult(null))
 
-        `when`(mockSnapshot.getString("current_song")).thenReturn(song)
+        `when`(mockSnapshot.getString(CURRENT_SONG_KEY)).thenReturn(song)
 
         val handler = PlayerGameHandler(ctx, 0, view, db)
 
@@ -233,12 +237,12 @@ class PlayerGameHandlerTest {
 
     @Test
     fun displayErrorOnDatabaseFailureToEndTurn() {
-        val view = FakeGameView("Not Singer")
+        val view = FakeGameView(notSinger)
         val db = mock(Database::class.java)
         `when`(db.playerEndTurn(anyLong(), anyString(), anyBoolean()))
             .thenReturn(Tasks.forException(Exception()))
 
-        `when`(mockSnapshot.getString("current_song")).thenReturn(song)
+        `when`(mockSnapshot.getString(CURRENT_SONG_KEY)).thenReturn(song)
 
         val handler = PlayerGameHandler(ctx, 0, view, db)
 
@@ -323,7 +327,7 @@ class PlayerGameHandlerTest {
         val view = FakeGameView()
         val handler = PlayerGameHandler(ctx, 0, view)
 
-        `when`(mockSnapshot.getBoolean("finished")).thenReturn(true)
+        `when`(mockSnapshot.getBoolean(FINISHED_KEY)).thenReturn(true)
 
         handler.handleSnapshot(mockSnapshot)
 
@@ -333,9 +337,9 @@ class PlayerGameHandlerTest {
 
     @Test
     fun timerLaunchedWhenGuessing() {
-        val view = FakeGameView("Not singer")
+        val view = FakeGameView(notSinger)
         val handler = PlayerGameHandler(ctx, 0, view)
-        `when`(mockSnapshot.getString("current_song")).thenReturn(song)
+        `when`(mockSnapshot.getString(CURRENT_SONG_KEY)).thenReturn(song)
 
         handler.handleSnapshot(mockSnapshot)
 
@@ -345,7 +349,7 @@ class PlayerGameHandlerTest {
 
     @Test
     fun timerStoppedOnGoodGuess() {
-        val view = FakeGameView("Not Singer")
+        val view = FakeGameView(notSinger)
         // Say the view started the timer to see the difference
         view.startTimer(deadline)
 
@@ -353,7 +357,7 @@ class PlayerGameHandlerTest {
         `when`(db.playerEndTurn(anyLong(), anyString(), anyBoolean()))
             .thenReturn(Tasks.forResult(null))
 
-        `when`(mockSnapshot.getString("current_song")).thenReturn(song)
+        `when`(mockSnapshot.getString(CURRENT_SONG_KEY)).thenReturn(song)
 
         val handler = PlayerGameHandler(ctx, 0, view, db)
 
@@ -371,12 +375,12 @@ class PlayerGameHandlerTest {
 
     @Test
     fun hideErrorOnTimeout() {
-        val view = FakeGameView("Not Singer")
+        val view = FakeGameView(notSinger)
         val db = mock(Database::class.java)
         `when`(db.playerEndTurn(anyLong(), anyString(), anyBoolean()))
             .thenReturn(Tasks.forResult(null))
 
-        `when`(mockSnapshot.getString("current_song")).thenReturn(song)
+        `when`(mockSnapshot.getString(CURRENT_SONG_KEY)).thenReturn(song)
 
         val handler = PlayerGameHandler(ctx, 0, view, db)
 
@@ -393,13 +397,13 @@ class PlayerGameHandlerTest {
     }
 
     @Test
-    fun gameCrashOnTimoutButDBFail() {
-        val view = FakeGameView("Not Singer")
+    fun gameCrashOnTimeoutButDBFail() {
+        val view = FakeGameView(notSinger)
         val db = mock(Database::class.java)
         `when`(db.playerEndTurn(anyLong(), anyString(), anyBoolean()))
             .thenReturn(Tasks.forException(Exception()))
 
-        `when`(mockSnapshot.getString("current_song")).thenReturn(song)
+        `when`(mockSnapshot.getString(CURRENT_SONG_KEY)).thenReturn(song)
 
         val handler = PlayerGameHandler(ctx, 0, view, db)
 
@@ -422,7 +426,7 @@ class PlayerGameHandlerTest {
         val view = FakeGameView()
         val handler = PlayerGameHandler(ctx, 0, view)
 
-        `when`(mockSnapshot.getBoolean("validity")).thenReturn(false)
+        `when`(mockSnapshot.getBoolean(VALIDITY_KEY)).thenReturn(false)
 
         handler.handleSnapshot(mockSnapshot)
 
@@ -439,13 +443,13 @@ class PlayerGameHandlerTest {
             }
         }
         val handler = PlayerGameHandler(ctx, 0, view, noSing = true, tts = tts)
-        `when`(mockSnapshot.getString("current_song"))
-            .thenReturn("Lithium")
-        `when`(mockSnapshot.get("song_choices_lyrics"))
-            .thenReturn(mapOf("Lithium" to "Whatever"))
+        `when`(mockSnapshot.getString(CURRENT_SONG_KEY))
+            .thenReturn(testSong4)
+        `when`(mockSnapshot.get(SONG_CHOICES_LYRICS_KEY))
+            .thenReturn(mapOf(testSong4 to testLyrics4))
         handler.handleSnapshot(mockSnapshot)
         handler.handleGuess("", "", timeout = true)
-        assertEquals(view.song, ctx.getString(R.string.previousSongDisplay) + "Lithium")
+        assertEquals(view.song, ctx.getString(R.string.previousSongDisplay) + testSong4)
     }
 
 }

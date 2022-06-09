@@ -3,8 +3,7 @@ package com.github.fribourgsdp.radio.game.handler
 import android.content.Context
 import android.util.Log
 import com.github.fribourgsdp.radio.R
-import com.github.fribourgsdp.radio.database.Database
-import com.github.fribourgsdp.radio.database.FirestoreDatabase
+import com.github.fribourgsdp.radio.database.*
 import com.github.fribourgsdp.radio.external.musixmatch.LyricsGetter
 import com.github.fribourgsdp.radio.external.musixmatch.MusixmatchLyricsGetter
 import com.github.fribourgsdp.radio.game.Game
@@ -62,11 +61,11 @@ class HostGameHandler(
                 val onSuccess: (Void?) -> (Unit) = {
                     if(!noSing) {
                         // update the latest singer
-                        latestSingerId = updatesMap["singer"] as String
+                        latestSingerId = updatesMap[SINGER_KEY] as String
                         resetGameMetadata(latestSingerId!!)
                     } else{
                         resetGameMetadata(NO_SINGER)
-                        assignSong(updatesMap["current_song"] as String)
+                        assignSong(updatesMap[CURRENT_SONG_KEY] as String)
                         game.incrementCurrentRound()
                     }
                 }
@@ -156,12 +155,12 @@ class HostGameHandler(
         }
 
         val updatesMap = hashMapOf(
-            "finished" to done,
-            "current_round" to game.currentRound,
-            "round_deadline" to FieldValue.delete(),
-            "song_choices" to nextChoices.toList(),
-            "song_choices_lyrics" to nextChoicesLyrics,
-            "scores" to game.getAllScores()
+            FINISHED_KEY to done,
+            CURRENT_ROUND_KEY to game.currentRound,
+            ROUND_DEADLINE_KEY to FieldValue.delete(),
+            SONG_CHOICES_KEY to nextChoices.toList(),
+            SONG_CHOICES_LYRICS_KEY to nextChoicesLyrics,
+            SCORES_KEY to game.getAllScores()
         )
 
         return if(!noSing) {
@@ -169,9 +168,9 @@ class HostGameHandler(
             do {
                 nextUser = game.getUserToPlay()
             } while (!playerIdsOnDatabase.contains(nextUser))
-            updatesMap + ("current_song" to FieldValue.delete()) + ("singer" to nextUser)
+            updatesMap + (CURRENT_SONG_KEY to FieldValue.delete()) + (SINGER_KEY to nextUser)
         } else{
-            updatesMap + ("current_song" to nextChoices[0])
+            updatesMap + (CURRENT_SONG_KEY to nextChoices[0])
         }
     }
 

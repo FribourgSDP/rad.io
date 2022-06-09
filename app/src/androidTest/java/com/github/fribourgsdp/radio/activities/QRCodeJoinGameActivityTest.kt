@@ -1,6 +1,5 @@
 package com.github.fribourgsdp.radio.activities
 
-import android.Manifest
 import android.content.Context
 import android.content.Intent
 import androidx.test.core.app.ActivityScenario
@@ -13,16 +12,15 @@ import androidx.test.espresso.intent.matcher.IntentMatchers
 import androidx.test.espresso.matcher.RootMatchers
 import androidx.test.espresso.matcher.ViewMatchers
 import androidx.test.ext.junit.runners.AndroidJUnit4
-import androidx.test.rule.GrantPermissionRule
 import com.github.fribourgsdp.radio.R
 import com.github.fribourgsdp.radio.game.prep.LobbyActivity
 import com.github.fribourgsdp.radio.mockimplementations.QRCodeJoinGameActivity
 import com.github.fribourgsdp.radio.mockimplementations.QRCodeJoinGameActivityJoin
 import com.github.fribourgsdp.radio.mockimplementations.QRCodeJoinGameActivityJoinFail
+import com.github.fribourgsdp.radio.utils.packageName
 import org.hamcrest.Matchers
 import org.junit.After
 import org.junit.Before
-import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
 
@@ -45,7 +43,7 @@ class QRCodeJoinGameActivityTest {
 
         val context: Context = ApplicationProvider.getApplicationContext()
         val intent = Intent(context, QRCodeJoinGameActivity::class.java)
-        ActivityScenario.launch<QRCodeJoinGameActivity>(intent).use { scenario ->
+        ActivityScenario.launch<QRCodeJoinGameActivity>(intent).use {
             ViewActions.closeSoftKeyboard()
             val joinQRCodeButton = Espresso.onView(ViewMatchers.withId(R.id.joinWithQRCode))
             joinQRCodeButton.perform(ViewActions.click())
@@ -68,7 +66,7 @@ class QRCodeJoinGameActivityTest {
 
         val context: Context = ApplicationProvider.getApplicationContext()
         val intent = Intent(context, QRCodeJoinGameActivityJoin::class.java)
-        ActivityScenario.launch<QRCodeJoinGameActivityJoin>(intent).use { scenario ->
+        ActivityScenario.launch<QRCodeJoinGameActivityJoin>(intent).use {
             val displayQRCodeButton = Espresso.onView(ViewMatchers.withId(R.id.joinWithQRCode))
             displayQRCodeButton.perform(ViewActions.click())
 
@@ -79,7 +77,7 @@ class QRCodeJoinGameActivityTest {
 
             Intents.intended(
                 Matchers.allOf(
-                    IntentMatchers.toPackage("com.github.fribourgsdp.radio"),
+                    IntentMatchers.toPackage(packageName),
                     IntentMatchers.hasComponent(LobbyActivity::class.java.name),
                 )
             )
@@ -92,7 +90,7 @@ class QRCodeJoinGameActivityTest {
 
         val context: Context = ApplicationProvider.getApplicationContext()
         val intent = Intent(context, QRCodeJoinGameActivityJoinFail::class.java)
-        ActivityScenario.launch<QRCodeJoinGameActivityJoinFail>(intent).use { scenario ->
+        ActivityScenario.launch<QRCodeJoinGameActivityJoinFail>(intent).use {
             val displayQRCodeButton = Espresso.onView(ViewMatchers.withId(R.id.joinWithQRCode))
             displayQRCodeButton.perform(ViewActions.click())
 

@@ -168,7 +168,7 @@ open class GameActivity : AppCompatActivity(), GameView, Timer.Listener {
 
         // Show the edit text and the submit button instead
         songGuessEditText.apply {
-            text.clear()
+            setText("")
             visibility = View.VISIBLE
         }
         songGuessSubmitButton.visibility = View.VISIBLE
@@ -282,6 +282,7 @@ open class GameActivity : AppCompatActivity(), GameView, Timer.Listener {
             }
             false
         }
+
         muteButton = findViewById(R.id.muteChannelButton)
         muteButton.setOnClickListener {
             voiceChannel.mute()
@@ -319,12 +320,10 @@ open class GameActivity : AppCompatActivity(), GameView, Timer.Listener {
     }
 
     override fun onUpdate(timeInSeconds: Long) {
-
-        updateHint(timeInSeconds.toInt())
-
         // Run on main thread
         runOnUiThread {
             timerProgressBarHandler.progressBar.setProgress(timeInSeconds.toInt(), true)
+            updateHint(timeInSeconds.toInt())
         }
     }
 

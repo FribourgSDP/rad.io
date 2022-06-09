@@ -56,7 +56,7 @@
     <string name="create_playlist">CREATE PLAYLIST</string>
     <string name="update_playlist">UPDATE PLAYLIST</string>
     <string name="add_song">ADD SONG</string>
-    <string name="lyricsPresenter">lyrics :</string>
+    <string name="lyricsPresenter">Lyrics :</string>
     <string name="pick_a_song">Pick a song!</string>
     <string name="submit">Submit</string>
     <string name="playlist_name">Playlist Name</string>
@@ -80,7 +80,7 @@
     <string name="no">No</string>
     <string name="round_done">The time of the round expired</string>
     <string name="warningMessageQuitAddPlaylist">Are you sure you want to return to the main menu? All unsaved changes will be discarded.</string>
-    <string name="validateMessageQuitAddPlaylist">Delete and return to main menu</string>
+    <string name="validateMessageQuitAddPlaylist">Return to your profile</string>
     <string name="cancelMessageQuitAddPlaylist">Continue editing my playlist</string>
     <string name="warningMessageQuitGameOrLobby">Warning: by clicking on continue, you will be kicked from the lobby. If you are host this will end the game for all players.</string>
     <string name="validateMessageQuitGameOrLobby">Continue</string>
@@ -157,4 +157,7 @@
     </string-array>
     <string name="deleteUndoQuestion">Undo deletion?</string>
     <string name="deleteUndoAnswer">Undo</string>
+    <string name="offline_error_message_toast">Cannot access online resources offline</string>
+    <string name="no_lyrics_generation_offline">Couldn\'t generate lyrics</string>
+    <string name="guest_cannot_save_online">You have to be signed in to Google to save a playlist online</string>
 </resources>

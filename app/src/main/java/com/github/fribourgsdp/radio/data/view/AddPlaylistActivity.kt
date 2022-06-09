@@ -69,6 +69,10 @@ open class AddPlaylistActivity : MyAppCompatActivity(), SavePlaylistOnlinePicker
         recyclerView.layoutManager = layoutManager
         errorTextView = findViewById(R.id.addPlaylistErrorTextView)
 
+        if(!hasConnectivity(this)){
+            generateLyricsCheckBox.isEnabled = false
+        }
+
     }
 
     private fun initViews(){
@@ -115,12 +119,33 @@ open class AddPlaylistActivity : MyAppCompatActivity(), SavePlaylistOnlinePicker
                 displayError(R.string.playlist_is_empty)
             }
             else -> {
-                val savePlaylistOnlinePicker = SavePlaylistOnlinePickerDialog(this)
-                savePlaylistOnlinePicker.show(supportFragmentManager, "SavePlaylistOnlinePicker")
+               if(!hasConnectivity(this) || !user.isGoogleUser){
+                    savePlaylistLocally()
+                }else{
+                    if(intent.getBooleanExtra(ADD_PLAYLIST_FLAG, true)){
+                        val savePlaylistOnlinePicker = SavePlaylistOnlinePickerDialog(this)
+                        savePlaylistOnlinePicker.show(supportFragmentManager, "SavePlaylistOnlinePicker")
+                    }else{
+                        saveEditedPlaylist()
+                    }
+
+                }
+
             }
         }
     }
 
+
+
+    private fun saveEditedPlaylist(){
+        val serializedPlaylist = intent.getStringExtra(PLAYLIST_TO_MODIFY)
+        val playlist : Playlist = Json.decodeFromString(serializedPlaylist!!)
+        user.removePlaylist(playlist)
+        onPick(playlist.savedOnline)
+
+
+
+    }
     /**
      * Fills error text view
      */
@@ -138,7 +163,22 @@ open class AddPlaylistActivity : MyAppCompatActivity(), SavePlaylistOnlinePicker
             confirmButton.text = getString(R.string.create_playlist)
         } else{
             confirmButton.text = getString(R.string.update_playlist)
+            generateLyricsCheckBox.visibility = View.INVISIBLE
         }
+    }
+
+
+    private fun savePlaylistLocally(){
+        if(generateLyricsCheckBox.isChecked){
+            Toast.makeText(this,getString(R.string.no_lyrics_generation_offline),Toast.LENGTH_SHORT).show()
+        }
+        val playlistName : String = findViewById<EditText>(R.id.newPlaylistName).text.toString()
+        val genre : Genre = genreSpinner.selectedItem as Genre
+        val playlist = Playlist(playlistName,listSongs.toSet(),genre)
+        user.addPlaylist(playlist)
+        user.save(this)
+        val intent = Intent(this@AddPlaylistActivity, UserProfileActivity::class.java)
+        startActivity(intent)
     }
 
 

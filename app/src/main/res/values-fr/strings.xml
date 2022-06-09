@@ -57,7 +57,7 @@
     <string name="create_playlist">CRÉER UNE PLAYLIST</string>
     <string name="update_playlist">MODIFIER LA PLAYLIST</string>
     <string name="add_song">AJOUTER UNE CHANSON</string>
-    <string name="lyricsPresenter">paroles :</string>
+    <string name="lyricsPresenter">Paroles :</string>
     <string name="pick_a_song">Choisis une chanson !</string>
     <string name="submit">Soumettre</string>
     <string name="playlist_name">Playlist Name</string>
@@ -86,7 +86,7 @@
     <string name="cancelMessageQuitGameOrLobby">Annuler</string>
     <string name="warningMessageQuitGameOrLobby">Attention, en cliquant sur continuer, vous serez retiré du lobby. Si vous êtes l\'hôte vous mettrez fin à la partie.</string>
     <string name="warningMessageQuitAddPlaylist">Voulez vous retourner au menu d\'utilisateur? Toutes les modifications ne seront pas sauvegardées.</string>
-    <string name="validateMessageQuitAddPlaylist">Supprimer la playlist et retourner au profil</string>
+    <string name="validateMessageQuitAddPlaylist">Retourner au profil</string>
     <string name="saveOnlineQuestionText">Voulez-vous sauvez votre playlist en ligne?</string>
     <string name="yes">oui</string>
     <string name="no">non</string>
@@ -158,5 +158,8 @@
     </string-array>
     <string name="deleteUndoAnswer">Annuler</string>
     <string name="deleteUndoQuestion">Annuler la suppression?</string>
+    <string name="offline_error_message_toast">Impossible d\'acceder à des ressources en ligne</string>
+    <string name="no_lyrics_generation_offline">Impossible de générer des paroles</string>
+    <string name="guest_cannot_save_online">Il faut être connecté avec Google pour sauver une playlist en ligne</string>
 
 </resources>

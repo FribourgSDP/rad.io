@@ -18,7 +18,6 @@ import com.github.fribourgsdp.radio.data.Song
 import com.github.fribourgsdp.radio.data.User
 import com.github.fribourgsdp.radio.game.prep.*
 import com.github.fribourgsdp.radio.mockimplementations.LocalDatabase
-import com.github.fribourgsdp.radio.mockimplementations.LyricsGettingWorkingLobbyActivity
 import com.github.fribourgsdp.radio.mockimplementations.WorkingLobbyActivity
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
@@ -37,6 +36,12 @@ import org.junit.runner.RunWith
 @RunWith(AndroidJUnit4::class)
 class WorkingLobbyActivityTest {
     private val ctx: Context = ApplicationProvider.getApplicationContext()
+    // Test values
+    private val testName = "Hello World!"
+    private val testPlaylist = Playlist("Rap Playlist")
+    private val testNbRounds = 20
+    private val withHint = true
+    private val private = true
     @Before
     fun initIntent() {
         Intents.init()
@@ -47,12 +52,6 @@ class WorkingLobbyActivityTest {
     }
     @Test
     fun pressingOnBackThenCancelStaysInLobby(){
-        // Test values
-        val testName = "Hello World!"
-        val testPlaylist = Playlist("Rap Playlist")
-        val testNbRounds = 20
-        val withHint = true
-        val private = true
         val testIntent = Intent(ctx, WorkingLobbyActivity::class.java).apply {
             putExtra(GAME_NAME_KEY, testName)
             putExtra(GAME_PLAYLIST_KEY, Json.encodeToString(testPlaylist))
@@ -80,12 +79,6 @@ class WorkingLobbyActivityTest {
     }
     @Test
     fun lobbyDisplayCorrectInfosWhenHost() {
-        // Test values
-        val testName = "Hello World!"
-        val testPlaylist = Playlist("Rap Playlist")
-        val testNbRounds = 20
-        val withHint = true
-        val private = true
         // Init views
         val uuidTextView = Espresso.onView(withId(R.id.uuidText))
         val gameNameTextView = Espresso.onView(withId(R.id.gameNameText))
@@ -119,11 +112,6 @@ class WorkingLobbyActivityTest {
     fun lobbyDisplayCorrectInfosWhenInvited() {
         // Test values
         val testUID = 42L
-        val testName = "Hello World!"
-        val testPlaylist = Playlist("Rap Playlist")
-        val testNbRounds = 20
-        val withHint = true
-        val private = true
         // Init views
         val uuidTextView = Espresso.onView(withId(R.id.uuidText))
         val gameNameTextView = Espresso.onView(withId(R.id.gameNameText))
@@ -165,37 +153,10 @@ class WorkingLobbyActivityTest {
             uuidTextView.check(matches(withText(ctx.getString(R.string.uid_error_join))))
         }
     }
-    @Test
-    fun lobbyFetchesLyricsTest() {
-        val lyrics = "If you feel, little chance, make a stance\n" +
-                "Looking for, better days, let me say\n" +
-                "Something's wrong, when you can't, let me go\n" +
-                "For to long, long, long...\n" +
-                "\n" +
-                "Momentum owns you\n" +
-                "Controlling her too"
-        // Test values
-        var testHost = User("Test User")
-        val testPlaylist = Playlist("Stoner Playlist")
-        testPlaylist.addSong(Song("Momentum", "Truckfighters"))
-        testHost.addPlaylist(testPlaylist)
-        val context: Context = ApplicationProvider.getApplicationContext()
-        testHost.save(context)
-        val testIntent = Intent(ctx, LyricsGettingWorkingLobbyActivity::class.java)
-        ActivityScenario.launch<LyricsGettingWorkingLobbyActivity>(testIntent).use {
-            testHost = User.load(context)
-            assertTrue(testHost.getPlaylists().any { p -> p.getSongs().any { s -> s.lyrics == lyrics } })
-        }
-    }
 
     @Test
     fun createCorrectQrCode(){
-        // Test values
-        val testName = "Hello World!"
-        val testPlaylist = Playlist("Rap Playlist")
-        val testNbRounds = 20
-        val withHint = true
-        val private = true
+
         val intent = Intent(ctx, WorkingLobbyActivity::class.java).apply {
             putExtra(GAME_NAME_KEY, testName)
             putExtra(GAME_PLAYLIST_KEY, Json.encodeToString(testPlaylist))
@@ -204,7 +165,7 @@ class WorkingLobbyActivityTest {
             putExtra(GAME_PRIVACY_KEY, private)
             putExtra(GAME_IS_HOST_KEY, true)
         }
-        ActivityScenario.launch<WorkingLobbyActivity>(intent).use { scenario ->
+        ActivityScenario.launch<WorkingLobbyActivity>(intent).use {
 
 
             val displayQRCodeButton = Espresso.onView(withId(R.id.displayQRCodeButton))

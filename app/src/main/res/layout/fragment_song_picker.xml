@@ -7,22 +7,16 @@
 
     <TextView
         android:id="@+id/songPickerTitle"
+        style="@style/Text.Popup"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
         android:text="@string/pick_a_song"
-        android:textSize="24sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <LinearLayout
         android:id="@+id/songPicksLayout"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:orientation="vertical"
-        android:paddingHorizontal="32dp"
-        android:textSize="24sp"
+        style="@style/LinearLayoutButton"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/songPickerTitle">

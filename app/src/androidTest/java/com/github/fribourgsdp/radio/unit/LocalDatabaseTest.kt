@@ -17,6 +17,12 @@ class LocalDatabaseTest
 {
     private val userAuthUID = "testUser"
 
+    private val song1 = Song("Hello","Adele","")
+    private val song2 = Song("World","NAthan","")
+
+    private val playlist = Playlist("test", Genre.COUNTRY)
+    private val rubbish = "rubbish"
+
     @Test
     fun registeringUserAndFetchingItWorks(){
         val db : Database = LocalDatabase()
@@ -30,7 +36,7 @@ class LocalDatabaseTest
     @Test
     fun fetchingUnregisteredUserReturnsNull(){
         val db : Database = LocalDatabase()
-        val user = Tasks.withTimeout(db.getUser("rubbish"),10,TimeUnit.SECONDS)
+        val user = Tasks.withTimeout(db.getUser(rubbish),10,TimeUnit.SECONDS)
         Log.d(ContentValues.TAG, "DocumentSnapshot added with ID put: " + Tasks.await(user))
         assertEquals(null, Tasks.await(user))
     }
@@ -38,25 +44,21 @@ class LocalDatabaseTest
     @Test
     fun registerSongAndFetchingItWorks(){
         val db : Database = LocalDatabase()
-        val song1 = Song("Hello","Adele","")
         db.registerSong(song1)
         assertEquals(song1, Tasks.await(db.getSong(song1.name)))
 
     }
 
     @Test
-    fun fetchingInexistantSongReturnsNull(){
+    fun fetchingNonExistentSongReturnsNull(){
         val db : Database = LocalDatabase()
-        val song = db.getSong("Rubbish")
+        val song = db.getSong(rubbish)
         assertEquals(null ,Tasks.await(song))
     }
 
     @Test
     fun registerPlaylistAndFetchingItWorks(){
         val db : Database = LocalDatabase()
-        val song1 = Song("Hello","Adele","")
-        val song2 = Song("World","NAthan","")
-        val playlist = Playlist("test", Genre.COUNTRY)
         playlist.addSong(song1)
         playlist.addSong(song2)
         db.registerPlaylist(playlist)
@@ -65,9 +67,9 @@ class LocalDatabaseTest
     }
 
     @Test
-    fun fetchingInexistantPlaylistReturnsNull(){
+    fun fetchingNonExistentPlaylistReturnsNull(){
         val db : Database = LocalDatabase()
-        val playlist = db.getPlaylist("Rubbish")
+        val playlist = db.getPlaylist(rubbish)
         assertEquals(null,Tasks.await(playlist))
 
     }

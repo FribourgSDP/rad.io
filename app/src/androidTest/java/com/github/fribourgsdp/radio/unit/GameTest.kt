@@ -22,10 +22,20 @@ class GameTest {
         ),
         Genre.NONE
     )
+    private val songWithNoLyrics = Song("Stream of Consciousness", "Dream theater", MusixmatchLyricsGetter.LYRICS_NOT_FOUND_PLACEHOLDER)
+    private val songWithBackendError = Song("Hell\'s Kitchen", "Dream theater", MusixmatchLyricsGetter.BACKEND_ERROR_PLACEHOLDER)
+    private val songWithFewLyrics = Song("Tequila", "Britain's got talent", "Tequila !")
+    private val songsWithLyrics = setOf(
+        Song("a", "a", "a"),
+        Song("b", "b", "b"),
+        Song("c", "c", "c"),
+    )
 
 
     private val name = "Game Test"
     private val host = User("host")
+    private val testUser = User("Test User")
+    private val testPlaylistName = "Test pl"
     private val otherId = "other_id"
     private val nbRounds = 3
     private val withHint = true
@@ -194,11 +204,11 @@ class GameTest {
     fun getChoiceWithLyricsReturnsTheOnlySongWithLyrics(){
         val game = Game.Builder()
             .setNoSing(true)
-            .setHost(User("Test User"))
-            .setPlaylist(Playlist("test pl", setOf(
-                Song("Stream of Consciousness", "Dream theater", MusixmatchLyricsGetter.LYRICS_NOT_FOUND_PLACEHOLDER),
-                Song("Hell\'s Kitchen", "Dream theater", MusixmatchLyricsGetter.BACKEND_ERROR_PLACEHOLDER),
-                Song("Tequila", "Britain's got talent", "Tequila !")
+            .setHost(testUser)
+            .setPlaylist(Playlist(testPlaylistName, setOf(
+                songWithNoLyrics,
+                songWithBackendError,
+                songWithFewLyrics
             ), Genre.NONE))
             .build()
         val choice = game.getChoiceWithLyrics()
@@ -210,10 +220,10 @@ class GameTest {
     fun getChoicesWithLyricsReturnsNull(){
         val game = Game.Builder()
             .setNoSing(true)
-            .setHost(User("Test User"))
-            .setPlaylist(Playlist("test pl", setOf(
-                Song("Stream of Consciousness", "Dream theater", MusixmatchLyricsGetter.LYRICS_NOT_FOUND_PLACEHOLDER),
-                Song("Hell\'s Kitchen", "Dream theater", MusixmatchLyricsGetter.BACKEND_ERROR_PLACEHOLDER)
+            .setHost(testUser)
+            .setPlaylist(Playlist(testPlaylistName, setOf(
+                songWithNoLyrics,
+                songWithBackendError
             ), Genre.NONE))
             .build()
         val choice = game.getChoiceWithLyrics()
@@ -224,12 +234,8 @@ class GameTest {
     fun getChoiceWithLyricsRotatesOnAllSongs(){
         val game = Game.Builder()
             .setNoSing(true)
-            .setHost(User("Test User"))
-            .setPlaylist(Playlist("test pl", setOf(
-                Song("a", "a", "a"),
-                Song("b", "b", "b"),
-                Song("c", "c", "c"),
-            ), Genre.NONE))
+            .setHost(testUser)
+            .setPlaylist(Playlist(testPlaylistName, songsWithLyrics, Genre.NONE))
             .build()
         val choices = mutableListOf<Song>()
         for(i in 0 until 3){
