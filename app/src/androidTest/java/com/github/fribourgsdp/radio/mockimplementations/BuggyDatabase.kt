@@ -90,7 +90,7 @@ class BuggyDatabase : Database {
     }
 
     override fun listenToPublicLobbiesUpdate(listener: EventListener<List<LobbyData>>) {
-        
+
     }
 
     override fun openGame(id: Long): Task<Void> {

@@ -83,7 +83,7 @@ class HostGameHandler(
                                 // quit on second failure
                                 view.gameOver(game.getAllScores(), true)
                             }
-                }
+                    }
             }
 
         } else {
@@ -183,4 +183,3 @@ class HostGameHandler(
     }
 
 }
-

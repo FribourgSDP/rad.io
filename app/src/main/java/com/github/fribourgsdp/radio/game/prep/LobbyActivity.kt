@@ -3,6 +3,7 @@ package com.github.fribourgsdp.radio.game.prep
 import android.Manifest
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.os.Build
 import android.os.Bundle
 import android.view.View
 import android.widget.Button
@@ -173,8 +174,26 @@ open class LobbyActivity : MyAppCompatActivity(){
         isPrivate       = intent.getBooleanExtra(GAME_PRIVACY_KEY, false)
         singerDuration    = intent.getLongExtra(GAME_DURATION_KEY, DEFAULT_SINGER_DURATION)
 
-        hasVoiceIdPermissions = (ContextCompat.checkSelfPermission(this, Manifest.permission.RECORD_AUDIO) == PackageManager.PERMISSION_GRANTED)
+        hasVoiceIdPermissions = checkPermission()
         gameLobbyId = intent.getLongExtra(GAME_UID_KEY, -1L)
+    }
+
+
+    private fun checkPermission(): Boolean {
+        val audio_permission = ContextCompat.checkSelfPermission(this,
+            Manifest.permission.RECORD_AUDIO
+        )
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+            val connect_permission = ContextCompat.checkSelfPermission(this,
+                Manifest.permission.BLUETOOTH_CONNECT
+            )
+            val scan_permission = ContextCompat.checkSelfPermission(this,
+                Manifest.permission.BLUETOOTH_SCAN
+            )
+            return audio_permission == PackageManager.PERMISSION_GRANTED && connect_permission == PackageManager.PERMISSION_GRANTED && scan_permission == PackageManager.PERMISSION_GRANTED
+        }
+
+        return audio_permission == PackageManager.PERMISSION_GRANTED
     }
 
     private fun initTextViews() {
@@ -211,8 +230,14 @@ open class LobbyActivity : MyAppCompatActivity(){
         }
         else {
             launchGameButton.isEnabled = false
-            askForPermissionsButton.setOnClickListener {
-                ActivityCompat.requestPermissions(this, arrayOf(Manifest.permission.RECORD_AUDIO), PERMISSION_REQ_ID_RECORD_AUDIO)
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+                askForPermissionsButton.setOnClickListener {
+                    ActivityCompat.requestPermissions(this, arrayOf(Manifest.permission.RECORD_AUDIO,Manifest.permission.BLUETOOTH_SCAN, Manifest.permission.BLUETOOTH_CONNECT), PERMISSION_REQ_ID_RECORD_AUDIO)
+                }
+            }else{
+                askForPermissionsButton.setOnClickListener {
+                    ActivityCompat.requestPermissions(this, arrayOf(Manifest.permission.RECORD_AUDIO), PERMISSION_REQ_ID_RECORD_AUDIO)
+                }
             }
         }
     }
@@ -345,18 +370,30 @@ open class LobbyActivity : MyAppCompatActivity(){
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
         // Test if received callback indeed comes from a microphone permission request
-        if (requestCode == PERMISSION_REQ_ID_RECORD_AUDIO) {
-            for (i in permissions.indices) {
-                val permission: String = permissions[i]
-                val granted: Int = grantResults[i]
-                if (permission == Manifest.permission.RECORD_AUDIO && granted == PackageManager.PERMISSION_GRANTED) {
-                    hasVoiceIdPermissions = true
-                    launchGameButton.isEnabled = true
-                    askForPermissionsButton.visibility = View.INVISIBLE
-                    db.modifyUserMicPermissions(gameLobbyId, user, true)
+
+
+        if (grantResults.isNotEmpty()) {
+            val audioAccepted = grantResults[0] == PackageManager.PERMISSION_GRANTED
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+                val scanAccepted = grantResults[1] == PackageManager.PERMISSION_GRANTED
+                val connectAccepted  = grantResults[2] == PackageManager.PERMISSION_GRANTED
+                if (audioAccepted && connectAccepted && scanAccepted) {
+                    validatePermissionsAccept()
+                }
+            }else{
+                if (audioAccepted ){
+                    validatePermissionsAccept()
                 }
             }
+
+
         }
+    }
+    private fun validatePermissionsAccept() {
+        hasVoiceIdPermissions = true
+        launchGameButton.isEnabled = true
+        askForPermissionsButton.visibility = View.INVISIBLE
+        db.modifyUserMicPermissions(gameLobbyId, user, true)
     }
 
     override fun onBackPressed() {

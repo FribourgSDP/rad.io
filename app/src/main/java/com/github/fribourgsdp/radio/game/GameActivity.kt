@@ -223,7 +223,7 @@ open class GameActivity : AppCompatActivity(), GameView, Timer.Listener {
                 putExtra(
                     SCORES_KEY,
                     // Replace ids by names and put in an ArrayList to make it Serializable
-                    ArrayList(it.map { (id, score) -> Pair(mapIdToName[id] ?: id, score) })
+                            ArrayList(it.map { (id, score) -> Pair(mapIdToName[id] ?: id, score) })
                 )
             }
 
@@ -256,6 +256,7 @@ open class GameActivity : AppCompatActivity(), GameView, Timer.Listener {
             hostGameHandler?.setSingerDuration(gameDuration)
         }
     }
+
 
     private fun initViews() {
         currentRoundTextView = findViewById(R.id.currentRoundView)
@@ -343,13 +344,13 @@ open class GameActivity : AppCompatActivity(), GameView, Timer.Listener {
             cantQuitGamePopup?.show(supportFragmentManager, "cannotQuitGame")
         }
     }
-    
+
     override fun updateLyrics(lyrics : String) {
         //Close any active popup if open
         closePopups()
-        
+
         lyricsPopup = if(lyrics.isNotEmpty() && lyrics != LYRICS_NOT_FOUND_PLACEHOLDER)  LyricsPopup(lyrics)
-            else null
+        else null
     }
 
     override fun onPause() {

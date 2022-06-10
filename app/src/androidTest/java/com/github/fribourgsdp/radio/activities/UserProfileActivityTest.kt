@@ -93,27 +93,6 @@ class UserProfileActivityTest : TestCase() {
 
     }
 
-
-    /*@Test
-    fun clickOnGoogleButtonSendToGoogleSignInActivityTestOrLogoutCorrectly() {
-
-        val context: Context = ApplicationProvider.getApplicationContext()
-        val intent = Intent(context, MockUserProfileActivity::class.java)
-        ActivityScenario.launch<UserProfileActivity>(intent).use { scenario ->
-
-            val googleSignInButton = onView(withId(R.id.googleSignInButton))
-            googleSignInButton.perform(click())
-
-            Intents.intended(
-                Matchers.allOf(
-                    IntentMatchers.hasComponent(GoogleSignInActivity::class.java.name),
-                    IntentMatchers.toPackage(packageName)
-                )
-            )
-        }
-    }*/
-
-
     @Test
     fun testBuildRequest() {
         val request = UserProfileActivity.buildRequest()

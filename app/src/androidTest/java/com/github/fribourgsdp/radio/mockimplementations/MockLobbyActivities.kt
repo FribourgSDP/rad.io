@@ -2,8 +2,6 @@ package com.github.fribourgsdp.radio.mockimplementations
 
 import android.content.Intent
 import android.os.Bundle
-import com.github.fribourgsdp.radio.data.Playlist
-import com.github.fribourgsdp.radio.data.Song
 import com.github.fribourgsdp.radio.data.User
 import com.github.fribourgsdp.radio.database.Database
 import com.github.fribourgsdp.radio.game.Game

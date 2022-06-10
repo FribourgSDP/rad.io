@@ -1,7 +1,6 @@
 package com.github.fribourgsdp.radio.data
 
 import android.content.Context
-import android.util.Log
 import com.github.fribourgsdp.radio.data.Genre.*
 import com.github.fribourgsdp.radio.external.musixmatch.MusixmatchLyricsGetter
 import java.io.BufferedReader
